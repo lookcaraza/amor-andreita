@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,6 +10,10 @@
   
   <!-- SDK de la API Widget de SoundCloud para control de audio -->
   <script src="https://w.soundcloud.com/player/api.js"></script>
+
+  <!-- SDKs Compatibles de Firebase (App, Firestore) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
   <style>
     :root {
@@ -1117,6 +1120,21 @@
   </div>
 
   <script>
+    // CONFIGURACIÓN DE FIREBASE FIRESTORE
+    const firebaseConfig = { 
+      apiKey: "AIzaSyBm0apLxTyiTOSqBMyZhr4aK_Stn1eLr-U", 
+      authDomain: "our-love-story-73f3d.firebaseapp.com", 
+      databaseURL: "https://nuestra-historia-de-amor-73f3d-default-rtdb.firebaseio.com", 
+      projectId: "nuestra-historia-de-amor-73f3d", 
+      storageBucket: "our-love-story-73f3d.firebasestorage.app", 
+      messagingSenderId: "526277320930", 
+      appId: "1:526277320930:web:a5c9355d7108ab98c5bebb", 
+      measurementId: "G-SC508T9FW9" 
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     // CONTROL DE MÚSICA EN BUCLE DESDE SOUNDCLOUD
     let scWidget;
 
@@ -1130,6 +1148,7 @@
       });
 
       initQuiz();
+      loadSavedMedia();
     });
 
     function startAppAndAudio() {
@@ -1347,26 +1366,7 @@
       if(evt) evt.currentTarget.classList.add('active');
     }
 
-    /* BASE DE DATOS INDEXEDDB PARA GUARDAR Y BORRAR FOTOS/VIDEOS PERMANENTEMENTE */
-    let db;
-    const dbRequest = indexedDB.open("AndreitaAlbumDB", 1);
-
-    dbRequest.onupgradeneeded = function(e) {
-      db = e.target.result;
-      if (!db.objectStoreNames.contains("media")) {
-        db.createObjectStore("media", { keyPath: "id", autoIncrement: true });
-      }
-    };
-
-    dbRequest.onsuccess = function(e) {
-      db = e.target.result;
-      loadSavedMedia();
-    };
-
-    dbRequest.onerror = function() {
-      console.error("Error al abrir IndexedDB");
-    };
-
+    /* SISTEMA DE NUBE CON FIREBASE FIRESTORE */
     let pendingFiles = [];
 
     function prepareMediaUpload(files) {
@@ -1384,8 +1384,6 @@
 
       if (!dateVal || !reasonVal.trim()) return;
 
-      const grid = document.getElementById('mediaGrid');
-
       pendingFiles.forEach(file => {
         const reader = new FileReader();
         reader.onload = function(evt) {
@@ -1393,22 +1391,20 @@
           const dateObj = new Date(dateVal + 'T00:00:00');
           const formattedDate = dateObj.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-          const mediaData = {
+          db.collection("recuerdos").add({
             type: file.type,
             dataUrl: fileDataUrl,
             date: formattedDate,
-            reason: reasonVal
-          };
-
-          if (db) {
-            const tx = db.transaction("media", "readwrite");
-            const store = tx.objectStore("media");
-            const addReq = store.add(mediaData);
-            addReq.onsuccess = function(evt) {
-              mediaData.id = evt.target.result;
-              renderMediaCard(mediaData, grid, true);
-            };
-          }
+            reason: reasonVal,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          })
+          .then(() => {
+            showToast("¡Recuerdo guardado en la nube! ✨");
+          })
+          .catch((error) => {
+            console.error("Error al guardar en Firestore: ", error);
+            showToast("Error al guardar el recuerdo 🥺");
+          });
         };
         reader.readAsDataURL(file);
       });
@@ -1418,7 +1414,7 @@
       document.getElementById('fileInput').value = '';
     }
 
-    function renderMediaCard(item, grid, prepend = false) {
+    function renderMediaCard(item, grid) {
       const card = document.createElement('div');
       card.className = 'media-card';
       card.dataset.id = item.id || '';
@@ -1428,15 +1424,11 @@
         ? `<img src="${item.dataUrl}" style="image-rendering: -webkit-optimize-contrast;">` 
         : `<video src="${item.dataUrl}" muted controls></video>`;
 
-      let deleteBtnHTML = item.id ? `<button class="delete-media-btn" onclick="requestDeleteMedia(event, ${item.id}, this)">🗑️</button>` : '';
+      let deleteBtnHTML = item.id ? `<button class="delete-media-btn" onclick="requestDeleteMedia(event, '${item.id}', this)">🗑️</button>` : '';
 
       card.innerHTML = `${deleteBtnHTML}${mediaHTML}<div class="media-info"><div class="date">${item.date}</div><div class="reason">${item.reason}</div></div>`;
 
-      if (prepend) {
-        grid.insertBefore(card, grid.children[1] || null);
-      } else {
-        grid.appendChild(card);
-      }
+      grid.appendChild(card);
     }
 
     /* SISTEMA DE CONFIRMACIÓN BONITA DE ELIMINACIÓN */
@@ -1454,32 +1446,39 @@
     }
 
     document.getElementById('confirmDeleteBtn').onclick = function() {
-      if (mediaToDelete && db) {
-        const tx = db.transaction("media", "readwrite");
-        const store = tx.objectStore("media");
-        store.delete(mediaToDelete.id);
-        tx.oncomplete = function() {
-          const card = mediaToDelete.btn.closest('.media-card');
-          if (card) card.remove();
+      if (mediaToDelete && mediaToDelete.id) {
+        db.collection("recuerdos").doc(mediaToDelete.id).delete()
+        .then(() => {
           closeDeleteModal();
           showToast("Recuerdo eliminado correctamente ✨");
-        };
+        })
+        .catch((error) => {
+          console.error("Error al eliminar: ", error);
+          showToast("Error al eliminar el recuerdo 🥺");
+        });
       }
     };
 
     function loadSavedMedia() {
-      if (!db) return;
-      const tx = db.transaction("media", "readonly");
-      const store = tx.objectStore("media");
-      const request = store.getAll();
-
-      request.onsuccess = function() {
-        const grid = document.getElementById('mediaGrid');
-        const items = request.result;
-        items.forEach(item => {
-          renderMediaCard(item, grid, true);
+      db.collection("recuerdos").orderBy("timestamp", "desc")
+        .onSnapshot((snapshot) => {
+          const grid = document.getElementById('mediaGrid');
+          grid.innerHTML = `
+            <div class="media-card" onclick="openMediaViewer(this)">
+              <img src="https://lh3.googleusercontent.com/d/1NFje4wxCSuw75gP9GAr9Ck4UiEYmU1Xj" alt="Foto">
+              <div class="media-info">
+                <div class="date">29/03/2026</div>
+                <div class="reason">La primera fotito que vi de ti 💕</div>
+              </div>
+            </div>
+          `;
+          
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            data.id = doc.id;
+            renderMediaCard(data, grid);
+          });
         });
-      };
     }
 
     function closeSuccessModal() {
