@@ -102,7 +102,7 @@
       background: var(--title-burgundy);
     }
 
-    /* TOAST FLOTANTE BONITO */
+    /* TOAST FLOTANTE */
     .toast-notification {
       position: fixed;
       top: -100px;
@@ -641,6 +641,12 @@
       font-size: 1rem;
       margin-top: 18px;
       cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .modal-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     .modal-btn-cancel {
@@ -962,7 +968,6 @@
       opacity: 0.9;
     }
 
-    /* Tabla de resultados del Quiz */
     .quiz-results-container {
       margin-top: 25px;
       background: #fff;
@@ -999,7 +1004,7 @@
 </head>
 <body>
 
-  <!-- REPRODUCTOR SOUNDCLOUD INVISIBLE CON TU CANCIÓN -->
+  <!-- REPRODUCTOR SOUNDCLOUD INVISIBLE -->
   <iframe id="sc-widget" 
           src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/chapins-che/whatsapp-audio-2026-08-06-at&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false" 
           width="100%" 
@@ -1019,7 +1024,7 @@
     </div>
   </div>
 
-  <!-- ELEMENTO DE NOTIFICACIÓN FLOTANTE (TOAST) -->
+  <!-- TOAST -->
   <div id="toastNotification" class="toast-notification"></div>
 
   <div class="hearts-bg" id="heartsBg"></div>
@@ -1084,7 +1089,7 @@
         </div>
       </div>
 
-      <!-- MINIJUEGO 3: CRIPTOGRAMA DEL AMOR -->
+      <!-- MINIJUEGO 3: CRIPTOGRAMA -->
       <div id="game-stage-3" style="display: none;">
         <div class="diff-header">
           <h3 style="color: var(--title-burgundy); font-weight: 800;">Nivel 3: El Código Secreto del Amor 🔐</h3>
@@ -1100,7 +1105,7 @@
         </div>
       </div>
 
-      <!-- MINIJUEGO 4: SIMON SAYS RITMO DE CORAZÓN -->
+      <!-- MINIJUEGO 4: SIMON SAYS -->
       <div id="game-stage-4" style="display: none;">
         <div class="diff-header">
           <h3 style="color: var(--title-burgundy); font-weight: 800;">Nivel 4: Ritmo de Nuestros Corazones 💓</h3>
@@ -1119,7 +1124,7 @@
         </div>
       </div>
 
-      <!-- MINIJUEGO 5: DÓNDE ESTÁ TOÑITA? (FOTO REAL DE PUG) -->
+      <!-- MINIJUEGO 5: TOÑITA -->
       <div id="game-stage-5" style="display: none;">
         <div class="diff-header">
           <h3 style="color: var(--title-burgundy); font-weight: 800;">Nivel 5: ¿Dónde está Toñita? 🐶</h3>
@@ -1181,9 +1186,7 @@
     <!-- Quiz Preguntados -->
     <section id="quiz-game" class="tab-content">
       <h2>¿Qué tanto nos conocemos? 🫣</h2>
-      <div id="quizContainer">
-        <!-- Las 13 preguntas se cargan dinámicamente -->
-      </div>
+      <div id="quizContainer"></div>
       <button class="modal-btn" id="showResultsBtn" onclick="showQuizResults()" style="margin-top: 25px;">Mostrar Resultados 📊</button>
       
       <div id="quizResultsSection" style="display: none;" class="quiz-results-container">
@@ -1197,8 +1200,7 @@
               <th>Estado</th>
             </tr>
           </thead>
-          <tbody id="resultsTableBody">
-          </tbody>
+          <tbody id="resultsTableBody"></tbody>
         </table>
         <button class="modal-btn" id="whatsappRewardBtn" onclick="sendRewardWhatsApp()" style="background: #25d366; margin-top: 20px;">Mostrar Recompensas 🎁 (WhatsApp)</button>
       </div>
@@ -1210,7 +1212,7 @@
     <div class="modal-box">
       <h3>Acceso Protegido 🔐</h3>
       <p style="font-weight: 700; color: #555; margin-bottom: 15px;">Escribe la contraseña de nuestro amor para continuar:</p>
-      <input type="text" id="authPasswordInput" placeholder="Escribe aquí (ej: 2025)" style="text-align: center; font-size: 1.1rem; font-weight: 800;">
+      <input type="password" id="authPasswordInput" placeholder="Escribe aquí (ej: 2025)" style="text-align: center; font-size: 1.1rem; font-weight: 800;">
       <button class="modal-btn" type="button" onclick="verifyAuthPassword()">Ingresar ✨</button>
       <button class="modal-btn modal-btn-cancel" type="button" onclick="closeAuthModal()">Cancelar</button>
     </div>
@@ -1224,7 +1226,7 @@
         <label for="photoDate">Añadir fecha:</label>
         <input type="date" id="photoDate" required>
 
-        <label for="photoReason">Motivo de la foto / video:</label>
+        <label for="photoReason">Motivo de la foto o video:</label>
         <textarea id="photoReason" rows="3" placeholder="Escribe el motivo de este recuerdo..." required></textarea>
 
         <label>¿Quién sube este recuerdo?</label>
@@ -1233,12 +1235,13 @@
           <div class="profile-card" id="profAndreita" onclick="selectProfile('Andreita')">🌸 Andreita</div>
         </div>
 
-        <button type="submit" class="modal-btn" id="submitUploadBtn">Listo ✨</button>
+        <button type="submit" id="submitUploadBtn" class="modal-btn">Listo ✨</button>
+        <button type="button" class="modal-btn modal-btn-cancel" onclick="closeUploadModal()">Cancelar</button>
       </form>
     </div>
   </div>
 
-  <!-- Modal confirmación borrado bonito -->
+  <!-- Modal confirmación borrado -->
   <div class="modal-overlay" id="deleteConfirmModal">
     <div class="modal-box">
       <h3 style="margin-bottom: 10px;">¿Eliminar recuerdo? 🌹</h3>
@@ -1252,13 +1255,13 @@
   <div class="modal-overlay" id="successModal">
     <div class="modal-box">
       <p style="font-size: 1.15rem; font-weight: 800; color: var(--title-burgundy); margin-bottom: 15px;">
-        Un recuerdo mas para nuestros futuros hijos amor
+        Un recuerdo más para nuestros futuros hijos amor 💕
       </p>
       <button class="modal-btn" onclick="closeSuccessModal()">si mi amor</button>
     </div>
   </div>
 
-  <!-- VISOR DE MULTIMEDIA CON MARCO DE AMOR SANRIO Y STICKERS SVG NATIVOS -->
+  <!-- VISOR DE MULTIMEDIA -->
   <div class="viewer-overlay" id="mediaViewer">
     <div class="sanrio-love-frame">
       <svg class="sanrio-svg-sticker svg-cinnamoroll" viewBox="0 0 100 65">
@@ -1314,7 +1317,7 @@
   <div class="modal-overlay" id="levelProgressModal">
     <div class="level-modal-content">
       <div style="font-size: 2.5rem;">✨❤️✨</div>
-      <div class="level-badge" id="levelProgressText">1/10 COMPLETADO</div>
+      <div class="level-badge" id="levelProgressText">1/11 COMPLETADO</div>
       <div class="level-love-msg" id="levelLoveMsg">¡Superaste la memoria de nuestro amor mi vida!</div>
       <button class="modal-btn" id="modalNextBtn" onclick="nextLevelFromModal()">Siguiente 🚀</button>
     </div>
@@ -1340,13 +1343,11 @@
     const CLOUDINARY_CLOUD_NAME = "r893yslz";
     const CLOUDINARY_UPLOAD_PRESET = "fotos_amor";
 
-    // Nombres de los meses para el agrupador
     const monthNames = [
       "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
     ];
 
-    // CONTROL DE MÚSICA EN BUCLE DESDE SOUNDCLOUD
     let scWidget;
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -1369,7 +1370,6 @@
       document.getElementById('welcomeOverlay').style.display = 'none';
     }
 
-    // CONTRASEÑA OBLIGATORIA "2308" Y ESTADO DE SESIÓN ACTIVADO
     let isAuthenticated = false;
     let currentAuthAction = null; 
     let pendingDeleteData = null;
@@ -1423,7 +1423,7 @@
       }
     }
 
-    // LAS 13 PREGUNTAS DEL QUIZ
+    // 13 PREGUNTAS DEL QUIZ
     const quizData = [
       { q: "¿Que celular tengo?", options: ["Xiaomi Poco F6 pro", "Iphone 15 Pro Max", "Samsung A30", "Todas las Anteriores"], corrects: ["Iphone 15 Pro Max"] },
       { q: "¿Quien es mi cantante favorito?", options: ["Paulo Londra", "Bruno Mars", "Duki", "Milo J"], corrects: ["Paulo Londra"] },
@@ -1626,7 +1626,7 @@
       if(evt) evt.currentTarget.classList.add('active');
     }
 
-    /* SISTEMA DE SUBIDA CON PERFIL */
+    /* SISTEMA DE SUBIDA OPTIMIZADO */
     let pendingFiles = [];
     let selectedAuthorProfile = "";
 
@@ -1642,107 +1642,59 @@
     }
 
     function prepareMediaUpload(files) {
-      if (files.length === 0) return;
+      if (!files || files.length === 0) return;
       pendingFiles = Array.from(files);
       selectedAuthorProfile = "";
       document.getElementById('profCriss').classList.remove('selected');
       document.getElementById('profAndreita').classList.remove('selected');
       document.getElementById('photoDate').valueAsDate = new Date();
       document.getElementById('photoReason').value = '';
+      document.getElementById('submitUploadBtn').disabled = false;
       document.getElementById('uploadModal').style.display = 'flex';
     }
 
-    // MOTOR DE SUBIDA DE ALTO RENDIMIENTO (CHUNKED UPLOAD SIN LÍMITE DE TAMAÑO PARA IPHONE Y ANDROID)
-    async function uploadToCloudinaryViaChunks(file) {
-      const isVideo = (file.type && file.type.startsWith('video/')) || 
-                      (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc)$/i));
-      
-      const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
-      const CHUNK_SIZE = 6 * 1024 * 1024; // Fragmentos de 6MB
-      const uniqueUploadId = 'love_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
-      const totalSize = file.size;
-
-      // Si el archivo es menor a 6MB se sube directo
-      if (totalSize <= CHUNK_SIZE) {
-        return new Promise((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          xhr.open("POST", url, true);
-
-          xhr.upload.onprogress = function(e) {
-            if (e.lengthComputable) {
-              const pct = Math.round((e.loaded / e.total) * 100);
-              showToast(`Subiendo recuerdo: ${pct}%... ⏳✨`);
-            }
-          };
-
-          xhr.onload = function() {
-            try {
-              const data = JSON.parse(xhr.responseText);
-              if (xhr.status >= 200 && xhr.status < 300) {
-                resolve({ data: data, isVideo: isVideo });
-              } else {
-                reject(new Error(data.error?.message || `Error ${xhr.status}`));
-              }
-            } catch(err) {
-              reject(new Error("Error procesando respuesta del servidor"));
-            }
-          };
-
-          xhr.onerror = () => reject(new Error("Error de conexión al subir el archivo"));
-
-          const formData = new FormData();
-          formData.append("file", file);
-          formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-          xhr.send(formData);
-        });
-      }
-
-      // Si el archivo es grande (> 6MB o hasta 1GB), se sube por fragmentos consecutivos
-      let start = 0;
-      let finalData = null;
-
-      while (start < totalSize) {
-        const end = Math.min(start + CHUNK_SIZE, totalSize);
-        const chunk = file.slice(start, end);
-        const contentRange = `bytes ${start}-${end - 1}/${totalSize}`;
-        const pct = Math.round((start / totalSize) * 100);
-        showToast(`Subiendo recuerdo: ${pct}%... ⏳✨`);
-
-        finalData = await new Promise((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          xhr.open("POST", url, true);
-          xhr.setRequestHeader("X-Unique-Upload-Id", uniqueUploadId);
-          xhr.setRequestHeader("Content-Range", contentRange);
-
-          xhr.onload = function() {
-            try {
-              const data = JSON.parse(xhr.responseText);
-              if (xhr.status >= 200 && xhr.status < 300) {
-                resolve(data);
-              } else {
-                reject(new Error(data.error?.message || `Error ${xhr.status} en fragmento`));
-              }
-            } catch(err) {
-              reject(new Error("Error procesando respuesta"));
-            }
-          };
-
-          xhr.onerror = () => reject(new Error("Error de red durante la subida"));
-
-          const formData = new FormData();
-          formData.append("file", chunk);
-          formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-          xhr.send(formData);
-        });
-
-        start = end;
-      }
-
-      showToast(`¡Subida completada al 100%! Guardando... 💕`);
-      return { data: finalData, isVideo: isVideo };
+    function closeUploadModal() {
+      document.getElementById('uploadModal').style.display = 'none';
+      pendingFiles = [];
+      document.getElementById('fileInput').value = '';
     }
 
-    // SUBIDA NUBE DIRECTA COMPATIBLE CON CUALQUIER CELULAR
+    // SUBIDA CLOUDINARY CON ENDPOINT UNIVERSAL (AUTO)
+    function uploadToCloudinaryViaXHR(file) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
+        
+        xhr.open("POST", url, true);
+        
+        xhr.onload = function() {
+          try {
+            const data = JSON.parse(xhr.responseText);
+            if (xhr.status >= 200 && xhr.status < 300) {
+              const isVideo = (file.type && file.type.startsWith('video/')) || 
+                              (data.resource_type === 'video') ||
+                              (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv)$/i));
+              resolve({ data: data, isVideo: isVideo });
+            } else {
+              reject(new Error(data.error?.message || `Error ${xhr.status} de Cloudinary`));
+            }
+          } catch(e) {
+            reject(new Error("Error al procesar la respuesta del servidor"));
+          }
+        };
+
+        xhr.onerror = function() {
+          reject(new Error("Error de conexión al subir el archivo multimedia"));
+        };
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+        xhr.send(formData);
+      });
+    }
+
     async function confirmUpload(e) {
       e.preventDefault();
       const dateVal = document.getElementById('photoDate').value;
@@ -1756,6 +1708,11 @@
 
       if (!selectedAuthorProfile) {
         showToast("Por favor selecciona quién está subiendo el recuerdo 🥺");
+        return;
+      }
+
+      if (pendingFiles.length === 0) {
+        showToast("No has seleccionado archivos 🥺");
         return;
       }
 
@@ -1774,11 +1731,15 @@
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = "Subiendo archivo... ⏳";
+      let totalFiles = pendingFiles.length;
+      let completed = 0;
 
-      for (const file of pendingFiles) {
+      for (let i = 0; i < totalFiles; i++) {
+        const file = pendingFiles[i];
+        showToast(`Subiendo archivo ${i + 1} de ${totalFiles}... ⏳✨`);
+
         try {
-          const result = await uploadToCloudinaryViaChunks(file);
+          const result = await uploadToCloudinaryViaXHR(file);
           const permanentUrl = result.data.secure_url;
           const detectedType = result.isVideo ? 'video/mp4' : 'image/jpeg';
 
@@ -1791,21 +1752,24 @@
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
           });
 
-          document.getElementById('uploadModal').style.display = 'none';
-          document.getElementById('successModal').style.display = 'flex';
-          document.getElementById('fileInput').value = '';
-          showToast("¡Recuerdo guardado para siempre en HD! ✨");
+          completed++;
         } catch (error) {
           console.error("Error al guardar archivo:", error);
-          showToast(`Error: ${error.message || "No se pudo guardar"} 🥺`);
+          showToast(`Error al subir ${file.name}: ${error.message || "Error desconocido"} 🥺`);
         }
       }
 
       submitBtn.disabled = false;
-      submitBtn.textContent = "Listo ✨";
+      document.getElementById('uploadModal').style.display = 'none';
+      document.getElementById('fileInput').value = '';
+      pendingFiles = [];
+
+      if (completed > 0) {
+        document.getElementById('successModal').style.display = 'flex';
+        showToast(`¡${completed} recuerdo(s) guardado(s) para siempre en HD! ✨`);
+      }
     }
 
-    // CONVERSIÓN DE FECHAS A TIMESTAMP (ORDEN CRONOLÓGICO)
     function parseDateToTimestamp(dateStr) {
       if (!dateStr) return 0;
       const parts = dateStr.trim().split('/');
@@ -1818,7 +1782,6 @@
       return 0;
     }
 
-    // OBTENER LLAVE ÚNICA Y NOMBRE DEL MES (Ej: "2026-03" -> "Marzo 2026")
     function getMonthYearInfo(dateStr) {
       const parts = dateStr.trim().split('/');
       if (parts.length === 3) {
@@ -1836,7 +1799,6 @@
       return { key: "9999-99", year: 9999, monthIdx: 11, title: "Recuerdos Especiales" };
     }
 
-    // CREACIÓN Y RENDERIZADO DE TARJETAS
     function createMediaCardElement(item) {
       const card = document.createElement('div');
       card.className = 'media-card';
@@ -1845,7 +1807,7 @@
       card.onclick = function() { openMediaViewer(this, item); };
 
       const fileSrc = item.mediaUrl || item.dataUrl || '';
-      const isVid = (item.type && item.type.startsWith('video/')) || fileSrc.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc)/i);
+      const isVid = (item.type && item.type.startsWith('video/')) || fileSrc.match(/\.(mp4|mov|webm|m4v|3gp)/i);
 
       let mediaHTML = !isVid 
         ? `<img src="${fileSrc}" style="image-rendering: -webkit-optimize-contrast;">` 
@@ -1867,12 +1829,10 @@
       return card;
     }
 
-    // RENDERIZADOR GENERAL DE LA GALERÍA DIVIDIDA POR MESES Y ORDENADA POR DÍAS (MENOR A MAYOR)
     function renderCompleteGallery(items) {
       const container = document.getElementById('galleryMonthsContainer');
       container.innerHTML = '';
 
-      // Agrupar elementos por mes
       const groups = {};
       items.forEach(item => {
         const info = getMonthYearInfo(item.date);
@@ -1885,13 +1845,11 @@
         groups[info.key].items.push(item);
       });
 
-      // Ordenar los meses de más antiguo a más nuevo
       const sortedMonthKeys = Object.keys(groups).sort();
 
       sortedMonthKeys.forEach(monthKey => {
         const group = groups[monthKey];
 
-        // Ordenar las fotos dentro del mes de menor a mayor (del día 1 al 31)
         group.items.sort((a, b) => {
           return parseDateToTimestamp(a.date) - parseDateToTimestamp(b.date);
         });
@@ -1920,7 +1878,6 @@
       });
     }
 
-    /* SISTEMA DE CONFIRMACIÓN AL ELIMINAR */
     let mediaToDelete = null;
 
     function requestDeleteMedia(e, id, btn) {
@@ -1951,7 +1908,6 @@
       db.collection("recuerdos").onSnapshot((snapshot) => {
         const allItems = [];
 
-        // Primer recuerdo base
         allItems.push({
           id: "",
           type: "image/jpeg",
@@ -1975,7 +1931,6 @@
       document.getElementById('successModal').style.display = 'none';
     }
 
-    /* VISOR DE FOTOS/VIDEOS A PANTALLA COMPLETA CON DECORADO DE SANRIO */
     function openMediaViewer(card, itemData) {
       const img = card.querySelector('img');
       const video = card.querySelector('video');
@@ -2014,14 +1969,12 @@
 
     function closeMediaViewer() {
       const container = document.getElementById('viewerContent');
-      
       const video = container.querySelector('video');
       if (video) {
         video.pause();
         video.currentTime = 0;
       }
       container.innerHTML = '';
-
       document.getElementById('mediaViewer').style.display = 'none';
     }
 
@@ -2111,7 +2064,7 @@
       }
     }
 
-    /* MINIJUEGO 2: ADIVINA LA DIFERENCIA CON ENLACES DIRECTOS DE GOOGLE DRIVE */
+    /* MINIJUEGO 2: DIFERENCIA */
     const diffLevels = [
       {
         name: "Fácil",
@@ -2234,7 +2187,7 @@
       });
     }
 
-    /* MINIJUEGO 3: CRIPTOGRAMA DEL AMOR */
+    /* MINIJUEGO 3: CRIPTOGRAMA */
     const cryptoQuestions = [
       { clue: "Pista: Alguien muy especial...", encoded: "SPOJUB", solution: "TOÑITA" },
       { clue: "Pista: Tú eres mi persona...", encoded: "GBWOSUB", solution: "FAVORITA" },
@@ -2269,7 +2222,7 @@
       }
     }
 
-    /* MINIJUEGO 4: SIMON SAYS MEMORIA SECUENCIAL */
+    /* MINIJUEGO 4: SIMON SAYS */
     let simonSequence = [];
     let playerSequence = [];
     let simonRound = 0;
@@ -2335,7 +2288,7 @@
       }
     }
 
-    /* MINIJUEGO 5: ADIVINA LA PELOTA EN LOS VASOS (FINAL) */
+    /* MINIJUEGO 5: VASOS */
     let cupLevel = 1; 
     let cupLives = 3; 
     let ballLocation = 1; 
@@ -2391,7 +2344,6 @@
       document.getElementById('startCupsBtn').style.display = 'none';
 
       const ball = document.getElementById('cupsBall');
-
       const cups = [document.getElementById('cup-0'), document.getElementById('cup-1'), document.getElementById('cup-2')];
       cups[ballLocation].classList.add('up');
 
@@ -2438,7 +2390,6 @@
       canPickCup = false;
 
       const clickedSlot = cupToSlotMap.indexOf(cupIndex);
-
       const cups = [document.getElementById('cup-0'), document.getElementById('cup-1'), document.getElementById('cup-2')];
       cups.forEach(c => c.classList.add('up'));
 
