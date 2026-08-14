@@ -1224,7 +1224,7 @@
         <label for="photoDate">Añadir fecha:</label>
         <input type="date" id="photoDate" required>
 
-        <label for="photoReason">Motivo de la foto:</label>
+        <label for="photoReason">Motivo de la foto / video:</label>
         <textarea id="photoReason" rows="3" placeholder="Escribe el motivo de este recuerdo..." required></textarea>
 
         <label>¿Quién sube este recuerdo?</label>
@@ -1233,7 +1233,7 @@
           <div class="profile-card" id="profAndreita" onclick="selectProfile('Andreita')">🌸 Andreita</div>
         </div>
 
-        <button type="submit" class="modal-btn">Listo ✨</button>
+        <button type="submit" class="modal-btn" id="submitUploadBtn">Listo ✨</button>
       </form>
     </div>
   </div>
@@ -1336,7 +1336,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // CONFIGURACIÓN DE CLOUDINARY PARA FOTOS EN 4K Y VIDEOS HD GRATIS
+    // CONFIGURACIÓN DE CLOUDINARY
     const CLOUDINARY_CLOUD_NAME = "r893yslz";
     const CLOUDINARY_UPLOAD_PRESET = "fotos_amor";
 
@@ -1652,50 +1652,102 @@
       document.getElementById('uploadModal').style.display = 'flex';
     }
 
-    // HELPER XHR DE ALTA COMPATIBILIDAD CON IPHONE, ANDROID Y COMPUTADORA
-    function uploadToCloudinaryViaXHR(file) {
-      return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        
-        // Detección estricta de video vs imagen para asignar el endpoint correcto de Cloudinary
-        const isVideo = (file.type && file.type.startsWith('video/')) || 
-                        (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv)$/i));
-        
-        const endpointType = isVideo ? 'video' : 'image';
-        const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${endpointType}/upload`;
-        
-        xhr.open("POST", url, true);
-        
-        xhr.onload = function() {
-          try {
-            const data = JSON.parse(xhr.responseText);
-            if (xhr.status >= 200 && xhr.status < 300) {
-              resolve({ data: data, isVideo: isVideo });
-            } else {
-              reject(new Error(data.error?.message || `Error ${xhr.status} de Cloudinary`));
+    // MOTOR DE SUBIDA DE ALTO RENDIMIENTO (CHUNKED UPLOAD SIN LÍMITE DE TAMAÑO PARA IPHONE Y ANDROID)
+    async function uploadToCloudinaryViaChunks(file) {
+      const isVideo = (file.type && file.type.startsWith('video/')) || 
+                      (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc)$/i));
+      
+      const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
+      const CHUNK_SIZE = 6 * 1024 * 1024; // Fragmentos de 6MB
+      const uniqueUploadId = 'love_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+      const totalSize = file.size;
+
+      // Si el archivo es menor a 6MB se sube directo
+      if (totalSize <= CHUNK_SIZE) {
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open("POST", url, true);
+
+          xhr.upload.onprogress = function(e) {
+            if (e.lengthComputable) {
+              const pct = Math.round((e.loaded / e.total) * 100);
+              showToast(`Subiendo recuerdo: ${pct}%... ⏳✨`);
             }
-          } catch(e) {
-            reject(new Error("Error procesando respuesta del servidor"));
-          }
-        };
+          };
 
-        xhr.onerror = function() {
-          reject(new Error("Error de conexión al subir el archivo multimedia"));
-        };
+          xhr.onload = function() {
+            try {
+              const data = JSON.parse(xhr.responseText);
+              if (xhr.status >= 200 && xhr.status < 300) {
+                resolve({ data: data, isVideo: isVideo });
+              } else {
+                reject(new Error(data.error?.message || `Error ${xhr.status}`));
+              }
+            } catch(err) {
+              reject(new Error("Error procesando respuesta del servidor"));
+            }
+          };
 
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+          xhr.onerror = () => reject(new Error("Error de conexión al subir el archivo"));
 
-        xhr.send(formData);
-      });
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+          xhr.send(formData);
+        });
+      }
+
+      // Si el archivo es grande (> 6MB o hasta 1GB), se sube por fragmentos consecutivos
+      let start = 0;
+      let finalData = null;
+
+      while (start < totalSize) {
+        const end = Math.min(start + CHUNK_SIZE, totalSize);
+        const chunk = file.slice(start, end);
+        const contentRange = `bytes ${start}-${end - 1}/${totalSize}`;
+        const pct = Math.round((start / totalSize) * 100);
+        showToast(`Subiendo recuerdo: ${pct}%... ⏳✨`);
+
+        finalData = await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open("POST", url, true);
+          xhr.setRequestHeader("X-Unique-Upload-Id", uniqueUploadId);
+          xhr.setRequestHeader("Content-Range", contentRange);
+
+          xhr.onload = function() {
+            try {
+              const data = JSON.parse(xhr.responseText);
+              if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(data);
+              } else {
+                reject(new Error(data.error?.message || `Error ${xhr.status} en fragmento`));
+              }
+            } catch(err) {
+              reject(new Error("Error procesando respuesta"));
+            }
+          };
+
+          xhr.onerror = () => reject(new Error("Error de red durante la subida"));
+
+          const formData = new FormData();
+          formData.append("file", chunk);
+          formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+          xhr.send(formData);
+        });
+
+        start = end;
+      }
+
+      showToast(`¡Subida completada al 100%! Guardando... 💕`);
+      return { data: finalData, isVideo: isVideo };
     }
 
-    // SUBIDA NUBE DIRECTA COMPATIBLE CON CUALQUIER NAVEGADOR MÓVIL
+    // SUBIDA NUBE DIRECTA COMPATIBLE CON CUALQUIER CELULAR
     async function confirmUpload(e) {
       e.preventDefault();
       const dateVal = document.getElementById('photoDate').value;
       const reasonVal = document.getElementById('photoReason').value;
+      const submitBtn = document.getElementById('submitUploadBtn');
 
       if (!reasonVal.trim()) {
         showToast("Por favor escribe el motivo del recuerdo 🥺");
@@ -1721,11 +1773,12 @@
         formattedDate = `${day}/${month}/${today.getFullYear()}`;
       }
 
-      showToast("Subiendo recuerdo en máxima calidad... ⏳✨");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Subiendo archivo... ⏳";
 
       for (const file of pendingFiles) {
         try {
-          const result = await uploadToCloudinaryViaXHR(file);
+          const result = await uploadToCloudinaryViaChunks(file);
           const permanentUrl = result.data.secure_url;
           const detectedType = result.isVideo ? 'video/mp4' : 'image/jpeg';
 
@@ -1747,6 +1800,9 @@
           showToast(`Error: ${error.message || "No se pudo guardar"} 🥺`);
         }
       }
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Listo ✨";
     }
 
     // CONVERSIÓN DE FECHAS A TIMESTAMP (ORDEN CRONOLÓGICO)
@@ -1789,7 +1845,7 @@
       card.onclick = function() { openMediaViewer(this, item); };
 
       const fileSrc = item.mediaUrl || item.dataUrl || '';
-      const isVid = (item.type && item.type.startsWith('video/')) || fileSrc.match(/\.(mp4|mov|webm|m4v|3gp)/i);
+      const isVid = (item.type && item.type.startsWith('video/')) || fileSrc.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc)/i);
 
       let mediaHTML = !isVid 
         ? `<img src="${fileSrc}" style="image-rendering: -webkit-optimize-contrast;">` 
@@ -1807,16 +1863,6 @@
       let authorHTML = `<div class="author-tag">👤 Subido por: ${authorName}</div>`;
 
       card.innerHTML = `${deleteBtnHTML}${mediaHTML}<div class="media-info"><div class="date">${item.date}</div><div class="reason">${item.reason}</div>${authorHTML}</div>`;
-
-      // Compatibilidad con fragmentos de video anteriores si existieran
-      if (item.type && item.type.startsWith('video/') && item.isChunked && !item.mediaUrl && item.id) {
-        db.collection("recuerdos").doc(item.id).collection("chunks").orderBy("index", "asc").get().then(snap => {
-          let fullData = "";
-          snap.forEach(doc => fullData += doc.data().data);
-          const videoElem = card.querySelector(`#thumb-vid-${item.id}`);
-          if (videoElem) videoElem.src = fullData;
-        });
-      }
 
       return card;
     }
@@ -1839,7 +1885,7 @@
         groups[info.key].items.push(item);
       });
 
-      // Ordenar los meses de más antiguo a más nuevo (Marzo 2026 arriba, luego meses posteriores)
+      // Ordenar los meses de más antiguo a más nuevo
       const sortedMonthKeys = Object.keys(groups).sort();
 
       sortedMonthKeys.forEach(monthKey => {
@@ -1905,7 +1951,7 @@
       db.collection("recuerdos").onSnapshot((snapshot) => {
         const allItems = [];
 
-        // Primer recuerdo base del 28/03/2026
+        // Primer recuerdo base
         allItems.push({
           id: "",
           type: "image/jpeg",
