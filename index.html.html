@@ -1719,11 +1719,13 @@
       overlay.style.display = 'flex';
     }
 
-    function updateUploadProgress(percent, loadedBytes, totalBytes) {
+    function updateUploadProgress(percent, loadedBytes, totalBytes, statusMessage) {
       requestAnimationFrame(() => {
         const fill = document.getElementById('progressBarFill');
         const text = document.getElementById('progressPercentageText');
         const bytesText = document.getElementById('progressBytesText');
+        const statusText = document.getElementById('uploadStatusTitle');
+        if (statusMessage && statusText) statusText.textContent = statusMessage;
 
         const safePercent = Math.min(100, Math.max(0, Math.round(percent || 0)));
         fill.style.width = `${safePercent}%`;
@@ -1861,24 +1863,142 @@
       });
     }
 
+    // SUBIDA DE VIDEOS GRANDES A CLOUDINARY POR BLOQUES
+    // Mantiene el archivo ORIGINAL: no comprime, no cambia FPS ni resolución.
+    // Cada bloque se reintenta sin volver a enviar los bloques anteriores.
+    function uploadOriginalVideoChunked(file, onProgress) {
+      return new Promise(async (resolve, reject) => {
+        const CHUNK_SIZE = 20 * 1024 * 1024; // 20 MB por bloque
+        const MAX_RETRIES = 6;
+        const RETRY_DELAY = 1500;
+        const uploadId = `web_${Date.now()}_${Math.random().toString(36).slice(2)}_${Math.random().toString(36).slice(2)}`;
+        const total = file.size;
+        const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`;
+        let uploadedBeforeChunk = 0;
+
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+        async function sendChunk(start, end, attempt) {
+          const blob = file.slice(start, end + 1);
+
+          return new Promise((resolveChunk, rejectChunk) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', uploadUrl, true);
+            xhr.timeout = 180000; // 3 minutos por bloque
+
+            // Cloudinary necesita el mismo ID en todos los bloques y el rango
+            // exacto de bytes de cada bloque.
+            xhr.setRequestHeader('X-Unique-Upload-Id', uploadId);
+            xhr.setRequestHeader('Content-Range', `bytes ${start}-${end}/${total}`);
+
+            if (xhr.upload) {
+              xhr.upload.onprogress = (event) => {
+                if (event.lengthComputable && onProgress) {
+                  const loaded = Math.min(total, uploadedBeforeChunk + event.loaded);
+                  const percent = total ? (loaded / total) * 100 : 0;
+                  onProgress(percent, loaded, total);
+                }
+              };
+            }
+
+            xhr.onload = () => {
+              let data = null;
+              try { data = JSON.parse(xhr.responseText || '{}'); } catch (_) {}
+
+              if (xhr.status >= 200 && xhr.status < 300) {
+                resolveChunk(data);
+                return;
+              }
+
+              const message = data?.error?.message || xhr.responseText || `HTTP ${xhr.status}`;
+              rejectChunk(new Error(`Cloudinary bloque ${start}-${end}: ${message}`));
+            };
+
+            xhr.onerror = () => rejectChunk(new Error('Error de red al enviar el bloque'));
+            xhr.ontimeout = () => rejectChunk(new Error('Tiempo agotado enviando el bloque'));
+            xhr.onabort = () => rejectChunk(new Error('La subida del bloque fue cancelada'));
+
+            const formData = new FormData();
+            formData.append('file', blob, file.name || `video_${Date.now()}.mp4`);
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+            xhr.send(formData);
+          }).catch(async (error) => {
+            if (attempt >= MAX_RETRIES) throw error;
+            if (onProgress) {
+              const percent = total ? (uploadedBeforeChunk / total) * 100 : 0;
+              onProgress(percent, uploadedBeforeChunk, total, `Reintentando bloque (${attempt + 1}/${MAX_RETRIES})...`);
+            }
+            await sleep(RETRY_DELAY * Math.min(attempt + 1, 4));
+            return sendChunk(start, end, attempt + 1);
+          });
+        }
+
+        try {
+          if (!total) throw new Error('El video está vacío o no se pudo leer.');
+
+          for (let start = 0; start < total; start += CHUNK_SIZE) {
+            const end = Math.min(start + CHUNK_SIZE - 1, total - 1);
+
+            if (onProgress) {
+              onProgress(
+                total ? (uploadedBeforeChunk / total) * 100 : 0,
+                uploadedBeforeChunk,
+                total,
+                `Subiendo bloque ${Math.floor(start / CHUNK_SIZE) + 1}...`
+              );
+            }
+
+            const response = await sendChunk(start, end, 0);
+            uploadedBeforeChunk = end + 1;
+
+            if (onProgress) {
+              onProgress(
+                total ? (uploadedBeforeChunk / total) * 100 : 0,
+                uploadedBeforeChunk,
+                total,
+                start + CHUNK_SIZE >= total ? 'Procesando video original...' : 'Bloque guardado ✓'
+              );
+            }
+
+            // La respuesta final de Cloudinary contiene secure_url y done:true.
+            if (response && response.done === true) {
+              const secureUrl = response.secure_url || response.url;
+              if (!secureUrl) throw new Error('Cloudinary terminó la subida pero no devolvió la URL del video.');
+
+              const urls = getCloudinaryDeliveryUrls(secureUrl);
+              resolve({
+                data: response,
+                isVideo: true,
+                mimeType: file.type || 'video/mp4',
+                size: file.size,
+                originalUrl: secureUrl,
+                deliveryUrl: urls.progressive,
+                streamUrl: urls.hls,
+                posterUrl: urls.poster
+              });
+              return;
+            }
+          }
+
+          // Algunas respuestas finales pueden no traer done:true en todos los
+          // entornos; si no hay secure_url, informamos en vez de subir otra vez.
+          throw new Error('Cloudinary no confirmó la finalización del video.');
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
+
     // DESPACHADOR UNIVERSAL ROBUSTO
     async function uploadMediaUniversal(file, onProgress) {
-      const isVideo = (file.type && file.type.startsWith('video/')) || 
+      const isVideo = (file.type && file.type.startsWith('video/')) ||
                       (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc|quicktime)$/i));
 
-      // VIDEOS: se conserva el archivo ORIGINAL. Se envía por bloques para
-      // evitar que una sola petición gigante se quede atascada o reinicie.
+      // Los videos grandes SIEMPRE usan la subida por bloques de Cloudinary.
+      // No hay fallback a una subida gigante de Firebase que pueda quedarse en 0%.
       if (isVideo) {
-        try {
-          return await uploadOriginalVideoChunked(file, onProgress);
-        } catch (cloudErr) {
-          // Si la cuenta de Cloudinary tiene un límite total de 100 MB, no
-          // comprimimos el video ni lo destruimos: lo guardamos ORIGINAL en
-          // Firebase Storage como respaldo.
-          console.warn('Cloudinary no aceptó el video original. Usando Firebase sin compresión:', cloudErr);
-          if (onProgress) onProgress(0, 0, file.size, 'Guardando video original en almacenamiento seguro...');
-          return await uploadToFirebaseStorageDirect(file, onProgress);
-        }
+        return await uploadOriginalVideoChunked(file, onProgress);
       }
 
       // Para imágenes, mantenemos exactamente el flujo anterior.
