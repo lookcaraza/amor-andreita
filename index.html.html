@@ -1739,309 +1739,56 @@
       document.getElementById('uploadProgressOverlay').style.display = 'none';
     }
 
-    // COMPRESIÓN DE VIDEO EN EL NAVEGADOR: MÁXIMO 1080P Y 60 FPS
-    // Se re-encodea el video antes de enviarlo a Firebase. Se conserva el audio
-    // cuando el navegador permite capturar la pista de audio original.
-    async function compressVideoTo1080p60(file, onProgress) {
-      if (!(file && file.type && file.type.startsWith('video/'))) {
-        return file;
-      }
-
-      if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
-        throw new Error("Este navegador no permite la compresión de video a 1080p/60 FPS. Prueba con Chrome, Edge o Safari actualizado.");
-      }
-
-      const video = document.createElement('video');
-      video.muted = false;
-      video.playsInline = true;
-      video.setAttribute('playsinline', '');
-      video.setAttribute('webkit-playsinline', '');
-      video.preload = 'auto';
-
-      const sourceURL = URL.createObjectURL(file);
-
-      try {
-        await new Promise((resolve, reject) => {
-          const timeout = setTimeout(() => reject(new Error("El video tardó demasiado en cargar.")), 30000);
-
-          video.onloadedmetadata = () => {
-            clearTimeout(timeout);
-            resolve();
-          };
-
-          video.onerror = () => {
-            clearTimeout(timeout);
-            reject(new Error("No se pudo leer el video seleccionado."));
-          };
-
-          video.src = sourceURL;
-          video.load();
-        });
-
-        const sourceWidth = video.videoWidth;
-        const sourceHeight = video.videoHeight;
-        const duration = video.duration;
-
-        if (!sourceWidth || !sourceHeight || !isFinite(duration) || duration <= 0) {
-          throw new Error("No se pudo obtener la información del video.");
-        }
-
-        // 1080p manteniendo exactamente la proporción original.
-        // Horizontal: máximo 1920x1080. Vertical: máximo 1080x1920.
-        const scale = Math.min(1, 1920 / sourceWidth, 1080 / sourceHeight);
-        let targetWidth = Math.max(2, Math.round((sourceWidth * scale) / 2) * 2);
-        let targetHeight = Math.max(2, Math.round((sourceHeight * scale) / 2) * 2);
-
-        const canvas = document.createElement('canvas');
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-        const ctx = canvas.getContext('2d', { alpha: false });
-
-        if (!ctx) {
-          throw new Error("No se pudo crear el procesador de video.");
-        }
-
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-
-        // captureStream(60) pide al navegador una pista de video de hasta 60 FPS.
-        const canvasStream = canvas.captureStream(60);
-
-        // Intentamos conservar el audio original.
-        let audioTracks = [];
-        try {
-          if (typeof video.captureStream === 'function') {
-            const originalStream = video.captureStream();
-            audioTracks = originalStream.getAudioTracks();
-          } else if (typeof video.mozCaptureStream === 'function') {
-            const originalStream = video.mozCaptureStream();
-            audioTracks = originalStream.getAudioTracks();
-          }
-        } catch (audioError) {
-          console.warn("No se pudo capturar el audio original:", audioError);
-        }
-
-        const outputStream = new MediaStream([
-          ...canvasStream.getVideoTracks(),
-          ...audioTracks
-        ]);
-
-        // Preferimos MP4/H.264 en Safari si está disponible; en Chrome/Edge
-        // normalmente WebM/VP9 ofrece mejor soporte para MediaRecorder.
-        const mimeCandidates = [
-          'video/mp4;codecs=avc1.42E01E,mp4a.40.2',
-          'video/mp4',
-          'video/webm;codecs=vp9,opus',
-          'video/webm;codecs=vp8,opus',
-          'video/webm'
-        ];
-
-        let selectedMime = '';
-        for (const mime of mimeCandidates) {
-          try {
-            if (MediaRecorder.isTypeSupported(mime)) {
-              selectedMime = mime;
-              break;
-            }
-          } catch (_) {}
-        }
-
-        if (!selectedMime) {
-          throw new Error("Este navegador no tiene un formato de video compatible para la compresión.");
-        }
-
-        const extension = selectedMime.startsWith('video/mp4') ? 'mp4' : 'webm';
-
-        const recorder = new MediaRecorder(outputStream, {
-          mimeType: selectedMime,
-          videoBitsPerSecond: 4500000,
-          audioBitsPerSecond: 96000
-        });
-
-        const chunks = [];
-
-        const recordingPromise = new Promise((resolve, reject) => {
-          recorder.ondataavailable = (event) => {
-            if (event.data && event.data.size > 0) {
-              chunks.push(event.data);
-            }
-          };
-
-          recorder.onerror = (event) => {
-            reject(event.error || new Error("Error durante la compresión del video."));
-          };
-
-          recorder.onstop = () => {
-            if (!chunks.length) {
-              reject(new Error("La compresión no produjo ningún archivo."));
-              return;
-            }
-
-            const blob = new Blob(chunks, { type: selectedMime });
-            const baseName = (file.name || 'recuerdo').replace(/\.[^/.]+$/, '');
-            const compressedFile = new File(
-              [blob],
-              `${baseName}_1080p60.${extension}`,
-              {
-                type: selectedMime,
-                lastModified: Date.now()
-              }
-            );
-
-            resolve(compressedFile);
-          };
-        });
-
-        await new Promise((resolve, reject) => {
-          const timeout = setTimeout(() => reject(new Error("No se pudo iniciar la reproducción del video.")), 15000);
-
-          video.oncanplay = async () => {
-            clearTimeout(timeout);
-            try {
-              await video.play();
-              resolve();
-            } catch (error) {
-              reject(new Error("El navegador bloqueó la reproducción necesaria para procesar el video."));
-            }
-          };
-        });
-
-        recorder.start(1000);
-
-        const startedAt = performance.now();
-        let animationFrameId = null;
-        let stopped = false;
-
-        const finishRecording = () => {
-          if (stopped) return;
-          stopped = true;
-
-          if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-          }
-
-          try {
-            video.pause();
-          } catch (_) {}
-
-          if (recorder.state !== 'inactive') {
-            recorder.stop();
-          }
-
-          canvasStream.getTracks().forEach(track => track.stop());
-          outputStream.getTracks().forEach(track => track.stop());
-        };
-
-        const drawFrame = () => {
-          if (stopped) return;
-
-          try {
-            ctx.drawImage(video, 0, 0, targetWidth, targetHeight);
-          } catch (drawError) {
-            finishRecording();
-            return;
-          }
-
-          const elapsed = performance.now() - startedAt;
-          const percent = Math.min(99, (elapsed / (duration * 1000)) * 100);
-
-          if (onProgress) {
-            // La compresión ocupa la primera fase visual del progreso.
-            onProgress(percent * 0.40, (file.size * percent) / 100, file.size);
-          }
-
-          if (video.ended || video.currentTime >= duration - 0.03) {
-            // Dibujamos el último frame antes de cerrar el grabador.
-            try {
-              ctx.drawImage(video, 0, 0, targetWidth, targetHeight);
-            } catch (_) {}
-            finishRecording();
-            return;
-          }
-
-          animationFrameId = requestAnimationFrame(drawFrame);
-        };
-
-        animationFrameId = requestAnimationFrame(drawFrame);
-
-        const compressedFile = await recordingPromise;
-
-        if (onProgress) {
-          onProgress(40, compressedFile.size, compressedFile.size);
-        }
-
-        return compressedFile;
-
-      } finally {
-        URL.revokeObjectURL(sourceURL);
-        try {
-          video.removeAttribute('src');
-          video.load();
-        } catch (_) {}
-      }
-    }
-
-    // SUBIDA NATIVA A FIREBASE STORAGE
+    // SUBIDA DIRECTA DE VIDEOS A FIREBASE STORAGE
+    // IMPORTANTE: los videos se suben ORIGINALES, sin compresión ni conversión.
+    // El progreso mostrado es el progreso REAL de Firebase de 0% a 100%.
     async function uploadToFirebaseStorageDirect(file, onProgress) {
       try {
         const isVideo = (file.type && file.type.startsWith('video/')) ||
                         !!(file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc|quicktime)$/i));
 
-        // Los videos se comprimen ANTES de subirlos.
-        let uploadFile = file;
-        if (isVideo) {
-          if (onProgress) {
-            onProgress(0, 0, file.size);
-          }
-
-          uploadFile = await compressVideoTo1080p60(file, onProgress);
-        }
-
-        const rawName = uploadFile.name || `recuerdo_${Date.now()}`;
+        const rawName = file.name || `recuerdo_${Date.now()}`;
         let safeName = rawName.replace(/[^a-zA-Z0-9._-]/g, '_');
 
-        if (isVideo) {
-          // Conserva .mp4 o .webm según el códec realmente disponible.
-          safeName = safeName.replace(/\.[^/.]+$/, "") +
-            (uploadFile.type && uploadFile.type.startsWith('video/mp4') ? ".mp4" : ".webm");
+        // Conservamos exactamente el formato original del archivo.
+        if (isVideo && !/\.[^/.]+$/.test(safeName)) {
+          const ext = (file.type || 'video/mp4').split('/')[1] || 'mp4';
+          safeName += `.${ext.replace(/[^a-zA-Z0-9]/g, '')}`;
         }
 
         const uniqueName = `${Date.now()}_${Math.random().toString(36).slice(2)}_${safeName}`;
         const storageRef = storage.ref().child(`recuerdos/${uniqueName}`);
 
-        const mimeType = isVideo
-          ? (uploadFile.type || 'video/mp4')
-          : (uploadFile.type || 'image/jpeg');
-
+        const mimeType = file.type || (isVideo ? 'video/mp4' : 'image/jpeg');
         const metadata = {
           contentType: mimeType,
           customMetadata: {
             originalName: file.name || 'archivo',
-            processed: isVideo ? '1080p60' : 'original'
+            processed: 'original'
           }
         };
 
-        if (onProgress && isVideo) {
-          updateUploadProgress(40, 0, uploadFile.size);
-          document.getElementById('uploadStatusTitle').textContent =
-            'Iniciando subida del video comprimido en 1080p y 60 FPS 💕';
-        }
-
-        // Aumentamos el tiempo de reintento de Firebase para conexiones móviles.
-        // Esto evita que una pausa temporal de Wi-Fi/datos deje la subida congelada.
+        // Firebase manejará la subida como una operación reanudable.
+        // Aumentamos el tiempo de reintento para conexiones móviles.
         try {
           if (storage && typeof storage.setMaxUploadRetryTime === 'function') {
-            storage.setMaxUploadRetryTime(15 * 60 * 1000);
+            storage.setMaxUploadRetryTime(30 * 60 * 1000);
           }
           if (storage && typeof storage.setMaxOperationRetryTime === 'function') {
-            storage.setMaxOperationRetryTime(15 * 60 * 1000);
+            storage.setMaxOperationRetryTime(30 * 60 * 1000);
           }
         } catch (_) {}
 
-        const uploadTask = storageRef.put(uploadFile, metadata);
+        const totalSize = file.size || 0;
+
+        if (onProgress) {
+          onProgress(0, 0, totalSize);
+        }
+
+        const uploadTask = storageRef.put(file, metadata);
 
         return await new Promise((resolve, reject) => {
-          let lastBytes = -1;
+          let lastBytes = 0;
           let lastProgressAt = Date.now();
           let resumeTimer = null;
           let finished = false;
@@ -2053,50 +1800,47 @@
             }
           };
 
-          // En algunos iPhone/iPad la subida puede quedarse temporalmente pausada
-          // mientras Safari gestiona un archivo grande. Reanudamos automáticamente.
+          // Si la conexión móvil se pausa, intentamos reanudar automáticamente.
           resumeTimer = setInterval(() => {
             if (finished) return;
-
             try {
-              if (uploadTask.snapshot &&
-                  uploadTask.snapshot.state === 'paused') {
+              const snapshot = uploadTask.snapshot;
+              if (!snapshot) return;
+
+              if (snapshot.state === 'paused') {
                 uploadTask.resume();
-              } else if (
-                uploadTask.snapshot &&
-                uploadTask.snapshot.bytesTransferred === lastBytes &&
-                Date.now() - lastProgressAt > 15000
-              ) {
-                uploadTask.resume();
+                return;
+              }
+
+              // No cancelamos la subida por falta de movimiento: Firebase puede
+              // tardar unos segundos en reportar el siguiente bloque.
+              // Solo reanudamos si Firebase informa explícitamente estado pausado.
+              if (snapshot.bytesTransferred !== lastBytes) {
+                lastBytes = snapshot.bytesTransferred;
+                lastProgressAt = Date.now();
               }
             } catch (_) {}
-          }, 5000);
+          }, 3000);
 
           uploadTask.on(
             'state_changed',
             (snapshot) => {
-              if (snapshot.totalBytes > 0) {
-                const uploadPercent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              if (!snapshot || snapshot.totalBytes <= 0) return;
 
-                if (snapshot.bytesTransferred !== lastBytes) {
-                  lastBytes = snapshot.bytesTransferred;
-                  lastProgressAt = Date.now();
-                }
+              lastBytes = snapshot.bytesTransferred;
+              lastProgressAt = Date.now();
 
-                // 40% = compresión terminada; 60% = subida a Firebase.
-                const percent = isVideo
-                  ? 40 + (uploadPercent * 0.60)
-                  : uploadPercent;
+              const percent = Math.min(100, Math.max(0,
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              ));
 
-                if (onProgress) {
-                  onProgress(percent, snapshot.bytesTransferred, snapshot.totalBytes);
-                }
+              if (onProgress) {
+                onProgress(percent, snapshot.bytesTransferred, snapshot.totalBytes);
+              }
 
-                const status = document.getElementById('uploadStatusTitle');
-                if (status && isVideo && uploadPercent < 100) {
-                  status.textContent =
-                    `Subiendo video comprimido en 1080p y 60 FPS 💕 ${Math.round(uploadPercent)}%`;
-                }
+              const status = document.getElementById('uploadStatusTitle');
+              if (status && isVideo && percent < 100) {
+                status.textContent = `Subiendo video original 💕 ${Math.round(percent)}%`;
               }
             },
             (error) => {
@@ -2111,7 +1855,7 @@
                 cleanup();
 
                 if (onProgress) {
-                  onProgress(100, uploadFile.size, uploadFile.size);
+                  onProgress(100, totalSize, totalSize);
                 }
 
                 const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
@@ -2123,7 +1867,7 @@
                   },
                   isVideo: isVideo,
                   mimeType: mimeType,
-                  size: uploadFile.size
+                  size: totalSize
                 });
               } catch (error) {
                 finished = true;
@@ -2133,13 +1877,11 @@
             }
           );
         });
-
       } catch (error) {
-        console.error('Error procesando/subiendo archivo:', error);
+        console.error('Error subiendo archivo original:', error);
         throw error;
       }
     }
-
 
     // SUBIDA A CLOUDINARY PARA FOTOS LIGERAS
     function uploadToCloudinaryViaXHR(file, onProgress) {
@@ -2193,8 +1935,7 @@
       const isVideo = (file.type && file.type.startsWith('video/')) || 
                       (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc|quicktime)$/i));
 
-      // Todos los videos se comprimen primero a máximo 1080p/60 FPS
-      // y después se suben a Firebase Storage.
+      // Los videos se suben directamente a Firebase Storage, sin compresión.
       if (isVideo) {
         return await uploadToFirebaseStorageDirect(file, onProgress);
       }
@@ -2259,7 +2000,7 @@
           });
 
           const permanentUrl = result.data.secure_url;
-          const detectedType = result.isVideo ? 'video/mp4' : 'image/jpeg';
+          const detectedType = result.mimeType || (result.isVideo ? (file.type || 'video/mp4') : (file.type || 'image/jpeg'));
 
           document.getElementById('uploadStatusTitle').textContent = `Guardando en la base de datos... ✨`;
 
@@ -2286,7 +2027,7 @@
 
       if (completed > 0) {
         document.getElementById('successModal').style.display = 'flex';
-        showToast(`¡${completed} recuerdo(s) guardado(s) para siempre! ✨`);
+        showToast(`¡${completed} recuerdo(s) guardado(s) correctamente! ✨`);
       }
     }
 
