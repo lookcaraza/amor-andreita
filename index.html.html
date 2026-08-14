@@ -1071,10 +1071,6 @@
       .diff-wrapper { width: 100%; }
     }
   </style>
-<style>
-    .media-card video { display:block; width:100%; background:#000; }
-    .viewer-media-box video { max-width:100%; }
-  </style>
 </head>
 <body>
 
@@ -1719,13 +1715,11 @@
       overlay.style.display = 'flex';
     }
 
-    function updateUploadProgress(percent, loadedBytes, totalBytes, statusMessage) {
+    function updateUploadProgress(percent, loadedBytes, totalBytes) {
       requestAnimationFrame(() => {
         const fill = document.getElementById('progressBarFill');
         const text = document.getElementById('progressPercentageText');
         const bytesText = document.getElementById('progressBytesText');
-        const statusText = document.getElementById('uploadStatusTitle');
-        if (statusMessage && statusText) statusText.textContent = statusMessage;
 
         const safePercent = Math.min(100, Math.max(0, Math.round(percent || 0)));
         fill.style.width = `${safePercent}%`;
@@ -1743,6 +1737,159 @@
 
     function hideUploadProgressModal() {
       document.getElementById('uploadProgressOverlay').style.display = 'none';
+    }
+
+    // SUBIDA DE VIDEOS ORIGINALES A CLOUDINARY EN BLOQUES
+    // IMPORTANTE: NO se comprime ni se convierte el video.
+    // Se envía el archivo original en bloques para evitar que el navegador
+    // se quede detenido al comenzar una subida grande.
+    async function uploadVideoOriginalChunked(file, onProgress) {
+      const chunkSize = 10 * 1024 * 1024; // 10 MB por bloque
+      const totalSize = file.size || 0;
+
+      if (!totalSize) {
+        throw new Error("El video está vacío o no se pudo leer su tamaño.");
+      }
+
+      const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`;
+      const uploadId = (
+        (window.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2)}`
+      ).replace(/[^a-zA-Z0-9_-]/g, "");
+
+      let uploadedBytes = 0;
+      let finalData = null;
+
+      if (onProgress) onProgress(0, 0, totalSize);
+
+      for (let startByte = 0; startByte < totalSize; startByte += chunkSize) {
+        const endByte = Math.min(startByte + chunkSize, totalSize);
+        const chunk = file.slice(startByte, endByte);
+        let attempt = 0;
+        let chunkDone = false;
+
+        while (!chunkDone && attempt < 5) {
+          attempt++;
+
+          try {
+            const data = await new Promise((resolve, reject) => {
+              const xhr = new XMLHttpRequest();
+
+              xhr.open("POST", uploadUrl, true);
+              xhr.timeout = 10 * 60 * 1000;
+
+              xhr.setRequestHeader("X-Unique-Upload-Id", uploadId);
+              xhr.setRequestHeader(
+                "Content-Range",
+                `bytes ${startByte}-${endByte - 1}/${totalSize}`
+              );
+
+              xhr.upload.onprogress = function(event) {
+                if (event.lengthComputable && event.total > 0) {
+                  const currentLoaded = startByte + event.loaded;
+                  const percent = (currentLoaded / totalSize) * 100;
+
+                  if (onProgress) {
+                    onProgress(
+                      Math.min(100, percent),
+                      Math.min(totalSize, currentLoaded),
+                      totalSize
+                    );
+                  }
+
+                  const status = document.getElementById('uploadStatusTitle');
+                  if (status) {
+                    status.textContent =
+                      `Subiendo video original 💕 ${Math.round(percent)}%`;
+                  }
+                }
+              };
+
+              xhr.onload = function() {
+                let response = null;
+
+                try {
+                  response = JSON.parse(xhr.responseText || "{}");
+                } catch (_) {}
+
+                if (xhr.status >= 200 && xhr.status < 300) {
+                  resolve(response || {});
+                } else {
+                  const message =
+                    response?.error?.message ||
+                    `Cloudinary respondió con HTTP ${xhr.status}`;
+                  reject(new Error(message));
+                }
+              };
+
+              xhr.onerror = function() {
+                reject(new Error("Error de red durante la subida del video."));
+              };
+
+              xhr.ontimeout = function() {
+                reject(new Error("Tiempo agotado durante la subida del bloque."));
+              };
+
+              const formData = new FormData();
+              formData.append("file", chunk, file.name || "video.mp4");
+              formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+              xhr.send(formData);
+            });
+
+            uploadedBytes = endByte;
+
+            if (onProgress) {
+              onProgress(
+                (uploadedBytes / totalSize) * 100,
+                uploadedBytes,
+                totalSize
+              );
+            }
+
+            if (data.done === true || endByte >= totalSize) {
+              finalData = data;
+            }
+
+            chunkDone = true;
+
+          } catch (error) {
+            console.warn(
+              `Fallo en bloque ${startByte}-${endByte - 1}, intento ${attempt}/5:`,
+              error
+            );
+
+            if (attempt >= 5) {
+              throw new Error(
+                `No se pudo subir el bloque del video después de varios intentos. ${error.message || ""}`
+              );
+            }
+
+            // Espera progresiva antes de reintentar el mismo bloque.
+            await new Promise(resolve =>
+              setTimeout(resolve, Math.min(8000, 1000 * attempt))
+            );
+          }
+        }
+      }
+
+      if (!finalData || !finalData.secure_url) {
+        throw new Error(
+          "La subida terminó pero Cloudinary no devolvió la URL del video."
+        );
+      }
+
+      if (onProgress) {
+        onProgress(100, totalSize, totalSize);
+      }
+
+      return {
+        data: finalData,
+        isVideo: true,
+        mimeType: file.type || "video/mp4",
+        size: totalSize
+      };
     }
 
     // SUBIDA A FIREBASE PARA FOTOS / RESPALDO DE ARCHIVOS PEQUEÑOS
@@ -1863,142 +2010,15 @@
       });
     }
 
-    // SUBIDA DE VIDEOS GRANDES A CLOUDINARY POR BLOQUES
-    // Mantiene el archivo ORIGINAL: no comprime, no cambia FPS ni resolución.
-    // Cada bloque se reintenta sin volver a enviar los bloques anteriores.
-    function uploadOriginalVideoChunked(file, onProgress) {
-      return new Promise(async (resolve, reject) => {
-        const CHUNK_SIZE = 20 * 1024 * 1024; // 20 MB por bloque
-        const MAX_RETRIES = 6;
-        const RETRY_DELAY = 1500;
-        const uploadId = `web_${Date.now()}_${Math.random().toString(36).slice(2)}_${Math.random().toString(36).slice(2)}`;
-        const total = file.size;
-        const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`;
-        let uploadedBeforeChunk = 0;
-
-        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-        async function sendChunk(start, end, attempt) {
-          const blob = file.slice(start, end + 1);
-
-          return new Promise((resolveChunk, rejectChunk) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', uploadUrl, true);
-            xhr.timeout = 180000; // 3 minutos por bloque
-
-            // Cloudinary necesita el mismo ID en todos los bloques y el rango
-            // exacto de bytes de cada bloque.
-            xhr.setRequestHeader('X-Unique-Upload-Id', uploadId);
-            xhr.setRequestHeader('Content-Range', `bytes ${start}-${end}/${total}`);
-
-            if (xhr.upload) {
-              xhr.upload.onprogress = (event) => {
-                if (event.lengthComputable && onProgress) {
-                  const loaded = Math.min(total, uploadedBeforeChunk + event.loaded);
-                  const percent = total ? (loaded / total) * 100 : 0;
-                  onProgress(percent, loaded, total);
-                }
-              };
-            }
-
-            xhr.onload = () => {
-              let data = null;
-              try { data = JSON.parse(xhr.responseText || '{}'); } catch (_) {}
-
-              if (xhr.status >= 200 && xhr.status < 300) {
-                resolveChunk(data);
-                return;
-              }
-
-              const message = data?.error?.message || xhr.responseText || `HTTP ${xhr.status}`;
-              rejectChunk(new Error(`Cloudinary bloque ${start}-${end}: ${message}`));
-            };
-
-            xhr.onerror = () => rejectChunk(new Error('Error de red al enviar el bloque'));
-            xhr.ontimeout = () => rejectChunk(new Error('Tiempo agotado enviando el bloque'));
-            xhr.onabort = () => rejectChunk(new Error('La subida del bloque fue cancelada'));
-
-            const formData = new FormData();
-            formData.append('file', blob, file.name || `video_${Date.now()}.mp4`);
-            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-
-            xhr.send(formData);
-          }).catch(async (error) => {
-            if (attempt >= MAX_RETRIES) throw error;
-            if (onProgress) {
-              const percent = total ? (uploadedBeforeChunk / total) * 100 : 0;
-              onProgress(percent, uploadedBeforeChunk, total, `Reintentando bloque (${attempt + 1}/${MAX_RETRIES})...`);
-            }
-            await sleep(RETRY_DELAY * Math.min(attempt + 1, 4));
-            return sendChunk(start, end, attempt + 1);
-          });
-        }
-
-        try {
-          if (!total) throw new Error('El video está vacío o no se pudo leer.');
-
-          for (let start = 0; start < total; start += CHUNK_SIZE) {
-            const end = Math.min(start + CHUNK_SIZE - 1, total - 1);
-
-            if (onProgress) {
-              onProgress(
-                total ? (uploadedBeforeChunk / total) * 100 : 0,
-                uploadedBeforeChunk,
-                total,
-                `Subiendo bloque ${Math.floor(start / CHUNK_SIZE) + 1}...`
-              );
-            }
-
-            const response = await sendChunk(start, end, 0);
-            uploadedBeforeChunk = end + 1;
-
-            if (onProgress) {
-              onProgress(
-                total ? (uploadedBeforeChunk / total) * 100 : 0,
-                uploadedBeforeChunk,
-                total,
-                start + CHUNK_SIZE >= total ? 'Procesando video original...' : 'Bloque guardado ✓'
-              );
-            }
-
-            // La respuesta final de Cloudinary contiene secure_url y done:true.
-            if (response && response.done === true) {
-              const secureUrl = response.secure_url || response.url;
-              if (!secureUrl) throw new Error('Cloudinary terminó la subida pero no devolvió la URL del video.');
-
-              const urls = getCloudinaryDeliveryUrls(secureUrl);
-              resolve({
-                data: response,
-                isVideo: true,
-                mimeType: file.type || 'video/mp4',
-                size: file.size,
-                originalUrl: secureUrl,
-                deliveryUrl: urls.progressive,
-                streamUrl: urls.hls,
-                posterUrl: urls.poster
-              });
-              return;
-            }
-          }
-
-          // Algunas respuestas finales pueden no traer done:true en todos los
-          // entornos; si no hay secure_url, informamos en vez de subir otra vez.
-          throw new Error('Cloudinary no confirmó la finalización del video.');
-        } catch (error) {
-          reject(error);
-        }
-      });
-    }
-
     // DESPACHADOR UNIVERSAL ROBUSTO
     async function uploadMediaUniversal(file, onProgress) {
-      const isVideo = (file.type && file.type.startsWith('video/')) ||
+      const isVideo = (file.type && file.type.startsWith('video/')) || 
                       (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc|quicktime)$/i));
 
-      // Los videos grandes SIEMPRE usan la subida por bloques de Cloudinary.
-      // No hay fallback a una subida gigante de Firebase que pueda quedarse en 0%.
+      // VIDEOS: Cloudinary por bloques, sin compresión ni conversión.
+      // Esto evita el bloqueo que estaba ocurriendo al iniciar Firebase Storage.
       if (isVideo) {
-        return await uploadOriginalVideoChunked(file, onProgress);
+        return await uploadVideoOriginalChunked(file, onProgress);
       }
 
       // Para imágenes, mantenemos exactamente el flujo anterior.
@@ -2060,7 +2080,7 @@
             updateUploadProgress(percent, loaded, total);
           });
 
-          const permanentUrl = result.deliveryUrl || result.data.secure_url;
+          const permanentUrl = result.data.secure_url;
           const detectedType = result.mimeType || (result.isVideo ? (file.type || 'video/mp4') : (file.type || 'image/jpeg'));
 
           document.getElementById('uploadStatusTitle').textContent = `Guardando en la base de datos... ✨`;
@@ -2068,10 +2088,6 @@
           await db.collection("recuerdos").add({
             type: detectedType,
             mediaUrl: permanentUrl,
-            originalUrl: result.originalUrl || result.data.secure_url || permanentUrl,
-            deliveryUrl: result.deliveryUrl || permanentUrl,
-            streamUrl: result.streamUrl || '',
-            posterUrl: result.posterUrl || '',
             date: formattedDate,
             reason: reasonVal,
             author: selectedAuthorProfile,
@@ -2125,111 +2141,6 @@
       return { key: "9999-99", year: 9999, monthIdx: 11, title: "Recuerdos Especiales" };
     }
 
-    // Carga HLS.js solamente cuando se abre un video, para no hacer más lenta la página.
-    let hlsJsPromise = null;
-    function loadHlsJs() {
-      if (window.Hls) return Promise.resolve(window.Hls);
-      if (hlsJsPromise) return hlsJsPromise;
-      hlsJsPromise = new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/hls.js@1';
-        script.async = true;
-        script.onload = () => window.Hls ? resolve(window.Hls) : reject(new Error('HLS.js no está disponible.'));
-        script.onerror = () => reject(new Error('No se pudo cargar el reproductor HLS.'));
-        document.head.appendChild(script);
-      });
-      return hlsJsPromise;
-    }
-
-    // Convierte la URL original de Cloudinary en URLs de entrega optimizadas.
-    // El archivo original se conserva; estas URLs solamente cambian la forma
-    // en que se entrega al navegador para que empiece a reproducir rápido.
-    function getCloudinaryDeliveryUrls(url) {
-      if (!url || !url.includes('res.cloudinary.com') || !url.includes('/video/upload/')) {
-        return { progressive: url || '', hls: '', poster: '' };
-      }
-
-      const marker = '/video/upload/';
-      const idx = url.indexOf(marker);
-      const base = url.slice(0, idx + marker.length);
-      let publicPart = url.slice(idx + marker.length);
-      const versionMatch = publicPart.match(/(?:^|\/)(v\d+\/.*)$/);
-      if (versionMatch) publicPart = versionMatch[1];
-      else publicPart = publicPart.replace(/^v\d+\//, '');
-      const withoutExt = publicPart.replace(/\.[^/.?#]+$/, '');
-
-      return {
-        // q_auto:best conserva mucha más calidad que la versión anterior,
-        // mientras f_auto permite al CDN elegir el formato más eficiente.
-        progressive: `${base}q_auto:best/f_auto:video/${publicPart}`,
-        // Streaming adaptativo: el navegador recibe solamente los segmentos
-        // que necesita y puede subir/bajar calidad según la conexión.
-        hls: `${base}sp_auto:maxres_1080p/${withoutExt}.m3u8`,
-        // Miniatura ligera para que la galería no descargue el video completo.
-        poster: `${base}so_0,w_640,q_auto/${withoutExt}.jpg`
-      };
-    }
-
-    async function attachAdaptiveVideo(video, itemData, fallbackUrl) {
-      const hlsUrl = itemData.streamUrl || getCloudinaryDeliveryUrls(fallbackUrl).hls;
-      const progressiveUrl = itemData.deliveryUrl || getCloudinaryDeliveryUrls(fallbackUrl).progressive || fallbackUrl;
-
-      video.preload = 'metadata';
-      video.playsInline = true;
-      video.setAttribute('playsinline', 'true');
-      video.setAttribute('webkit-playsinline', 'true');
-      video.controls = true;
-
-      // Primero HLS en Safari/iPhone; en otros navegadores usamos HLS.js.
-      if (hlsUrl) {
-        try {
-          if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            let nativeFallbackUsed = false;
-            video.addEventListener('error', () => {
-              if (nativeFallbackUsed) return;
-              nativeFallbackUsed = true;
-              video.src = progressiveUrl;
-              video.play().catch(() => {});
-            }, { once: true });
-            video.src = hlsUrl;
-            await video.play().catch(() => {});
-            return;
-          }
-
-          const Hls = await loadHlsJs();
-          if (Hls && Hls.isSupported()) {
-            const hls = new Hls({
-              enableWorker: true,
-              lowLatencyMode: false,
-              backBufferLength: 30,
-              maxBufferLength: 30,
-              startLevel: -1
-            });
-            video._hlsInstance = hls;
-            hls.loadSource(hlsUrl);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
-              video.play().catch(() => {});
-            });
-            hls.on(Hls.Events.ERROR, (_event, data) => {
-              if (data && data.fatal) {
-                try { hls.destroy(); } catch (_) {}
-                video._hlsInstance = null;
-                video.src = progressiveUrl;
-                video.play().catch(() => {});
-              }
-            });
-            return;
-          }
-        } catch (err) {
-          console.warn('No se pudo iniciar HLS; usando video progresivo:', err);
-        }
-      }
-
-      video.src = progressiveUrl || fallbackUrl || '';
-      video.play().catch(() => {});
-    }
-
     function createMediaCardElement(item) {
       const card = document.createElement('div');
       card.className = 'media-card';
@@ -2237,14 +2148,14 @@
       card.dataset.date = item.date || '';
       card.onclick = function() { openMediaViewer(this, item); };
 
-      const fileSrc = item.deliveryUrl || item.mediaUrl || item.dataUrl || '';
-      const isVid = (item.type && item.type.startsWith('video/')) ||
-                    /\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc)(?:\?|$)/i.test(fileSrc) ||
+      const fileSrc = item.mediaUrl || item.dataUrl || '';
+      const isVid = (item.type && item.type.startsWith('video/')) || 
+                    fileSrc.match(/\.(mp4|mov|webm|m4v|3gp|hevc)/i) || 
                     (item.mediaUrl && (item.mediaUrl.includes('/video/upload/') || item.mediaUrl.includes('firebasestorage')));
 
-      let mediaHTML = !isVid
-        ? `<img src="${fileSrc}" loading="lazy" decoding="async" style="image-rendering: -webkit-optimize-contrast;">`
-        : `<video id="thumb-vid-${item.id}" src="" poster="${item.posterUrl || getCloudinaryDeliveryUrls(item.mediaUrl || '').poster || ''}" muted controls preload="none" playsinline webkit-playsinline></video>`;
+      let mediaHTML = !isVid 
+        ? `<img src="${fileSrc}" style="image-rendering: -webkit-optimize-contrast;">` 
+        : `<video id="thumb-vid-${item.id}" src="${fileSrc}" type="video/mp4" muted controls preload="metadata" playsinline webkit-playsinline></video>`;
 
       let deleteBtnHTML = item.id ? `<button class="delete-media-btn" onclick="requestDeleteMedia(event, '${item.id}', this)">🗑️</button>` : '';
 
@@ -2256,7 +2167,9 @@
       }
 
       let authorHTML = `<div class="author-tag">👤 Subido por: ${authorName}</div>`;
+
       card.innerHTML = `${deleteBtnHTML}${mediaHTML}<div class="media-info"><div class="date">${item.date}</div><div class="reason">${item.reason}</div>${authorHTML}</div>`;
+
       return card;
     }
 
@@ -2362,7 +2275,7 @@
       document.getElementById('successModal').style.display = 'none';
     }
 
-    async function openMediaViewer(card, itemData) {
+    function openMediaViewer(card, itemData) {
       const img = card.querySelector('img');
       const video = card.querySelector('video');
       const dateEl = card.querySelector('.date');
@@ -2384,29 +2297,16 @@
       if (img) {
         const fullImg = document.createElement('img');
         fullImg.src = img.src;
-        fullImg.loading = 'eager';
         container.appendChild(fullImg);
       } else if (video) {
         const fullVideo = document.createElement('video');
+        fullVideo.src = video.src;
+        fullVideo.setAttribute('type', 'video/mp4');
         fullVideo.controls = true;
-        fullVideo.playsInline = true;
-        fullVideo.setAttribute('playsinline', 'true');
+        fullVideo.autoplay = true;
+        fullVideo.playsinline = true;
         fullVideo.setAttribute('webkit-playsinline', 'true');
-        fullVideo.preload = 'metadata';
-        fullVideo.poster = itemData.posterUrl || getCloudinaryDeliveryUrls(itemData.mediaUrl || '').poster || '';
-        fullVideo.style.width = '100%';
-        fullVideo.style.height = 'auto';
-        fullVideo.style.maxHeight = '70vh';
-        fullVideo.style.objectFit = 'contain';
         container.appendChild(fullVideo);
-        document.getElementById('mediaViewer').style.display = 'flex';
-
-        // HLS adaptativo: arranca con pocos MB y sube de calidad según la red.
-        // Si Cloudinary aún está preparando el manifiesto, cae automáticamente
-        // a la versión progresiva q_auto:best/f_auto.
-        await attachAdaptiveVideo(fullVideo, itemData, itemData.mediaUrl || video.src || '');
-      } else {
-        document.getElementById('mediaViewer').style.display = 'flex';
       }
 
       document.getElementById('mediaViewer').style.display = 'flex';
@@ -2418,12 +2318,6 @@
       if (video) {
         video.pause();
         video.currentTime = 0;
-        if (video._hlsInstance) {
-          try { video._hlsInstance.destroy(); } catch (_) {}
-          video._hlsInstance = null;
-        }
-        video.removeAttribute('src');
-        video.load();
       }
       container.innerHTML = '';
       document.getElementById('mediaViewer').style.display = 'none';
