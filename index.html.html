@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,7 +11,7 @@
   <!-- SDK de la API Widget de SoundCloud para control de audio -->
   <script src="https://w.soundcloud.com/player/api.js"></script>
 
-  <!-- SDKs Compatibles de Firebase (App, Firestore) -->
+  <!-- SDKs Compatibles de Firebase (App, Firestore) NATIVO GRATUITO -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -316,6 +315,41 @@
 
     .drop-zone:hover {
       border-color: var(--soft-red);
+    }
+
+    /* ESTILOS DE AGRUPACIÓN POR MESES */
+    .gallery-month-section {
+      margin-bottom: 35px;
+    }
+
+    .month-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 8px;
+      border-bottom: 2px dashed var(--rose-pink);
+    }
+
+    .month-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--title-burgundy);
+      text-transform: capitalize;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .month-badge-count {
+      font-size: 0.8rem;
+      background: var(--soft-red);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-weight: 800;
     }
 
     .media-grid {
@@ -1015,17 +1049,8 @@
         <input type="file" id="fileInput" accept="image/*,video/*" multiple hidden onchange="prepareMediaUpload(this.files)">
       </div>
 
-      <div class="media-grid" id="mediaGrid">
-        <!-- 1. Foto del 28/07/2026 subida por Andreita -->
-        <div class="media-card" data-date="28/07/2026" onclick="openMediaViewer(this)">
-          <img src="https://lh3.googleusercontent.com/d/1NFje4wxCSuw75gP9GAr9Ck4UiEYmU1Xj" alt="Foto">
-          <div class="media-info">
-            <div class="date">28/07/2026</div>
-            <div class="reason">La primera fotito que vi de ti 💕</div>
-            <div class="author-tag">👤 Subido por: Criss</div>
-          </div>
-        </div>
-      </div>
+      <!-- Contenedor dinámico estructurado por meses -->
+      <div id="galleryMonthsContainer"></div>
     </section>
 
     <!-- Minijuegos -->
@@ -1296,7 +1321,7 @@
   </div>
 
   <script>
-    // CONFIGURACIÓN DE FIREBASE FIRESTORE
+    // CONFIGURACIÓN DE FIREBASE FIRESTORE NATIVO GRATIS
     const firebaseConfig = { 
       apiKey: "AIzaSyBm0apLxTyiTOSqBMyZhr4aK_Stn1eLr-U", 
       authDomain: "our-love-story-73f3d.firebaseapp.com", 
@@ -1310,6 +1335,16 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+
+    // CONFIGURACIÓN DE CLOUDINARY PARA FOTOS EN 4K Y VIDEOS HD GRATIS
+    const CLOUDINARY_CLOUD_NAME = "r893yslz";
+    const CLOUDINARY_UPLOAD_PRESET = "fotos_amor";
+
+    // Nombres de los meses para el agrupador
+    const monthNames = [
+      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
 
     // CONTROL DE MÚSICA EN BUCLE DESDE SOUNDCLOUD
     let scWidget;
@@ -1617,89 +1652,128 @@
       document.getElementById('uploadModal').style.display = 'flex';
     }
 
-    function confirmUpload(e) {
+    // SUBIDA NUBE DIRECTA A CLOUDINARY + FIRESTORE PARA FOTOS 4K Y VIDEOS HD GRATIS
+    async function confirmUpload(e) {
       e.preventDefault();
       const dateVal = document.getElementById('photoDate').value;
       const reasonVal = document.getElementById('photoReason').value;
 
-      if (!dateVal || !reasonVal.trim()) return;
+      if (!reasonVal.trim()) {
+        showToast("Por favor escribe el motivo del recuerdo 🥺");
+        return;
+      }
 
       if (!selectedAuthorProfile) {
         showToast("Por favor selecciona quién está subiendo el recuerdo 🥺");
         return;
       }
 
-      pendingFiles.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          const fileDataUrl = evt.target.result;
-          const dateObj = new Date(dateVal + 'T00:00:00');
-          const formattedDate = dateObj.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      let formattedDate = "";
+      if (dateVal) {
+        const parts = dateVal.split('-');
+        if (parts.length === 3) {
+          formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+      }
+      if (!formattedDate) {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        formattedDate = `${day}/${month}/${today.getFullYear()}`;
+      }
 
-          db.collection("recuerdos").add({
+      showToast("Subiendo recuerdo en máxima calidad... ⏳✨");
+
+      for (const file of pendingFiles) {
+        try {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+          const resourceType = file.type.startsWith('video/') ? 'video' : 'image';
+
+          const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`, {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!res.ok) {
+            throw new Error('Error al subir a Cloudinary');
+          }
+
+          const uploadResult = await res.json();
+          const permanentUrl = uploadResult.secure_url;
+
+          await db.collection("recuerdos").add({
             type: file.type,
-            dataUrl: fileDataUrl,
+            mediaUrl: permanentUrl,
             date: formattedDate,
             reason: reasonVal,
             author: selectedAuthorProfile,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
-          })
-          .then(() => {
-            showToast("¡Recuerdo guardado en la nube! ✨");
-          })
-          .catch((error) => {
-            console.error("Error al guardar en Firestore: ", error);
-            showToast("Error al guardar el recuerdo 🥺");
           });
-        };
-        reader.readAsDataURL(file);
-      });
 
-      document.getElementById('uploadModal').style.display = 'none';
-      document.getElementById('successModal').style.display = 'flex';
-      document.getElementById('fileInput').value = '';
+          document.getElementById('uploadModal').style.display = 'none';
+          document.getElementById('successModal').style.display = 'flex';
+          document.getElementById('fileInput').value = '';
+          showToast("¡Recuerdo guardado para siempre en HD! ✨");
+        } catch (error) {
+          console.error("Error al guardar archivo:", error);
+          showToast("Error al guardar el archivo 🥺 Verifica tu preset de Cloudinary");
+        }
+      }
     }
 
-    // CONVERSIÓN Y ORDENAMIENTO DE FECHAS
-    function parseDateString(dateStr) {
+    // CONVERSIÓN DE FECHAS A TIMESTAMP (ORDEN CRONOLÓGICO)
+    function parseDateToTimestamp(dateStr) {
       if (!dateStr) return 0;
-      const parts = dateStr.split('/');
+      const parts = dateStr.trim().split('/');
       if (parts.length === 3) {
-        return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).getTime();
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const year = parseInt(parts[2], 10);
+        return new Date(year, month, day).getTime() || 0;
       }
       return 0;
     }
 
-    function sortGalleryCards() {
-      const grid = document.getElementById('mediaGrid');
-      const cards = Array.from(grid.children);
-
-      cards.sort((a, b) => {
-        const dateA = parseDateString(a.dataset.date);
-        const dateB = parseDateString(b.dataset.date);
-        return dateB - dateA; // Orden descendente (fechas recientes arriba)
-      });
-
-      cards.forEach(card => grid.appendChild(card));
+    // OBTENER LLAVE ÚNICA Y NOMBRE DEL MES (Ej: "2026-03" -> "Marzo 2026")
+    function getMonthYearInfo(dateStr) {
+      const parts = dateStr.trim().split('/');
+      if (parts.length === 3) {
+        const monthIdx = parseInt(parts[1], 10) - 1;
+        const year = parts[2];
+        const monthPad = String(parts[1]).padStart(2, '0');
+        const monthLabel = monthNames[monthIdx] || "Mes";
+        return {
+          key: `${year}-${monthPad}`,
+          year: parseInt(year, 10),
+          monthIdx: monthIdx,
+          title: `${monthLabel} ${year}`
+        };
+      }
+      return { key: "9999-99", year: 9999, monthIdx: 11, title: "Recuerdos Especiales" };
     }
 
-    function renderMediaCard(item, grid) {
+    // CREACIÓN Y RENDERIZADO DE TARJETAS
+    function createMediaCardElement(item) {
       const card = document.createElement('div');
       card.className = 'media-card';
       card.dataset.id = item.id || '';
       card.dataset.date = item.date || '';
-      card.onclick = function() { openMediaViewer(this); };
+      card.onclick = function() { openMediaViewer(this, item); };
+
+      const fileSrc = item.mediaUrl || item.dataUrl || '';
 
       let mediaHTML = item.type.startsWith('image/') 
-        ? `<img src="${item.dataUrl}" style="image-rendering: -webkit-optimize-contrast;">` 
-        : `<video src="${item.dataUrl}" muted controls></video>`;
+        ? `<img src="${fileSrc}" style="image-rendering: -webkit-optimize-contrast;">` 
+        : `<video id="thumb-vid-${item.id}" src="${fileSrc}" muted controls preload="metadata" playsinline webkit-playsinline></video>`;
 
       let deleteBtnHTML = item.id ? `<button class="delete-media-btn" onclick="requestDeleteMedia(event, '${item.id}', this)">🗑️</button>` : '';
 
-      // Asigna autoría respetando la regla (28/07/2026 -> Andreita; resto de tres subidas -> Criss)
       let authorName = item.author;
-      if (item.date === "28/07/2026") {
-        authorName = "Andreita";
+      if (item.date === "28/07/2026" || item.date === "28/03/2026") {
+        authorName = item.author || "Criss";
       } else if (!authorName) {
         authorName = "Criss";
       }
@@ -1708,7 +1782,70 @@
 
       card.innerHTML = `${deleteBtnHTML}${mediaHTML}<div class="media-info"><div class="date">${item.date}</div><div class="reason">${item.reason}</div>${authorHTML}</div>`;
 
-      grid.appendChild(card);
+      // Compatibilidad con fragmentos de video anteriores
+      if (item.type.startsWith('video/') && item.isChunked && !item.mediaUrl && item.id) {
+        db.collection("recuerdos").doc(item.id).collection("chunks").orderBy("index", "asc").get().then(snap => {
+          let fullData = "";
+          snap.forEach(doc => fullData += doc.data().data);
+          const videoElem = card.querySelector(`#thumb-vid-${item.id}`);
+          if (videoElem) videoElem.src = fullData;
+        });
+      }
+
+      return card;
+    }
+
+    // RENDERIZADOR GENERAL DE LA GALERÍA DIVIDIDA POR MESES Y ORDENADA POR DÍAS (MENOR A MAYOR)
+    function renderCompleteGallery(items) {
+      const container = document.getElementById('galleryMonthsContainer');
+      container.innerHTML = '';
+
+      // Agrupar elementos por mes
+      const groups = {};
+      items.forEach(item => {
+        const info = getMonthYearInfo(item.date);
+        if (!groups[info.key]) {
+          groups[info.key] = {
+            info: info,
+            items: []
+          };
+        }
+        groups[info.key].items.push(item);
+      });
+
+      // Ordenar los meses de más antiguo a más nuevo (Marzo 2026 arriba, luego meses posteriores)
+      const sortedMonthKeys = Object.keys(groups).sort();
+
+      sortedMonthKeys.forEach(monthKey => {
+        const group = groups[monthKey];
+
+        // Ordenar las fotos dentro del mes de menor a mayor (del día 1 al 31)
+        group.items.sort((a, b) => {
+          return parseDateToTimestamp(a.date) - parseDateToTimestamp(b.date);
+        });
+
+        const monthSection = document.createElement('div');
+        monthSection.className = 'gallery-month-section';
+
+        const monthHeader = document.createElement('div');
+        monthHeader.className = 'month-header';
+        monthHeader.innerHTML = `
+          <div class="month-title">📅 ${group.info.title}</div>
+          <span class="month-badge-count">${group.items.length} ${group.items.length === 1 ? 'recuerdo' : 'recuerdos'}</span>
+        `;
+
+        const grid = document.createElement('div');
+        grid.className = 'media-grid';
+
+        group.items.forEach(item => {
+          const card = createMediaCardElement(item);
+          grid.appendChild(card);
+        });
+
+        monthSection.appendChild(monthHeader);
+        monthSection.appendChild(grid);
+        container.appendChild(monthSection);
+      });
     }
 
     /* SISTEMA DE CONFIRMACIÓN AL ELIMINAR */
@@ -1739,29 +1876,27 @@
     };
 
     function loadSavedMedia() {
-      db.collection("recuerdos").orderBy("timestamp", "desc")
-        .onSnapshot((snapshot) => {
-          const grid = document.getElementById('mediaGrid');
-          grid.innerHTML = `
-            <div class="media-card" data-date="28/07/2026" onclick="openMediaViewer(this)">
-              <img src="https://lh3.googleusercontent.com/d/1NFje4wxCSuw75gP9GAr9Ck4UiEYmU1Xj" alt="Foto">
-              <div class="media-info">
-                <div class="date">28/07/2026</div>
-                <div class="reason">La primera fotito que vi de ti 💕</div>
-                <div class="author-tag">👤 Subido por: Criss</div>
-              </div>
-            </div>
-          `;
-          
-          snapshot.forEach((doc) => {
-            const data = doc.data();
-            data.id = doc.id;
-            renderMediaCard(data, grid);
-          });
+      db.collection("recuerdos").onSnapshot((snapshot) => {
+        const allItems = [];
 
-          // Reordena todo de forma reciente a antigua
-          sortGalleryCards();
+        // Primer recuerdo base del 28/03/2026
+        allItems.push({
+          id: "",
+          type: "image/jpeg",
+          mediaUrl: "https://lh3.googleusercontent.com/d/1NFje4wxCSuw75gP9GAr9Ck4UiEYmU1Xj",
+          date: "28/03/2026",
+          reason: "La primera fotito que vi de ti 💕",
+          author: "Criss"
         });
+
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          data.id = doc.id;
+          allItems.push(data);
+        });
+
+        renderCompleteGallery(allItems);
+      });
     }
 
     function closeSuccessModal() {
@@ -1769,7 +1904,7 @@
     }
 
     /* VISOR DE FOTOS/VIDEOS A PANTALLA COMPLETA CON DECORADO DE SANRIO */
-    function openMediaViewer(card) {
+    function openMediaViewer(card, itemData) {
       const img = card.querySelector('img');
       const video = card.querySelector('video');
       const dateEl = card.querySelector('.date');
@@ -1797,6 +1932,8 @@
         fullVideo.src = video.src;
         fullVideo.controls = true;
         fullVideo.autoplay = true;
+        fullVideo.playsinline = true;
+        fullVideo.setAttribute('webkit-playsinline', 'true');
         container.appendChild(fullVideo);
       }
 
@@ -1972,15 +2109,15 @@
       };
     }
 
-    function checkDifferenceClick(e) {
+    function checkDifferenceClick(event) {
       const canvasMod = document.getElementById('canvasMod');
       const rect = canvasMod.getBoundingClientRect();
 
       const scaleX = canvasMod.width / rect.width;
       const scaleY = canvasMod.height / rect.height;
 
-      const clickX = (e.clientX - rect.left) * scaleX;
-      const clickY = (e.clientY - rect.top) * scaleY;
+      const clickX = (event.clientX - rect.left) * scaleX;
+      const clickY = (event.clientY - rect.top) * scaleY;
 
       const pctX = (clickX / canvasMod.width) * 100;
       const pctY = (clickY / canvasMod.height) * 100;
