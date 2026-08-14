@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -8,12 +8,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- SDK de la API Widget de SoundCloud -->
+  <!-- SDK de la API Widget de SoundCloud para control de audio -->
   <script src="https://w.soundcloud.com/player/api.js"></script>
 
-  <!-- SDKs Firebase Compatibles (App, Auth, Firestore, Storage) -->
+  <!-- SDKs Compatibles de Firebase (App, Firestore, Storage) NATIVO GRATUITO -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 
@@ -43,7 +42,7 @@
       overflow-x: hidden;
     }
 
-    /* MODAL BIENVENIDA */
+    /* MODAL OBLIGATORIO DE BIENVENIDA / PLAY MÚSICA */
     .welcome-overlay {
       position: fixed;
       top: 0;
@@ -104,7 +103,7 @@
       background: var(--title-burgundy);
     }
 
-    /* TOAST */
+    /* TOAST FLOTANTE */
     .toast-notification {
       position: fixed;
       top: -100px;
@@ -299,6 +298,7 @@
       border-color: var(--soft-red);
     }
 
+    /* ESTILOS DE AGRUPACIÓN POR MESES */
     .gallery-month-section {
       margin-bottom: 35px;
     }
@@ -356,6 +356,7 @@
       height: 180px;
       object-fit: cover;
       image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
     }
 
     .media-info {
@@ -519,7 +520,7 @@
       margin-top: 8px;
     }
 
-    /* MODAL DE PROGRESO */
+    /* MODAL DE PROGRESO CUTE */
     .upload-progress-overlay {
       display: none;
       position: fixed;
@@ -1123,6 +1124,7 @@
         <input type="file" id="fileInput" accept="image/*,video/*" multiple hidden onchange="prepareMediaUpload(this.files)">
       </div>
 
+      <!-- Contenedor dinámico estructurado por meses -->
       <div id="galleryMonthsContainer"></div>
     </section>
 
@@ -1192,7 +1194,7 @@
         </div>
       </div>
 
-      <!-- MINIJUEGO 5: VASOS -->
+      <!-- MINIJUEGO 5: TOÑITA -->
       <div id="game-stage-5" style="display: none;">
         <div class="diff-header">
           <h3 style="color: var(--title-burgundy); font-weight: 800;">Nivel 5: ¿Dónde está Toñita? 🐶</h3>
@@ -1275,12 +1277,12 @@
     </section>
   </main>
 
-  <!-- MODAL DE PROGRESO DE SUBIDA -->
+  <!-- MODAL DE PROGRESO DE SUBIDA EN TIEMPO REAL -->
   <div class="upload-progress-overlay" id="uploadProgressOverlay">
     <div class="upload-progress-card">
       <div class="cute-spinner">🐱💕</div>
       <h3 style="color: var(--title-burgundy); font-family: 'Montserrat', sans-serif; font-weight: 800; margin-bottom: 6px;">Guardando Recuerdos</h3>
-      <p style="font-weight: 700; color: #666; font-size: 0.9rem;" id="uploadStatusTitle">Subiendo tu recuerdo con amor 💕</p>
+      <p style="font-weight: 700; color: #666; font-size: 0.9rem;" id="uploadStatusTitle">Subiendo archivo con amor...</p>
       
       <div class="progress-bar-track">
         <div class="progress-bar-fill" id="progressBarFill"></div>
@@ -1292,7 +1294,7 @@
     </div>
   </div>
 
-  <!-- Modal Auth -->
+  <!-- Modal de Autenticación Integrado -->
   <div class="modal-overlay" id="authModal">
     <div class="modal-box">
       <h3>Acceso Protegido 🔐</h3>
@@ -1303,7 +1305,7 @@
     </div>
   </div>
 
-  <!-- Modal Subir Foto -->
+  <!-- Modal subir foto -->
   <div class="modal-overlay" id="uploadModal">
     <div class="modal-box">
       <h3>Detalles del Recuerdo 📸</h3>
@@ -1326,7 +1328,7 @@
     </div>
   </div>
 
-  <!-- Modal Confirmación Borrado -->
+  <!-- Modal confirmación borrado -->
   <div class="modal-overlay" id="deleteConfirmModal">
     <div class="modal-box">
       <h3 style="margin-bottom: 10px;">¿Eliminar recuerdo? 🌹</h3>
@@ -1336,7 +1338,7 @@
     </div>
   </div>
 
-  <!-- Modal Confirmación Subida -->
+  <!-- Modal confirmación subida -->
   <div class="modal-overlay" id="successModal">
     <div class="modal-box">
       <p style="font-size: 1.15rem; font-weight: 800; color: var(--title-burgundy); margin-bottom: 15px;">
@@ -1346,7 +1348,7 @@
     </div>
   </div>
 
-  <!-- Visor Multimedia -->
+  <!-- VISOR DE MULTIMEDIA -->
   <div class="viewer-overlay" id="mediaViewer">
     <div class="sanrio-love-frame">
       <button class="close-viewer-btn" onclick="closeMediaViewer()">✕</button>
@@ -1356,7 +1358,7 @@
     </div>
   </div>
 
-  <!-- Modal Progreso Niveles -->
+  <!-- Modal Animación Progreso de Niveles -->
   <div class="modal-overlay" id="levelProgressModal">
     <div class="level-modal-content">
       <div style="font-size: 2.5rem;">✨❤️✨</div>
@@ -1367,7 +1369,7 @@
   </div>
 
   <script>
-    // CONFIGURACIÓN DE FIREBASE
+    // CONFIGURACIÓN DE FIREBASE FIRESTORE Y STORAGE
     const firebaseConfig = { 
       apiKey: "AIzaSyBm0apLxTyiTOSqBMyZhr4aK_Stn1eLr-U", 
       authDomain: "our-love-story-73f3d.firebaseapp.com", 
@@ -1382,12 +1384,6 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const storage = firebase.storage();
-    const auth = firebase.auth();
-
-    // Autenticación anónima para habilitar subidas estables en móviles
-    auth.signInAnonymously().catch((err) => {
-      console.warn("Autenticación anónima Firebase omitida o pendiente:", err);
-    });
 
     // CONFIGURACIÓN DE CLOUDINARY
     const CLOUDINARY_CLOUD_NAME = "r893yslz";
@@ -1473,7 +1469,7 @@
       }
     }
 
-    // QUIZ DATA
+    // 13 PREGUNTAS DEL QUIZ
     const quizData = [
       { q: "¿Que celular tengo?", options: ["Xiaomi Poco F6 pro", "Iphone 15 Pro Max", "Samsung A30", "Todas las Anteriores"], corrects: ["Iphone 15 Pro Max"] },
       { q: "¿Quien es mi cantante favorito?", options: ["Paulo Londra", "Bruno Mars", "Duki", "Milo J"], corrects: ["Paulo Londra"] },
@@ -1676,7 +1672,7 @@
       if(evt) evt.currentTarget.classList.add('active');
     }
 
-    /* SISTEMA DE SUBIDA COMPATIBLE CON MÓVILES (iOS / Android) */
+    /* SISTEMA DE SUBIDA OPTIMIZADO Y CONVERSIÓN A MP4 UNIVERSAL (iOS / Android / COMPUTADORAS) */
     let pendingFiles = [];
     let selectedAuthorProfile = "";
 
@@ -1720,56 +1716,58 @@
     }
 
     function updateUploadProgress(percent, loadedBytes, totalBytes) {
-      const fill = document.getElementById('progressBarFill');
-      const text = document.getElementById('progressPercentageText');
-      const bytesText = document.getElementById('progressBytesText');
+      requestAnimationFrame(() => {
+        const fill = document.getElementById('progressBarFill');
+        const text = document.getElementById('progressPercentageText');
+        const bytesText = document.getElementById('progressBytesText');
 
-      const safePercent = Math.min(100, Math.max(0, Math.round(percent || 0)));
-      fill.style.width = `${safePercent}%`;
-      text.textContent = `${safePercent}%`;
+        const safePercent = Math.min(100, Math.max(0, Math.round(percent || 0)));
+        fill.style.width = `${safePercent}%`;
+        text.textContent = `${safePercent}%`;
 
-      if (totalBytes && totalBytes > 0) {
-        const loadedMB = (loadedBytes / (1024 * 1024)).toFixed(1);
-        const totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
-        bytesText.textContent = `${loadedMB} MB de ${totalMB} MB`;
-      } else {
-        bytesText.textContent = `Procesando archivo...`;
-      }
+        if (totalBytes && totalBytes > 0) {
+          const loadedMB = (loadedBytes / (1024 * 1024)).toFixed(1);
+          const totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
+          bytesText.textContent = `${loadedMB} MB de ${totalMB} MB`;
+        } else {
+          bytesText.textContent = `Procesando archivo...`;
+        }
+      });
     }
 
     function hideUploadProgressModal() {
       document.getElementById('uploadProgressOverlay').style.display = 'none';
     }
 
-    // SUBIDA NATIVA DIRECTA A FIREBASE STORAGE
+    // SUBIDA NATIVA Y CONVERSIÓN/ETIQUETADO MP4 UNIVERSAL EN FIREBASE STORAGE
     function uploadToFirebaseStorageDirect(file, onProgress) {
-      return new Promise(async (resolve, reject) => {
+      return new Promise((resolve, reject) => {
         try {
-          if (!auth.currentUser) {
-            try { await auth.signInAnonymously(); } catch(e) {}
+          const rawName = file.name || `recuerdo_${Date.now()}`;
+          const isVideo = (file.type && file.type.startsWith('video/')) || 
+                          !!(rawName.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc|quicktime)$/i));
+
+          // Normaliza siempre el nombre para que termine en .mp4 si es video
+          let safeName = rawName.replace(/[^a-zA-Z0-9._-]/g, '_');
+          if (isVideo) {
+            safeName = safeName.replace(/\.[^/.]+$/, "") + ".mp4";
           }
 
-          const rawName = file.name || `recuerdo_${Date.now()}`;
-          const safeName = rawName.replace(/[^a-zA-Z0-9._-]/g, '_');
           const uniqueName = `${Date.now()}_${Math.random().toString(36).slice(2)}_${safeName}`;
           const storageRef = storage.ref().child(`recuerdos/${uniqueName}`);
           
-          let mimeType = file.type;
-          const isMovOrQuicktime = rawName.match(/\.(mov|quicktime)$/i) || mimeType === 'video/quicktime';
-          const isGenericVideo = rawName.match(/\.(mp4|webm|m4v|3gp|avi|mkv|hevc)$/i) || (mimeType && mimeType.startsWith('video/'));
+          // Forzado de MIME type universal a video/mp4 para compatibilidad total en móviles
+          let mimeType = isVideo ? 'video/mp4' : (file.type || 'image/jpeg');
 
-          if (isMovOrQuicktime) {
-            mimeType = 'video/mp4'; 
-          } else if (!mimeType || mimeType === "") {
-            if (isGenericVideo) mimeType = 'video/mp4';
-            else if (rawName.match(/\.(jpeg|jpg|png|webp|gif)$/i)) mimeType = 'image/jpeg';
-            else mimeType = 'application/octet-stream';
-          }
+          const metadata = { 
+            contentType: mimeType,
+            customMetadata: { 'originalName': file.name || 'archivo' }
+          };
 
-          const metadata = { contentType: mimeType };
           const uploadTask = storageRef.put(file, metadata);
 
-          uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+          uploadTask.on(
+            'state_changed',
             (snapshot) => {
               if (snapshot.totalBytes > 0) {
                 const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -1785,7 +1783,6 @@
             async () => {
               try {
                 const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-                const isVideo = isMovOrQuicktime || isGenericVideo;
                 resolve({
                   data: {
                     secure_url: downloadURL,
@@ -1804,7 +1801,7 @@
       });
     }
 
-    // SUBIDA A CLOUDINARY PARA FOTOS PEQUEÑAS
+    // SUBIDA A CLOUDINARY PARA FOTOS LIGERAS
     function uploadToCloudinaryViaXHR(file, onProgress) {
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -1851,19 +1848,21 @@
       });
     }
 
-    // MANEJADOR UNIVERSAL
+    // DESPACHADOR UNIVERSAL ROBUSTO
     async function uploadMediaUniversal(file, onProgress) {
       const isVideo = (file.type && file.type.startsWith('video/')) || 
                       (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc|quicktime)$/i));
 
+      // Todos los videos van directo a Firebase Storage con etiqueta video/mp4 para streaming y progreso garantizado en celulares
       if (isVideo) {
         return await uploadToFirebaseStorageDirect(file, onProgress);
       }
 
+      // Para imágenes, intentamos Cloudinary y si falla en móvil, respalda en Firebase Storage
       try {
         return await uploadToCloudinaryViaXHR(file, onProgress);
       } catch (err) {
-        console.warn("Fallo en Cloudinary, respaldando en Firebase Storage...", err);
+        console.warn("Fallo subida a Cloudinary, respaldando en Firebase Storage...", err);
         return await uploadToFirebaseStorageDirect(file, onProgress);
       }
     }
@@ -1924,7 +1923,7 @@
           document.getElementById('uploadStatusTitle').textContent = `Guardando en la base de datos... ✨`;
 
           await db.collection("recuerdos").add({
-            type: file.type || detectedType,
+            type: detectedType,
             mediaUrl: permanentUrl,
             date: formattedDate,
             reason: reasonVal,
@@ -1993,7 +1992,7 @@
 
       let mediaHTML = !isVid 
         ? `<img src="${fileSrc}" style="image-rendering: -webkit-optimize-contrast;">` 
-        : `<video id="thumb-vid-${item.id}" src="${fileSrc}" muted controls preload="metadata" playsinline webkit-playsinline></video>`;
+        : `<video id="thumb-vid-${item.id}" src="${fileSrc}" type="video/mp4" muted controls preload="metadata" playsinline webkit-playsinline></video>`;
 
       let deleteBtnHTML = item.id ? `<button class="delete-media-btn" onclick="requestDeleteMedia(event, '${item.id}', this)">🗑️</button>` : '';
 
@@ -2139,6 +2138,7 @@
       } else if (video) {
         const fullVideo = document.createElement('video');
         fullVideo.src = video.src;
+        fullVideo.setAttribute('type', 'video/mp4');
         fullVideo.controls = true;
         fullVideo.autoplay = true;
         fullVideo.playsinline = true;
@@ -2613,7 +2613,7 @@
 
     function showLevelProgressModal(progressText, loveMsg) {
       document.getElementById('levelProgressText').textContent = progressText;
-      document.getElementById('levelLoveMsg').textContent = loveLoveMsg = loveMsg;
+      document.getElementById('levelLoveMsg').textContent = loveMsg;
       document.getElementById('levelProgressModal').style.display = 'flex';
     }
 
