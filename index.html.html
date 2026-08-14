@@ -14,6 +14,7 @@
   <!-- SDKs Compatibles de Firebase (App, Firestore) NATIVO GRATUITO -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 
   <style>
     :root {
@@ -1659,122 +1660,93 @@
       document.getElementById('fileInput').value = '';
     }
 
-    // SUBIDA CLOUDINARY: NORMAL HASTA 100 MB + CHUNKED PARA ARCHIVOS GRANDES
-    // Esto permite subir videos de iPhone/Android mayores de 100 MB sin cambiar
-    // el resto del sistema de recuerdos, Firestore o la galería.
-    function uploadToCloudinaryViaXHR(file) {
-      const MAX_NORMAL_UPLOAD = 100 * 1024 * 1024; // 100 MB
-      const CHUNK_SIZE = 20 * 1024 * 1024; // 20 MB por parte
+    // SUBIDA DE ARCHIVOS
+    // - Hasta 100 MB: Cloudinary, igual que antes.
+    // - Más de 100 MB: Firebase Storage con subida reanudable.
+    // Esto evita el límite de 100 MB de la subida directa de Cloudinary.
+    function uploadLargeFileToFirebaseStorage(file) {
+      return new Promise((resolve, reject) => {
+        try {
+          const storage = firebase.storage();
+          const safeName = (file.name || 'video').replace(/[^a-zA-Z0-9._-]/g, '_');
+          const uniqueName = `${Date.now()}_${Math.random().toString(36).slice(2)}_${safeName}`;
+          const storageRef = storage.ref().child(`recuerdos/${uniqueName}`);
+          const metadata = { contentType: file.type || 'video/mp4' };
+          const uploadTask = storageRef.put(file, metadata);
 
-      // Archivos pequeños: mantenemos exactamente la subida normal que ya usabas.
-      if (file.size <= MAX_NORMAL_UPLOAD) {
-        return new Promise((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
-
-          xhr.open("POST", url, true);
-
-          xhr.onload = function() {
-            try {
-              const data = JSON.parse(xhr.responseText);
-              if (xhr.status >= 200 && xhr.status < 300) {
-                const isVideo = (file.type && file.type.startsWith('video/')) ||
-                                (data.resource_type === 'video') ||
-                                (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv)$/i));
-                resolve({ data: data, isVideo: isVideo });
-              } else {
-                reject(new Error(data.error?.message || `Error ${xhr.status} de Cloudinary`));
+          uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+            (snapshot) => {
+              const percent = snapshot.totalBytes
+                ? Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                : 0;
+              showToast(`Subiendo video grande... ${percent}% ⏳✨`);
+            },
+            (error) => {
+              console.error('Error Firebase Storage:', error);
+              reject(error);
+            },
+            async () => {
+              try {
+                const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+                resolve({
+                  data: {
+                    secure_url: downloadURL,
+                    resource_type: 'video'
+                  },
+                  isVideo: true
+                });
+              } catch (error) {
+                reject(error);
               }
-            } catch(e) {
-              reject(new Error("Error al procesar la respuesta del servidor"));
             }
-          };
+          );
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
 
-          xhr.onerror = function() {
-            reject(new Error("Error de conexión al subir el archivo multimedia"));
-          };
+    function uploadToCloudinaryViaXHR(file) {
+      const MAX_CLOUDINARY_UPLOAD = 100 * 1024 * 1024;
 
-          const formData = new FormData();
-          formData.append("file", file);
-          formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-
-          xhr.send(formData);
-        });
+      // IMPORTANTE: Cloudinary está rechazando el archivo completo de 161 MB
+      // porque tu cuenta/preset tiene un máximo de 100 MB para esa subida.
+      // Los videos mayores pasan directamente a Firebase Storage.
+      if (file.size > MAX_CLOUDINARY_UPLOAD) {
+        return uploadLargeFileToFirebaseStorage(file);
       }
 
-      // Archivos mayores de 100 MB: Cloudinary exige subida por partes (chunked).
       return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
         const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
-        const uploadId = (window.crypto && crypto.randomUUID)
-          ? crypto.randomUUID()
-          : `upload-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
-        let start = 0;
-        let lastResponse = null;
+        xhr.open("POST", url, true);
 
-        function uploadNextChunk() {
-          if (start >= file.size) {
-            if (lastResponse) {
+        xhr.onload = function() {
+          try {
+            const data = JSON.parse(xhr.responseText);
+            if (xhr.status >= 200 && xhr.status < 300) {
               const isVideo = (file.type && file.type.startsWith('video/')) ||
-                              (lastResponse.resource_type === 'video') ||
+                              (data.resource_type === 'video') ||
                               (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv)$/i));
-              resolve({ data: lastResponse, isVideo: isVideo });
+              resolve({ data: data, isVideo: isVideo });
             } else {
-              reject(new Error("Cloudinary no devolvió una respuesta final para el archivo"));
+              reject(new Error(data.error?.message || `Error ${xhr.status} de Cloudinary`));
             }
-            return;
+          } catch(e) {
+            reject(new Error("Error al procesar la respuesta del servidor"));
           }
+        };
 
-          const end = Math.min(start + CHUNK_SIZE, file.size) - 1;
-          const chunk = file.slice(start, end + 1);
-          const xhr = new XMLHttpRequest();
+        xhr.onerror = function() {
+          reject(new Error("Error de conexión al subir el archivo multimedia"));
+        };
 
-          xhr.open("POST", url, true);
-          xhr.setRequestHeader("X-Unique-Upload-Id", uploadId);
-          xhr.setRequestHeader("Content-Range", `bytes ${start}-${end}/${file.size}`);
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
-          xhr.onload = function() {
-            try {
-              const data = JSON.parse(xhr.responseText);
-
-              if (xhr.status < 200 || xhr.status >= 300) {
-                reject(new Error(data.error?.message || `Error ${xhr.status} de Cloudinary`));
-                return;
-              }
-
-              lastResponse = data;
-              start = end + 1;
-
-              if (data.done === true || start >= file.size) {
-                const isVideo = (file.type && file.type.startsWith('video/')) ||
-                                (data.resource_type === 'video') ||
-                                (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv)$/i));
-                resolve({ data: data, isVideo: isVideo });
-                return;
-              }
-
-              uploadNextChunk();
-            } catch(e) {
-              reject(new Error("Error al procesar la respuesta de Cloudinary durante la subida"));
-            }
-          };
-
-          xhr.onerror = function() {
-            reject(new Error("Error de conexión durante la subida del video. Inténtalo nuevamente."));
-          };
-
-          xhr.ontimeout = function() {
-            reject(new Error("La subida tardó demasiado. Comprueba tu conexión e inténtalo nuevamente."));
-          };
-
-          const formData = new FormData();
-          formData.append("file", chunk, file.name);
-          formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-
-          xhr.send(formData);
-        }
-
-        uploadNextChunk();
+        xhr.send(formData);
       });
     }
 
