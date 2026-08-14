@@ -1690,15 +1690,16 @@
           formData.append("file", file);
           formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
-          const resourceType = file.type.startsWith('video/') ? 'video' : 'image';
-
-          const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`, {
+          // Endpoint '/auto/upload' universal para fotos 4K, fotos HEIC de iPhone y videos HD
+          const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`, {
             method: 'POST',
             body: formData
           });
 
           if (!res.ok) {
-            throw new Error('Error al subir a Cloudinary');
+            const errorDetails = await res.json().catch(() => ({}));
+            console.error("Detalle de respuesta Cloudinary:", errorDetails);
+            throw new Error(errorDetails.error?.message || 'Error al subir a Cloudinary');
           }
 
           const uploadResult = await res.json();
@@ -1719,7 +1720,7 @@
           showToast("¡Recuerdo guardado para siempre en HD! ✨");
         } catch (error) {
           console.error("Error al guardar archivo:", error);
-          showToast("Error al guardar el archivo 🥺 Verifica tu preset de Cloudinary");
+          showToast("Error al guardar el archivo 🥺 Revisa la consola para más detalles");
         }
       }
     }
