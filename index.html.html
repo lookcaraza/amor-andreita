@@ -1739,126 +1739,209 @@
       document.getElementById('uploadProgressOverlay').style.display = 'none';
     }
 
-    // SUBIDA DIRECTA DE VIDEOS A FIREBASE STORAGE
-    // IMPORTANTE: los videos se suben ORIGINALES, sin compresión ni conversión.
-    // El progreso mostrado es el progreso REAL de Firebase de 0% a 100%.
-    async function uploadToFirebaseStorageDirect(file, onProgress) {
-      try {
-        const isVideo = (file.type && file.type.startsWith('video/')) ||
-                        !!(file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc|quicktime)$/i));
+    // SUBIDA DE VIDEOS ORIGINALES A CLOUDINARY EN BLOQUES
+    // IMPORTANTE: NO se comprime ni se convierte el video.
+    // Se envía el archivo original en bloques para evitar que el navegador
+    // se quede detenido al comenzar una subida grande.
+    async function uploadVideoOriginalChunked(file, onProgress) {
+      const chunkSize = 10 * 1024 * 1024; // 10 MB por bloque
+      const totalSize = file.size || 0;
 
-        const rawName = file.name || `recuerdo_${Date.now()}`;
-        let safeName = rawName.replace(/[^a-zA-Z0-9._-]/g, '_');
+      if (!totalSize) {
+        throw new Error("El video está vacío o no se pudo leer su tamaño.");
+      }
 
-        // Conservamos exactamente el formato original del archivo.
-        if (isVideo && !/\.[^/.]+$/.test(safeName)) {
-          const ext = (file.type || 'video/mp4').split('/')[1] || 'mp4';
-          safeName += `.${ext.replace(/[^a-zA-Z0-9]/g, '')}`;
-        }
+      const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`;
+      const uploadId = (
+        (window.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2)}`
+      ).replace(/[^a-zA-Z0-9_-]/g, "");
 
-        const uniqueName = `${Date.now()}_${Math.random().toString(36).slice(2)}_${safeName}`;
-        const storageRef = storage.ref().child(`recuerdos/${uniqueName}`);
+      let uploadedBytes = 0;
+      let finalData = null;
 
-        const mimeType = file.type || (isVideo ? 'video/mp4' : 'image/jpeg');
-        const metadata = {
-          contentType: mimeType,
-          customMetadata: {
-            originalName: file.name || 'archivo',
-            processed: 'original'
+      if (onProgress) onProgress(0, 0, totalSize);
+
+      for (let startByte = 0; startByte < totalSize; startByte += chunkSize) {
+        const endByte = Math.min(startByte + chunkSize, totalSize);
+        const chunk = file.slice(startByte, endByte);
+        let attempt = 0;
+        let chunkDone = false;
+
+        while (!chunkDone && attempt < 5) {
+          attempt++;
+
+          try {
+            const data = await new Promise((resolve, reject) => {
+              const xhr = new XMLHttpRequest();
+
+              xhr.open("POST", uploadUrl, true);
+              xhr.timeout = 10 * 60 * 1000;
+
+              xhr.setRequestHeader("X-Unique-Upload-Id", uploadId);
+              xhr.setRequestHeader(
+                "Content-Range",
+                `bytes ${startByte}-${endByte - 1}/${totalSize}`
+              );
+
+              xhr.upload.onprogress = function(event) {
+                if (event.lengthComputable && event.total > 0) {
+                  const currentLoaded = startByte + event.loaded;
+                  const percent = (currentLoaded / totalSize) * 100;
+
+                  if (onProgress) {
+                    onProgress(
+                      Math.min(100, percent),
+                      Math.min(totalSize, currentLoaded),
+                      totalSize
+                    );
+                  }
+
+                  const status = document.getElementById('uploadStatusTitle');
+                  if (status) {
+                    status.textContent =
+                      `Subiendo video original 💕 ${Math.round(percent)}%`;
+                  }
+                }
+              };
+
+              xhr.onload = function() {
+                let response = null;
+
+                try {
+                  response = JSON.parse(xhr.responseText || "{}");
+                } catch (_) {}
+
+                if (xhr.status >= 200 && xhr.status < 300) {
+                  resolve(response || {});
+                } else {
+                  const message =
+                    response?.error?.message ||
+                    `Cloudinary respondió con HTTP ${xhr.status}`;
+                  reject(new Error(message));
+                }
+              };
+
+              xhr.onerror = function() {
+                reject(new Error("Error de red durante la subida del video."));
+              };
+
+              xhr.ontimeout = function() {
+                reject(new Error("Tiempo agotado durante la subida del bloque."));
+              };
+
+              const formData = new FormData();
+              formData.append("file", chunk, file.name || "video.mp4");
+              formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+              xhr.send(formData);
+            });
+
+            uploadedBytes = endByte;
+
+            if (onProgress) {
+              onProgress(
+                (uploadedBytes / totalSize) * 100,
+                uploadedBytes,
+                totalSize
+              );
+            }
+
+            if (data.done === true || endByte >= totalSize) {
+              finalData = data;
+            }
+
+            chunkDone = true;
+
+          } catch (error) {
+            console.warn(
+              `Fallo en bloque ${startByte}-${endByte - 1}, intento ${attempt}/5:`,
+              error
+            );
+
+            if (attempt >= 5) {
+              throw new Error(
+                `No se pudo subir el bloque del video después de varios intentos. ${error.message || ""}`
+              );
+            }
+
+            // Espera progresiva antes de reintentar el mismo bloque.
+            await new Promise(resolve =>
+              setTimeout(resolve, Math.min(8000, 1000 * attempt))
+            );
           }
-        };
+        }
+      }
 
-        // Firebase manejará la subida como una operación reanudable.
-        // Aumentamos el tiempo de reintento para conexiones móviles.
+      if (!finalData || !finalData.secure_url) {
+        throw new Error(
+          "La subida terminó pero Cloudinary no devolvió la URL del video."
+        );
+      }
+
+      if (onProgress) {
+        onProgress(100, totalSize, totalSize);
+      }
+
+      return {
+        data: finalData,
+        isVideo: true,
+        mimeType: file.type || "video/mp4",
+        size: totalSize
+      };
+    }
+
+    // SUBIDA A FIREBASE PARA FOTOS / RESPALDO DE ARCHIVOS PEQUEÑOS
+    async function uploadToFirebaseStorageDirect(file, onProgress) {
+      return new Promise((resolve, reject) => {
         try {
+          const rawName = file.name || `recuerdo_${Date.now()}`;
+          const isVideo = (file.type && file.type.startsWith('video/')) ||
+                          !!(rawName.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc|quicktime)$/i));
+
+          let safeName = rawName.replace(/[^a-zA-Z0-9._-]/g, '_');
+          const uniqueName = `${Date.now()}_${Math.random().toString(36).slice(2)}_${safeName}`;
+          const storageRef = storage.ref().child(`recuerdos/${uniqueName}`);
+
+          const mimeType = file.type || (isVideo ? 'video/mp4' : 'image/jpeg');
+          const metadata = {
+            contentType: mimeType,
+            customMetadata: {
+              originalName: file.name || 'archivo'
+            }
+          };
+
           if (storage && typeof storage.setMaxUploadRetryTime === 'function') {
             storage.setMaxUploadRetryTime(30 * 60 * 1000);
           }
           if (storage && typeof storage.setMaxOperationRetryTime === 'function') {
             storage.setMaxOperationRetryTime(30 * 60 * 1000);
           }
-        } catch (_) {}
 
-        const totalSize = file.size || 0;
-
-        if (onProgress) {
-          onProgress(0, 0, totalSize);
-        }
-
-        const uploadTask = storageRef.put(file, metadata);
-
-        return await new Promise((resolve, reject) => {
-          let lastBytes = 0;
-          let lastProgressAt = Date.now();
-          let resumeTimer = null;
-          let finished = false;
-
-          const cleanup = () => {
-            if (resumeTimer) {
-              clearInterval(resumeTimer);
-              resumeTimer = null;
-            }
-          };
-
-          // Si la conexión móvil se pausa, intentamos reanudar automáticamente.
-          resumeTimer = setInterval(() => {
-            if (finished) return;
-            try {
-              const snapshot = uploadTask.snapshot;
-              if (!snapshot) return;
-
-              if (snapshot.state === 'paused') {
-                uploadTask.resume();
-                return;
-              }
-
-              // No cancelamos la subida por falta de movimiento: Firebase puede
-              // tardar unos segundos en reportar el siguiente bloque.
-              // Solo reanudamos si Firebase informa explícitamente estado pausado.
-              if (snapshot.bytesTransferred !== lastBytes) {
-                lastBytes = snapshot.bytesTransferred;
-                lastProgressAt = Date.now();
-              }
-            } catch (_) {}
-          }, 3000);
+          const uploadTask = storageRef.put(file, metadata);
 
           uploadTask.on(
             'state_changed',
             (snapshot) => {
-              if (!snapshot || snapshot.totalBytes <= 0) return;
-
-              lastBytes = snapshot.bytesTransferred;
-              lastProgressAt = Date.now();
-
-              const percent = Math.min(100, Math.max(0,
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-              ));
-
-              if (onProgress) {
-                onProgress(percent, snapshot.bytesTransferred, snapshot.totalBytes);
-              }
-
-              const status = document.getElementById('uploadStatusTitle');
-              if (status && isVideo && percent < 100) {
-                status.textContent = `Subiendo video original 💕 ${Math.round(percent)}%`;
+              if (snapshot.totalBytes > 0 && onProgress) {
+                const percent =
+                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                onProgress(
+                  percent,
+                  snapshot.bytesTransferred,
+                  snapshot.totalBytes
+                );
               }
             },
             (error) => {
-              finished = true;
-              cleanup();
               console.error('Error en Firebase Storage:', error);
               reject(error);
             },
             async () => {
               try {
-                finished = true;
-                cleanup();
-
-                if (onProgress) {
-                  onProgress(100, totalSize, totalSize);
-                }
-
-                const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+                const downloadURL =
+                  await uploadTask.snapshot.ref.getDownloadURL();
 
                 resolve({
                   data: {
@@ -1867,20 +1950,17 @@
                   },
                   isVideo: isVideo,
                   mimeType: mimeType,
-                  size: totalSize
+                  size: file.size || 0
                 });
               } catch (error) {
-                finished = true;
-                cleanup();
                 reject(error);
               }
             }
           );
-        });
-      } catch (error) {
-        console.error('Error subiendo archivo original:', error);
-        throw error;
-      }
+        } catch (error) {
+          reject(error);
+        }
+      });
     }
 
     // SUBIDA A CLOUDINARY PARA FOTOS LIGERAS
@@ -1935,12 +2015,13 @@
       const isVideo = (file.type && file.type.startsWith('video/')) || 
                       (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc|quicktime)$/i));
 
-      // Los videos se suben directamente a Firebase Storage, sin compresión.
+      // VIDEOS: Cloudinary por bloques, sin compresión ni conversión.
+      // Esto evita el bloqueo que estaba ocurriendo al iniciar Firebase Storage.
       if (isVideo) {
-        return await uploadToFirebaseStorageDirect(file, onProgress);
+        return await uploadVideoOriginalChunked(file, onProgress);
       }
 
-      // Para imágenes, intentamos Cloudinary y si falla en móvil, respalda en Firebase Storage
+      // Para imágenes, mantenemos exactamente el flujo anterior.
       try {
         return await uploadToCloudinaryViaXHR(file, onProgress);
       } catch (err) {
