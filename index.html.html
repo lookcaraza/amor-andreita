@@ -11,7 +11,7 @@
   <!-- SDK de la API Widget de SoundCloud para control de audio -->
   <script src="https://w.soundcloud.com/player/api.js"></script>
 
-  <!-- SDKs Compatibles de Firebase (App, Firestore) NATIVO GRATUITO -->
+  <!-- SDKs Compatibles de Firebase (App, Firestore, Storage) NATIVO GRATUITO -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
@@ -283,26 +283,6 @@
       margin-bottom: 25px;
     }
 
-    .custom-game-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--title-burgundy) !important;
-      text-align: center;
-      line-height: 1.2;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .custom-game-subtitle {
-      font-size: 1.05rem;
-      color: var(--text-subtle);
-      text-align: center;
-      font-weight: 700;
-      margin-bottom: 30px;
-    }
-
     .drop-zone {
       border: 3px dashed var(--rose-pink);
       background: #fff;
@@ -431,7 +411,6 @@
       background: #d62828;
     }
 
-    /* SELECCIÓN DE PERFILES */
     .profile-selector {
       display: flex;
       gap: 12px;
@@ -477,6 +456,154 @@
       padding: 20px;
     }
 
+    .modal-box {
+      background: white;
+      border-radius: 25px;
+      padding: 30px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      border: 3px solid var(--rose-pink);
+      text-align: center;
+      animation: popIn 0.3s ease;
+    }
+
+    .modal-box h3 {
+      font-family: 'Montserrat', sans-serif;
+      color: var(--title-burgundy);
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+
+    .modal-box label {
+      display: block;
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin: 10px 0 5px;
+      color: var(--text-black);
+    }
+
+    .modal-box input, .modal-box textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 2px solid var(--rose-pink);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .modal-btn {
+      width: 100%;
+      background: var(--title-burgundy);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 15px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-top: 18px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .modal-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .modal-btn-cancel {
+      background: #888;
+      margin-top: 8px;
+    }
+
+    /* MODAL DE PROGRESO CUTE/SANRIO */
+    .upload-progress-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255, 204, 213, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .upload-progress-card {
+      background: white;
+      border-radius: 30px;
+      padding: 30px 25px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      border: 4px solid var(--soft-red);
+      box-shadow: 0 20px 45px rgba(230, 92, 101, 0.4);
+      animation: popIn 0.3s ease;
+      position: relative;
+    }
+
+    .cute-spinner {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      display: inline-block;
+      animation: heartPulse 1.2s infinite ease-in-out;
+    }
+
+    @keyframes heartPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .progress-bar-track {
+      width: 100%;
+      height: 24px;
+      background: #fff0f3;
+      border-radius: 20px;
+      border: 2px solid var(--rose-pink);
+      overflow: hidden;
+      margin: 18px 0 10px;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff758f, #e65c65);
+      border-radius: 20px;
+      transition: width 0.25s ease-out;
+      box-shadow: 0 0 10px rgba(230, 92, 101, 0.5);
+    }
+
+    .progress-percentage {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--title-burgundy);
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .progress-details-text {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #555;
+      margin-top: 5px;
+    }
+
+    .progress-file-info {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--soft-red);
+      margin-top: 4px;
+      word-break: break-all;
+    }
+
+    /* VISOR SANRIO */
     .viewer-overlay {
       display: none;
       position: fixed;
@@ -486,7 +613,6 @@
       height: 100vh;
       background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       z-index: 1000;
       justify-content: center;
       align-items: center;
@@ -505,7 +631,7 @@
       align-items: center;
       max-width: 90vw;
       max-height: 88vh;
-      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: popIn 0.3s ease;
     }
 
     .sanrio-svg-sticker {
@@ -591,71 +717,27 @@
       transform: scale(1.15);
     }
 
-    .modal-box {
-      background: white;
-      border-radius: 25px;
-      padding: 30px;
-      max-width: 420px;
-      width: 100%;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-      border: 3px solid var(--rose-pink);
-      text-align: center;
-      animation: popIn 0.3s ease;
-    }
-
-    .modal-box h3 {
+    /* MINIJUEGOS & ESTILOS */
+    .custom-game-title {
       font-family: 'Montserrat', sans-serif;
-      color: var(--title-burgundy);
-      font-size: 1.3rem;
+      font-size: 1.8rem;
       font-weight: 800;
-      margin-bottom: 15px;
+      color: var(--title-burgundy) !important;
+      text-align: center;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .modal-box label {
-      display: block;
-      text-align: left;
+    .custom-game-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-subtle);
+      text-align: center;
       font-weight: 700;
-      font-size: 0.9rem;
-      margin: 10px 0 5px;
-      color: var(--text-black);
+      margin-bottom: 30px;
     }
 
-    .modal-box input, .modal-box textarea {
-      width: 100%;
-      padding: 10px 14px;
-      border-radius: 12px;
-      border: 2px solid var(--rose-pink);
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.95rem;
-      outline: none;
-    }
-
-    .modal-btn {
-      width: 100%;
-      background: var(--title-burgundy);
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 15px;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      margin-top: 18px;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-
-    .modal-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .modal-btn-cancel {
-      background: #888;
-      margin-top: 8px;
-    }
-
-    /* Juego de Memoria */
     .memory-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -819,7 +901,6 @@
     #simon-2 { background: #c9184a; }
     #simon-3 { background: #800f2f; }
 
-    /* ESTILOS DE LOS VASOS */
     .cups-container {
       max-width: 500px;
       margin: 0 auto;
@@ -1207,6 +1288,23 @@
       </div>
     </section>
   </main>
+
+  <!-- MODAL DE PROGRESO DE SUBIDA EN TIEMPO REAL CUTE -->
+  <div class="upload-progress-overlay" id="uploadProgressOverlay">
+    <div class="upload-progress-card">
+      <div class="cute-spinner">🐱💕</div>
+      <h3 style="color: var(--title-burgundy); font-family: 'Montserrat', sans-serif; font-weight: 800; margin-bottom: 6px;">Guardando Recuerdos</h3>
+      <p style="font-weight: 700; color: #666; font-size: 0.9rem;" id="uploadStatusTitle">Subiendo archivo con amor...</p>
+      
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progressBarFill"></div>
+      </div>
+
+      <div class="progress-percentage" id="progressPercentageText">0%</div>
+      <div class="progress-details-text" id="progressBytesText">0.0 MB / 0.0 MB</div>
+      <div class="progress-file-info" id="progressFileIndex">Archivo 1 de 1</div>
+    </div>
+  </div>
 
   <!-- Modal de Autenticación Integrado NATIVO -->
   <div class="modal-overlay" id="authModal">
@@ -1627,7 +1725,7 @@
       if(evt) evt.currentTarget.classList.add('active');
     }
 
-    /* SISTEMA DE SUBIDA OPTIMIZADO */
+    /* SISTEMA DE SUBIDA CON BARRA DE PROGRESO REAL */
     let pendingFiles = [];
     let selectedAuthorProfile = "";
 
@@ -1660,11 +1758,38 @@
       document.getElementById('fileInput').value = '';
     }
 
-    // SUBIDA DE ARCHIVOS
-    // - Hasta 100 MB: Cloudinary, igual que antes.
-    // - Más de 100 MB: Firebase Storage con subida reanudable.
-    // Esto evita el límite de 100 MB de la subida directa de Cloudinary.
-    function uploadLargeFileToFirebaseStorage(file) {
+    function showUploadProgressModal(fileIndex, totalFiles, fileName) {
+      const overlay = document.getElementById('uploadProgressOverlay');
+      document.getElementById('progressBarFill').style.width = '0%';
+      document.getElementById('progressPercentageText').textContent = '0%';
+      document.getElementById('progressBytesText').textContent = 'Conectando con el servidor...';
+      document.getElementById('progressFileIndex').textContent = `Subiendo ${fileName} (${fileIndex + 1} de ${totalFiles})`;
+      document.getElementById('uploadStatusTitle').textContent = `Subiendo tu recuerdo con amor 💕`;
+      overlay.style.display = 'flex';
+    }
+
+    function updateUploadProgress(percent, loadedBytes, totalBytes) {
+      const fill = document.getElementById('progressBarFill');
+      const text = document.getElementById('progressPercentageText');
+      const bytesText = document.getElementById('progressBytesText');
+
+      fill.style.width = `${percent}%`;
+      text.textContent = `${percent}%`;
+
+      if (totalBytes && totalBytes > 0) {
+        const loadedMB = (loadedBytes / (1024 * 1024)).toFixed(1);
+        const totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
+        bytesText.textContent = `${loadedMB} MB de ${totalMB} MB`;
+      } else {
+        bytesText.textContent = `Procesando...`;
+      }
+    }
+
+    function hideUploadProgressModal() {
+      document.getElementById('uploadProgressOverlay').style.display = 'none';
+    }
+
+    function uploadLargeFileToFirebaseStorage(file, onProgress) {
       return new Promise((resolve, reject) => {
         try {
           const storage = firebase.storage();
@@ -1679,7 +1804,9 @@
               const percent = snapshot.totalBytes
                 ? Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
                 : 0;
-              showToast(`Subiendo video grande... ${percent}% ⏳✨`);
+              if (onProgress) {
+                onProgress(percent, snapshot.bytesTransferred, snapshot.totalBytes);
+              }
             },
             (error) => {
               console.error('Error Firebase Storage:', error);
@@ -1706,14 +1833,11 @@
       });
     }
 
-    function uploadToCloudinaryViaXHR(file) {
+    function uploadToCloudinaryViaXHR(file, onProgress) {
       const MAX_CLOUDINARY_UPLOAD = 100 * 1024 * 1024;
 
-      // IMPORTANTE: Cloudinary está rechazando el archivo completo de 161 MB
-      // porque tu cuenta/preset tiene un máximo de 100 MB para esa subida.
-      // Los videos mayores pasan directamente a Firebase Storage.
       if (file.size > MAX_CLOUDINARY_UPLOAD) {
-        return uploadLargeFileToFirebaseStorage(file);
+        return uploadLargeFileToFirebaseStorage(file, onProgress);
       }
 
       return new Promise((resolve, reject) => {
@@ -1721,6 +1845,18 @@
         const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
 
         xhr.open("POST", url, true);
+
+        // Medidor de progreso real en Cloudinary
+        if (xhr.upload) {
+          xhr.upload.onprogress = function(event) {
+            if (event.lengthComputable) {
+              const percent = Math.round((event.loaded / event.total) * 100);
+              if (onProgress) {
+                onProgress(percent, event.loaded, event.total);
+              }
+            }
+          };
+        }
 
         xhr.onload = function() {
           try {
@@ -1786,17 +1922,24 @@
       }
 
       submitBtn.disabled = true;
+      document.getElementById('uploadModal').style.display = 'none';
+
       let totalFiles = pendingFiles.length;
       let completed = 0;
 
       for (let i = 0; i < totalFiles; i++) {
         const file = pendingFiles[i];
-        showToast(`Subiendo archivo ${i + 1} de ${totalFiles}... ⏳✨`);
+        showUploadProgressModal(i, totalFiles, file.name);
 
         try {
-          const result = await uploadToCloudinaryViaXHR(file);
+          const result = await uploadToCloudinaryViaXHR(file, (percent, loaded, total) => {
+            updateUploadProgress(percent, loaded, total);
+          });
+
           const permanentUrl = result.data.secure_url;
           const detectedType = result.isVideo ? 'video/mp4' : 'image/jpeg';
+
+          document.getElementById('uploadStatusTitle').textContent = `Guardando en la base de datos... ✨`;
 
           await db.collection("recuerdos").add({
             type: file.type || detectedType,
@@ -1814,8 +1957,8 @@
         }
       }
 
+      hideUploadProgressModal();
       submitBtn.disabled = false;
-      document.getElementById('uploadModal').style.display = 'none';
       document.getElementById('fileInput').value = '';
       pendingFiles = [];
 
