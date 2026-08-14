@@ -11,10 +11,9 @@
   <!-- SDK de la API Widget de SoundCloud para control de audio -->
   <script src="https://w.soundcloud.com/player/api.js"></script>
 
-  <!-- SDKs Compatibles de Firebase (App, Firestore, Storage) NATIVO GRATUITO -->
+  <!-- SDKs Compatibles de Firebase (App, Firestore) NATIVO GRATUITO -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 
   <style>
     :root {
@@ -520,7 +519,7 @@
       margin-top: 8px;
     }
 
-    /* MODAL DE PROGRESO CUTE/SANRIO */
+    /* MODAL DE PROGRESO CUTE / EN TIEMPO REAL */
     .upload-progress-overlay {
       display: none;
       position: fixed;
@@ -528,8 +527,9 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(255, 204, 213, 0.85);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 204, 213, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       z-index: 9999;
       justify-content: center;
       align-items: center;
@@ -550,15 +550,15 @@
     }
 
     .cute-spinner {
-      font-size: 3rem;
-      margin-bottom: 12px;
+      font-size: 3.2rem;
+      margin-bottom: 10px;
       display: inline-block;
       animation: heartPulse 1.2s infinite ease-in-out;
     }
 
     @keyframes heartPulse {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
+      50% { transform: scale(1.15); }
     }
 
     .progress-bar-track {
@@ -577,7 +577,7 @@
       width: 0%;
       background: linear-gradient(90deg, #ff758f, #e65c65);
       border-radius: 20px;
-      transition: width 0.25s ease-out;
+      transition: width 0.15s linear;
       box-shadow: 0 0 10px rgba(230, 92, 101, 0.5);
     }
 
@@ -631,7 +631,7 @@
       align-items: center;
       max-width: 90vw;
       max-height: 88vh;
-      animation: popIn 0.3s ease;
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .sanrio-svg-sticker {
@@ -1294,14 +1294,14 @@
     <div class="upload-progress-card">
       <div class="cute-spinner">🐱💕</div>
       <h3 style="color: var(--title-burgundy); font-family: 'Montserrat', sans-serif; font-weight: 800; margin-bottom: 6px;">Guardando Recuerdos</h3>
-      <p style="font-weight: 700; color: #666; font-size: 0.9rem;" id="uploadStatusTitle">Subiendo archivo con amor...</p>
+      <p style="font-weight: 700; color: #666; font-size: 0.9rem;" id="uploadStatusTitle">Subiendo tu recuerdo con amor 💕</p>
       
       <div class="progress-bar-track">
         <div class="progress-bar-fill" id="progressBarFill"></div>
       </div>
 
       <div class="progress-percentage" id="progressPercentageText">0%</div>
-      <div class="progress-details-text" id="progressBytesText">0.0 MB / 0.0 MB</div>
+      <div class="progress-details-text" id="progressBytesText">0.0 MB de 0.0 MB</div>
       <div class="progress-file-info" id="progressFileIndex">Archivo 1 de 1</div>
     </div>
   </div>
@@ -1762,7 +1762,7 @@
       const overlay = document.getElementById('uploadProgressOverlay');
       document.getElementById('progressBarFill').style.width = '0%';
       document.getElementById('progressPercentageText').textContent = '0%';
-      document.getElementById('progressBytesText').textContent = 'Conectando con el servidor...';
+      document.getElementById('progressBytesText').textContent = 'Preparando archivo...';
       document.getElementById('progressFileIndex').textContent = `Subiendo ${fileName} (${fileIndex + 1} de ${totalFiles})`;
       document.getElementById('uploadStatusTitle').textContent = `Subiendo tu recuerdo con amor 💕`;
       overlay.style.display = 'flex';
@@ -1789,71 +1789,21 @@
       document.getElementById('uploadProgressOverlay').style.display = 'none';
     }
 
-    function uploadLargeFileToFirebaseStorage(file, onProgress) {
-      return new Promise((resolve, reject) => {
-        try {
-          const storage = firebase.storage();
-          const safeName = (file.name || 'video').replace(/[^a-zA-Z0-9._-]/g, '_');
-          const uniqueName = `${Date.now()}_${Math.random().toString(36).slice(2)}_${safeName}`;
-          const storageRef = storage.ref().child(`recuerdos/${uniqueName}`);
-          const metadata = { contentType: file.type || 'video/mp4' };
-          const uploadTask = storageRef.put(file, metadata);
-
-          uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-            (snapshot) => {
-              const percent = snapshot.totalBytes
-                ? Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-                : 0;
-              if (onProgress) {
-                onProgress(percent, snapshot.bytesTransferred, snapshot.totalBytes);
-              }
-            },
-            (error) => {
-              console.error('Error Firebase Storage:', error);
-              reject(error);
-            },
-            async () => {
-              try {
-                const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-                resolve({
-                  data: {
-                    secure_url: downloadURL,
-                    resource_type: 'video'
-                  },
-                  isVideo: true
-                });
-              } catch (error) {
-                reject(error);
-              }
-            }
-          );
-        } catch (error) {
-          reject(error);
-        }
-      });
-    }
-
-    function uploadToCloudinaryViaXHR(file, onProgress) {
-      const MAX_CLOUDINARY_UPLOAD = 100 * 1024 * 1024;
-
-      if (file.size > MAX_CLOUDINARY_UPLOAD) {
-        return uploadLargeFileToFirebaseStorage(file, onProgress);
-      }
-
+    // SUBIDA POR FRAGMENTOS (CHUNKED UPLOAD) PARA CLOUDINARY SIN LÍMITE DE 100MB
+    function uploadChunkToCloudinary(chunkBlob, contentRange, uniqueUploadId, isVideo, onChunkProgress) {
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
+        const endpointType = isVideo ? 'video' : 'auto';
+        const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${endpointType}/upload`;
 
         xhr.open("POST", url, true);
+        xhr.setRequestHeader("X-Unique-Upload-Id", uniqueUploadId);
+        xhr.setRequestHeader("Content-Range", contentRange);
 
-        // Medidor de progreso real en Cloudinary
         if (xhr.upload) {
-          xhr.upload.onprogress = function(event) {
-            if (event.lengthComputable) {
-              const percent = Math.round((event.loaded / event.total) * 100);
-              if (onProgress) {
-                onProgress(percent, event.loaded, event.total);
-              }
+          xhr.upload.onprogress = function(e) {
+            if (e.lengthComputable && onChunkProgress) {
+              onChunkProgress(e.loaded, e.total);
             }
           };
         }
@@ -1862,28 +1812,102 @@
           try {
             const data = JSON.parse(xhr.responseText);
             if (xhr.status >= 200 && xhr.status < 300) {
-              const isVideo = (file.type && file.type.startsWith('video/')) ||
-                              (data.resource_type === 'video') ||
-                              (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv)$/i));
-              resolve({ data: data, isVideo: isVideo });
+              resolve(data);
             } else {
               reject(new Error(data.error?.message || `Error ${xhr.status} de Cloudinary`));
             }
-          } catch(e) {
+          } catch (err) {
             reject(new Error("Error al procesar la respuesta del servidor"));
           }
         };
 
         xhr.onerror = function() {
-          reject(new Error("Error de conexión al subir el archivo multimedia"));
+          reject(new Error("Fallo de conexión al transferir fragmento a Cloudinary"));
         };
 
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("file", chunkBlob);
         formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
         xhr.send(formData);
       });
+    }
+
+    async function uploadToCloudinaryViaXHR(file, onProgress) {
+      const isVideo = (file.type && file.type.startsWith('video/')) || 
+                      (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc)$/i));
+      
+      const totalSize = file.size;
+      const CHUNK_SIZE = 6 * 1024 * 1024; // 6MB por fragmento (Cloudinary exige mínimo 5MB por chunk)
+
+      // Si pesa 6MB o menos, se envía directo
+      if (totalSize <= CHUNK_SIZE) {
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          const endpointType = isVideo ? 'video' : 'auto';
+          const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${endpointType}/upload`;
+
+          xhr.open("POST", url, true);
+
+          if (xhr.upload) {
+            xhr.upload.onprogress = function(e) {
+              if (e.lengthComputable) {
+                const percent = Math.round((e.loaded / e.total) * 100);
+                if (onProgress) onProgress(percent, e.loaded, e.total);
+              }
+            };
+          }
+
+          xhr.onload = function() {
+            try {
+              const data = JSON.parse(xhr.responseText);
+              if (xhr.status >= 200 && xhr.status < 300) {
+                resolve({ data: data, isVideo: isVideo });
+              } else {
+                reject(new Error(data.error?.message || `Error ${xhr.status} de Cloudinary`));
+              }
+            } catch (err) {
+              reject(new Error("Error al procesar la respuesta del servidor"));
+            }
+          };
+
+          xhr.onerror = () => reject(new Error("Error de conexión al subir el archivo multimedia"));
+
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+          xhr.send(formData);
+        });
+      }
+
+      // Si pesa más de 6MB (incluso 150MB, 500MB o más de 1GB) se sube por fragmentos consecutivos
+      const uniqueUploadId = 'cld_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+      let start = 0;
+      let finalData = null;
+
+      while (start < totalSize) {
+        const end = Math.min(start + CHUNK_SIZE, totalSize);
+        const chunkBlob = file.slice(start, end);
+        const contentRange = `bytes ${start}-${end - 1}/${totalSize}`;
+
+        finalData = await uploadChunkToCloudinary(
+          chunkBlob, 
+          contentRange, 
+          uniqueUploadId, 
+          isVideo, 
+          (chunkLoaded, chunkTotal) => {
+            const currentTotalLoaded = start + chunkLoaded;
+            const percent = Math.min(99, Math.round((currentTotalLoaded / totalSize) * 100));
+            if (onProgress) onProgress(percent, currentTotalLoaded, totalSize);
+          }
+        );
+
+        start = end;
+      }
+
+      if (onProgress) onProgress(100, totalSize, totalSize);
+      return { data: finalData, isVideo: isVideo };
     }
 
     async function confirmUpload(e) {
@@ -2005,7 +2029,9 @@
       card.onclick = function() { openMediaViewer(this, item); };
 
       const fileSrc = item.mediaUrl || item.dataUrl || '';
-      const isVid = (item.type && item.type.startsWith('video/')) || fileSrc.match(/\.(mp4|mov|webm|m4v|3gp)/i);
+      const isVid = (item.type && item.type.startsWith('video/')) || 
+                    fileSrc.match(/\.(mp4|mov|webm|m4v|3gp|hevc)/i) || 
+                    (item.mediaUrl && item.mediaUrl.includes('/video/upload/'));
 
       let mediaHTML = !isVid 
         ? `<img src="${fileSrc}" style="image-rendering: -webkit-optimize-contrast;">` 
