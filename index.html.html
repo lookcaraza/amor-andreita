@@ -1659,39 +1659,122 @@
       document.getElementById('fileInput').value = '';
     }
 
-    // SUBIDA CLOUDINARY CON ENDPOINT UNIVERSAL (AUTO)
+    // SUBIDA CLOUDINARY: NORMAL HASTA 100 MB + CHUNKED PARA ARCHIVOS GRANDES
+    // Esto permite subir videos de iPhone/Android mayores de 100 MB sin cambiar
+    // el resto del sistema de recuerdos, Firestore o la galería.
     function uploadToCloudinaryViaXHR(file) {
-      return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
-        
-        xhr.open("POST", url, true);
-        
-        xhr.onload = function() {
-          try {
-            const data = JSON.parse(xhr.responseText);
-            if (xhr.status >= 200 && xhr.status < 300) {
-              const isVideo = (file.type && file.type.startsWith('video/')) || 
-                              (data.resource_type === 'video') ||
-                              (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv)$/i));
-              resolve({ data: data, isVideo: isVideo });
-            } else {
-              reject(new Error(data.error?.message || `Error ${xhr.status} de Cloudinary`));
+      const MAX_NORMAL_UPLOAD = 100 * 1024 * 1024; // 100 MB
+      const CHUNK_SIZE = 20 * 1024 * 1024; // 20 MB por parte
+
+      // Archivos pequeños: mantenemos exactamente la subida normal que ya usabas.
+      if (file.size <= MAX_NORMAL_UPLOAD) {
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
+
+          xhr.open("POST", url, true);
+
+          xhr.onload = function() {
+            try {
+              const data = JSON.parse(xhr.responseText);
+              if (xhr.status >= 200 && xhr.status < 300) {
+                const isVideo = (file.type && file.type.startsWith('video/')) ||
+                                (data.resource_type === 'video') ||
+                                (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv)$/i));
+                resolve({ data: data, isVideo: isVideo });
+              } else {
+                reject(new Error(data.error?.message || `Error ${xhr.status} de Cloudinary`));
+              }
+            } catch(e) {
+              reject(new Error("Error al procesar la respuesta del servidor"));
             }
-          } catch(e) {
-            reject(new Error("Error al procesar la respuesta del servidor"));
+          };
+
+          xhr.onerror = function() {
+            reject(new Error("Error de conexión al subir el archivo multimedia"));
+          };
+
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+          xhr.send(formData);
+        });
+      }
+
+      // Archivos mayores de 100 MB: Cloudinary exige subida por partes (chunked).
+      return new Promise((resolve, reject) => {
+        const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
+        const uploadId = (window.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : `upload-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+        let start = 0;
+        let lastResponse = null;
+
+        function uploadNextChunk() {
+          if (start >= file.size) {
+            if (lastResponse) {
+              const isVideo = (file.type && file.type.startsWith('video/')) ||
+                              (lastResponse.resource_type === 'video') ||
+                              (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv)$/i));
+              resolve({ data: lastResponse, isVideo: isVideo });
+            } else {
+              reject(new Error("Cloudinary no devolvió una respuesta final para el archivo"));
+            }
+            return;
           }
-        };
 
-        xhr.onerror = function() {
-          reject(new Error("Error de conexión al subir el archivo multimedia"));
-        };
+          const end = Math.min(start + CHUNK_SIZE, file.size) - 1;
+          const chunk = file.slice(start, end + 1);
+          const xhr = new XMLHttpRequest();
 
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+          xhr.open("POST", url, true);
+          xhr.setRequestHeader("X-Unique-Upload-Id", uploadId);
+          xhr.setRequestHeader("Content-Range", `bytes ${start}-${end}/${file.size}`);
 
-        xhr.send(formData);
+          xhr.onload = function() {
+            try {
+              const data = JSON.parse(xhr.responseText);
+
+              if (xhr.status < 200 || xhr.status >= 300) {
+                reject(new Error(data.error?.message || `Error ${xhr.status} de Cloudinary`));
+                return;
+              }
+
+              lastResponse = data;
+              start = end + 1;
+
+              if (data.done === true || start >= file.size) {
+                const isVideo = (file.type && file.type.startsWith('video/')) ||
+                                (data.resource_type === 'video') ||
+                                (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv)$/i));
+                resolve({ data: data, isVideo: isVideo });
+                return;
+              }
+
+              uploadNextChunk();
+            } catch(e) {
+              reject(new Error("Error al procesar la respuesta de Cloudinary durante la subida"));
+            }
+          };
+
+          xhr.onerror = function() {
+            reject(new Error("Error de conexión durante la subida del video. Inténtalo nuevamente."));
+          };
+
+          xhr.ontimeout = function() {
+            reject(new Error("La subida tardó demasiado. Comprueba tu conexión e inténtalo nuevamente."));
+          };
+
+          const formData = new FormData();
+          formData.append("file", chunk, file.name);
+          formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+          xhr.send(formData);
+        }
+
+        uploadNextChunk();
       });
     }
 
