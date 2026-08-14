@@ -1739,156 +1739,333 @@
       document.getElementById('uploadProgressOverlay').style.display = 'none';
     }
 
-    // SUBIDA DE VIDEOS ORIGINALES A CLOUDINARY EN BLOQUES
-    // IMPORTANTE: NO se comprime ni se convierte el video.
-    // Se envía el archivo original en bloques para evitar que el navegador
-    // se quede detenido al comenzar una subida grande.
-    async function uploadVideoOriginalChunked(file, onProgress) {
-      const chunkSize = 10 * 1024 * 1024; // 10 MB por bloque
-      const totalSize = file.size || 0;
+    // COMPRESIÓN LIGERA DE VIDEOS + SUBIDA A CLOUDINARY
+    // Los videos grandes se reducen antes de subir para respetar el límite
+    // de subida del entorno de Cloudinary y evitar que el teléfono se quede atascado.
+    // Se conserva la proporción, se limita a 1080p y se usa un bitrate moderado.
+    async function compressVideoForUpload(file, onProgress) {
+      const MAX_UPLOAD_BYTES = 85 * 1024 * 1024; // margen de seguridad bajo 100 MB
+      const MAX_WIDTH = 1920;
+      const MAX_HEIGHT = 1080;
+      const TARGET_FPS = 30;
+      const AUDIO_BITRATE = 128000;
 
-      if (!totalSize) {
-        throw new Error("El video está vacío o no se pudo leer su tamaño.");
+      // Si ya es suficientemente pequeño, no lo recomprimimos.
+      if (file.size <= MAX_UPLOAD_BYTES) {
+        if (onProgress) onProgress(0, 0, file.size, 'Preparando video...');
+        return file;
       }
 
+      if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
+        throw new Error('Este navegador no puede comprimir el video automáticamente. Prueba con Chrome o Safari actualizado.');
+      }
+
+      const sourceUrl = URL.createObjectURL(file);
+      const video = document.createElement('video');
+      video.src = sourceUrl;
+      video.muted = true;
+      video.playsInline = true;
+      video.setAttribute('playsinline', '');
+      video.setAttribute('webkit-playsinline', '');
+      video.preload = 'auto';
+
+      try {
+        await new Promise((resolve, reject) => {
+          video.onloadedmetadata = resolve;
+          video.onerror = () => reject(new Error('No se pudo leer el video seleccionado.'));
+          video.load();
+        });
+
+        const srcW = video.videoWidth || 1920;
+        const srcH = video.videoHeight || 1080;
+        const scale = Math.min(1, MAX_WIDTH / srcW, MAX_HEIGHT / srcH);
+        const width = Math.max(2, Math.round((srcW * scale) / 2) * 2);
+        const height = Math.max(2, Math.round((srcH * scale) / 2) * 2);
+        const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 60;
+
+        // Bitrate adaptativo: intenta dejar el resultado por debajo de ~85 MB,
+        // pero nunca baja demasiado para conservar buena calidad visual.
+        const targetBits = MAX_UPLOAD_BYTES * 8 * 0.88;
+        const calculatedVideoBitrate = Math.floor(targetBits / duration - AUDIO_BITRATE);
+        const videoBitrate = Math.max(1800000, Math.min(5500000, calculatedVideoBitrate));
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d', { alpha: false });
+        if (!ctx) throw new Error('No se pudo preparar el procesador de video.');
+
+        // Elegimos el formato que realmente soporte el navegador.
+        const mimeCandidates = [
+          'video/mp4;codecs="avc1.42E01E,mp4a.40.2"',
+          'video/mp4',
+          'video/webm;codecs="vp9,opus"',
+          'video/webm;codecs="vp8,opus"',
+          'video/webm'
+        ];
+        const mimeType = mimeCandidates.find(type => MediaRecorder.isTypeSupported(type));
+        if (!mimeType) {
+          throw new Error('El navegador no tiene un formato de video compatible para comprimir.');
+        }
+
+        const canvasStream = canvas.captureStream(TARGET_FPS);
+        let audioStream = null;
+        let audioContext = null;
+        let mediaSource = null;
+
+        // Captura el audio original sin reproducirlo por los altavoces.
+        // Esto evita perder el sonido al recomprimir.
+        try {
+          const CaptureStream = video.captureStream || video.webkitCaptureStream;
+          if (CaptureStream) {
+            const originalStream = CaptureStream.call(video);
+            const audioTracks = originalStream.getAudioTracks();
+            if (audioTracks.length) {
+              audioStream = new MediaStream(audioTracks);
+            }
+          }
+        } catch (audioErr) {
+          console.warn('No se pudo capturar audio mediante captureStream:', audioErr);
+        }
+
+        // Respaldo para navegadores donde captureStream no entrega audio.
+        if (!audioStream) {
+          try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) {
+              audioContext = new AudioCtx();
+              mediaSource = audioContext.createMediaElementSource(video);
+              const destination = audioContext.createMediaStreamDestination();
+              mediaSource.connect(destination);
+              audioStream = destination.stream;
+            }
+          } catch (audioErr) {
+            console.warn('Audio alternativo no disponible:', audioErr);
+          }
+        }
+
+        const outputStream = new MediaStream();
+        canvasStream.getVideoTracks().forEach(track => outputStream.addTrack(track));
+        if (audioStream) {
+          audioStream.getAudioTracks().forEach(track => outputStream.addTrack(track));
+        }
+
+        const recorderOptions = {
+          mimeType,
+          videoBitsPerSecond: videoBitrate,
+          audioBitsPerSecond: AUDIO_BITRATE
+        };
+
+        let recorder;
+        try {
+          recorder = new MediaRecorder(outputStream, recorderOptions);
+        } catch (_) {
+          recorder = new MediaRecorder(outputStream, { mimeType, videoBitsPerSecond: videoBitrate });
+        }
+
+        const chunks = [];
+        let recordedBytes = 0;
+        let lastProgress = 0;
+
+        const compressionPromise = new Promise((resolve, reject) => {
+          recorder.ondataavailable = event => {
+            if (event.data && event.data.size > 0) {
+              chunks.push(event.data);
+              recordedBytes += event.data.size;
+            }
+          };
+
+          recorder.onerror = event => {
+            reject(new Error('El navegador detuvo la compresión del video.'));
+          };
+
+          recorder.onstop = () => {
+            try {
+              const blob = new Blob(chunks, { type: mimeType.split(';')[0] });
+              resolve(blob);
+            } catch (err) {
+              reject(err);
+            }
+          };
+        });
+
+        let stopped = false;
+        const stopEverything = () => {
+          if (stopped) return;
+          stopped = true;
+          try { if (recorder.state !== 'inactive') recorder.stop(); } catch (_) {}
+          try { outputStream.getTracks().forEach(track => track.stop()); } catch (_) {}
+          try { canvasStream.getTracks().forEach(track => track.stop()); } catch (_) {}
+          try { if (audioContext) audioContext.close(); } catch (_) {}
+        };
+
+        const drawFrame = () => {
+          if (video.ended || video.paused) return;
+          ctx.drawImage(video, 0, 0, width, height);
+          if (onProgress && duration > 0) {
+            const percent = Math.min(39, (video.currentTime / duration) * 39);
+            if (percent - lastProgress >= 1) {
+              lastProgress = percent;
+              onProgress(percent, recordedBytes, file.size, 'Preparando video optimizado...');
+            }
+          }
+          requestAnimationFrame(drawFrame);
+        };
+
+        recorder.start(1000);
+        // Mantenerlo silenciado evita que Safari/iPhone bloquee la reproducción
+        // automática durante el procesamiento. El audio se conserva en el stream.
+        video.muted = true;
+        video.volume = 0;
+        try { if (audioContext && audioContext.state === 'suspended') await audioContext.resume(); } catch (_) {}
+        await video.play();
+        drawFrame();
+
+        await new Promise(resolve => {
+          video.onended = resolve;
+          video.onerror = resolve;
+        });
+
+        stopEverything();
+        const blob = await compressionPromise;
+
+        if (!blob || blob.size === 0) {
+          throw new Error('La compresión produjo un archivo vacío.');
+        }
+
+        // Si el resultado sigue siendo demasiado grande, hacemos una segunda pasada
+        // con bitrate más bajo. Esto evita el error de límite de Cloudinary.
+        if (blob.size > MAX_UPLOAD_BYTES) {
+          throw new Error(`El video sigue pesando ${(blob.size / 1048576).toFixed(1)} MB después de optimizarlo. Intenta con un video más corto.`);
+        }
+
+        const extension = blob.type.includes('mp4') ? 'mp4' : 'webm';
+        const safeName = (file.name || 'video').replace(/\.[^/.]+$/, '') + `_optimizado.${extension}`;
+        const optimizedFile = new File([blob], safeName, {
+          type: blob.type || mimeType.split(';')[0],
+          lastModified: Date.now()
+        });
+
+        if (onProgress) onProgress(40, 0, optimizedFile.size, `Video optimizado: ${(optimizedFile.size / 1048576).toFixed(1)} MB`);
+        return optimizedFile;
+
+      } finally {
+        URL.revokeObjectURL(sourceUrl);
+        try { video.pause(); video.src = ''; video.load(); } catch (_) {}
+      }
+    }
+
+    // SUBIDA DEL VIDEO OPTIMIZADO A CLOUDINARY EN BLOQUES PEQUEÑOS
+    // El resultado ya está por debajo del límite de 100 MB. Los bloques
+    // hacen la transferencia más resistente en conexiones móviles.
+    async function uploadOptimizedVideo(file, onProgress) {
+      const MAX_UPLOAD_BYTES = 85 * 1024 * 1024;
+      const CHUNK_SIZE = 10 * 1024 * 1024;
+
+      if (file.size > MAX_UPLOAD_BYTES) {
+        throw new Error(`El video optimizado pesa ${(file.size / 1048576).toFixed(1)} MB y aún es demasiado grande.`);
+      }
+
+      const totalSize = file.size;
       const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`;
       const uploadId = (
         (window.crypto && crypto.randomUUID)
           ? crypto.randomUUID()
           : `${Date.now()}-${Math.random().toString(36).slice(2)}`
-      ).replace(/[^a-zA-Z0-9_-]/g, "");
+      ).replace(/[^a-zA-Z0-9_-]/g, '');
 
       let uploadedBytes = 0;
       let finalData = null;
 
-      if (onProgress) onProgress(0, 0, totalSize);
+      if (onProgress) onProgress(40, 0, totalSize, 'Subiendo video optimizado...');
 
-      for (let startByte = 0; startByte < totalSize; startByte += chunkSize) {
-        const endByte = Math.min(startByte + chunkSize, totalSize);
-        const chunk = file.slice(startByte, endByte);
-        let attempt = 0;
-        let chunkDone = false;
+      for (let startByte = 0; startByte < totalSize; startByte += CHUNK_SIZE) {
+        const endByte = Math.min(startByte + CHUNK_SIZE, totalSize);
+        const chunk = file.slice(startByte, endByte, file.type || 'video/mp4');
+        let success = false;
+        let lastError = null;
 
-        while (!chunkDone && attempt < 5) {
-          attempt++;
-
+        for (let attempt = 1; attempt <= 5 && !success; attempt++) {
           try {
             const data = await new Promise((resolve, reject) => {
               const xhr = new XMLHttpRequest();
-
-              xhr.open("POST", uploadUrl, true);
+              xhr.open('POST', uploadUrl, true);
               xhr.timeout = 10 * 60 * 1000;
 
-              xhr.setRequestHeader("X-Unique-Upload-Id", uploadId);
+              xhr.setRequestHeader('X-Unique-Upload-Id', uploadId);
               xhr.setRequestHeader(
-                "Content-Range",
+                'Content-Range',
                 `bytes ${startByte}-${endByte - 1}/${totalSize}`
               );
 
-              xhr.upload.onprogress = function(event) {
+              xhr.upload.onprogress = event => {
                 if (event.lengthComputable && event.total > 0) {
-                  const currentLoaded = startByte + event.loaded;
-                  const percent = (currentLoaded / totalSize) * 100;
-
+                  const currentBytes = startByte + event.loaded;
+                  const ratio = currentBytes / totalSize;
+                  const percent = 40 + (ratio * 60);
                   if (onProgress) {
-                    onProgress(
-                      Math.min(100, percent),
-                      Math.min(totalSize, currentLoaded),
-                      totalSize
-                    );
-                  }
-
-                  const status = document.getElementById('uploadStatusTitle');
-                  if (status) {
-                    status.textContent =
-                      `Subiendo video original 💕 ${Math.round(percent)}%`;
+                    onProgress(percent, currentBytes, totalSize, 'Subiendo video optimizado...');
                   }
                 }
               };
 
-              xhr.onload = function() {
-                let response = null;
-
-                try {
-                  response = JSON.parse(xhr.responseText || "{}");
-                } catch (_) {}
+              xhr.onload = () => {
+                let data = {};
+                try { data = JSON.parse(xhr.responseText || '{}'); } catch (_) {}
 
                 if (xhr.status >= 200 && xhr.status < 300) {
-                  resolve(response || {});
+                  resolve(data);
                 } else {
-                  const message =
-                    response?.error?.message ||
-                    `Cloudinary respondió con HTTP ${xhr.status}`;
-                  reject(new Error(message));
+                  reject(new Error(
+                    data.error?.message || `Cloudinary respondió con HTTP ${xhr.status}.`
+                  ));
                 }
               };
 
-              xhr.onerror = function() {
-                reject(new Error("Error de red durante la subida del video."));
-              };
-
-              xhr.ontimeout = function() {
-                reject(new Error("Tiempo agotado durante la subida del bloque."));
-              };
+              xhr.onerror = () => reject(new Error('Error de red durante un bloque del video.'));
+              xhr.ontimeout = () => reject(new Error('Tiempo agotado durante un bloque del video.'));
 
               const formData = new FormData();
-              formData.append("file", chunk, file.name || "video.mp4");
-              formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-
+              formData.append('file', chunk, file.name || 'video.mp4');
+              formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
               xhr.send(formData);
             });
 
             uploadedBytes = endByte;
+            success = true;
 
-            if (onProgress) {
-              onProgress(
-                (uploadedBytes / totalSize) * 100,
-                uploadedBytes,
-                totalSize
-              );
-            }
-
-            if (data.done === true || endByte >= totalSize) {
+            if (data && data.done === true) {
               finalData = data;
             }
-
-            chunkDone = true;
-
           } catch (error) {
-            console.warn(
-              `Fallo en bloque ${startByte}-${endByte - 1}, intento ${attempt}/5:`,
-              error
-            );
-
-            if (attempt >= 5) {
-              throw new Error(
-                `No se pudo subir el bloque del video después de varios intentos. ${error.message || ""}`
-              );
+            lastError = error;
+            console.warn(`Bloque ${startByte}-${endByte - 1}: intento ${attempt}/5`, error);
+            if (attempt < 5) {
+              await new Promise(resolve => setTimeout(resolve, Math.min(10000, attempt * 1500)));
             }
-
-            // Espera progresiva antes de reintentar el mismo bloque.
-            await new Promise(resolve =>
-              setTimeout(resolve, Math.min(8000, 1000 * attempt))
-            );
           }
+        }
+
+        if (!success) {
+          throw new Error(`No se pudo subir un bloque después de 5 intentos. ${lastError?.message || ''}`);
+        }
+
+        if (onProgress) {
+          onProgress(40 + ((uploadedBytes / totalSize) * 60), uploadedBytes, totalSize, 'Subiendo video optimizado...');
         }
       }
 
       if (!finalData || !finalData.secure_url) {
-        throw new Error(
-          "La subida terminó pero Cloudinary no devolvió la URL del video."
-        );
+        throw new Error('La subida terminó pero Cloudinary no devolvió la URL del video.');
       }
 
-      if (onProgress) {
-        onProgress(100, totalSize, totalSize);
-      }
+      if (onProgress) onProgress(100, totalSize, totalSize, 'Video subido correctamente ✨');
 
       return {
         data: finalData,
         isVideo: true,
-        mimeType: file.type || "video/mp4",
-        size: totalSize
+        mimeType: file.type || finalData.format || 'video/mp4',
+        size: file.size
       };
     }
 
@@ -2015,10 +2192,12 @@
       const isVideo = (file.type && file.type.startsWith('video/')) || 
                       (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc|quicktime)$/i));
 
-      // VIDEOS: Cloudinary por bloques, sin compresión ni conversión.
-      // Esto evita el bloqueo que estaba ocurriendo al iniciar Firebase Storage.
+      // VIDEOS: optimización ligera antes de subir.
+      // Mantiene hasta 1080p, conserva buena calidad y reduce el tamaño
+      // para evitar el límite de 100 MB de la subida directa.
       if (isVideo) {
-        return await uploadVideoOriginalChunked(file, onProgress);
+        const optimized = await compressVideoForUpload(file, onProgress);
+        return await uploadOptimizedVideo(optimized, onProgress);
       }
 
       // Para imágenes, mantenemos exactamente el flujo anterior.
