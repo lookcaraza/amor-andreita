@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -1854,8 +1854,8 @@
 
         const recorder = new MediaRecorder(outputStream, {
           mimeType: selectedMime,
-          videoBitsPerSecond: 8000000,
-          audioBitsPerSecond: 128000
+          videoBitsPerSecond: 4500000,
+          audioBitsPerSecond: 96000
         });
 
         const chunks = [];
@@ -2022,19 +2022,66 @@
         };
 
         if (onProgress && isVideo) {
-          updateUploadProgress(40, uploadFile.size, uploadFile.size);
+          updateUploadProgress(40, 0, uploadFile.size);
           document.getElementById('uploadStatusTitle').textContent =
-            'Subiendo video comprimido en 1080p y 60 FPS 💕';
+            'Iniciando subida del video comprimido en 1080p y 60 FPS 💕';
         }
+
+        // Aumentamos el tiempo de reintento de Firebase para conexiones móviles.
+        // Esto evita que una pausa temporal de Wi-Fi/datos deje la subida congelada.
+        try {
+          if (storage && typeof storage.setMaxUploadRetryTime === 'function') {
+            storage.setMaxUploadRetryTime(15 * 60 * 1000);
+          }
+          if (storage && typeof storage.setMaxOperationRetryTime === 'function') {
+            storage.setMaxOperationRetryTime(15 * 60 * 1000);
+          }
+        } catch (_) {}
 
         const uploadTask = storageRef.put(uploadFile, metadata);
 
         return await new Promise((resolve, reject) => {
+          let lastBytes = -1;
+          let lastProgressAt = Date.now();
+          let resumeTimer = null;
+          let finished = false;
+
+          const cleanup = () => {
+            if (resumeTimer) {
+              clearInterval(resumeTimer);
+              resumeTimer = null;
+            }
+          };
+
+          // En algunos iPhone/iPad la subida puede quedarse temporalmente pausada
+          // mientras Safari gestiona un archivo grande. Reanudamos automáticamente.
+          resumeTimer = setInterval(() => {
+            if (finished) return;
+
+            try {
+              if (uploadTask.snapshot &&
+                  uploadTask.snapshot.state === 'paused') {
+                uploadTask.resume();
+              } else if (
+                uploadTask.snapshot &&
+                uploadTask.snapshot.bytesTransferred === lastBytes &&
+                Date.now() - lastProgressAt > 15000
+              ) {
+                uploadTask.resume();
+              }
+            } catch (_) {}
+          }, 5000);
+
           uploadTask.on(
             'state_changed',
             (snapshot) => {
               if (snapshot.totalBytes > 0) {
                 const uploadPercent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+                if (snapshot.bytesTransferred !== lastBytes) {
+                  lastBytes = snapshot.bytesTransferred;
+                  lastProgressAt = Date.now();
+                }
 
                 // 40% = compresión terminada; 60% = subida a Firebase.
                 const percent = isVideo
@@ -2044,14 +2091,29 @@
                 if (onProgress) {
                   onProgress(percent, snapshot.bytesTransferred, snapshot.totalBytes);
                 }
+
+                const status = document.getElementById('uploadStatusTitle');
+                if (status && isVideo && uploadPercent < 100) {
+                  status.textContent =
+                    `Subiendo video comprimido en 1080p y 60 FPS 💕 ${Math.round(uploadPercent)}%`;
+                }
               }
             },
             (error) => {
+              finished = true;
+              cleanup();
               console.error('Error en Firebase Storage:', error);
               reject(error);
             },
             async () => {
               try {
+                finished = true;
+                cleanup();
+
+                if (onProgress) {
+                  onProgress(100, uploadFile.size, uploadFile.size);
+                }
+
                 const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
 
                 resolve({
@@ -2064,6 +2126,8 @@
                   size: uploadFile.size
                 });
               } catch (error) {
+                finished = true;
+                cleanup();
                 reject(error);
               }
             }
