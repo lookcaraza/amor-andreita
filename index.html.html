@@ -6,7 +6,7 @@
   <title>Nuestra Pagina de Amor ❤️ Andreita</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&family=Fredoka+One&family=Pacifico&display=swap" rel="stylesheet">
   
   <!-- SDK de la API Widget de SoundCloud para control de audio -->
   <script src="https://w.soundcloud.com/player/api.js"></script>
@@ -299,7 +299,6 @@
       border-color: var(--soft-red);
     }
 
-    /* ESTILOS DE AGRUPACIÓN POR MESES */
     .gallery-month-section {
       margin-bottom: 35px;
     }
@@ -521,7 +520,6 @@
       margin-top: 8px;
     }
 
-    /* MODAL DE PROGRESO CUTE */
     .upload-progress-overlay {
       display: none;
       position: fixed;
@@ -605,7 +603,6 @@
       word-break: break-all;
     }
 
-    /* VISOR MULTIMEDIA */
     .viewer-overlay {
       display: none;
       position: fixed;
@@ -727,7 +724,6 @@
       margin-bottom: 30px;
     }
 
-    /* ESTILOS DEL LISTADO LATERAL DE MINIJUEGOS */
     .minigames-layout {
       display: flex;
       gap: 20px;
@@ -1159,6 +1155,12 @@
       border: 1px solid #a5d6a7;
     }
 
+    .presence-badge.lost {
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef9a9a;
+    }
+
     .pinturillo-timer-badge {
       background: var(--title-burgundy);
       color: white;
@@ -1367,6 +1369,327 @@
       font-size: 1.05rem;
     }
 
+    /* ESTILOS COMPETITIVOS: RESTAURANTE CHEF VERSUS */
+    .burger-container {
+      background: #ffffff;
+      border: 3px solid var(--rose-pink);
+      border-radius: 25px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(230, 92, 101, 0.15);
+      position: relative;
+    }
+
+    .burger-container:fullscreen, .burger-container:-webkit-full-screen {
+      background: #fff0f3;
+      padding: 25px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .burger-fullscreen-btn {
+      background: var(--title-burgundy);
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .burger-fullscreen-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .chef-score-board {
+      display: flex;
+      justify-content: space-around;
+      background: #fff0f3;
+      border: 2px solid var(--rose-pink);
+      border-radius: 18px;
+      padding: 12px;
+      margin-bottom: 15px;
+      font-weight: 800;
+    }
+
+    .burger-order-card {
+      background: #fff0f3;
+      border: 3px solid var(--soft-red);
+      border-radius: 20px;
+      padding: 15px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .burger-recipe-display {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .recipe-item-pill {
+      background: white;
+      border: 2px solid var(--rose-pink);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: var(--title-burgundy);
+    }
+
+    .burger-plate-area {
+      min-height: 180px;
+      background: #fff;
+      border: 3px dashed var(--rose-pink);
+      border-radius: 20px;
+      margin: 15px 0;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 15px;
+      gap: 6px;
+    }
+
+    .stacked-ingredient {
+      font-size: 1rem;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 14px;
+      border: 2px solid #ddd;
+      animation: popIn 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-width: 220px;
+      max-width: 90%;
+    }
+
+    .remove-ing-cross-btn {
+      background: #e63946;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 0.75rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    .remove-ing-cross-btn:hover {
+      transform: scale(1.2);
+      background: #b7094c;
+    }
+
+    .burger-controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .burger-ingredient-btn {
+      background: #fff0f3;
+      border: 2px solid var(--rose-pink);
+      border-radius: 16px;
+      padding: 8px 4px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--title-burgundy);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      transition: all 0.2s;
+    }
+
+    .burger-ingredient-btn:hover {
+      background: var(--soft-red);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .burger-ingredient-btn span {
+      font-size: 1.5rem;
+    }
+
+    .burger-action-btn {
+      padding: 12px;
+      border-radius: 16px;
+      border: none;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      color: white;
+      transition: transform 0.2s;
+    }
+
+    .burger-action-btn:hover {
+      transform: scale(1.03);
+    }
+
+    .serve-btn {
+      background: #2a9d8f;
+      flex: 2;
+    }
+
+    .trash-btn {
+      background: #e63946;
+      flex: 1;
+    }
+
+    .bankruptcy-overlay {
+      background: #ffebee;
+      border: 3px solid #d32f2f;
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      animation: popIn 0.3s ease;
+      margin: 15px 0;
+    }
+
+    .cute-sanrio-avatar {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid var(--rose-pink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      box-shadow: 0 4px 10px rgba(230, 92, 101, 0.2);
+      animation: iconFloat 2.2s ease-in-out infinite alternate;
+    }
+
+    .cute-sanrio-avatar-small {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid var(--rose-pink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      vertical-align: middle;
+      margin-right: 6px;
+      box-shadow: 0 2px 5px rgba(230, 92, 101, 0.2);
+    }
+
+    /* ESTILO FEMENINO Y CUTE PARA EL TOP 10 DE CHEFS */
+    .cute-records-container {
+      background: linear-gradient(135deg, #fff0f3 0%, #ffffff 50%, #ffe3e8 100%);
+      border: 3px solid #ff758f;
+      border-radius: 28px;
+      padding: 24px 18px;
+      box-shadow: 0 12px 30px rgba(255, 117, 143, 0.25);
+      margin-top: 15px;
+    }
+
+    .cute-top-heading {
+      font-family: 'Pacifico', cursive, sans-serif;
+      font-size: 1.45rem;
+      color: #d63384;
+      text-align: center;
+      margin-top: 18px;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 4px rgba(255, 182, 193, 0.6);
+      border-top: 2px dashed #ffb3c1;
+      padding-top: 14px;
+    }
+
+    .records-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+      margin-top: 10px;
+      font-size: 0.95rem;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .records-table th {
+      background: #ffb3c1;
+      color: #800020;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      padding: 10px 8px;
+      border: none;
+      border-radius: 12px;
+      text-transform: uppercase;
+      font-size: 0.82rem;
+      letter-spacing: 0.5px;
+    }
+
+    .records-table td {
+      background: #ffffff;
+      color: #4a0e2e;
+      border-top: 2px solid #ffccd5;
+      border-bottom: 2px solid #ffccd5;
+      padding: 10px 8px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .records-table tr td:first-child {
+      border-left: 2px solid #ffccd5;
+      border-top-left-radius: 14px;
+      border-bottom-left-radius: 14px;
+    }
+
+    .records-table tr td:last-child {
+      border-right: 2px solid #ffccd5;
+      border-top-right-radius: 14px;
+      border-bottom-right-radius: 14px;
+    }
+
+    .medal-icon-badge {
+      display: inline-block;
+      font-size: 1.45rem;
+      vertical-align: middle;
+      margin-right: 4px;
+      filter: drop-shadow(0 2px 4px rgba(255, 105, 180, 0.4));
+    }
+
+    .rank-cell-text {
+      font-family: 'Fredoka One', cursive, sans-serif;
+      font-size: 1.15rem;
+      color: #d63384;
+    }
+
+    .rank-1-row td {
+      background: #fff8e7 !important;
+      border-color: #ffd166 !important;
+      color: #854d0e !important;
+    }
+
+    .rank-2-row td {
+      background: #f8f9fa !important;
+      border-color: #ced4da !important;
+      color: #495057 !important;
+    }
+
+    .rank-3-row td {
+      background: #fff0ea !important;
+      border-color: #f4a261 !important;
+      color: #9a3412 !important;
+    }
+
     .quiz-card {
       background: white;
       border-radius: 20px;
@@ -1472,12 +1795,32 @@
       }
       .pinturillo-game-row {
         flex-direction: column;
+        align-items: center;
+        width: 100%;
+      }
+      .board-area-column {
+        width: 100%;
+        min-width: 0;
+      }
+      .board-canvas-wrapper {
+        width: 100%;
+        max-width: 100%;
       }
       #pinturilloCanvas {
+        width: 100% !important;
         height: 250px;
       }
       .chat-side-column {
+        width: 100%;
+        min-width: 0;
         height: 280px;
+      }
+      .burger-controls-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .stacked-ingredient {
+        min-width: 180px;
+        font-size: 0.88rem;
       }
     }
   </style>
@@ -1601,6 +1944,16 @@
               <span class="minigame-nav-sub">Online: Criss & Andreita</span>
             </div>
             <span class="new-badge-pill" id="badge-game-6">NEW</span>
+          </div>
+
+          <!-- MINIJUEGO 7: RESTAURANTE CHEF VERSUS -->
+          <div class="minigame-nav-item" id="nav-game-7" onclick="selectMinigameFromSidebar(7)">
+            <span class="minigame-nav-icon">🍕</span>
+            <div class="minigame-nav-info">
+              <span class="minigame-nav-name">Chef Versus Amor</span>
+              <span class="minigame-nav-sub">Competitivo Online 1v1</span>
+            </div>
+            <span class="new-badge-pill" id="badge-game-7">NEW</span>
           </div>
         </aside>
 
@@ -1749,7 +2102,7 @@
                 <div class="word-choices-modal-grid" id="wordChoicesContainer"></div>
               </div>
 
-              <!-- Tablero Principal de Juego y Adivinanza -->
+              <!-- Tablero Principal de Juego y Adivinanza Centrado Responsive -->
               <div id="pinturilloPlayArena" style="display: none;">
                 <div class="pinturillo-header">
                   <div style="display: flex; gap: 8px; align-items: center;">
@@ -1767,7 +2120,7 @@
                     <div class="board-canvas-wrapper">
                       <canvas id="pinturilloCanvas" width="500" height="320"></canvas>
                     </div>
-                    <!-- Paleta de dibujo (Visible para el que dibuja) -->
+                    <!-- Paleta de dibujo -->
                     <div class="pinturillo-palette" id="drawingToolsBar">
                       <div class="color-swatch-btn" style="background: #000000;" onclick="setPinturilloColor('#000000')"></div>
                       <div class="color-swatch-btn" style="background: #e63946;" onclick="setPinturilloColor('#e63946')"></div>
@@ -1799,6 +2152,130 @@
                     <span style="color: #0d47a1;">👑 Criss: <span id="scoreCriss">0</span> pts</span>
                     <span style="color: #880e4f;">🌸 Andreita: <span id="scoreAndreita">0</span> pts</span>
                   </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- MINIJUEGO 7: RESTAURANTE CHEF VERSUS -->
+          <div id="game-stage-7" style="display: none; width: 100%;">
+            <div class="burger-container" id="burgerGameCard">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="cute-sanrio-avatar-small">🐱🎀</span>
+                  <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.3rem;">🍕 Chef Versus: Duelo Culinario</h3>
+                </div>
+                <button class="burger-fullscreen-btn" onclick="toggleBurgerFullscreen()">⛶ Pantalla Completa</button>
+              </div>
+
+              <!-- Login / Selección de Jugador Versus -->
+              <div id="burgerLoginBox" style="text-align: center; padding: 20px 10px;">
+                <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 15px;">
+                  <span class="cute-sanrio-avatar">🐱🎀</span>
+                  <span class="cute-sanrio-avatar" style="animation-delay: 0.3s;">🐰🌸</span>
+                </div>
+                <p style="font-weight: 700; color: #555; margin-bottom: 15px;">Selecciona tu identidad para la competencia de cocina:</p>
+                <div class="profile-selector" style="max-width: 320px; margin: 0 auto 15px auto;">
+                  <div class="profile-card" id="burgerUserCriss" onclick="chooseBurgerUser('Criss')">👑 Chef Criss</div>
+                  <div class="profile-card" id="burgerUserAndreita" onclick="chooseBurgerUser('Andreita')">🌸 Chef Andreita</div>
+                </div>
+                <button class="modal-btn" onclick="connectBurger()" style="max-width: 250px; margin: 0 auto;">Iniciar Competencia ⚔️👩‍🍳</button>
+              </div>
+
+              <!-- Espera de Conexión -->
+              <div id="burgerWaitingBox" style="display: none; text-align: center; padding: 25px 10px;">
+                <div style="margin-bottom: 12px;">
+                  <span class="cute-sanrio-avatar">🐱🎀</span>
+                </div>
+                <h3 style="color: var(--title-burgundy); font-weight: 800; margin-bottom: 8px;">Esperando al oponente en cocina...</h3>
+                <p style="font-weight: 700; color: #666; margin-bottom: 12px;">Ambos deben estar conectados para que inicie la batalla.</p>
+                <div style="display: flex; justify-content: center; gap: 15px;">
+                  <span class="presence-badge" id="burgerWaitCriss">👑 Criss: Desconectado</span>
+                  <span class="presence-badge" id="burgerWaitAndreita">🌸 Andreita: Desconectada</span>
+                </div>
+              </div>
+
+              <!-- Área de Cocina Individual y Marcador Versus en Vivo -->
+              <div id="burgerPlayArena" style="display: none;">
+                
+                <!-- Marcador de Progreso en Vivo -->
+                <div class="chef-score-board">
+                  <div style="color: #0d47a1;" id="versusScoreCriss">👑 Criss: 0 pedidos</div>
+                  <div style="color: #880e4f;" id="versusScoreAndreita">🌸 Andreita: 0 pedidos</div>
+                </div>
+
+                <div class="pinturillo-header">
+                  <div style="font-weight: 800; color: var(--title-burgundy);" id="chefLevelTag">Nivel: 1 (Tiempo: 60s)</div>
+                  <div class="pinturillo-timer-badge" id="burgerOrderTimerDisplay">⏳ 01:00</div>
+                </div>
+
+                <!-- Tarjeta del Pedido Actual -->
+                <div class="burger-order-card">
+                  <div style="font-weight: 800; color: var(--title-burgundy); font-size: 1.15rem;" id="burgerCustomerTitle">😋 ¡Cliente: "Quiero una orden!"</div>
+                  <div style="font-weight: 700; font-size: 0.9rem; color: #555; margin-top: 4px;">Receta requerida (en orden exacto):</div>
+                  <div class="burger-recipe-display" id="burgerTargetRecipe"></div>
+                </div>
+
+                <!-- Plato Individual del Jugador -->
+                <div class="burger-plate-area" id="burgerCurrentPlate">
+                  <div style="color: #999; font-weight: 700; font-size: 0.9rem;" id="emptyPlateNotice">🍽️ Tu mesa está vacía... ¡Añade los ingredientes en orden!</div>
+                </div>
+
+                <!-- Controles Dinámicos y Mezclados de Ingredientes -->
+                <div class="burger-controls-grid" id="burgerControlsGrid"></div>
+
+                <!-- Botones de Acción -->
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                  <button class="burger-action-btn serve-btn" onclick="serveChefOrder()">🛎️ ¡Entregar Pedido!</button>
+                  <button class="burger-action-btn trash-btn" onclick="clearChefPlate()">🗑️ Descartar</button>
+                </div>
+              </div>
+
+              <!-- Sala de Bancarrota y Espera de Rival -->
+              <div id="bankruptcyRoom" class="bankruptcy-overlay" style="display: none;">
+                <div style="font-size: 3rem; margin-bottom: 6px;">💸💥😭</div>
+                <h3 style="color: #c62828; font-weight: 800; font-size: 1.4rem;">¡BANCARROTA!</h3>
+                <p style="font-weight: 700; color: #555; margin: 8px 0;" id="bankruptcySummaryText">No entregaste el pedido a tiempo o te equivocaste.</p>
+                <p style="font-weight: 800; color: var(--title-burgundy);">⏳ Esperando a que termine el otro chef para ver la tabla de récords...</p>
+                <div style="margin-top: 12px; display: flex; justify-content: center; gap: 10px;">
+                  <span class="presence-badge" id="statusCrissVersus">👑 Criss: Cocinando</span>
+                  <span class="presence-badge" id="statusAndreitaVersus">🌸 Andreita: Cocinando</span>
+                </div>
+              </div>
+
+              <!-- Pantalla Final: Tabla de Records Cute y Femenina -->
+              <div id="matchSummarySection" style="display: none; margin-top: 20px;">
+                <div class="cute-records-container">
+                  <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <span class="cute-sanrio-avatar-small">🐱🎀</span>
+                    <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.4rem; font-family: 'Montserrat', sans-serif;">🏆 ¡FIN DE LA COMPETENCIA! 🏆</h3>
+                    <span class="cute-sanrio-avatar-small">🐰🌸</span>
+                  </div>
+                  
+                  <p style="font-weight: 700; margin: 10px 0; text-align: center; color: #800020;" id="matchWinnerDeclaration"></p>
+                  
+                  <div style="margin: 15px 0; font-weight: 800; font-size: 1.05rem; text-align: center;">
+                    <span style="color: #0d47a1; margin-right: 15px;">👑 Criss: <span id="finalCrissCount">0</span> pedidos</span>
+                    <span style="color: #880e4f;">🌸 Andreita: <span id="finalAndreitaCount">0</span> pedidos</span>
+                  </div>
+
+                  <div class="cute-top-heading">
+                    ✨ 🎀 Top 10 Histórico de Chefs 🎀 ✨
+                  </div>
+                  <table class="records-table">
+                    <thead>
+                      <tr>
+                        <th>Top</th>
+                        <th>Chef</th>
+                        <th>Pedidos Realizados</th>
+                        <th>Fecha</th>
+                      </tr>
+                    </thead>
+                    <tbody id="top10RecordsBody"></tbody>
+                  </table>
+
+                  <button class="modal-btn" onclick="restartChefVersusMatch()" style="max-width: 260px; margin: 20px auto 0 auto;">🔄 Jugar Otra Partida</button>
                 </div>
               </div>
 
@@ -2242,6 +2719,7 @@
     let selectedAuthorProfile = "";
 
     function selectProfile(name) {
+      if (name !== 'Criss' && name !== 'Andreita') return;
       selectedAuthorProfile = name;
       document.getElementById('profCriss').classList.remove('selected');
       document.getElementById('profAndreita').classList.remove('selected');
@@ -2306,7 +2784,7 @@
 
     // SUBIDA DE VIDEOS ORIGINALES A CLOUDINARY EN BLOQUES
     async function uploadVideoOriginalChunked(file, onProgress) {
-      const chunkSize = 10 * 1024 * 1024; // 10 MB por bloque
+      const chunkSize = 10 * 1024 * 1024;
       const totalSize = file.size || 0;
 
       if (!totalSize) {
@@ -2599,8 +3077,8 @@
         return;
       }
 
-      if (!selectedAuthorProfile) {
-        showToast("Por favor selecciona quién está subiendo el recuerdo 🥺");
+      if (!selectedAuthorProfile || (selectedAuthorProfile !== 'Criss' && selectedAuthorProfile !== 'Andreita')) {
+        showToast("Por favor selecciona solo entre Criss y Andreita 🥺");
         return;
       }
 
@@ -2718,9 +3196,7 @@
       let deleteBtnHTML = item.id ? `<button class="delete-media-btn" onclick="requestDeleteMedia(event, '${item.id}', this)">🗑️</button>` : '';
 
       let authorName = item.author;
-      if (item.date === "28/07/2026" || item.date === "28/03/2026") {
-        authorName = item.author || "Criss";
-      } else if (!authorName) {
+      if (authorName !== 'Criss' && authorName !== 'Andreita') {
         authorName = "Criss";
       }
 
@@ -2896,14 +3372,12 @@
 
     /* CONTROL DEL MENÚ LATERAL Y ACTIVACIÓN DE MINIJUEGOS */
     function selectMinigameFromSidebar(stageNum) {
-      // Ocultar badge parpadeante de "NEW" al entrar
       const badge = document.getElementById(`badge-game-${stageNum}`);
       if (badge) {
         badge.style.display = 'none';
       }
 
-      // Actualizar estilo de selección activa en la lista
-      for (let i = 1; i <= 6; i++) {
+      for (let i = 1; i <= 7; i++) {
         const navItem = document.getElementById(`nav-game-${i}`);
         if (navItem) {
           if (i === stageNum) {
@@ -2976,9 +3450,9 @@
       document.getElementById('game-stage-4').style.display = 'none';
       document.getElementById('game-stage-5').style.display = 'none';
       document.getElementById('game-stage-6').style.display = 'none';
+      document.getElementById('game-stage-7').style.display = 'none';
 
-      // Sincronizar estado visual del menú lateral
-      for (let i = 1; i <= 6; i++) {
+      for (let i = 1; i <= 7; i++) {
         const navItem = document.getElementById(`nav-game-${i}`);
         if (navItem) {
           if (i === stageNum) {
@@ -2989,7 +3463,6 @@
         }
       }
 
-      // Quitar badge "NEW" si se entra por flujo secuencial
       const badge = document.getElementById(`badge-game-${stageNum}`);
       if (badge) {
         badge.style.display = 'none';
@@ -3011,42 +3484,45 @@
       } else if (stageNum === 6) {
         document.getElementById('game-stage-6').style.display = 'block';
         initPinturilloSystem();
+      } else if (stageNum === 7) {
+        document.getElementById('game-stage-7').style.display = 'block';
+        initChefVersusSystem();
       }
     }
 
     /* MINIJUEGO 2: DIFERENCIA */
     const diffLevels = [
-      {
+       {
         name: "Fácil",
-        orig: "https://lh3.googleusercontent.com/d/1u8A2M2XrR-tny67UNdvdQNYq2xi5d0Pd",
-        mod: "https://lh3.googleusercontent.com/d/1PcRM-43df4nNj2nxLVyzZlLh8_3nte-k",
-        targetX: 59.5,
-        targetY: 31.8,
+        orig: "https://lh3.googleusercontent.com/d/1Et7iLCPT28NYwqK3RGheV1vTaDHRo_Fo",
+        mod: "https://lh3.googleusercontent.com/d/1oKF34gLouuG5I4l94wBDpXCoN9gOEzDN",
+        targetX: 5.6,
+        targetY: 48.8,
         radius: 3.5
       },
       {
         name: "Intermedio",
-        orig: "https://lh3.googleusercontent.com/d/1PM5HszG8_YZJkHLyCEaOj0hfuttsFmns",
-        mod: "https://lh3.googleusercontent.com/d/1Dj-jRv3kXZH7irTUYd1ddwUKMXt7ytVT",
-        targetX: 11.6,
-        targetY: 48.2,
+        orig: "https://lh3.googleusercontent.com/d/1yIFSXTP3BDZEZt1vJTSHBIFs7KGkiolN",
+        mod: "https://lh3.googleusercontent.com/d/1qOsBgPs9cUMppWnceOaIsChs_dumwhfh",
+        targetX: 91.2,
+        targetY: 36.0,
         radius: 3.5
       },
       {
         name: "Difícil",
-        orig: "https://lh3.googleusercontent.com/d/1QeZFavlnrcuz_AjhkM4Rx6XufJRxsnw5",
-        mod: "https://lh3.googleusercontent.com/d/1uuB3hmpxs64B4qnnZnxbzN1hlN1_E4PJ",
-        targetX: 60.5,
-        targetY: 10.5,
-        radius: 3.3
+        orig: "https://lh3.googleusercontent.com/d/184GiGK5yTBHXm2I0Rpk3t1JQRXYVVWmJ",
+        mod: "https://lh3.googleusercontent.com/d/1TbIhnC6vyIrPfLCvB-QX24ZUv-nPBXDy",
+        targetX: 70.0,
+        targetY: 84.0,
+        radius: 3.5
       },
       {
         name: "Extremo",
-        orig: "https://lh3.googleusercontent.com/d/1atOPeXBnjrB7U2Fmo6VCqStpq3lcRmeY",
-        mod: "https://lh3.googleusercontent.com/d/1w7XV3TBJ3zLLImB3997adSff8vjZFAnF",
-        targetX: 17.8,
-        targetY: 80.8,
-        radius: 3.3
+        orig: "https://lh3.googleusercontent.com/d/1Ff8iHT3qIPR6mglN8AJnp3aaKQAmOvN8",
+        mod: "https://lh3.googleusercontent.com/d/1VsUTPe9BGytIFQDWCgQGEF8Qrkx5dD9e",
+        targetX: 68.0,
+        targetY: 60.2,
+        radius: 2.0
       }
     ];
 
@@ -3394,6 +3870,7 @@
       const stage4 = document.getElementById('game-stage-4');
       const stage5 = document.getElementById('game-stage-5');
       const stage6 = document.getElementById('game-stage-6');
+      const stage7 = document.getElementById('game-stage-7');
 
       if (stage1.style.display !== 'none') {
         goToStage(2);
@@ -3406,7 +3883,9 @@
       } else if (stage5.style.display !== 'none') {
         goToStage(6);
       } else if (stage6.style.display !== 'none') {
-        stage6.style.display = 'none';
+        goToStage(7);
+      } else if (stage7.style.display !== 'none') {
+        stage7.style.display = 'none';
         document.getElementById('rewardModal').style.display = 'block';
       }
     }
@@ -3415,17 +3894,14 @@
        MINIJUEGO 6: PINTURILLO MULTIJUGADOR ONLINE EN TIEMPO REAL (100 PALABRAS)
        ========================================================================== */
     const PINTURILLO_WORDS_POOL = [
-      // Fáciles (1-35)
       "Perro", "Gato", "Casa", "Carro", "Sol", "Luna", "Flor", "Corazón", "Árbol", "Pelota",
       "Manzana", "Helado", "Zapato", "Avión", "Barco", "Estrella", "Pez", "Ojo", "Mano", "Pastel",
       "Lentes", "Sombrero", "Cama", "Mesa", "Silla", "Reloj", "Puerta", "Bicicleta", "Guitarra", "Pizza",
       "Hamburguesa", "Teléfono", "Globo", "Anillo", "Libro",
-      // Intermedios (36-70)
       "Toñita", "Paraguas", "Cámara", "Tiburón", "Delfín", "Mariposa", "Castillo", "Cohete", "Tren", "Helicóptero",
       "León", "Elefante", "Tortuga", "Pingüino", "Mono", "Robot", "Dinosaurio", "Corona", "Diamante", "Micrófono",
       "Auriculares", "Volcán", "Arcoíris", "Fresa", "Sandía", "Chocolate", "Café", "Cuchara", "Tenedor", "Campana",
       "Vela", "Cofre", "Espada", "Escudo", "Faro",
-      // Difíciles y Románticos (71-100)
       "Atardecer", "Fotografía", "Astronauta", "Submarino", "Montaña Rusa", "Bailarina", "Cine", "Palomitas",
       "Nuestra Boda", "Abrazo", "Beso", "Cartas de Amor", "Anillo de Compromiso", "Parque de Diversiones",
       "Viaje a la Playa", "Cena Romántica", "Serenata", "Peluches Gigantes", "Rosas Rojas", "Cielo Estrellado",
@@ -3439,19 +3915,20 @@
     let lastDrawX = 0;
     let lastDrawY = 0;
     let pinturilloTimerInterval = null;
-    let localCurrentRole = "guess"; // "drawer" o "guess"
+    let localCurrentRole = "guess";
     let localCurrentWord = "";
     let lastClearSignal = 0;
 
     function initPinturilloSystem() {
       const savedUser = localStorage.getItem('pinturillo_saved_user');
-      if (savedUser) {
+      if (savedUser && (savedUser === 'Criss' || savedUser === 'Andreita')) {
         choosePinturilloUser(savedUser);
       }
       setupPinturilloCanvasEvents();
     }
 
     function choosePinturilloUser(name) {
+      if (name !== 'Criss' && name !== 'Andreita') return;
       myPinturilloUser = name;
       localStorage.setItem('pinturillo_saved_user', name);
       document.getElementById('pinturilloUserCriss').classList.remove('selected');
@@ -3464,7 +3941,7 @@
     }
 
     function connectPinturillo() {
-      if (!myPinturilloUser) {
+      if (!myPinturilloUser || (myPinturilloUser !== 'Criss' && myPinturilloUser !== 'Andreita')) {
         showToast("Por favor selecciona si eres Criss o Andreita 💕");
         return;
       }
@@ -3472,7 +3949,6 @@
       document.getElementById('pinturilloLoginBox').style.display = 'none';
       document.getElementById('pinturilloWaitingBox').style.display = 'block';
 
-      // Presencia en tiempo real en Firebase Realtime Database
       const presenceRef = rtdb.ref(`pinturillo_presence/${myPinturilloUser}`);
       const connectedRef = rtdb.ref('.info/connected');
 
@@ -3505,7 +3981,6 @@
         if (crissOnline && andreitaOnline) {
           document.getElementById('pinturilloWaitingBox').style.display = 'none';
           
-          // Si ambos se conectan y la sala no está activa, iniciar automáticamente
           rtdb.ref('pinturillo_room').once('value').then(roomSnap => {
             const roomData = roomSnap.val();
             if (!roomData || roomData.status === 'waiting' || !roomData.status) {
@@ -3620,7 +4095,7 @@
     }
 
     function selectWordToDraw(selectedWord) {
-      const timerDuration = 5 * 60 * 1000; // 5 Minutos
+      const timerDuration = 5 * 60 * 1000;
       const timerEnd = Date.now() + timerDuration;
 
       const canvas = document.getElementById('pinturilloCanvas');
@@ -3679,7 +4154,6 @@
       startNewPinturilloRound(otherUser);
     }
 
-    /* SISTEMA DE DIBUJO EN CANVAS Y SINCRONIZACIÓN */
     function setupPinturilloCanvasEvents() {
       const canvas = document.getElementById('pinturilloCanvas');
       const ctx = canvas.getContext('2d');
@@ -3781,7 +4255,6 @@
       });
     }
 
-    /* CHAT DE ADIVINANZAS Y PUNTUACIÓN */
     function listenPinturilloChat() {
       rtdb.ref('pinturillo_chat').limitToLast(35).on('value', (snap) => {
         const chatBox = document.getElementById('pinturilloChatMessages');
@@ -3856,8 +4329,632 @@
       }
     }
 
+    /* ==========================================================================
+       MINIJUEGO 7: RESTAURANTE CHEF VERSUS 1v1 (COMPETITIVO ONLINE)
+       ========================================================================== */
+    const CHEF_CATEGORIES_DATA = {
+      burger: {
+        title: "🍔 Hamburguesa",
+        ingredients: {
+          pan_abajo: { name: "Pan Abajo", icon: "🍞", color: "#f4a261" },
+          carne: { name: "Carne", icon: "🥩", color: "#6f1d1b" },
+          queso: { name: "Queso", icon: "🧀", color: "#ffd166" },
+          lechuga: { name: "Lechuga", icon: "🥬", color: "#588157" },
+          tomate: { name: "Tomate", icon: "🍅", color: "#e63946" },
+          cebolla: { name: "Cebolla", icon: "🧅", color: "#d8bbff" },
+          huevo: { name: "Huevo", icon: "🍳", color: "#fff3b0" },
+          tocino: { name: "Tocino", icon: "🥓", color: "#a44a3f" },
+          pepinillos: { name: "Pepinillos", icon: "🥒", color: "#386641" },
+          champinones: { name: "Champiñones", icon: "🍄", color: "#d4a373" },
+          mostaza: { name: "Mostaza", icon: "🟡", color: "#e9d8a6" },
+          ketchup: { name: "Ketchup", icon: "🥫", color: "#d90429" },
+          mayonesa: { name: "Mayonesa", icon: "⚪", color: "#f8f9fa" },
+          jalapeno: { name: "Jalapeño", icon: "🌶️", color: "#2d6a4f" },
+          pan_arriba: { name: "Pan Arriba", icon: "🍔", color: "#f4a261" }
+        },
+        recipes: [
+          { name: "Burger Clásica", recipe: ["pan_abajo", "carne", "queso", "lechuga", "pan_arriba"] },
+          { name: "Burger Doble Carne", recipe: ["pan_abajo", "carne", "queso", "carne", "tomate", "pan_arriba"] },
+          { name: "Burger Suprema Tocino", recipe: ["pan_abajo", "carne", "tocino", "queso", "huevo", "pan_arriba"] },
+          { name: "Master Burger 15 Ingredientes", recipe: ["pan_abajo", "carne", "queso", "tocino", "lechuga", "tomate", "cebolla", "pepinillos", "champinones", "huevo", "mostaza", "ketchup", "mayonesa", "jalapeno", "pan_arriba"] }
+        ]
+      },
+      pizza: {
+        title: "🍕 Pizza Italiana",
+        ingredients: {
+          masa_pizza: { name: "Masa", icon: "🫓", color: "#ffe5b4" },
+          salsa_tomate: { name: "Salsa", icon: "🥫", color: "#d90429" },
+          mozzarella: { name: "Mozzarella", icon: "🧀", color: "#fff3b0" },
+          pepperoni: { name: "Pepperoni", icon: "🍕", color: "#b7094c" },
+          champinon: { name: "Champiñón", icon: "🍄", color: "#d4a373" },
+          albahaca: { name: "Albahaca", icon: "🌿", color: "#52b788" },
+          aceitunas: { name: "Aceitunas", icon: "🫒", color: "#2b2d42" },
+          jamon: { name: "Jamón", icon: "🥓", color: "#ffb4a2" },
+          pimiento: { name: "Pimiento", icon: "🫑", color: "#74c69d" },
+          cebolla_morada: { name: "Cebolla", icon: "🧅", color: "#b5838d" },
+          pina: { name: "Piña", icon: "🍍", color: "#fee440" },
+          pollo: { name: "Pollo", icon: "🍗", color: "#e07a5f" },
+          parmesano: { name: "Parmesano", icon: "🧀", color: "#ffeedd" },
+          oregano: { name: "Orégano", icon: "🍃", color: "#40916c" },
+          aceite_oliva: { name: "Aceite Oliva", icon: "🫗", color: "#d4d700" }
+        },
+        recipes: [
+          { name: "Pizza Pepperoni Clásica", recipe: ["masa_pizza", "salsa_tomate", "mozzarella", "pepperoni"] },
+          { name: "Pizza Margarita Especial", recipe: ["masa_pizza", "salsa_tomate", "mozzarella", "albahaca", "aceite_oliva"] },
+          { name: "Pizza Hawaiana", recipe: ["masa_pizza", "salsa_tomate", "mozzarella", "jamon", "pina"] },
+          { name: "Pizza Suprema 15 Ingredientes", recipe: ["masa_pizza", "salsa_tomate", "mozzarella", "pepperoni", "champinon", "jamon", "pimiento", "cebolla_morada", "aceitunas", "pina", "pollo", "parmesano", "albahaca", "oregano", "aceite_oliva"] }
+        ]
+      },
+      shake: {
+        title: "🥤 Malteada & Bebida",
+        ingredients: {
+          vaso_cristal: { name: "Vaso", icon: "🥛", color: "#edf2f4" },
+          leche: { name: "Leche", icon: "🥛", color: "#ffffff" },
+          helado_vainilla: { name: "Helado Vainilla", icon: "🍨", color: "#fefae0" },
+          helado_fresa: { name: "Helado Fresa", icon: "🍓", color: "#ff758f" },
+          helado_choco: { name: "Helado Choco", icon: "🍫", color: "#6b4226" },
+          jarabe_fresa: { name: "Sirope Fresa", icon: "🍓", color: "#e63946" },
+          jarabe_choco: { name: "Sirope Choco", icon: "🍫", color: "#402211" },
+          crema_batida: { name: "Crema Batida", icon: "🧁", color: "#ffffff" },
+          chispas_colores: { name: "Chispitas", icon: "✨", color: "#ffc6ff" },
+          galleta_oreo: { name: "Galleta", icon: "🍪", color: "#212529" },
+          cereza: { name: "Cereza", icon: "🍒", color: "#9d0208" },
+          malvavisco: { name: "Malvaviscos", icon: "🍬", color: "#ffcad4" },
+          caramelo: { name: "Caramelo", icon: "🍯", color: "#e09f3e" },
+          canela: { name: "Canela", icon: "🍂", color: "#9c6644" },
+          pajita_corazon: { name: "Pajilla Amor", icon: "🥤", color: "#ff4d6d" }
+        },
+        recipes: [
+          { name: "Malteada Rosa San Valentín", recipe: ["vaso_cristal", "helado_fresa", "leche", "crema_batida", "cereza"] },
+          { name: "Choco Shake Dulzura", recipe: ["vaso_cristal", "helado_choco", "jarabe_choco", "crema_batida", "galleta_oreo"] },
+          { name: "Mega Freakshake 15 Ingredientes", recipe: ["vaso_cristal", "leche", "helado_vainilla", "helado_fresa", "helado_choco", "jarabe_fresa", "jarabe_choco", "crema_batida", "chispas_colores", "galleta_oreo", "malvavisco", "caramelo", "canela", "cereza", "pajita_corazon"] }
+        ]
+      },
+      cake: {
+        title: "🎂 Pastel de Celebración",
+        ingredients: {
+          base_pastel: { name: "Base Pastel", icon: "🎂", color: "#e9c46a" },
+          bizcocho_vainilla: { name: "Bizcocho Vainilla", icon: "🥞", color: "#faedcd" },
+          bizcocho_choco: { name: "Bizcocho Choco", icon: "🍫", color: "#582f0e" },
+          relleno_fresa: { name: "Mermelada Fresa", icon: "🍓", color: "#d90429" },
+          relleno_arequipe: { name: "Dulce de Leche", icon: "🍯", color: "#ddb892" },
+          crema_pastelera: { name: "Crema Pastelera", icon: "🧁", color: "#fff3b0" },
+          cobertura_rosa: { name: "Fondant Rosa", icon: "🌸", color: "#ffb3c1" },
+          cobertura_blanca: { name: "Glaseado Blanco", icon: "🤍", color: "#f8f9fa" },
+          fresas_frescas: { name: "Fresas", icon: "🍓", color: "#e63946" },
+          frambuesas: { name: "Frambuesas", icon: "🫐", color: "#7209b7" },
+          perlas_azucar: { name: "Perlas Azúcar", icon: "⚪", color: "#e2eafc" },
+          chispas_chocolate: { name: "Chispas Choco", icon: "🍫", color: "#3d0c02" },
+          flores_azucar: { name: "Flores Azúcar", icon: "🌺", color: "#ff758f" },
+          lazo_decorativo: { name: "Lazo Cute", icon: "🎀", color: "#ff4d6d" },
+          vela_amor: { name: "Vela Aniversario", icon: "🕯️", color: "#ffd166" }
+        },
+        recipes: [
+          { name: "Pastel Fresa Romántico", recipe: ["base_pastel", "bizcocho_vainilla", "relleno_fresa", "cobertura_rosa", "fresas_frescas", "vela_amor"] },
+          { name: "Pastel Chocolate Intenso", recipe: ["base_pastel", "bizcocho_choco", "relleno_arequipe", "crema_pastelera", "chispas_chocolate"] },
+          { name: "Pastel Real Bodas 15 Ingredientes", recipe: ["base_pastel", "bizcocho_vainilla", "bizcocho_choco", "relleno_fresa", "relleno_arequipe", "crema_pastelera", "cobertura_rosa", "cobertura_blanca", "fresas_frescas", "frambuesas", "perlas_azucar", "chispas_chocolate", "flores_azucar", "lazo_decorativo", "vela_amor"] }
+        ]
+      },
+      lasagna: {
+        title: "🥘 Lasaña Horneada",
+        ingredients: {
+          bandeja_horno: { name: "Bandeja Horno", icon: "🥘", color: "#adb5bd" },
+          pasta_lasana_1: { name: "Lámina Pasta", icon: "📄", color: "#faedcd" },
+          salsa_bolonesa: { name: "Salsa Boloñesa", icon: "🥩", color: "#9b2226" },
+          salsa_bechamel: { name: "Bechamel", icon: "⚪", color: "#f8f9fa" },
+          queso_ricotta: { name: "Ricotta", icon: "🧀", color: "#fff3b0" },
+          espinacas: { name: "Espinacas", icon: "🥬", color: "#2d6a4f" },
+          carne_molida: { name: "Carne Molida", icon: "🥩", color: "#6f1d1b" },
+          queso_mozzarella: { name: "Mozzarella", icon: "🧀", color: "#ffe6a7" },
+          pasta_lasana_2: { name: "Segunda Lámina", icon: "📄", color: "#faedcd" },
+          champinon_laminado: { name: "Champiñón", icon: "🍄", color: "#cb997e" },
+          nuez_moscada: { name: "Nuez Moscada", icon: "🌰", color: "#7f4f24" },
+          pimienta_negra: { name: "Pimienta", icon: "🧂", color: "#212529" },
+          parmesano_gratinado: { name: "Parmesano", icon: "🧀", color: "#fefae0" },
+          albahaca_fresca: { name: "Albahaca", icon: "🌿", color: "#52b788" },
+          toque_amor: { name: "Toque de Amor", icon: "💖", color: "#ff4d6d" }
+        },
+        recipes: [
+          { name: "Lasaña Casera Boloñesa", recipe: ["bandeja_horno", "pasta_lasana_1", "salsa_bolonesa", "salsa_bechamel", "queso_mozzarella", "parmesano_gratinado"] },
+          { name: "Lasaña Espinaca & Ricotta", recipe: ["bandeja_horno", "pasta_lasana_1", "queso_ricotta", "espinacas", "salsa_bechamel", "parmesano_gratinado"] },
+          { name: "Gran Lasaña Suprema 15 Ingredientes", recipe: ["bandeja_horno", "pasta_lasana_1", "salsa_bolonesa", "carne_molida", "salsa_bechamel", "queso_ricotta", "espinacas", "champinon_laminado", "pasta_lasana_2", "queso_mozzarella", "nuez_moscada", "pimienta_negra", "parmesano_gratinado", "albahaca_fresca", "toque_amor"] }
+        ]
+      },
+      pasta: {
+        title: "🍝 Pasta Gourmet",
+        ingredients: {
+          plato_hondo: { name: "Plato Hondo", icon: "🥣", color: "#f8f9fa" },
+          fettuccine: { name: "Fettuccine", icon: "🍝", color: "#ffe5b4" },
+          spaghetti: { name: "Spaghetti", icon: "🍝", color: "#faedcd" },
+          salsa_alfredo: { name: "Salsa Alfredo", icon: "⚪", color: "#fff3b0" },
+          salsa_pesto: { name: "Salsa Pesto", icon: "🟢", color: "#52b788" },
+          camarones: { name: "Camarones", icon: "🦐", color: "#ff758f" },
+          pechuga_pollo: { name: "Pollo Asado", icon: "🍗", color: "#e07a5f" },
+          tomates_cherry: { name: "Tomates Cherry", icon: "🍅", color: "#e63946" },
+          ajo_dorado: { name: "Ajo Dorado", icon: "🧄", color: "#fefae0" },
+          champinones_salteados: { name: "Champiñones", icon: "🍄", color: "#b08968" },
+          brócoli: { name: "Brócoli", icon: "🥦", color: "#40916c" },
+          queso_pecorino: { name: "Pecorino", icon: "🧀", color: "#fdf0d5" },
+          pimienta_rosa: { name: "Pimienta Rosa", icon: "🧂", color: "#ff8fa3" },
+          perejil_picado: { name: "Perejil", icon: "🌿", color: "#74c69d" },
+          vino_blanco_reduccion: { name: "Vino Blanco", icon: "🍷", color: "#f1faee" }
+        },
+        recipes: [
+          { name: "Fettuccine Alfredo con Pollo", recipe: ["plato_hondo", "fettuccine", "salsa_alfredo", "pechuga_pollo", "queso_pecorino"] },
+          { name: "Spaghetti al Pesto con Tomatitos", recipe: ["plato_hondo", "spaghetti", "salsa_pesto", "tomates_cherry", "queso_pecorino"] },
+          { name: "Pasta Marinera 15 Ingredientes", recipe: ["plato_hondo", "fettuccine", "spaghetti", "salsa_alfredo", "salsa_pesto", "camarones", "pechuga_pollo", "tomates_cherry", "ajo_dorado", "champinones_salteados", "brócoli", "queso_pecorino", "pimienta_rosa", "perejil_picado", "vino_blanco_reduccion"] }
+        ]
+      }
+    };
+
+    let myChefUser = "";
+    let myChefOrdersCount = 0;
+    let myCurrentChefRecipe = null;
+    let myCurrentCategoryKey = "burger";
+    let myChefPlate = [];
+    let chefOrderTimerInterval = null;
+    let isBankrupt = false;
+
+    function initChefVersusSystem() {
+      const savedUser = localStorage.getItem('burger_saved_user') || localStorage.getItem('pinturillo_saved_user');
+      if (savedUser && (savedUser === 'Criss' || savedUser === 'Andreita')) {
+        chooseBurgerUser(savedUser);
+      }
+      loadTop10Records();
+    }
+
+    function chooseBurgerUser(name) {
+      if (name !== 'Criss' && name !== 'Andreita') return;
+      myChefUser = name;
+      localStorage.setItem('burger_saved_user', name);
+      document.getElementById('burgerUserCriss').classList.remove('selected');
+      document.getElementById('burgerUserAndreita').classList.remove('selected');
+      if (name === 'Criss') {
+        document.getElementById('burgerUserCriss').classList.add('selected');
+      } else if (name === 'Andreita') {
+        document.getElementById('burgerUserAndreita').classList.add('selected');
+      }
+    }
+
+    function connectBurger() {
+      if (!myChefUser || (myChefUser !== 'Criss' && myChefUser !== 'Andreita')) {
+        showToast("Por favor selecciona si eres Criss o Andreita 💕");
+        return;
+      }
+
+      document.getElementById('burgerLoginBox').style.display = 'none';
+      document.getElementById('burgerWaitingBox').style.display = 'block';
+
+      const presenceRef = rtdb.ref(`chef_presence/${myChefUser}`);
+      const connectedRef = rtdb.ref('.info/connected');
+
+      connectedRef.on('value', (snap) => {
+        if (snap.val() === true) {
+          presenceRef.onDisconnect().set(false);
+          presenceRef.set(true);
+        }
+      });
+
+      listenChefPresence();
+      listenChefMatchState();
+    }
+
+    function listenChefPresence() {
+      const allPresenceRef = rtdb.ref('chef_presence');
+      allPresenceRef.on('value', (snap) => {
+        const presence = snap.val() || {};
+        const crissOnline = presence.Criss === true;
+        const andreitaOnline = presence.Andreita === true;
+
+        document.getElementById('burgerWaitCriss').textContent = `👑 Criss: ${crissOnline ? 'Conectado ✅' : 'Desconectado ❌'}`;
+        document.getElementById('burgerWaitCriss').className = `presence-badge ${crissOnline ? 'online' : ''}`;
+        
+        document.getElementById('burgerWaitAndreita').textContent = `🌸 Andreita: ${andreitaOnline ? 'Conectada ✅' : 'Desconectada ❌'}`;
+        document.getElementById('burgerWaitAndreita').className = `presence-badge ${andreitaOnline ? 'online' : ''}`;
+
+        const isGameActive = (document.getElementById('burgerPlayArena').style.display === 'block' || document.getElementById('bankruptcyRoom').style.display === 'block');
+
+        if (crissOnline && andreitaOnline) {
+          document.getElementById('burgerWaitingBox').style.display = 'none';
+          
+          rtdb.ref('chef_match').once('value').then(matchSnap => {
+            const data = matchSnap.val();
+            if (!data || data.status === 'idle') {
+              if (myChefUser === 'Criss') {
+                startVersusMatchOnline();
+              }
+            } else if (data.status === 'in_progress' && !isGameActive && !isBankrupt) {
+              startPlayerChefGame();
+            }
+          });
+        } else if (!isGameActive) {
+          document.getElementById('burgerWaitingBox').style.display = 'block';
+          document.getElementById('burgerPlayArena').style.display = 'none';
+          document.getElementById('bankruptcyRoom').style.display = 'none';
+          document.getElementById('matchSummarySection').style.display = 'none';
+          if (chefOrderTimerInterval) clearInterval(chefOrderTimerInterval);
+        }
+      });
+    }
+
+    function startVersusMatchOnline() {
+      rtdb.ref('chef_match').set({
+        status: "in_progress",
+        scores: { Criss: 0, Andreita: 0 },
+        bankrupt: { Criss: false, Andreita: false },
+        startTime: Date.now()
+      });
+    }
+
+    function listenChefMatchState() {
+      rtdb.ref('chef_match').on('value', (snap) => {
+        const data = snap.val();
+        if (!data) return;
+
+        const sCriss = (data.scores && data.scores.Criss) ? data.scores.Criss : 0;
+        const sAndreita = (data.scores && data.scores.Andreita) ? data.scores.Andreita : 0;
+        document.getElementById('versusScoreCriss').textContent = `👑 Criss: ${sCriss} pedidos`;
+        document.getElementById('versusScoreAndreita').textContent = `🌸 Andreita: ${sAndreita} pedidos`;
+
+        const bCriss = data.bankrupt && data.bankrupt.Criss;
+        const bAndreita = data.bankrupt && data.bankrupt.Andreita;
+
+        document.getElementById('statusCrissVersus').textContent = `👑 Criss: ${bCriss ? 'Bancarrota ❌' : 'Cocinando 🔥'}`;
+        document.getElementById('statusCrissVersus').className = `presence-badge ${bCriss ? 'lost' : 'online'}`;
+
+        document.getElementById('statusAndreitaVersus').textContent = `🌸 Andreita: ${bAndreita ? 'Bancarrota ❌' : 'Cocinando 🔥'}`;
+        document.getElementById('statusAndreitaVersus').className = `presence-badge ${bAndreita ? 'lost' : 'online'}`;
+
+        if (data.status === "in_progress") {
+          if (!isBankrupt && document.getElementById('burgerPlayArena').style.display === 'none' && !bCriss && !bAndreita) {
+            startPlayerChefGame();
+          }
+
+          if (bCriss && bAndreita) {
+            finishVersusMatch(sCriss, sAndreita);
+          }
+        }
+      });
+    }
+
+    function startPlayerChefGame() {
+      isBankrupt = false;
+      myChefOrdersCount = 0;
+      myChefPlate = [];
+      document.getElementById('bankruptcyRoom').style.display = 'none';
+      document.getElementById('matchSummarySection').style.display = 'none';
+      document.getElementById('burgerPlayArena').style.display = 'block';
+
+      nextChefOrder();
+    }
+
+    function getTimeLimitForOrders(count) {
+      if (count < 5) return 60;
+      if (count < 10) return 45;
+      return 30;
+    }
+
+    function renderDynamicShuffledControls(catKey, isMaster15, targetRecipe) {
+      const grid = document.getElementById('burgerControlsGrid');
+      grid.innerHTML = '';
+
+      const catData = CHEF_CATEGORIES_DATA[catKey];
+      const allKeys = Object.keys(catData.ingredients);
+
+      let poolToUse = [];
+
+      if (isMaster15) {
+        poolToUse = [...allKeys];
+      } else {
+        const requiredKeys = Array.from(new Set(targetRecipe || []));
+        const extraKeys = allKeys.filter(k => !requiredKeys.includes(k));
+        
+        const neededExtrasCount = Math.max(0, 7 - requiredKeys.length);
+        const selectedExtras = extraKeys.sort(() => 0.5 - Math.random()).slice(0, neededExtrasCount);
+        
+        poolToUse = [...requiredKeys, ...selectedExtras];
+      }
+
+      const shuffledKeys = poolToUse.sort(() => 0.5 - Math.random());
+
+      shuffledKeys.forEach(key => {
+        const ing = catData.ingredients[key];
+        if (ing) {
+          const btn = document.createElement('button');
+          btn.className = 'burger-ingredient-btn';
+          btn.onclick = () => addChefIngredient(key, catKey);
+          btn.innerHTML = `<span>${ing.icon}</span>${ing.name}`;
+          grid.appendChild(btn);
+        }
+      });
+    }
+
+    function nextChefOrder() {
+      const timeLimitSec = getTimeLimitForOrders(myChefOrdersCount);
+      const isMasterPhase = (myChefOrdersCount >= 15);
+
+      if (myChefOrdersCount < 5) {
+        myCurrentCategoryKey = "burger";
+      } else {
+        const categories = ["pizza", "shake", "cake", "lasagna", "pasta", "burger"];
+        myCurrentCategoryKey = categories[Math.floor(Math.random() * categories.length)];
+      }
+
+      const catData = CHEF_CATEGORIES_DATA[myCurrentCategoryKey];
+      document.getElementById('chefLevelTag').textContent = `Orden #${myChefOrdersCount + 1} (${catData.title}) | Tiempo: ${timeLimitSec}s`;
+
+      if (isMasterPhase) {
+        myCurrentChefRecipe = catData.recipes.find(r => r.recipe.length === 15) || catData.recipes[catData.recipes.length - 1];
+      } else {
+        const standardRecipes = catData.recipes.filter(r => r.recipe.length < 15);
+        myCurrentChefRecipe = standardRecipes[Math.floor(Math.random() * standardRecipes.length)];
+      }
+
+      myChefPlate = [];
+      document.getElementById('burgerCustomerTitle').textContent = `😋 Cliente: "${myCurrentChefRecipe.name}"`;
+
+      renderDynamicShuffledControls(myCurrentCategoryKey, isMasterPhase, myCurrentChefRecipe.recipe);
+      renderChefTargetRecipe(myCurrentChefRecipe.recipe, myCurrentCategoryKey);
+      renderChefPlate(myCurrentCategoryKey);
+
+      startChefTimer(timeLimitSec);
+    }
+
+    function startChefTimer(durationSec) {
+      if (chefOrderTimerInterval) clearInterval(chefOrderTimerInterval);
+      let remaining = durationSec;
+
+      function tick() {
+        if (remaining <= 0) {
+          document.getElementById('burgerOrderTimerDisplay').textContent = "⏳ 00:00";
+          clearInterval(chefOrderTimerInterval);
+          triggerBankruptcy("¡Se te agotó el tiempo para entregar el pedido!");
+          return;
+        }
+
+        const mins = String(Math.floor(remaining / 60)).padStart(2, '0');
+        const secs = String(remaining % 60).padStart(2, '0');
+        document.getElementById('burgerOrderTimerDisplay').textContent = `⏳ ${mins}:${secs}`;
+        remaining--;
+      }
+
+      tick();
+      chefOrderTimerInterval = setInterval(tick, 1000);
+    }
+
+    function renderChefTargetRecipe(recipeList, catKey) {
+      const container = document.getElementById('burgerTargetRecipe');
+      container.innerHTML = '';
+      const catIngs = CHEF_CATEGORIES_DATA[catKey].ingredients;
+
+      recipeList.forEach((ingKey, idx) => {
+        const ing = catIngs[ingKey] || { name: ingKey, icon: "🍴" };
+        const pill = document.createElement('div');
+        pill.className = 'recipe-item-pill';
+        pill.innerHTML = `${idx + 1}. ${ing.icon} ${ing.name}`;
+        container.appendChild(pill);
+      });
+    }
+
+    function renderChefPlate(catKey) {
+      const container = document.getElementById('burgerCurrentPlate');
+      container.innerHTML = '';
+
+      if (myChefPlate.length === 0) {
+        container.innerHTML = `<div style="color: #999; font-weight: 700; font-size: 0.9rem;" id="emptyPlateNotice">🍽️ Tu mesa está vacía... ¡Añade los ingredientes en orden!</div>`;
+        return;
+      }
+
+      const catIngs = CHEF_CATEGORIES_DATA[catKey || myCurrentCategoryKey].ingredients;
+
+      myChefPlate.forEach((ingKey, idx) => {
+        const ing = catIngs[ingKey] || { name: ingKey, icon: "🍴", color: "#eee" };
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'stacked-ingredient';
+        itemDiv.style.backgroundColor = ing.color;
+        itemDiv.style.color = (ingKey.includes('choco') || ingKey.includes('carne') || ingKey.includes('lechuga') || ingKey.includes('bolonesa')) ? 'white' : '#111';
+        
+        itemDiv.innerHTML = `
+          <span>${ing.icon} ${ing.name}</span>
+          <button class="remove-ing-cross-btn" onclick="removeChefIngredientAt(${idx})" title="Quitar este ingrediente">✕</button>
+        `;
+        container.appendChild(itemDiv);
+      });
+    }
+
+    function removeChefIngredientAt(index) {
+      if (isBankrupt) return;
+      myChefPlate.splice(index, 1);
+      renderChefPlate(myCurrentCategoryKey);
+    }
+
+    function addChefIngredient(ingKey, catKey) {
+      if (isBankrupt) return;
+      if (myChefPlate.length >= 16) {
+        showToast("¡Demasiados ingredientes en la mesa! 🥺");
+        return;
+      }
+      myChefPlate.push(ingKey);
+      renderChefPlate(catKey);
+    }
+
+    function clearChefPlate() {
+      myChefPlate = [];
+      renderChefPlate(myCurrentCategoryKey);
+    }
+
+    async function serveChefOrder() {
+      if (isBankrupt || !myCurrentChefRecipe) return;
+
+      const target = myCurrentChefRecipe.recipe || [];
+      const isMatch = (target.length === myChefPlate.length) && target.every((v, i) => v === myChefPlate[i]);
+
+      if (isMatch) {
+        myChefOrdersCount++;
+        showToast(`🎉 ¡Pedido #${myChefOrdersCount} entregado con éxito! ✨`);
+
+        const updateObj = {};
+        updateObj[`scores/${myChefUser}`] = myChefOrdersCount;
+        rtdb.ref('chef_match').update(updateObj);
+
+        nextChefOrder();
+      } else {
+        triggerBankruptcy("¡Te equivocaste en los ingredientes y el cliente se quejó!");
+      }
+    }
+
+    function triggerBankruptcy(reason) {
+      if (isBankrupt) return;
+      isBankrupt = true;
+      if (chefOrderTimerInterval) clearInterval(chefOrderTimerInterval);
+
+      document.getElementById('burgerPlayArena').style.display = 'none';
+      document.getElementById('bankruptcySummaryText').textContent = reason;
+      document.getElementById('bankruptcyRoom').style.display = 'block';
+
+      const updateObj = {};
+      updateObj[`bankrupt/${myChefUser}`] = true;
+      rtdb.ref('chef_match').update(updateObj);
+
+      showToast("💥 ¡Has caído en bancarrota! Esperando al otro chef...");
+    }
+
+    async function finishVersusMatch(crissScore, andreitaScore) {
+      document.getElementById('burgerPlayArena').style.display = 'none';
+      document.getElementById('bankruptcyRoom').style.display = 'none';
+      document.getElementById('matchSummarySection').style.display = 'block';
+
+      document.getElementById('finalCrissCount').textContent = crissScore;
+      document.getElementById('finalAndreitaCount').textContent = andreitaScore;
+
+      let winnerText = "";
+      if (crissScore > andreitaScore) {
+        winnerText = `👑 ¡Ganó Criss con ${crissScore} pedidos completados! Eres un Master Chef mi amor 💕`;
+      } else if (andreitaScore > crissScore) {
+        winnerText = `🌸 ¡Ganó Andreita con ${andreitaScore} pedidos completados! ¡Eres la reina de la cocina mi vida! 🥰`;
+      } else {
+        winnerText = `🤝 ¡Empate perfecto con ${crissScore} pedidos cada uno! Hechos el uno para el otro ❤️`;
+      }
+      document.getElementById('matchWinnerDeclaration').textContent = winnerText;
+
+      if (myChefUser === 'Criss') {
+        await saveRecordToFirestore('Criss', crissScore);
+        await saveRecordToFirestore('Andreita', andreitaScore);
+      }
+    }
+
+    async function saveRecordToFirestore(name, score) {
+      if (score <= 0) return;
+      if (name !== 'Criss' && name !== 'Andreita') return;
+
+      const top10Snap = await db.collection("chef_records").orderBy("orders", "desc").limit(10).get();
+      
+      let qualifiesForTop10 = false;
+      if (top10Snap.size < 10) {
+        qualifiesForTop10 = true;
+      } else {
+        const lowestScoreInTop = top10Snap.docs[top10Snap.docs.length - 1].data().orders;
+        if (score > lowestScoreInTop) {
+          qualifiesForTop10 = true;
+        }
+      }
+
+      if (!qualifiesForTop10) return;
+      
+      const today = new Date();
+      const dateStr = `${String(today.getDate()).padStart(2,'0')}/${String(today.getMonth()+1).padStart(2,'0')}/${today.getFullYear()}`;
+
+      await db.collection("chef_records").add({
+        chef: name,
+        orders: score,
+        date: dateStr,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      const snapshot = await db.collection("chef_records").orderBy("orders", "desc").get();
+      if (snapshot.size > 10) {
+        const docsToDelete = snapshot.docs.slice(10);
+        for (const doc of docsToDelete) {
+          await doc.ref.delete();
+        }
+      }
+
+      loadTop10Records();
+    }
+
+    function loadTop10Records() {
+      db.collection("chef_records")
+        .orderBy("orders", "desc")
+        .limit(10)
+        .onSnapshot(snap => {
+          const tbody = document.getElementById('top10RecordsBody');
+          tbody.innerHTML = '';
+
+          if (snap.empty) {
+            tbody.innerHTML = `<tr><td colspan="4" style="color: #d63384; font-weight: 700; font-style: italic; background: #fff;">Aún no hay récords en el Top 10. ¡Jueguen su primera partida! ✨</td></tr>`;
+            return;
+          }
+
+          let rank = 1;
+          snap.forEach(doc => {
+            const r = doc.data();
+            const tr = document.createElement('tr');
+            
+            let medalBadge = "";
+            let rankClass = "";
+
+            if (rank === 1) {
+              medalBadge = `<span class="medal-icon-badge">🥇</span>`;
+              rankClass = "rank-1-row";
+            } else if (rank === 2) {
+              medalBadge = `<span class="medal-icon-badge">🥈</span>`;
+              rankClass = "rank-2-row";
+            } else if (rank === 3) {
+              medalBadge = `<span class="medal-icon-badge">🥉</span>`;
+              rankClass = "rank-3-row";
+            }
+
+            tr.className = rankClass;
+            tr.innerHTML = `
+              <td class="rank-cell-text">${medalBadge}#${rank}</td>
+              <td style="font-weight: 800; color: #800020;">${r.chef === 'Criss' ? '👑 Criss' : '🌸 Andreita'}</td>
+              <td style="font-weight: 800; color: #d63384;">${r.orders} pedidos</td>
+              <td style="color: #666; font-size: 0.88rem;">${r.date || 'Hoy'}</td>
+            `;
+            tbody.appendChild(tr);
+            rank++;
+          });
+        });
+    }
+
+    function restartChefVersusMatch() {
+      if (myChefUser === 'Criss') {
+        startVersusMatchOnline();
+      } else {
+        showToast("Iniciando nueva partida con tu amorcito 💕");
+        rtdb.ref('chef_match').update({
+          status: "in_progress",
+          scores: { Criss: 0, Andreita: 0 },
+          bankrupt: { Criss: false, Andreita: false }
+        });
+      }
+    }
+
+    function toggleBurgerFullscreen() {
+      const el = document.getElementById('burgerGameCard');
+      if (!document.fullscreenElement) {
+        if (el.requestFullscreen) el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      }
+    }
+
     createBgHearts();
     initMemoryGame();
   </script>
 </body>
 </html>
+
+YA FUNCIONA PERO NO AL 100%, ARREGLA QUE CUANDO PIDA UN PEDIDO LOS INGREDIENTES SALGAN PARA COLOCAR PORQUE HAY INGREDIENTES QUE NO SALEN PARA PONERLO
