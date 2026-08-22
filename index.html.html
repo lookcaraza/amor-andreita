@@ -11,10 +11,11 @@
   <!-- SDK de la API Widget de SoundCloud para control de audio -->
   <script src="https://w.soundcloud.com/player/api.js"></script>
 
-  <!-- SDKs Compatibles de Firebase (App, Firestore, Storage) NATIVO GRATUITO -->
+  <!-- SDKs Compatibles de Firebase (App, Firestore, Storage, Database) NATIVO GRATUITO -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
   <style>
     :root {
@@ -1947,6 +1948,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const storage = firebase.storage();
+    const rtdb = firebase.database();
 
     // CONFIGURACIÓN DE CLOUDINARY
     const CLOUDINARY_CLOUD_NAME = "r893yslz";
@@ -3432,8 +3434,6 @@
     ];
 
     let myPinturilloUser = "";
-    let pinturilloRoomUnsub = null;
-    let pinturilloChatUnsub = null;
     let isDrawingOnCanvas = false;
     let currentColor = "#000000";
     let lastDrawX = 0;
@@ -3441,10 +3441,9 @@
     let pinturilloTimerInterval = null;
     let localCurrentRole = "guess"; // "drawer" o "guess"
     let localCurrentWord = "";
-    let presenceHeartbeatInterval = null;
+    let lastClearSignal = 0;
 
     function initPinturilloSystem() {
-      // Si ya hay usuario guardado previamente en sesión
       const savedUser = localStorage.getItem('pinturillo_saved_user');
       if (savedUser) {
         choosePinturilloUser(savedUser);
@@ -3464,7 +3463,7 @@
       }
     }
 
-    async function connectPinturillo() {
+    function connectPinturillo() {
       if (!myPinturilloUser) {
         showToast("Por favor selecciona si eres Criss o Andreita 💕");
         return;
@@ -3473,86 +3472,72 @@
       document.getElementById('pinturilloLoginBox').style.display = 'none';
       document.getElementById('pinturilloWaitingBox').style.display = 'block';
 
-      // Registro de presencia en Firestore
-      const roomRef = db.collection("pinturillo_online").doc("sala_principal");
-      
-      const updateData = {};
-      updateData[`presence.${myPinturilloUser}`] = Date.now();
-      await roomRef.set(updateData, { merge: true });
+      // Presencia en tiempo real en Firebase Realtime Database
+      const presenceRef = rtdb.ref(`pinturillo_presence/${myPinturilloUser}`);
+      const connectedRef = rtdb.ref('.info/connected');
 
-      // Heartbeat cada 4 segundos para mantener presencia
-      if (presenceHeartbeatInterval) clearInterval(presenceHeartbeatInterval);
-      presenceHeartbeatInterval = setInterval(() => {
-        const hb = {};
-        hb[`presence.${myPinturilloUser}`] = Date.now();
-        roomRef.set(hb, { merge: true }).catch(()=>{});
-      }, 4000);
+      connectedRef.on('value', (snap) => {
+        if (snap.val() === true) {
+          presenceRef.onDisconnect().set(false);
+          presenceRef.set(true);
+        }
+      });
 
-      // Listener de la sala
-      listenPinturilloRoom();
+      listenPinturilloPresence();
+      listenPinturilloGameState();
       listenPinturilloChat();
+      listenPinturilloStrokes();
     }
 
-    function listenPinturilloRoom() {
-      const roomRef = db.collection("pinturillo_online").doc("sala_principal");
-      
-      if (pinturilloRoomUnsub) pinturilloRoomUnsub();
+    function listenPinturilloPresence() {
+      const allPresenceRef = rtdb.ref('pinturillo_presence');
+      allPresenceRef.on('value', (snap) => {
+        const presence = snap.val() || {};
+        const crissOnline = presence.Criss === true;
+        const andreitaOnline = presence.Andreita === true;
 
-      pinturilloRoomUnsub = roomRef.onSnapshot((doc) => {
-        if (!doc.exists) {
-          // Inicializar sala base
-          roomRef.set({
-            status: "waiting",
-            drawer: "Criss",
-            word: "",
-            secretWord: "",
-            timerEnd: 0,
-            scores: { Criss: 0, Andreita: 0 },
-            canvasStroke: null,
-            clearCanvasSignal: 0,
-            presence: {}
-          });
-          return;
-        }
-
-        const data = doc.data();
-        const now = Date.now();
-
-        // Verificar si ambos están conectados (presencia en los últimos 15 seg)
-        const crissOnline = data.presence && data.presence.Criss && (now - data.presence.Criss < 15000);
-        const andreitaOnline = data.presence && data.presence.Andreita && (now - data.presence.Andreita < 15000);
-
-        // Actualizar badges de espera
         document.getElementById('waitStatusCriss').textContent = `👑 Criss: ${crissOnline ? 'Conectado ✅' : 'Desconectado ❌'}`;
         document.getElementById('waitStatusCriss').className = `presence-badge ${crissOnline ? 'online' : ''}`;
         
         document.getElementById('waitStatusAndreita').textContent = `🌸 Andreita: ${andreitaOnline ? 'Conectada ✅' : 'Desconectada ❌'}`;
         document.getElementById('waitStatusAndreita').className = `presence-badge ${andreitaOnline ? 'online' : ''}`;
 
-        // Marcadores
+        if (crissOnline && andreitaOnline) {
+          document.getElementById('pinturilloWaitingBox').style.display = 'none';
+          
+          // Si ambos se conectan y la sala no está activa, iniciar automáticamente
+          rtdb.ref('pinturillo_room').once('value').then(roomSnap => {
+            const roomData = roomSnap.val();
+            if (!roomData || roomData.status === 'waiting' || !roomData.status) {
+              if (myPinturilloUser === 'Criss') {
+                startNewPinturilloRound('Criss');
+              }
+            }
+          });
+        } else {
+          document.getElementById('pinturilloWaitingBox').style.display = 'block';
+          document.getElementById('pinturilloWordChoiceModal').style.display = 'none';
+          document.getElementById('pinturilloPlayArena').style.display = 'none';
+          if (pinturilloTimerInterval) clearInterval(pinturilloTimerInterval);
+        }
+      });
+    }
+
+    function listenPinturilloGameState() {
+      const roomRef = rtdb.ref('pinturillo_room');
+      roomRef.on('value', (snap) => {
+        const data = snap.val();
+        if (!data) return;
+
         if (data.scores) {
           document.getElementById('scoreCriss').textContent = data.scores.Criss || 0;
           document.getElementById('scoreAndreita').textContent = data.scores.Andreita || 0;
         }
 
-        // Si falta alguno de los dos, forzar sala de espera
-        if (!crissOnline || !andreitaOnline) {
-          document.getElementById('pinturilloWaitingBox').style.display = 'block';
-          document.getElementById('pinturilloWordChoiceModal').style.display = 'none';
-          document.getElementById('pinturilloPlayArena').style.display = 'none';
-          if (pinturilloTimerInterval) clearInterval(pinturilloTimerInterval);
-          return;
-        }
-
-        // AMBOS ESTÁN CONECTADOS:
-        document.getElementById('pinturilloWaitingBox').style.display = 'none';
-
-        // Determinar rol
         const isDrawer = (data.drawer === myPinturilloUser);
         localCurrentRole = isDrawer ? "drawer" : "guess";
-        localCurrentWord = data.word || "";
+        localCurrentWord = data.secretWord || "";
 
-        // Si la partida está en selección de palabra
         if (data.status === "choosing_word") {
           if (isDrawer) {
             document.getElementById('pinturilloWordChoiceModal').style.display = 'block';
@@ -3568,54 +3553,35 @@
           document.getElementById('pinturilloWordChoiceModal').style.display = 'none';
           document.getElementById('pinturilloPlayArena').style.display = 'block';
 
-          // Mostrar palabra o guiones según el rol
           if (isDrawer) {
             document.getElementById('pinturilloWordBanner').innerHTML = `✏️ DIBUJA: <span style="color: var(--soft-red);">${data.secretWord}</span>`;
             document.getElementById('drawingToolsBar').style.display = 'flex';
           } else {
-            const masked = data.secretWord.replace(/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/g, "_ ");
-            document.getElementById('pinturilloWordBanner').textContent = `ADIVINA (${data.secretWord.length} letras): ${masked}`;
+            const masked = (data.secretWord || "").replace(/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/g, "_ ");
+            document.getElementById('pinturilloWordBanner').textContent = `ADIVINA (${(data.secretWord || "").length} letras): ${masked}`;
             document.getElementById('drawingToolsBar').style.display = 'none';
           }
 
-          // Iniciar sincronización de cronómetro de 5 minutos
           syncPinturilloTimer(data.timerEnd, isDrawer);
 
-          // Sincronizar trazos entrantes si soy adivinador
-          if (!isDrawer && data.canvasStroke) {
-            drawStrokeOnLocalCanvas(data.canvasStroke);
-          }
-
-          // Limpieza de pizarra
           if (data.clearCanvasSignal && data.clearCanvasSignal !== lastClearSignal) {
             lastClearSignal = data.clearCanvasSignal;
             const canvas = document.getElementById('pinturilloCanvas');
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
           }
-        } 
-        else if (data.status === "waiting" || !data.status) {
-          // Si ambos acaban de entrar y no hay juego activo, iniciar primer turno
-          if (myPinturilloUser === "Criss") {
-            startNewPinturilloRound("Criss");
-          }
         }
       });
     }
-
-    let lastClearSignal = 0;
 
     function renderWordChoices(options) {
       const container = document.getElementById('wordChoicesContainer');
       container.innerHTML = '';
 
       if (!options || options.length === 0) {
-        // Generar 3 opciones aleatorias
         const shuffled = [...PINTURILLO_WORDS_POOL].sort(() => 0.5 - Math.random());
         options = shuffled.slice(0, 3);
-        db.collection("pinturillo_online").doc("sala_principal").update({
-          wordOptions: options
-        });
+        rtdb.ref('pinturillo_room').update({ wordOptions: options });
       }
 
       options.forEach(word => {
@@ -3627,7 +3593,7 @@
       });
     }
 
-    async function startNewPinturilloRound(nextDrawer) {
+    function startNewPinturilloRound(nextDrawer) {
       const shuffled = [...PINTURILLO_WORDS_POOL].sort(() => 0.5 - Math.random());
       const choices = shuffled.slice(0, 3);
 
@@ -3635,37 +3601,38 @@
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      await db.collection("pinturillo_online").doc("sala_principal").update({
+      rtdb.ref('pinturillo_room').update({
         status: "choosing_word",
         drawer: nextDrawer,
         wordOptions: choices,
         secretWord: "",
-        clearCanvasSignal: Date.now(),
-        canvasStroke: null
+        clearCanvasSignal: Date.now()
       });
 
-      // Mensaje del sistema en el chat
-      db.collection("pinturillo_online").doc("sala_principal").collection("chat").add({
+      rtdb.ref('pinturillo_strokes').remove();
+
+      rtdb.ref('pinturillo_chat').push({
         author: "Sistema",
-        text: `✨ Nueva ronda iniciada: ¡Turno de dibujar para ${nextDrawer}! ✨`,
+        text: `✨ Nueva ronda: ¡Turno de dibujar para ${nextDrawer}! ✨`,
         type: "system",
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        timestamp: Date.now()
       });
     }
 
-    async function selectWordToDraw(selectedWord) {
-      const timerDuration = 5 * 60 * 1000; // 5 Minutos exactos
+    function selectWordToDraw(selectedWord) {
+      const timerDuration = 5 * 60 * 1000; // 5 Minutos
       const timerEnd = Date.now() + timerDuration;
 
       const canvas = document.getElementById('pinturilloCanvas');
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      await db.collection("pinturillo_online").doc("sala_principal").update({
+      rtdb.ref('pinturillo_strokes').remove();
+
+      rtdb.ref('pinturillo_room').update({
         status: "playing",
         secretWord: selectedWord,
         timerEnd: timerEnd,
-        canvasStroke: null,
         clearCanvasSignal: Date.now()
       });
     }
@@ -3697,19 +3664,18 @@
     async function handlePinturilloTimeOut() {
       showToast("¡Se agotó el tiempo de 5 minutos! 🥺");
 
-      const roomRef = db.collection("pinturillo_online").doc("sala_principal");
-      const doc = await roomRef.get();
-      const currentDrawer = doc.data().drawer;
+      const snap = await rtdb.ref('pinturillo_room').once('value');
+      const roomData = snap.val() || {};
+      const currentDrawer = roomData.drawer;
       const otherUser = (currentDrawer === "Criss") ? "Andreita" : "Criss";
 
-      await db.collection("pinturillo_online").doc("sala_principal").collection("chat").add({
+      rtdb.ref('pinturillo_chat').push({
         author: "Sistema",
-        text: `⏳ ¡Tiempo terminado! La palabra secreta era: "${doc.data().secretWord}". Turno de ${otherUser}.`,
+        text: `⏳ ¡Tiempo terminado! La palabra era: "${roomData.secretWord}". Turno de ${otherUser}.`,
         type: "system",
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        timestamp: Date.now()
       });
 
-      // Pasa el turno al otro
       startNewPinturilloRound(otherUser);
     }
 
@@ -3753,19 +3719,13 @@
         ctx.lineTo(pos.x, pos.y);
         ctx.stroke();
 
-        // Enviar trazo a Firestore
-        const strokeData = {
+        rtdb.ref('pinturillo_strokes').push({
           x1: lastDrawX,
           y1: lastDrawY,
           x2: pos.x,
           y2: pos.y,
-          color: currentColor,
-          t: Date.now()
-        };
-
-        db.collection("pinturillo_online").doc("sala_principal").update({
-          canvasStroke: strokeData
-        }).catch(()=>{});
+          color: currentColor
+        });
 
         lastDrawX = pos.x;
         lastDrawY = pos.y;
@@ -3784,20 +3744,25 @@
       window.addEventListener('touchend', stopDraw);
     }
 
-    function drawStrokeOnLocalCanvas(stroke) {
-      if (!stroke) return;
-      const canvas = document.getElementById('pinturilloCanvas');
-      const ctx = canvas.getContext('2d');
+    function listenPinturilloStrokes() {
+      rtdb.ref('pinturillo_strokes').on('child_added', (snap) => {
+        if (localCurrentRole !== "drawer") {
+          const s = snap.val();
+          if (!s) return;
+          const canvas = document.getElementById('pinturilloCanvas');
+          const ctx = canvas.getContext('2d');
 
-      ctx.strokeStyle = stroke.color || "#000000";
-      ctx.lineWidth = 4;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
+          ctx.strokeStyle = s.color || "#000000";
+          ctx.lineWidth = 4;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
 
-      ctx.beginPath();
-      ctx.moveTo(stroke.x1, stroke.y1);
-      ctx.lineTo(stroke.x2, stroke.y2);
-      ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(s.x1, s.y1);
+          ctx.lineTo(s.x2, s.y2);
+          ctx.stroke();
+        }
+      });
     }
 
     function setPinturilloColor(colorHex) {
@@ -3810,42 +3775,35 @@
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      db.collection("pinturillo_online").doc("sala_principal").update({
-        clearCanvasSignal: Date.now(),
-        canvasStroke: null
+      rtdb.ref('pinturillo_strokes').remove();
+      rtdb.ref('pinturillo_room').update({
+        clearCanvasSignal: Date.now()
       });
     }
 
-    /* CHAT DE ADIVINANZAS Y SISTEMA DE PUNTUACIÓN */
+    /* CHAT DE ADIVINANZAS Y PUNTUACIÓN */
     function listenPinturilloChat() {
-      if (pinturilloChatUnsub) pinturilloChatUnsub();
+      rtdb.ref('pinturillo_chat').limitToLast(35).on('value', (snap) => {
+        const chatBox = document.getElementById('pinturilloChatMessages');
+        chatBox.innerHTML = '';
 
-      pinturilloChatUnsub = db.collection("pinturillo_online")
-        .doc("sala_principal")
-        .collection("chat")
-        .orderBy("timestamp", "asc")
-        .limitToLast(30)
-        .onSnapshot(snapshot => {
-          const chatBox = document.getElementById('pinturilloChatMessages');
-          chatBox.innerHTML = '';
+        snap.forEach(child => {
+          const m = child.val();
+          const bubble = document.createElement('div');
+          
+          let bubbleClass = "chat-bubble";
+          if (m.type === "system") bubbleClass += " system";
+          else if (m.type === "success") bubbleClass += " success";
+          else if (m.author === "Criss") bubbleClass += " criss";
+          else if (m.author === "Andreita") bubbleClass += " andreita";
 
-          snapshot.forEach(doc => {
-            const m = doc.data();
-            const bubble = document.createElement('div');
-            
-            let bubbleClass = "chat-bubble";
-            if (m.type === "system") bubbleClass += " system";
-            else if (m.type === "success") bubbleClass += " success";
-            else if (m.author === "Criss") bubbleClass += " criss";
-            else if (m.author === "Andreita") bubbleClass += " andreita";
-
-            bubble.className = bubbleClass;
-            bubble.innerHTML = `<b>${m.author}:</b> ${m.text}`;
-            chatBox.appendChild(bubble);
-          });
-
-          chatBox.scrollTop = chatBox.scrollHeight;
+          bubble.className = bubbleClass;
+          bubble.innerHTML = `<b>${m.author}:</b> ${m.text}`;
+          chatBox.appendChild(bubble);
         });
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+      });
     }
 
     async function sendPinturilloGuess() {
@@ -3854,35 +3812,30 @@
       if (!text) return;
       input.value = '';
 
-      const roomRef = db.collection("pinturillo_online").doc("sala_principal");
-      const roomSnap = await roomRef.get();
-      const roomData = roomSnap.data();
+      const snap = await rtdb.ref('pinturillo_room').once('value');
+      const roomData = snap.val();
 
       if (!roomData || roomData.status !== "playing") {
         showToast("La partida no ha comenzado mi amor 💕");
         return;
       }
 
-      // Normalizar texto para comparación
-      const normalize = (str) => str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+      const normalize = (str) => (str || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
       const isCorrectGuess = (normalize(text) === normalize(roomData.secretWord || ""));
 
       if (isCorrectGuess && localCurrentRole === "guess") {
-        // ¡ADIVINÓ CORRECTAMENTE!
         const currentScores = roomData.scores || { Criss: 0, Andreita: 0 };
-        currentScores[myPinturilloUser] = (currentScores[myPinturilloUser] || 0) + 50; // Puntos por adivinar
-        currentScores[roomData.drawer] = (currentScores[roomData.drawer] || 0) + 30; // Puntos para el dibujante
+        currentScores[myPinturilloUser] = (currentScores[myPinturilloUser] || 0) + 50;
+        currentScores[roomData.drawer] = (currentScores[roomData.drawer] || 0) + 30;
 
-        // Registrar mensaje de victoria
-        await roomRef.collection("chat").add({
+        rtdb.ref('pinturillo_chat').push({
           author: "🎉 Sistema",
           text: `¡${myPinturilloUser} adivinó la palabra "${roomData.secretWord}"! (+50 pts)`,
           type: "success",
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          timestamp: Date.now()
         });
 
-        // Actualizar puntos en Firestore y pasar turno
-        await roomRef.update({
+        rtdb.ref('pinturillo_room').update({
           scores: currentScores
         });
 
@@ -3894,12 +3847,11 @@
         }, 1500);
 
       } else {
-        // Mensaje normal de chat
-        await roomRef.collection("chat").add({
+        rtdb.ref('pinturillo_chat').push({
           author: myPinturilloUser,
           text: text,
           type: "user",
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          timestamp: Date.now()
         });
       }
     }
