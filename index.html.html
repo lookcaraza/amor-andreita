@@ -2075,6 +2075,152 @@
       color: white;
       border-color: #b7094c;
     }
+    .overcooked-container {
+  background: #ffffff;
+  border: 3px solid var(--rose-pink);
+  border-radius: 25px;
+  padding: 16px;
+  box-shadow: 0 10px 25px rgba(230, 92, 101, 0.15);
+  position: relative;
+}
+.coop-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: #fff0f3;
+  padding: 10px 14px;
+  border-radius: 18px;
+  border: 2px solid var(--rose-pink);
+  margin-bottom: 12px;
+}
+.coop-orders-tray {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 8px 4px;
+  margin-bottom: 12px;
+}
+.coop-order-ticket {
+  background: #ffffff;
+  border: 2px solid var(--soft-red);
+  border-radius: 14px;
+  padding: 8px 12px;
+  min-width: 140px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  flex-shrink: 0;
+}
+.coop-ticket-name {
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--title-burgundy);
+  margin-bottom: 4px;
+}
+.coop-ticket-reqs {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  font-size: 1.1rem;
+}
+.coop-pass-counter {
+  background: linear-gradient(135deg, #fff0f3, #ffe3e8);
+  border: 2px dashed #ff758f;
+  border-radius: 18px;
+  padding: 10px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.pass-items-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-height: 42px;
+  align-items: center;
+  margin-top: 6px;
+}
+.pass-item-pill {
+  background: #ffffff;
+  border: 2px solid var(--soft-red);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: transform 0.15s;
+}
+.pass-item-pill:hover {
+  transform: scale(1.05);
+}
+.coop-station-box {
+  background: #ffffff;
+  border: 2px solid var(--rose-pink);
+  border-radius: 18px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.station-heading {
+  font-weight: 800;
+  color: var(--title-burgundy);
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.stove-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.stove-card {
+  background: #fff0f3;
+  border: 2px solid var(--rose-pink);
+  border-radius: 14px;
+  padding: 10px;
+  text-align: center;
+  position: relative;
+}
+.stove-card.burning {
+  background: #ffebee;
+  border-color: #d32f2f;
+  animation: heartPulse 0.6s infinite alternate;
+}
+.chop-action-area {
+  text-align: center;
+  padding: 10px;
+  background: #fff0f3;
+  border-radius: 14px;
+  border: 1.5px solid var(--rose-pink);
+}
+.chop-progress-track {
+  width: 100%;
+  height: 14px;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid var(--rose-pink);
+  overflow: hidden;
+  margin: 8px 0;
+}
+.chop-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #2a9d8f;
+  transition: width 0.1s;
+}
+.dirty-plates-badge {
+  background: #e63946;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
   </style>
 </head>
 <body>
@@ -2213,6 +2359,15 @@
             </div>
             <span class="new-badge-pill" id="badge-game-8">NEW</span>
            </div>
+
+           <div class="minigame-nav-item" id="nav-game-9" onclick="selectMinigameFromSidebar(9)">
+            <span class="minigame-nav-icon">🍳</span>
+            <div class="minigame-nav-info">
+              <span class="minigame-nav-name">Overcooked Dúo</span>
+              <span class="minigame-nav-sub">Cooperativo 2vEnv</span>
+            </div>
+            <span class="new-badge-pill" id="badge-game-9">NEW</span>
+          </div>
         </aside>
 
         <div class="minigames-main-stage">
@@ -2705,6 +2860,143 @@
             </div>
           </div>
 
+<div id="game-stage-9" style="display: none; width: 100%;">
+            <div class="overcooked-container">
+              
+              <!-- Login / Selección de Rol -->
+              <div id="coopLoginBox" style="text-align: center; padding: 20px 10px;">
+                <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.35rem; margin-bottom: 8px;">🍳 Overcooked Dúo: Cocina en Pareja</h3>
+                <p style="font-weight: 700; color: #555; margin-bottom: 16px;">Trabajen en equipo en tiempo real para sacar las órdenes:</p>
+                <div class="profile-selector" style="max-width: 320px; margin: 0 auto 15px auto;">
+                  <div class="profile-card" id="coopUserCriss" onclick="chooseCoopUser('Criss')">👑 Soy Criss</div>
+                  <div class="profile-card" id="coopUserAndreita" onclick="chooseCoopUser('Andreita')">🌸 Soy Andreita</div>
+                </div>
+                <button class="modal-btn" onclick="connectCoop()" style="max-width: 250px; margin: 0 auto;">Entrar a la Cocina 🚀</button>
+              </div>
+
+              <!-- Sala de Espera -->
+              <div id="coopWaitingBox" style="display: none; text-align: center; padding: 25px 10px;">
+                <div style="font-size: 3rem; margin-bottom: 8px; animation: heartPulse 1.2s infinite ease-in-out;">👨‍🍳👩‍🍳💕</div>
+                <h3 style="color: var(--title-burgundy); font-weight: 800; margin-bottom: 8px;">Sala de Servicio</h3>
+                <p style="font-weight: 700; color: #666; max-width: 400px; margin: 0 auto 15px auto;">Ambos deben ponerse listos para abrir el restaurante:</p>
+                
+                <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+                  <span class="presence-badge" id="coopWaitCriss">👑 Criss: Desconectado</span>
+                  <span class="presence-badge" id="coopWaitAndreita">🌸 Andreita: Desconectada</span>
+                </div>
+
+                <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 18px;">
+                  <span class="presence-badge ready" id="coopReadyCriss">👑 Criss: No listo ⏳</span>
+                  <span class="presence-badge ready" id="coopReadyAndreita">🌸 Andreita: No lista ⏳</span>
+                </div>
+
+                <button class="modal-btn" id="coopReadyBtn" onclick="toggleCoopReady()" style="max-width: 280px; margin: 10px auto; background: #2a9d8f;">✨ ¡Chef Listo para Cooperar! ✨</button>
+              </div>
+
+              <!-- Área Principal de Juego Cooperativo -->
+              <div id="coopPlayArena" style="display: none;">
+                
+                <div class="coop-header-bar">
+                  <div style="font-weight: 800; color: var(--title-burgundy); font-size: 1.05rem;" id="coopMyRoleTag">Rol: Chef</div>
+                  <div style="font-weight: 800; color: #2a9d8f; font-size: 1.1rem;">🏆 Puntos: <span id="coopScoreDisplay">0</span></div>
+                  <div class="pinturillo-timer-badge" id="coopTimerDisplay">⏳ 03:00</div>
+                </div>
+
+                <!-- Comandas / Pedidos en Fila -->
+                <div style="font-weight: 800; color: var(--title-burgundy); font-size: 0.85rem; margin-bottom: 4px;">📋 PEDIDOS EN COLA:</div>
+                <div class="coop-orders-tray" id="coopOrdersTray"></div>
+
+                <!-- Mesa Central de Pase (Compartida) -->
+                <div class="coop-pass-counter">
+                  <div style="font-weight: 800; color: var(--title-burgundy); font-size: 0.9rem;">🪟 MESA DE PASE (Toca para recoger):</div>
+                  <div class="pass-items-row" id="coopPassItemsRow">
+                    <span style="color: #999; font-weight: 700; font-size: 0.85rem;">(Mesa vacía...)</span>
+                  </div>
+                </div>
+
+                <!-- Estación Jugador 1: Despensa y Tabla de Picar (Criss) -->
+                <div id="stationPrep" class="coop-station-box" style="display: none;">
+                  <div class="station-heading">🔪 ESTACIÓN DE CORTE & DESPENSA</div>
+                  
+                  <div style="font-weight: 700; font-size: 0.82rem; color: #555; margin-bottom: 6px;">1. Selecciona ingrediente crudo:</div>
+                  <div class="burger-controls-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 12px;">
+                    <button class="burger-ingredient-btn" onclick="selectRawIngredient('carne')"><span>🥩</span>Carne</button>
+                    <button class="burger-ingredient-btn" onclick="selectRawIngredient('tomate')"><span>🍅</span>Tomate</button>
+                    <button class="burger-ingredient-btn" onclick="selectRawIngredient('lechuga')"><span>🥬</span>Lechuga</button>
+                    <button class="burger-ingredient-btn" onclick="selectRawIngredient('queso')"><span>🧀</span>Queso</button>
+                  </div>
+
+                  <div class="chop-action-area">
+                    <div style="font-weight: 800; color: var(--title-burgundy); font-size: 0.9rem;" id="chopStatusText">Mesa de corte libre</div>
+                    <div class="chop-progress-track"><div class="chop-progress-fill" id="chopProgressFill"></div></div>
+                    <button class="modal-btn" id="chopActionBtn" onclick="performChopTap()" disabled style="padding: 10px; margin-top: 6px; background: #e65c65;">🔪 ¡Picar Rápido!</button>
+                  </div>
+                </div>
+
+                <!-- Estación Jugador 2: Estufas, Emplatado y Entrega (Andreita) -->
+                <div id="stationCook" class="coop-station-box" style="display: none;">
+                  <div class="station-heading">
+                    🍳 ESTACIÓN DE COCCIÓN & ENTREGA
+                    <span class="dirty-plates-badge" id="cleanPlatesCountBadge">Platos Limpios: 2</span>
+                  </div>
+
+                  <div class="stove-grid">
+                    <!-- Sartén 1 -->
+                    <div class="stove-card" id="stoveCard1">
+                      <div style="font-weight: 800; font-size: 0.85rem; color: var(--title-burgundy);">Sartén 1</div>
+                      <div style="font-size: 1.8rem; margin: 4px 0;" id="stoveIcon1">🍳</div>
+                      <div style="font-size: 0.8rem; font-weight: 700; color: #555;" id="stoveStatus1">Vacío</div>
+                      <button class="tool-btn" id="stoveBtn1" onclick="handleStoveAction(1)" style="margin-top: 6px; width: 100%;">Cocinar Carne</button>
+                    </div>
+
+                    <!-- Sartén 2 -->
+                    <div class="stove-card" id="stoveCard2">
+                      <div style="font-weight: 800; font-size: 0.85rem; color: var(--title-burgundy);">Sartén 2</div>
+                      <div style="font-size: 1.8rem; margin: 4px 0;" id="stoveIcon2">🍳</div>
+                      <div style="font-size: 0.8rem; font-weight: 700; color: #555;" id="stoveStatus2">Vacío</div>
+                      <button class="tool-btn" id="stoveBtn2" onclick="handleStoveAction(2)" style="margin-top: 6px; width: 100%;">Cocinar Carne</button>
+                    </div>
+                  </div>
+
+                  <!-- Plato en Armado -->
+                  <div style="margin-top: 12px; background: #fff0f3; border-radius: 14px; padding: 10px; border: 1.5px solid var(--rose-pink);">
+                    <div style="font-weight: 800; font-size: 0.85rem; color: var(--title-burgundy); margin-bottom: 4px;">🍽️ Plato actual armado:</div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; min-height: 28px;" id="currentAssembledPlate">
+                      <span style="color: #999; font-size: 0.8rem; font-weight: 700;">(Vacío - Agrega pan y cosas de la mesa de pase)</span>
+                    </div>
+                    <div style="display: flex; gap: 6px; margin-top: 8px;">
+                      <button class="burger-action-btn" onclick="addBunToPlate()" style="background: #f4a261; padding: 8px; flex: 1;">🍞 Añadir Pan</button>
+                      <button class="burger-action-btn serve-btn" onclick="deliverPlateToCustomer()" style="padding: 8px; flex: 1.5;">🛎️ ¡Entregar!</button>
+                      <button class="burger-action-btn trash-btn" onclick="trashPlate()" style="padding: 8px;">🗑️</button>
+                    </div>
+                  </div>
+
+                  <!-- Fregadero de Platos -->
+                  <div style="margin-top: 10px; text-align: center;">
+                    <button class="modal-btn" onclick="washDirtyPlate()" style="background: #3a86ff; padding: 8px; font-size: 0.9rem; margin-top: 4px;">🧼 Lavar Plato Sucio (Tocar)</button>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Pantalla de Resumen Final Cooperativo -->
+              <div id="coopSummarySection" style="display: none; margin-top: 15px;">
+                <div class="cute-records-container" style="text-align: center;">
+                  <div style="font-size: 2.8rem; margin-bottom: 6px;" id="coopStarRating">⭐⭐⭐</div>
+                  <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.35rem;">🏆 ¡SERVICIO COOPERATIVO TERMINADO! 🏆</h3>
+                  <p style="font-weight: 700; color: #800020; margin: 10px 0;" id="coopLoveVerdict"></p>
+                  
+                  <div style="margin: 15px 0; font-weight: 800; font-size: 1.15rem; color: #2a9d8f;">
+                    Puntuación Final: <span id="coopFinalTotalScore">0</span> pts
+                  </div>
+
+                  <button class="modal-btn" onclick="restartCoopMatch()" style="max-width: 260px; margin: 15px auto 0 auto;">🔄 Jugar Otra Partida Juntos</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
 
           <!-- RECOMPENSA FINAL -->
           <div class="reward-modal" id="rewardModal">
@@ -2828,6 +3120,476 @@
   </div>
 
   <script>
+let myCoopUser = "";
+let amICoopReady = false;
+let currentChoppingItem = null;
+let currentChopTaps = 0;
+const REQUIRED_CHOP_TAPS = 4;
+let myAssembledItems = [];
+let coopTimerInterval = null;
+let cleanPlatesCount = 2;
+
+const COOP_RECIPES_CATALOG = [
+  { id: "burger_simple", name: "🍔 Burger Clásica", reqs: ["🍞 Pan", "🥩 Carne Asada", "🥬 Lechuga Picada"], points: 40 },
+  { id: "burger_completa", name: "🍔 Burger Especial", reqs: ["🍞 Pan", "🥩 Carne Asada", "🍅 Tomate Picado", "🧀 Queso Picado"], points: 60 },
+  { id: "ensalada_fresca", name: "🥗 Ensalada de Amor", reqs: ["🥬 Lechuga Picada", "🍅 Tomate Picado", "🧀 Queso Picado"], points: 50 }
+];
+
+function initCoopSystem() {
+  const savedUser = localStorage.getItem('basta_saved_user') || localStorage.getItem('pinturillo_saved_user');
+  if (savedUser && (savedUser === 'Criss' || savedUser === 'Andreita')) {
+    chooseCoopUser(savedUser);
+  }
+}
+
+function chooseCoopUser(name) {
+  if (name !== 'Criss' && name !== 'Andreita') return;
+  myCoopUser = name;
+  localStorage.setItem('basta_saved_user', name);
+  document.getElementById('coopUserCriss').classList.remove('selected');
+  document.getElementById('coopUserAndreita').classList.remove('selected');
+  if (name === 'Criss') {
+    document.getElementById('coopUserCriss').classList.add('selected');
+  } else if (name === 'Andreita') {
+    document.getElementById('coopUserAndreita').classList.add('selected');
+  }
+}
+
+function connectCoop() {
+  if (!myCoopUser || (myCoopUser !== 'Criss' && myCoopUser !== 'Andreita')) {
+    showToast("Por favor selecciona si eres Criss o Andreita 💕");
+    return;
+  }
+
+  document.getElementById('coopLoginBox').style.display = 'none';
+  document.getElementById('coopWaitingBox').style.display = 'block';
+
+  const presenceRef = rtdb.ref(`coop_presence/${myCoopUser}`);
+  const connectedRef = rtdb.ref('.info/connected');
+
+  connectedRef.on('value', (snap) => {
+    if (snap.val() === true) {
+      presenceRef.onDisconnect().set(false);
+      presenceRef.set(true);
+    }
+  });
+
+  listenCoopPresence();
+  listenCoopGameState();
+}
+
+function toggleCoopReady() {
+  amICoopReady = !amICoopReady;
+  const btn = document.getElementById('coopReadyBtn');
+  if (amICoopReady) {
+    btn.textContent = "✅ ¡Listo! (Esperando a tu chefcito...)";
+    btn.style.background = "#800020";
+  } else {
+    btn.textContent = "✨ ¡Chef Listo para Cooperar! ✨";
+    btn.style.background = "#2a9d8f";
+  }
+  rtdb.ref(`coop_ready/${myCoopUser}`).set(amICoopReady);
+}
+
+function listenCoopPresence() {
+  const allPresenceRef = rtdb.ref('coop_presence');
+  const readyRef = rtdb.ref('coop_ready');
+
+  allPresenceRef.on('value', (snap) => {
+    const presence = snap.val() || {};
+    const crissOnline = presence.Criss === true;
+    const andreitaOnline = presence.Andreita === true;
+
+    document.getElementById('coopWaitCriss').textContent = `👑 Criss: ${crissOnline ? 'En Sala ✅' : 'Ausente ❌'}`;
+    document.getElementById('coopWaitCriss').className = `presence-badge ${crissOnline ? 'online' : ''}`;
+    
+    document.getElementById('coopWaitAndreita').textContent = `🌸 Andreita: ${andreitaOnline ? 'En Sala ✅' : 'Ausente ❌'}`;
+    document.getElementById('coopWaitAndreita').className = `presence-badge ${andreitaOnline ? 'online' : ''}`;
+  });
+
+  readyRef.on('value', (snap) => {
+    const readyData = snap.val() || {};
+    const crissReady = readyData.Criss === true;
+    const andreitaReady = readyData.Andreita === true;
+
+    document.getElementById('coopReadyCriss').textContent = `👑 Criss: ${crissReady ? '¡Listo! ✅' : 'No listo ⏳'}`;
+    document.getElementById('coopReadyCriss').className = `presence-badge ${crissReady ? 'ready-ok' : 'ready'}`;
+
+    document.getElementById('coopReadyAndreita').textContent = `🌸 Andreita: ${andreitaReady ? '¡Lista! ✅' : 'No lista ⏳'}`;
+    document.getElementById('coopReadyAndreita').className = `presence-badge ${andreitaReady ? 'ready-ok' : 'ready'}`;
+
+    if (crissReady && andreitaReady) {
+      rtdb.ref('coop_match').once('value').then(snapMatch => {
+        const data = snapMatch.val();
+        if (!data || data.status === 'idle' || data.status === 'finished') {
+          if (myCoopUser === 'Criss') {
+            startCoopGameOnline();
+          }
+        }
+      });
+    }
+  });
+}
+
+function startCoopGameOnline() {
+  const initialOrders = [
+    COOP_RECIPES_CATALOG[0],
+    COOP_RECIPES_CATALOG[1]
+  ];
+
+  rtdb.ref('coop_match').set({
+    status: "playing",
+    score: 0,
+    timerEnd: Date.now() + (3 * 60 * 1000),
+    orders: initialOrders,
+    passTable: [],
+    stoves: {
+      stove1: { status: "empty", ingredient: "", timer: 0 },
+      stove2: { status: "empty", ingredient: "", timer: 0 }
+    }
+  });
+}
+
+function listenCoopGameState() {
+  rtdb.ref('coop_match').on('value', (snap) => {
+    const data = snap.val();
+    if (!data) return;
+
+    if (data.status === "playing") {
+      document.getElementById('coopWaitingBox').style.display = 'none';
+      document.getElementById('coopSummarySection').style.display = 'none';
+      document.getElementById('coopPlayArena').style.display = 'block';
+
+      document.getElementById('coopScoreDisplay').textContent = data.score || 0;
+      syncCoopTimer(data.timerEnd);
+
+      // Asignación de estaciones: Criss = Picador, Andreita = Cocinera
+      if (myCoopUser === "Criss") {
+        document.getElementById('stationPrep').style.display = 'block';
+        document.getElementById('stationCook').style.display = 'none';
+        document.getElementById('coopMyRoleTag').textContent = "👑 Tu Rol: Despensa & Corte";
+      } else {
+        document.getElementById('stationPrep').style.display = 'none';
+        document.getElementById('stationCook').style.display = 'block';
+        document.getElementById('coopMyRoleTag').textContent = "🌸 Tu Rol: Estufas & Entrega";
+      }
+
+      renderCoopOrders(data.orders || []);
+      renderCoopPassTable(data.passTable || []);
+      renderStovesUI(data.stoves || {});
+    } 
+    else if (data.status === "finished") {
+      showCoopSummary(data.score || 0);
+    }
+  });
+}
+
+function syncCoopTimer(timerEnd) {
+  if (coopTimerInterval) clearInterval(coopTimerInterval);
+
+  function update() {
+    const remainingMs = timerEnd - Date.now();
+    if (remainingMs <= 0) {
+      document.getElementById('coopTimerDisplay').textContent = "⏳ 00:00";
+      clearInterval(coopTimerInterval);
+      if (myCoopUser === "Criss") {
+        rtdb.ref('coop_match').update({ status: "finished" });
+      }
+      return;
+    }
+    const totalSec = Math.floor(remainingMs / 1000);
+    const m = String(Math.floor(totalSec / 60)).padStart(2, '0');
+    const s = String(totalSec % 60).padStart(2, '0');
+    document.getElementById('coopTimerDisplay').textContent = `⏳ ${m}:${s}`;
+  }
+  update();
+  coopTimerInterval = setInterval(update, 1000);
+}
+
+function renderCoopOrders(orders) {
+  const tray = document.getElementById('coopOrdersTray');
+  tray.innerHTML = '';
+  orders.forEach((ord) => {
+    const ticket = document.createElement('div');
+    ticket.className = 'coop-order-ticket';
+    ticket.innerHTML = `
+      <div class="coop-ticket-name">${ord.name}</div>
+      <div class="coop-ticket-reqs">${ord.reqs.map(r => r.split(' ')[0]).join(' ')}</div>
+      <div style="font-size: 0.75rem; font-weight: 800; color: #2a9d8f; margin-top: 4px;">+${ord.points} pts</div>
+    `;
+    tray.appendChild(ticket);
+  });
+}
+
+function renderCoopPassTable(items) {
+  const container = document.getElementById('coopPassItemsRow');
+  container.innerHTML = '';
+  if (!items || items.length === 0) {
+    container.innerHTML = '<span style="color: #999; font-weight: 700; font-size: 0.85rem;">(Mesa vacía...)</span>';
+    return;
+  }
+  items.forEach((item, index) => {
+    const pill = document.createElement('button');
+    pill.className = 'pass-item-pill';
+    pill.textContent = item;
+    pill.onclick = () => takeItemFromPassTable(index, item);
+    container.appendChild(pill);
+  });
+}
+
+/* ACCIONES JUGADOR 1 (PREPARADOR) */
+function selectRawIngredient(type) {
+  const labels = {
+    carne: "🥩 Carne Picada",
+    tomate: "🍅 Tomate Picado",
+    lechuga: "🥬 Lechuga Picada",
+    queso: "🧀 Queso Picado"
+  };
+  currentChoppingItem = labels[type];
+  currentChopTaps = 0;
+  document.getElementById('chopStatusText').textContent = `Picando: ${currentChoppingItem} (0/${REQUIRED_CHOP_TAPS})`;
+  document.getElementById('chopProgressFill').style.width = '0%';
+  document.getElementById('chopActionBtn').disabled = false;
+  document.getElementById('chopActionBtn').style.background = "#2a9d8f";
+}
+
+function performChopTap() {
+  if (!currentChoppingItem) return;
+  currentChopTaps++;
+  const pct = (currentChopTaps / REQUIRED_CHOP_TAPS) * 100;
+  document.getElementById('chopProgressFill').style.width = `${pct}%`;
+  document.getElementById('chopStatusText').textContent = `Picando: ${currentChoppingItem} (${currentChopTaps}/${REQUIRED_CHOP_TAPS})`;
+
+  if (currentChopTaps >= REQUIRED_CHOP_TAPS) {
+    putItemOnPassTable(currentChoppingItem);
+    currentChoppingItem = null;
+    currentChopTaps = 0;
+    document.getElementById('chopStatusText').textContent = "✅ ¡Listo y enviado a la Mesa de Pase!";
+    document.getElementById('chopActionBtn').disabled = true;
+    document.getElementById('chopActionBtn').style.background = "#e65c65";
+  }
+}
+
+async function putItemOnPassTable(itemName) {
+  const snap = await rtdb.ref('coop_match/passTable').once('value');
+  const items = snap.val() || [];
+  if (items.length >= 6) {
+    showToast("¡La mesa de pase está llena! Espera a que recojan algo 🥺");
+    return;
+  }
+  items.push(itemName);
+  await rtdb.ref('coop_match/passTable').set(items);
+  showToast(`¡Pusiste ${itemName} en la mesa de pase! ✨`);
+}
+
+/* ACCIONES JUGADOR 2 (COCINERA / EMPLATADORA) */
+async function takeItemFromPassTable(index, itemName) {
+  const snap = await rtdb.ref('coop_match/passTable').once('value');
+  const items = snap.val() || [];
+  items.splice(index, 1);
+  await rtdb.ref('coop_match/passTable').set(items);
+
+  if (myCoopUser === "Andreita") {
+    myAssembledItems.push(itemName);
+    renderCurrentAssembledPlate();
+    showToast(`Recogiste ${itemName} para armar el plato 🍽️`);
+  } else {
+    showToast(`Recogiste ${itemName} de vuelta`);
+  }
+}
+
+function addBunToPlate() {
+  if (cleanPlatesCount <= 0) {
+    showToast("¡No tienes platos limpios! Lava uno primero 🧼");
+    return;
+  }
+  myAssembledItems.push("🍞 Pan");
+  renderCurrentAssembledPlate();
+}
+
+function renderCurrentAssembledPlate() {
+  const box = document.getElementById('currentAssembledPlate');
+  box.innerHTML = '';
+  if (myAssembledItems.length === 0) {
+    box.innerHTML = '<span style="color: #999; font-size: 0.8rem; font-weight: 700;">(Vacío - Agrega pan y cosas de la mesa de pase)</span>';
+    return;
+  }
+  myAssembledItems.forEach(it => {
+    const pill = document.createElement('span');
+    pill.className = 'recipe-item-pill';
+    pill.textContent = it;
+    box.appendChild(pill);
+  });
+}
+
+function trashPlate() {
+  myAssembledItems = [];
+  renderCurrentAssembledPlate();
+  showToast("Plato descartado a la basura 🗑️");
+}
+
+function washDirtyPlate() {
+  cleanPlatesCount++;
+  document.getElementById('cleanPlatesCountBadge').textContent = `Platos Limpios: ${cleanPlatesCount}`;
+  showToast("¡Lavaste un plato limpio! ✨🍽️");
+}
+
+/* MANEJO DE ESTUFAS */
+function renderStovesUI(stoves) {
+  for (let i = 1; i <= 2; i++) {
+    const s = stoves[`stove${i}`] || { status: "empty" };
+    const card = document.getElementById(`stoveCard${i}`);
+    const icon = document.getElementById(`stoveIcon${i}`);
+    const statusText = document.getElementById(`stoveStatus${i}`);
+    const btn = document.getElementById(`stoveBtn${i}`);
+
+    card.classList.remove('burning');
+
+    if (s.status === "empty") {
+      icon.textContent = "🍳";
+      statusText.textContent = "Vacío";
+      btn.textContent = "Poner Carne";
+      btn.style.background = "#fff0f3";
+      btn.style.color = "var(--title-burgundy)";
+    } else if (s.status === "cooking") {
+      icon.textContent = "🔥🥩";
+      statusText.textContent = "Cocinando...";
+      btn.textContent = "Cocinando ⏳";
+    } else if (s.status === "ready") {
+      icon.textContent = "✨🥩";
+      statusText.textContent = "¡Carne Lista!";
+      btn.textContent = "Sacar Carne";
+      btn.style.background = "#2a9d8f";
+      btn.style.color = "white";
+    } else if (s.status === "burning") {
+      card.classList.add('burning');
+      icon.textContent = "💥🔥";
+      statusText.textContent = "¡QUEMADO!";
+      btn.textContent = "🧯 ¡APAGAR!";
+      btn.style.background = "#d32f2f";
+      btn.style.color = "white";
+    }
+  }
+}
+
+async function handleStoveAction(stoveNum) {
+  const snap = await rtdb.ref(`coop_match/stoves/stove${stoveNum}`).once('value');
+  const s = snap.val() || { status: "empty" };
+
+  if (s.status === "empty") {
+    // Para cocinar carne, debe tener Carne Picada
+    const hasCarne = myAssembledItems.includes("🥩 Carne Picada");
+    if (!hasCarne) {
+      showToast("Debes recoger '🥩 Carne Picada' de la mesa de pase primero");
+      return;
+    }
+    myAssembledItems.splice(myAssembledItems.indexOf("🥩 Carne Picada"), 1);
+    renderCurrentAssembledPlate();
+
+    rtdb.ref(`coop_match/stoves/stove${stoveNum}`).set({ status: "cooking" });
+
+    setTimeout(() => {
+      rtdb.ref(`coop_match/stoves/stove${stoveNum}`).once('value').then(currSnap => {
+        if (currSnap.val()?.status === "cooking") {
+          rtdb.ref(`coop_match/stoves/stove${stoveNum}`).set({ status: "ready" });
+          
+          // Si no la saca en 6 segundos, se quema
+          setTimeout(() => {
+            rtdb.ref(`coop_match/stoves/stove${stoveNum}`).once('value').then(burnSnap => {
+              if (burnSnap.val()?.status === "ready") {
+                rtdb.ref(`coop_match/stoves/stove${stoveNum}`).set({ status: "burning" });
+              }
+            });
+          }, 6000);
+        }
+      });
+    }, 4500);
+  }
+  else if (s.status === "ready") {
+    myAssembledItems.push("🥩 Carne Asada");
+    renderCurrentAssembledPlate();
+    rtdb.ref(`coop_match/stoves/stove${stoveNum}`).set({ status: "empty" });
+    showToast("¡Carne asada lista añadida al plato! 🥩🔥");
+  }
+  else if (s.status === "burning") {
+    rtdb.ref(`coop_match/stoves/stove${stoveNum}`).set({ status: "empty" });
+    showToast("🧯 ¡Apagaste el fuego y limpiaste el sartén!");
+  }
+}
+
+async function deliverPlateToCustomer() {
+  const snap = await rtdb.ref('coop_match').once('value');
+  const data = snap.val();
+  const orders = data.orders || [];
+
+  let matchedIdx = -1;
+  for (let i = 0; i < orders.length; i++) {
+    const reqs = orders[i].reqs;
+    const isMatch = reqs.length === myAssembledItems.length && reqs.every(r => myAssembledItems.includes(r));
+    if (isMatch) {
+      matchedIdx = i;
+      break;
+    }
+  }
+
+  if (matchedIdx !== -1) {
+    const completedOrder = orders[matchedIdx];
+    const newScore = (data.score || 0) + completedOrder.points;
+    orders.splice(matchedIdx, 1);
+
+    // Añadir una nueva orden al azar
+    const randomNew = COOP_RECIPES_CATALOG[Math.floor(Math.random() * COOP_RECIPES_CATALOG.length)];
+    orders.push(randomNew);
+
+    await rtdb.ref('coop_match').update({
+      score: newScore,
+      orders: orders
+    });
+
+    myAssembledItems = [];
+    cleanPlatesCount = Math.max(0, cleanPlatesCount - 1);
+    document.getElementById('cleanPlatesCountBadge').textContent = `Platos Limpios: ${cleanPlatesCount}`;
+    renderCurrentAssembledPlate();
+
+    showToast(`🎉 ¡Pedido entregado con éxito! +${completedOrder.points} pts 💕`);
+  } else {
+    showToast("❌ Ese plato no coincide con ninguna comanda activa");
+  }
+}
+
+function showCoopSummary(finalScore) {
+  document.getElementById('coopPlayArena').style.display = 'none';
+  document.getElementById('coopSummarySection').style.display = 'block';
+  document.getElementById('coopFinalTotalScore').textContent = finalScore;
+
+  let stars = "⭐";
+  let verdict = "¡Buen intento mi amor! Nos faltó un poquito más de comunicación 💕";
+  if (finalScore >= 180) {
+    stars = "⭐⭐⭐";
+    verdict = "¡EQUIPO PERFECTO! Son la pareja de chefs más coordinada y hermosa del mundo 🥰✨";
+  } else if (finalScore >= 100) {
+    stars = "⭐⭐";
+    verdict = "¡Gran trabajo en equipo! Sacamos el restaurante adelante juntos mi vida ❤️";
+  }
+
+  document.getElementById('coopStarRating').textContent = stars;
+  document.getElementById('coopLoveVerdict').textContent = verdict;
+}
+
+function restartCoopMatch() {
+  amICoopReady = false;
+  rtdb.ref('coop_ready/Criss').set(false);
+  rtdb.ref('coop_ready/Andreita').set(false);
+  rtdb.ref('coop_match').set({
+    status: "idle",
+    score: 0
+  });
+
+  document.getElementById('coopReadyBtn').textContent = "✨ ¡Chef Listo para Cooperar! ✨";
+  document.getElementById('coopReadyBtn').style.background = "#2a9d8f";
+  document.getElementById('coopSummarySection').style.display = 'none';
+  document.getElementById('coopWaitingBox').style.display = 'block';
+}
     const firebaseConfig = { 
       apiKey: "AIzaSyBm0apLxTyiTOSqBMyZhr4aK_Stn1eLr-U", 
       authDomain: "our-love-story-73f3d.firebaseapp.com", 
@@ -3781,7 +4543,7 @@
         badge.style.display = 'none';
       }
 
-      for (let i = 1; i <= 8; i++) {
+      for (let i = 1; i <= 9; i++) {
         const navItem = document.getElementById(`nav-game-${i}`);
         if (navItem) {
           if (i === stageNum) {
@@ -3848,12 +4610,12 @@
     }
 
     function goToStage(stageNum) {
-      for(let i=1; i<=8; i++) {
-        document.getElementById(`game-stage-${i}`).style.display = 'none';
-        const navItem = document.getElementById(`nav-game-${i}`);
-        if(navItem) {
-          if(i === stageNum) navItem.classList.add('active');
-          else navItem.classList.remove('active');
+      for(let i=1; i<=9; i++) {
+  document.getElementById(`game-stage-${i}`).style.display = 'none';
+  const navItem = document.getElementById(`nav-game-${i}`);
+  if(navItem) {
+    if(i === stageNum) navItem.classList.add('active');
+    else navItem.classList.remove('active');
         }
       }
 
@@ -3868,6 +4630,7 @@
       else if (stageNum === 6) initPinturilloSystem();
       else if (stageNum === 7) initChefVersusSystem();
       else if (stageNum === 8) initBastaSystem();
+      else if (stageNum === 9) initCoopSystem();
     }
 
     /* MINIJUEGO 2 */
@@ -4252,6 +5015,7 @@
       const stage6 = document.getElementById('game-stage-6');
       const stage7 = document.getElementById('game-stage-7');
       const stage8 = document.getElementById('game-stage-8');
+      const stage9 = document.getElementById('game-stage-9');
 
       if (stage1.style.display !== 'none') {
         goToStage(2);
@@ -4268,9 +5032,10 @@
       } else if (stage7.style.display !== 'none') {
         goToStage(8);
       } else if (stage8.style.display !== 'none') {
-        stage8.style.display = 'none';
-        document.getElementById('rewardModal').style.display = 'block';
-     }
+      } else if (stage9.style.display !== 'none') {
+  stage9.style.display = 'none';
+  document.getElementById('rewardModal').style.display = 'block';
+}
    }
 
     /* ==========================================================================
