@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Nuestra Pagina de Amor ❤️ Andreita</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,6 +34,7 @@
       margin: 0;
       padding: 0;
       font-family: 'Nunito', sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -513,6 +514,13 @@
     .modal-btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
+    }
+
+   .basta-container .profile-card.selected {
+     background: var(--soft-red) !important;
+     color: white !important;
+     border-color: var(--title-burgundy) !important;
+    transform: scale(1.03);
     }
 
     .modal-btn-cancel {
@@ -1161,6 +1169,18 @@
       border: 1px solid #ef9a9a;
     }
 
+    .presence-badge.ready {
+      background: #fff3e0;
+      color: #e65100;
+      border: 1px solid #ffb74d;
+    }
+
+    .presence-badge.ready-ok {
+      background: #e1f5fe;
+      color: #0277bd;
+      border: 1px solid #81d4fa;
+    }
+
     .pinturillo-timer-badge {
       background: var(--title-burgundy);
       color: white;
@@ -1206,6 +1226,7 @@
       position: relative;
       touch-action: none;
       overflow: hidden;
+      user-select: none;
     }
 
     #pinturilloCanvas {
@@ -1214,6 +1235,7 @@
       height: 320px;
       cursor: crosshair;
       background: #ffffff;
+      touch-action: none;
     }
 
     .pinturillo-palette {
@@ -1224,6 +1246,10 @@
       flex-wrap: wrap;
       justify-content: center;
       width: 100%;
+      background: #fff0f3;
+      padding: 10px;
+      border-radius: 16px;
+      border: 1px solid var(--rose-pink);
     }
 
     .color-swatch-btn {
@@ -1236,8 +1262,57 @@
       transition: transform 0.2s;
     }
 
-    .color-swatch-btn:hover {
-      transform: scale(1.2);
+    .color-swatch-btn.selected {
+      transform: scale(1.25);
+      box-shadow: 0 0 0 3px var(--title-burgundy);
+    }
+
+    .tool-btn {
+      background: white;
+      border: 2px solid var(--rose-pink);
+      color: var(--title-burgundy);
+      padding: 6px 10px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .tool-btn.active, .tool-btn:hover {
+      background: var(--soft-red);
+      color: white;
+      border-color: var(--title-burgundy);
+    }
+
+    .brush-size-btn {
+      background: white;
+      border: 2px solid var(--rose-pink);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .brush-size-btn.active {
+      border-color: var(--title-burgundy);
+      background: var(--soft-red);
+    }
+
+    .brush-size-btn.active .brush-dot {
+      background: white !important;
+    }
+
+    .brush-dot {
+      background: var(--title-burgundy);
+      border-radius: 50%;
     }
 
     .chat-side-column {
@@ -1754,21 +1829,84 @@
       color: var(--title-burgundy);
     }
 
+    /* ADAPTACIÓN CELULARES */
     @media (max-width: 768px) {
+      body {
+        font-size: 14px;
+      }
+      header {
+        margin: 15px auto 15px;
+        padding: 0 12px;
+      }
+      .hero-card {
+        height: 280px;
+        border-radius: 20px;
+      }
+      .hero-overlay {
+        padding: 15px;
+      }
+      .hero-overlay h1 {
+        font-size: 1.5rem;
+      }
+      nav {
+        gap: 6px;
+        padding: 0 12px;
+        margin-bottom: 20px;
+      }
+      .tab-btn {
+        padding: 10px 4px;
+        font-size: 0.8rem;
+        border-radius: 14px;
+      }
+      main {
+        padding: 0 12px 40px;
+      }
+      .tab-content { 
+        padding: 18px 12px;
+        border-radius: 20px;
+      }
+      .custom-game-title { 
+        font-size: 1.25rem; 
+      }
+      .custom-game-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 18px;
+      }
       .minigames-layout {
         flex-direction: column;
+        gap: 15px;
       }
       .minigames-sidebar {
         width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        padding: 10px;
+      }
+      .minigames-sidebar-title {
+        grid-column: span 2;
+        padding-bottom: 4px;
+      }
+      .minigame-nav-item {
+        padding: 8px 6px;
+      }
+      .minigame-nav-icon {
+        font-size: 1.1rem;
+      }
+      .minigame-nav-name {
+        font-size: 0.78rem;
+      }
+      .minigame-nav-sub {
+        display: none;
       }
       .memory-grid { 
         grid-template-columns: repeat(4, 1fr); 
-        gap: 8px; 
+        gap: 6px; 
         max-width: 100%;
       }
       .memory-card { 
-        font-size: 1.6rem; 
-        border-radius: 12px; 
+        font-size: 1.5rem; 
+        border-radius: 10px; 
       }
       .diff-container { 
         flex-direction: row !important; 
@@ -1787,16 +1925,11 @@
         top: 4px; 
         left: 4px; 
       }
-      .tab-content { 
-        padding: 20px 14px; 
-      }
-      .custom-game-title { 
-        font-size: 1.3rem; 
-      }
       .pinturillo-game-row {
         flex-direction: column;
         align-items: center;
         width: 100%;
+        gap: 12px;
       }
       .board-area-column {
         width: 100%;
@@ -1808,20 +1941,135 @@
       }
       #pinturilloCanvas {
         width: 100% !important;
-        height: 250px;
+        height: 280px;
       }
       .chat-side-column {
         width: 100%;
         min-width: 0;
-        height: 280px;
+        height: 260px;
       }
       .burger-controls-grid {
         grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
       }
       .stacked-ingredient {
-        min-width: 180px;
-        font-size: 0.88rem;
+        min-width: 160px;
+        font-size: 0.82rem;
+        padding: 5px 10px;
       }
+      .quiz-options {
+        grid-template-columns: 1fr;
+      }
+    }
+/* ... tus últimos estilos existentes (quiz-results-table, media queries, etc.) ... */
+
+    /* ==========================================================================
+       ESTILOS BASTA ONLINE 1v1
+       ========================================================================== */
+    .basta-container {
+      background: #ffffff;
+      border: 3px solid var(--rose-pink);
+      border-radius: 25px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(230, 92, 101, 0.15);
+      position: relative;
+    }
+    .basta-roulette-box {
+      text-align: center;
+      background: linear-gradient(135deg, #fff0f3, #ffe3e8);
+      border: 3px solid var(--soft-red);
+      border-radius: 20px;
+      padding: 20px;
+      margin: 15px 0;
+    }
+    .basta-letter-display {
+      font-size: 4.5rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      color: var(--title-burgundy);
+      text-shadow: 0 4px 10px rgba(230, 92, 101, 0.3);
+      display: inline-block;
+      min-width: 90px;
+      animation: heartPulse 1.2s infinite ease-in-out;
+    }
+    .basta-fields-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      margin: 15px 0;
+    }
+    .basta-field-card {
+      background: #fff0f3;
+      border: 2px solid var(--rose-pink);
+      border-radius: 16px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .basta-field-label {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--title-burgundy);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .basta-field-input {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1.5px solid var(--rose-pink);
+      font-weight: 700;
+      font-size: 0.95rem;
+      outline: none;
+      background: white;
+    }
+    .basta-field-input:focus {
+      border-color: var(--soft-red);
+      box-shadow: 0 0 8px rgba(230, 92, 101, 0.3);
+    }
+    .basta-vote-card {
+      background: white;
+      border: 2px solid var(--rose-pink);
+      border-radius: 16px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .vote-btn-group {
+      display: flex;
+      gap: 6px;
+    }
+    .vote-point-btn {
+      padding: 6px 12px;
+      border-radius: 12px;
+      border: 2px solid var(--rose-pink);
+      background: #fff0f3;
+      color: var(--title-burgundy);
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .vote-point-btn.active-10 {
+      background: #2a9d8f;
+      color: white;
+      border-color: #1b5e20;
+    }
+    .vote-point-btn.active-5 {
+      background: #f4a261;
+      color: white;
+      border-color: #e76f51;
+    }
+    .vote-point-btn.active-0 {
+      background: #e63946;
+      color: white;
+      border-color: #b7094c;
     }
   </style>
 </head>
@@ -1877,7 +2125,6 @@
         <input type="file" id="fileInput" accept="image/*,video/*" multiple hidden onchange="prepareMediaUpload(this.files)">
       </div>
 
-      <!-- Contenedor dinámico estructurado por meses -->
       <div id="galleryMonthsContainer"></div>
     </section>
 
@@ -1887,7 +2134,6 @@
       <p class="custom-game-subtitle">si completas todos estos minijuegos desbloquearas algo miamor jiji ✨</p>
       
       <div class="minigames-layout">
-        <!-- Listado lateral izquierdo de minijuegos con imagen animada y badge parpadeante NEW -->
         <aside class="minigames-sidebar">
           <div class="minigames-sidebar-title">🎮 Elige un Minijuego</div>
           
@@ -1936,7 +2182,6 @@
             <span class="new-badge-pill" id="badge-game-5">NEW</span>
           </div>
 
-          <!-- MINIJUEGO 6: PINTURILLO MULTIJUGADOR ONLINE -->
           <div class="minigame-nav-item" id="nav-game-6" onclick="selectMinigameFromSidebar(6)">
             <span class="minigame-nav-icon">🎨</span>
             <div class="minigame-nav-info">
@@ -1946,7 +2191,6 @@
             <span class="new-badge-pill" id="badge-game-6">NEW</span>
           </div>
 
-          <!-- MINIJUEGO 7: RESTAURANTE CHEF VERSUS -->
           <div class="minigame-nav-item" id="nav-game-7" onclick="selectMinigameFromSidebar(7)">
             <span class="minigame-nav-icon">🍕</span>
             <div class="minigame-nav-info">
@@ -1955,9 +2199,18 @@
             </div>
             <span class="new-badge-pill" id="badge-game-7">NEW</span>
           </div>
+
+          <!-- BOTÓN BASTA ONLINE -->
+          <div class="minigame-nav-item" id="nav-game-8" onclick="selectMinigameFromSidebar(8)">
+            <span class="minigame-nav-icon">🛑</span>
+            <div class="minigame-nav-info">
+              <span class="minigame-nav-name">Basta Online</span>
+              <span class="minigame-nav-sub">Duelo 1v1 en Vivo</span>
+            </div>
+            <span class="new-badge-pill" id="badge-game-8">NEW</span>
+           </div>
         </aside>
 
-        <!-- Área de juego interactiva a la derecha -->
         <div class="minigames-main-stage">
           <!-- MINIJUEGO 1 -->
           <div id="game-stage-1" style="width: 100%;">
@@ -1985,7 +2238,7 @@
             </div>
           </div>
 
-          <!-- MINIJUEGO 3: CRIPTOGRAMA -->
+          <!-- MINIJUEGO 3 -->
           <div id="game-stage-3" style="display: none; width: 100%;">
             <div class="diff-header">
               <h3 style="color: var(--title-burgundy); font-weight: 800;">Nivel 3: El Código Secreto del Amor 🔐</h3>
@@ -2001,7 +2254,7 @@
             </div>
           </div>
 
-          <!-- MINIJUEGO 4: SIMON SAYS -->
+          <!-- MINIJUEGO 4 -->
           <div id="game-stage-4" style="display: none; width: 100%;">
             <div class="diff-header">
               <h3 style="color: var(--title-burgundy); font-weight: 800;">Nivel 4: Ritmo de Nuestros Corazones 💓</h3>
@@ -2020,7 +2273,7 @@
             </div>
           </div>
 
-          <!-- MINIJUEGO 5: TOÑITA -->
+          <!-- MINIJUEGO 5 -->
           <div id="game-stage-5" style="display: none; width: 100%;">
             <div class="diff-header">
               <h3 style="color: var(--title-burgundy); font-weight: 800;">Nivel 5: ¿Dónde está Toñita? 🐶</h3>
@@ -2034,7 +2287,6 @@
                 <div class="ball-item" id="cupsBall">
                   <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=300&q=80" alt="Toñita Real" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <!-- Vaso 0 -->
                 <div class="cup-item" id="cup-0" onclick="selectCup(0)">
                   <svg viewBox="0 0 100 120">
                     <path d="M 15 15 L 85 15 L 72 105 A 10 10 0 0 1 62 115 L 38 115 A 10 10 0 0 1 28 105 Z" fill="url(#cupGrad)" stroke="#800020" stroke-width="3"/>
@@ -2048,7 +2300,6 @@
                     </defs>
                   </svg>
                 </div>
-                <!-- Vaso 1 -->
                 <div class="cup-item" id="cup-1" onclick="selectCup(1)">
                   <svg viewBox="0 0 100 120">
                     <path d="M 15 15 L 85 15 L 72 105 A 10 10 0 0 1 62 115 L 38 115 A 10 10 0 0 1 28 105 Z" fill="url(#cupGrad)" stroke="#800020" stroke-width="3"/>
@@ -2056,7 +2307,6 @@
                     <path d="M 25 35 Q 50 45 75 35" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.5"/>
                   </svg>
                 </div>
-                <!-- Vaso 2 -->
                 <div class="cup-item" id="cup-2" onclick="selectCup(2)">
                   <svg viewBox="0 0 100 120">
                     <path d="M 15 15 L 85 15 L 72 105 A 10 10 0 0 1 62 115 L 38 115 A 10 10 0 0 1 28 105 Z" fill="url(#cupGrad)" stroke="#800020" stroke-width="3"/>
@@ -2073,7 +2323,6 @@
           <div id="game-stage-6" style="display: none; width: 100%;">
             <div class="pinturillo-container">
               
-              <!-- Pantalla de Selección de Jugador Online -->
               <div id="pinturilloLoginBox" style="text-align: center; padding: 20px 10px;">
                 <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.4rem; margin-bottom: 8px;">🎨 Pinturillo Multijugador Online</h3>
                 <p style="font-weight: 700; color: #555; margin-bottom: 20px;">Selecciona tu identidad para sincronizarte en vivo con tu amorcito:</p>
@@ -2084,30 +2333,38 @@
                 <button class="modal-btn" id="enterPinturilloBtn" onclick="connectPinturillo()" style="max-width: 250px; margin: 0 auto;">Entrar a la Sala 🚀</button>
               </div>
 
-              <!-- Sala de Espera cuando falta uno -->
-              <div id="pinturilloWaitingBox" style="display: none; text-align: center; padding: 30px 10px;">
+              <!-- Sala de Espera y BOTÓN DE LISTO -->
+              <div id="pinturilloWaitingBox" style="display: none; text-align: center; padding: 25px 10px;">
                 <div style="font-size: 3rem; margin-bottom: 10px; animation: heartPulse 1.2s infinite ease-in-out;">⏳💕</div>
-                <h3 style="color: var(--title-burgundy); font-weight: 800; margin-bottom: 10px;">Esperando que tu amorcito se conecte...</h3>
-                <p style="font-weight: 700; color: #666; max-width: 400px; margin: 0 auto 15px auto;">Ambos deben estar en el apartado de Pinturillo para poder jugar juntos en tiempo real.</p>
-                <div style="display: flex; justify-content: center; gap: 15px;">
+                <h3 style="color: var(--title-burgundy); font-weight: 800; margin-bottom: 10px;" id="pinturilloWaitingHeading">Sala de Espera de Amor</h3>
+                <p style="font-weight: 700; color: #666; max-width: 400px; margin: 0 auto 15px auto;">Ambos deben estar conectados y presionar <b>"¡Estoy Listo!"</b> para iniciar la partida.</p>
+                
+                <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
                   <span class="presence-badge" id="waitStatusCriss">👑 Criss: Desconectado</span>
                   <span class="presence-badge" id="waitStatusAndreita">🌸 Andreita: Desconectada</span>
                 </div>
+
+                <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+                  <span class="presence-badge ready" id="readyBadgeCriss">👑 Criss: No listo ⏳</span>
+                  <span class="presence-badge ready" id="readyBadgeAndreita">🌸 Andreita: No lista ⏳</span>
+                </div>
+
+                <button class="modal-btn" id="pinturilloReadyBtn" onclick="togglePinturilloReady()" style="max-width: 280px; margin: 10px auto; background: #2a9d8f;">✨ ¡Estoy Listo para Jugar! ✨</button>
               </div>
 
-              <!-- Pantalla de Selección de 3 Palabras para el Dibujante -->
+              <!-- Pantalla de Selección de 3 Palabras -->
               <div id="pinturilloWordChoiceModal" style="display: none; text-align: center; padding: 20px 10px;">
                 <h3 style="color: var(--title-burgundy); font-weight: 800; margin-bottom: 10px;">🎨 ¡Es tu turno de dibujar!</h3>
                 <p style="font-weight: 700; color: #555; margin-bottom: 15px;">Elige una de las 3 palabras para que tu amorcito la adivine:</p>
                 <div class="word-choices-modal-grid" id="wordChoicesContainer"></div>
               </div>
 
-              <!-- Tablero Principal de Juego y Adivinanza Centrado Responsive -->
+              <!-- Tablero Principal de Juego -->
               <div id="pinturilloPlayArena" style="display: none;">
                 <div class="pinturillo-header">
-                  <div style="display: flex; gap: 8px; align-items: center;">
-                    <span class="presence-badge online" id="livePlayerCriss">👑 Criss: Conectado</span>
-                    <span class="presence-badge online" id="livePlayerAndreita">🌸 Andreita: Conectada</span>
+                  <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    <span class="presence-badge online" id="livePlayerCriss">👑 Criss: En Sala</span>
+                    <span class="presence-badge online" id="livePlayerAndreita">🌸 Andreita: En Sala</span>
                   </div>
                   <div class="pinturillo-timer-badge" id="pinturilloTimerDisplay">⏳ 05:00</div>
                 </div>
@@ -2115,26 +2372,46 @@
                 <div class="word-banner-box" id="pinturilloWordBanner">PALABRA: _ _ _ _ _ _</div>
 
                 <div class="pinturillo-game-row">
-                  <!-- Pizarrón de dibujo -->
                   <div class="board-area-column">
                     <div class="board-canvas-wrapper">
                       <canvas id="pinturilloCanvas" width="500" height="320"></canvas>
                     </div>
-                    <!-- Paleta de dibujo -->
+
+                    <!-- Paleta completa con Grosores, Borrador y Bote de Pintura -->
                     <div class="pinturillo-palette" id="drawingToolsBar">
-                      <div class="color-swatch-btn" style="background: #000000;" onclick="setPinturilloColor('#000000')"></div>
-                      <div class="color-swatch-btn" style="background: #e63946;" onclick="setPinturilloColor('#e63946')"></div>
-                      <div class="color-swatch-btn" style="background: #ff758f;" onclick="setPinturilloColor('#ff758f')"></div>
-                      <div class="color-swatch-btn" style="background: #3a86ff;" onclick="setPinturilloColor('#3a86ff')"></div>
-                      <div class="color-swatch-btn" style="background: #38b000;" onclick="setPinturilloColor('#38b000')"></div>
-                      <div class="color-swatch-btn" style="background: #ffb703;" onclick="setPinturilloColor('#ffb703')"></div>
-                      <div class="color-swatch-btn" style="background: #8338ec;" onclick="setPinturilloColor('#8338ec')"></div>
-                      <div class="color-swatch-btn" style="background: #fb5607;" onclick="setPinturilloColor('#fb5607')"></div>
-                      <button onclick="clearPinturilloCanvasOnline()" style="background: #800020; color: white; border: none; padding: 4px 10px; border-radius: 10px; font-weight: 800; font-size: 0.78rem; cursor: pointer;">Limpiar 🧹</button>
+                      <!-- Colores -->
+                      <div class="color-swatch-btn selected" style="background: #000000;" onclick="setPinturilloColor('#000000', this)"></div>
+                      <div class="color-swatch-btn" style="background: #e63946;" onclick="setPinturilloColor('#e63946', this)"></div>
+                      <div class="color-swatch-btn" style="background: #ff758f;" onclick="setPinturilloColor('#ff758f', this)"></div>
+                      <div class="color-swatch-btn" style="background: #3a86ff;" onclick="setPinturilloColor('#3a86ff', this)"></div>
+                      <div class="color-swatch-btn" style="background: #38b000;" onclick="setPinturilloColor('#38b000', this)"></div>
+                      <div class="color-swatch-btn" style="background: #ffb703;" onclick="setPinturilloColor('#ffb703', this)"></div>
+                      <div class="color-swatch-btn" style="background: #8338ec;" onclick="setPinturilloColor('#8338ec', this)"></div>
+                      <div class="color-swatch-btn" style="background: #fb5607;" onclick="setPinturilloColor('#fb5607', this)"></div>
+                      <div class="color-swatch-btn" style="background: #ffffff; border: 2px solid #ccc;" onclick="setPinturilloColor('#ffffff', this)" title="Color Blanco"></div>
+
+                      <!-- Separador -->
+                      <div style="width: 2px; height: 24px; background: var(--rose-pink); margin: 0 4px;"></div>
+
+                      <!-- Grosores -->
+                      <div class="brush-size-btn active" onclick="setPinturilloLineWidth(3, this)" title="Pincel Fino">
+                        <div class="brush-dot" style="width: 4px; height: 4px;"></div>
+                      </div>
+                      <div class="brush-size-btn" onclick="setPinturilloLineWidth(8, this)" title="Pincel Medio">
+                        <div class="brush-dot" style="width: 8px; height: 8px;"></div>
+                      </div>
+                      <div class="brush-size-btn" onclick="setPinturilloLineWidth(16, this)" title="Pincel Grueso">
+                        <div class="brush-dot" style="width: 14px; height: 14px;"></div>
+                      </div>
+
+                      <!-- Herramientas Borrador y Cubeta -->
+                      <button class="tool-btn active" id="toolPencilBtn" onclick="setPinturilloTool('pencil')">✏️ Lápiz</button>
+                      <button class="tool-btn" id="toolEraserBtn" onclick="setPinturilloTool('eraser')">🧹 Borrador</button>
+                      <button class="tool-btn" id="toolBucketBtn" onclick="setPinturilloTool('bucket')">🪣 Bote Pintura</button>
+                      <button class="tool-btn" style="background: #800020; color: white;" onclick="clearPinturilloCanvasOnline()">🗑️ Limpiar</button>
                     </div>
                   </div>
 
-                  <!-- Chat y Adivinanzas -->
                   <div class="chat-side-column">
                     <div style="font-weight: 800; color: var(--title-burgundy); font-size: 0.9rem; margin-bottom: 6px; text-align: center;">💬 Chat de Adivinanzas</div>
                     <div class="chat-messages-box" id="pinturilloChatMessages"></div>
@@ -2145,7 +2422,6 @@
                   </div>
                 </div>
 
-                <!-- Tabla de Récords y Puntos -->
                 <div class="pinturillo-scoreboard">
                   <h4 style="color: var(--title-burgundy); font-weight: 800; font-size: 1rem;">🏆 Marcador de Amor</h4>
                   <div class="scores-badges-row">
@@ -2169,7 +2445,6 @@
                 <button class="burger-fullscreen-btn" onclick="toggleBurgerFullscreen()">⛶ Pantalla Completa</button>
               </div>
 
-              <!-- Login / Selección de Jugador Versus -->
               <div id="burgerLoginBox" style="text-align: center; padding: 20px 10px;">
                 <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 15px;">
                   <span class="cute-sanrio-avatar">🐱🎀</span>
@@ -2183,23 +2458,29 @@
                 <button class="modal-btn" onclick="connectBurger()" style="max-width: 250px; margin: 0 auto;">Iniciar Competencia ⚔️👩‍🍳</button>
               </div>
 
-              <!-- Espera de Conexión -->
+              <!-- Sala de Espera y LISTO para Chefs -->
               <div id="burgerWaitingBox" style="display: none; text-align: center; padding: 25px 10px;">
                 <div style="margin-bottom: 12px;">
                   <span class="cute-sanrio-avatar">🐱🎀</span>
                 </div>
-                <h3 style="color: var(--title-burgundy); font-weight: 800; margin-bottom: 8px;">Esperando al oponente en cocina...</h3>
-                <p style="font-weight: 700; color: #666; margin-bottom: 12px;">Ambos deben estar conectados para que inicie la batalla.</p>
-                <div style="display: flex; justify-content: center; gap: 15px;">
+                <h3 style="color: var(--title-burgundy); font-weight: 800; margin-bottom: 8px;">Esperando en la cocina...</h3>
+                <p style="font-weight: 700; color: #666; margin-bottom: 15px;">Ambos deben presionar <b>"¡Chef Listo!"</b> para iniciar el duelo culinario:</p>
+                
+                <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
                   <span class="presence-badge" id="burgerWaitCriss">👑 Criss: Desconectado</span>
                   <span class="presence-badge" id="burgerWaitAndreita">🌸 Andreita: Desconectada</span>
                 </div>
+
+                <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+                  <span class="presence-badge ready" id="burgerReadyCriss">👑 Criss: No listo ⏳</span>
+                  <span class="presence-badge ready" id="burgerReadyAndreita">🌸 Andreita: No lista ⏳</span>
+                </div>
+
+                <button class="modal-btn" id="burgerReadyBtn" onclick="toggleBurgerReady()" style="max-width: 280px; margin: 10px auto; background: #2a9d8f;">👩‍🍳 ¡Chef Listo para Cocinar! ✨</button>
               </div>
 
-              <!-- Área de Cocina Individual y Marcador Versus en Vivo -->
+              <!-- Área de Cocina Individual -->
               <div id="burgerPlayArena" style="display: none;">
-                
-                <!-- Marcador de Progreso en Vivo -->
                 <div class="chef-score-board">
                   <div style="color: #0d47a1;" id="versusScoreCriss">👑 Criss: 0 pedidos</div>
                   <div style="color: #880e4f;" id="versusScoreAndreita">🌸 Andreita: 0 pedidos</div>
@@ -2210,29 +2491,24 @@
                   <div class="pinturillo-timer-badge" id="burgerOrderTimerDisplay">⏳ 01:00</div>
                 </div>
 
-                <!-- Tarjeta del Pedido Actual -->
                 <div class="burger-order-card">
                   <div style="font-weight: 800; color: var(--title-burgundy); font-size: 1.15rem;" id="burgerCustomerTitle">😋 ¡Cliente: "Quiero una orden!"</div>
                   <div style="font-weight: 700; font-size: 0.9rem; color: #555; margin-top: 4px;">Receta requerida (en orden exacto):</div>
                   <div class="burger-recipe-display" id="burgerTargetRecipe"></div>
                 </div>
 
-                <!-- Plato Individual del Jugador -->
                 <div class="burger-plate-area" id="burgerCurrentPlate">
                   <div style="color: #999; font-weight: 700; font-size: 0.9rem;" id="emptyPlateNotice">🍽️ Tu mesa está vacía... ¡Añade los ingredientes en orden!</div>
                 </div>
 
-                <!-- Controles Dinámicos y Mezclados de Ingredientes -->
                 <div class="burger-controls-grid" id="burgerControlsGrid"></div>
 
-                <!-- Botones de Acción -->
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
                   <button class="burger-action-btn serve-btn" onclick="serveChefOrder()">🛎️ ¡Entregar Pedido!</button>
                   <button class="burger-action-btn trash-btn" onclick="clearChefPlate()">🗑️ Descartar</button>
                 </div>
               </div>
 
-              <!-- Sala de Bancarrota y Espera de Rival -->
               <div id="bankruptcyRoom" class="bankruptcy-overlay" style="display: none;">
                 <div style="font-size: 3rem; margin-bottom: 6px;">💸💥😭</div>
                 <h3 style="color: #c62828; font-weight: 800; font-size: 1.4rem;">¡BANCARROTA!</h3>
@@ -2244,7 +2520,6 @@
                 </div>
               </div>
 
-              <!-- Pantalla Final: Tabla de Records Cute y Femenina -->
               <div id="matchSummarySection" style="display: none; margin-top: 20px;">
                 <div class="cute-records-container">
                   <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 8px;">
@@ -2276,11 +2551,156 @@
                   </table>
 
                   <button class="modal-btn" onclick="restartChefVersusMatch()" style="max-width: 260px; margin: 20px auto 0 auto;">🔄 Jugar Otra Partida</button>
+                  <!-- MINIJUEGO 7: RESTAURANTE CHEF VERSUS -->
+               </div>
+              </div>
+
+            </div>
+          </div>
+
+<!-- MINIJUEGO 8: BASTA ONLINE DE AMOR -->
+          <div id="game-stage-8" style="display: none; width: 100%;">
+            <div class="basta-container">
+              
+              <!-- Login / Selección de Jugador Basta -->
+              <div id="bastaLoginBox" style="text-align: center; padding: 20px 10px;">
+                <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.4rem; margin-bottom: 8px;">🛑 Basta Online de Amor 1v1</h3>
+                <p style="font-weight: 700; color: #555; margin-bottom: 20px;">Selecciona tu nombre para jugar Basta en vivo con tu pareja:</p>
+                <div class="profile-selector" style="max-width: 320px; margin: 0 auto 20px auto;">
+                  <div class="profile-card" id="bastaUserCriss" onclick="chooseBastaUser('Criss')">👑 Soy Criss</div>
+                  <div class="profile-card" id="bastaUserAndreita" onclick="chooseBastaUser('Andreita')">🌸 Soy Andreita</div>
+                </div>
+                <button class="modal-btn" onclick="connectBasta()" style="max-width: 250px; margin: 0 auto;">Entrar al Basta 🚀</button>
+              </div>
+
+              <!-- Sala de Espera y Listo -->
+              <div id="bastaWaitingBox" style="display: none; text-align: center; padding: 25px 10px;">
+                <div style="font-size: 3rem; margin-bottom: 10px; animation: heartPulse 1.2s infinite ease-in-out;">⏳💕</div>
+                <h3 style="color: var(--title-burgundy); font-weight: 800; margin-bottom: 10px;">Sala de Espera Basta</h3>
+                <p style="font-weight: 700; color: #666; max-width: 400px; margin: 0 auto 15px auto;">Ambos deben estar en el juego y presionar <b>"¡Estoy Listo!"</b> para sortear la letra:</p>
+                
+                <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+                  <span class="presence-badge" id="bastaWaitCriss">👑 Criss: Desconectado</span>
+                  <span class="presence-badge" id="bastaWaitAndreita">🌸 Andreita: Desconectada</span>
+                </div>
+
+                <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+                  <span class="presence-badge ready" id="bastaReadyCriss">👑 Criss: No listo ⏳</span>
+                  <span class="presence-badge ready" id="bastaReadyAndreita">🌸 Andreita: No lista ⏳</span>
+                </div>
+
+                <button class="modal-btn" id="bastaReadyBtn" onclick="toggleBastaReady()" style="max-width: 280px; margin: 10px auto; background: #2a9d8f;">✨ ¡Estoy Listo para el Basta! ✨</button>
+              </div>
+
+              <!-- Ruleta de Letras -->
+              <div id="bastaRouletteSection" style="display: none;" class="basta-roulette-box">
+                <h4 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.1rem; margin-bottom: 8px;">🎲 SORTEANDO LETRA DE LA RONDA...</h4>
+                <div class="basta-letter-display" id="bastaRouletteLetter">A</div>
+                <p style="font-weight: 700; color: #666; font-size: 0.9rem;" id="bastaRoundInfo">Ronda 1 de 3</p>
+              </div>
+
+              <!-- Área de Llenado de Casillas -->
+              <div id="bastaPlayArena" style="display: none;">
+                <div class="pinturillo-header">
+                  <div style="font-weight: 800; color: var(--title-burgundy); font-size: 1.15rem;" id="bastaCurrentLetterTitle">Letra Activa: [ A ]</div>
+                  <div class="pinturillo-timer-badge" id="bastaRoundBadge">Ronda 1/3</div>
+                </div>
+
+                <div class="basta-fields-grid" id="bastaInputsGrid">
+                  <div class="basta-field-card">
+                    <span class="basta-field-label">👤 1. NOMBRE:</span>
+                    <input type="text" class="basta-field-input" id="basta_nombre" placeholder="Nombre con la letra..." oninput="checkBastaFieldsComplete()">
+                  </div>
+
+                  <div class="basta-field-card">
+                    <span class="basta-field-label">🌎 2. PAÍS O CIUDAD:</span>
+                    <input type="text" class="basta-field-input" id="basta_pais" placeholder="País o ciudad..." oninput="checkBastaFieldsComplete()">
+                  </div>
+
+                  <div class="basta-field-card">
+                    <span class="basta-field-label">🐶 3. ANIMAL:</span>
+                    <input type="text" class="basta-field-input" id="basta_animal" placeholder="Animal..." oninput="checkBastaFieldsComplete()">
+                  </div>
+
+                  <div class="basta-field-card">
+                    <span class="basta-field-label">🎨 4. COLOR:</span>
+                    <input type="text" class="basta-field-input" id="basta_color" placeholder="Color..." oninput="checkBastaFieldsComplete()">
+                  </div>
+
+                  <div class="basta-field-card">
+                    <span class="basta-field-label">📦 5. OBJETO:</span>
+                    <input type="text" class="basta-field-input" id="basta_objeto" placeholder="Cosa u objeto..." oninput="checkBastaFieldsComplete()">
+                  </div>
+
+                  <div class="basta-field-card">
+                    <span class="basta-field-label">🍎 6. FRUTA O VERDURA:</span>
+                    <input type="text" class="basta-field-input" id="basta_fruta" placeholder="Fruta o verdura..." oninput="checkBastaFieldsComplete()">
+                  </div>
+
+                  <div class="basta-field-card">
+                    <span class="basta-field-label">🏷️ 7. APELLIDO:</span>
+                    <input type="text" class="basta-field-input" id="basta_apellido" placeholder="Apellido..." oninput="checkBastaFieldsComplete()">
+                  </div>
+
+                  <div class="basta-field-card">
+                    <span class="basta-field-label">🍕 8. COMIDA:</span>
+                    <input type="text" class="basta-field-input" id="basta_comida" placeholder="Platillo o comida..." oninput="checkBastaFieldsComplete()">
+                  </div>
+
+                  <div class="basta-field-card">
+                    <span class="basta-field-label">⏰ 9. EXCUSAS PARA LLEGAR TARDE:</span>
+                    <input type="text" class="basta-field-input" id="basta_excusa" placeholder="Excusa divertida..." oninput="checkBastaFieldsComplete()">
+                  </div>
+
+                  <div class="basta-field-card">
+                    <span class="basta-field-label">🎬 10. PELÍCULA:</span>
+                    <input type="text" class="basta-field-input" id="basta_pelicula" placeholder="Película..." oninput="checkBastaFieldsComplete()">
+                  </div>
+
+                  <div class="basta-field-card">
+                    <span class="basta-field-label">📺 11. SERIE O PELÍCULA:</span>
+                    <input type="text" class="basta-field-input" id="basta_serie" placeholder="Serie o película..." oninput="checkBastaFieldsComplete()">
+                  </div>
+                </div>
+
+                <button class="modal-btn" id="bastaFinishBtn" onclick="triggerBastaStop()" disabled style="background: #e63946; font-size: 1.15rem; padding: 14px; margin-top: 15px;">🛑 ¡BASTA PARA TODOS! (Completa todas las casillas)</button>
+              </div>
+
+              <!-- Pantalla de Votación Comparativa 1v1 -->
+              <div id="bastaVotingArena" style="display: none; padding: 15px 0;">
+                <div style="text-align: center; margin-bottom: 15px;">
+                  <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.3rem;">📋 Califica las Respuestas de tu Pareja</h3>
+                  <p style="font-weight: 700; color: #555; font-size: 0.9rem;">Vota +10 si es única y válida, +5 si es repetida o sencilla, y 0 si no es válida o vacía:</p>
+                </div>
+
+                <div id="bastaVotingItemsList"></div>
+
+                <button class="modal-btn" id="bastaNextRoundBtn" onclick="confirmBastaVotesAndNext()" style="background: #2a9d8f; margin-top: 20px;">Siguiente Ronda 🚀</button>
+              </div>
+
+              <!-- Pantalla de Resultados Finales -->
+              <div id="bastaFinalSummarySection" style="display: none; margin-top: 20px;">
+                <div class="cute-records-container">
+                  <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <span class="cute-sanrio-avatar-small">🐱🎀</span>
+                    <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.4rem;">🏆 ¡FIN DEL BASTA ONLINE! 🏆</h3>
+                    <span class="cute-sanrio-avatar-small">🐰🌸</span>
+                  </div>
+
+                  <p style="font-weight: 700; margin: 10px 0; text-align: center; color: #800020;" id="bastaFinalWinnerTitle"></p>
+
+                  <div style="margin: 18px 0; font-weight: 800; font-size: 1.15rem; text-align: center; display: flex; justify-content: center; gap: 25px;">
+                    <span style="color: #0d47a1;">👑 Criss: <span id="bastaFinalScoreCriss">0</span> pts</span>
+                    <span style="color: #880e4f;">🌸 Andreita: <span id="bastaFinalScoreAndreita">0</span> pts</span>
+                  </div>
+
+                  <button class="modal-btn" onclick="restartBastaGame()" style="max-width: 260px; margin: 20px auto 0 auto;">🔄 Jugar Otra Partida de Basta</button>
                 </div>
               </div>
 
             </div>
           </div>
+
 
           <!-- RECOMPENSA FINAL -->
           <div class="reward-modal" id="rewardModal">
@@ -2335,7 +2755,6 @@
     </div>
   </div>
 
-  <!-- Modal de Autenticación Integrado -->
   <div class="modal-overlay" id="authModal">
     <div class="modal-box">
       <h3>Acceso Protegido 🔐</h3>
@@ -2346,7 +2765,6 @@
     </div>
   </div>
 
-  <!-- Modal subir foto -->
   <div class="modal-overlay" id="uploadModal">
     <div class="modal-box">
       <h3>Detalles del Recuerdo 📸</h3>
@@ -2369,7 +2787,6 @@
     </div>
   </div>
 
-  <!-- Modal confirmación borrado -->
   <div class="modal-overlay" id="deleteConfirmModal">
     <div class="modal-box">
       <h3 style="margin-bottom: 10px;">¿Eliminar recuerdo? 🌹</h3>
@@ -2379,7 +2796,6 @@
     </div>
   </div>
 
-  <!-- Modal confirmación subida -->
   <div class="modal-overlay" id="successModal">
     <div class="modal-box">
       <p style="font-size: 1.15rem; font-weight: 800; color: var(--title-burgundy); margin-bottom: 15px;">
@@ -2389,7 +2805,6 @@
     </div>
   </div>
 
-  <!-- VISOR DE MULTIMEDIA -->
   <div class="viewer-overlay" id="mediaViewer">
     <div class="sanrio-love-frame">
       <button class="close-viewer-btn" onclick="closeMediaViewer()">✕</button>
@@ -2399,7 +2814,6 @@
     </div>
   </div>
 
-  <!-- Modal Animación Progreso de Niveles -->
   <div class="modal-overlay" id="levelProgressModal">
     <div class="level-modal-content">
       <div style="font-size: 2.5rem;">✨❤️✨</div>
@@ -2410,7 +2824,6 @@
   </div>
 
   <script>
-    // CONFIGURACIÓN DE FIREBASE FIRESTORE Y STORAGE
     const firebaseConfig = { 
       apiKey: "AIzaSyBm0apLxTyiTOSqBMyZhr4aK_Stn1eLr-U", 
       authDomain: "our-love-story-73f3d.firebaseapp.com", 
@@ -2427,7 +2840,6 @@
     const storage = firebase.storage();
     const rtdb = firebase.database();
 
-    // CONFIGURACIÓN DE CLOUDINARY
     const CLOUDINARY_CLOUD_NAME = "r893yslz";
     const CLOUDINARY_UPLOAD_PRESET = "fotos_amor";
 
@@ -2449,6 +2861,7 @@
 
       initQuiz();
       loadSavedMedia();
+      initBastaSystem();
     });
 
     function startAppAndAudio() {
@@ -2511,7 +2924,6 @@
       }
     }
 
-    // 13 PREGUNTAS DEL QUIZ
     const quizData = [
       { q: "¿Que celular tengo?", options: ["Xiaomi Poco F6 pro", "Iphone 15 Pro Max", "Samsung A30", "Todas las Anteriores"], corrects: ["Iphone 15 Pro Max"] },
       { q: "¿Quien es mi cantante favorito?", options: ["Paulo Londra", "Bruno Mars", "Duki", "Milo J"], corrects: ["Paulo Londra"] },
@@ -2714,7 +3126,6 @@
       if(evt) evt.currentTarget.classList.add('active');
     }
 
-    /* SISTEMA DE SUBIDA OPTIMIZADO Y CONVERSIÓN A MP4 UNIVERSAL (iOS / Android / COMPUTADORAS) */
     let pendingFiles = [];
     let selectedAuthorProfile = "";
 
@@ -2782,7 +3193,6 @@
       document.getElementById('uploadProgressOverlay').style.display = 'none';
     }
 
-    // SUBIDA DE VIDEOS ORIGINALES A CLOUDINARY EN BLOQUES
     async function uploadVideoOriginalChunked(file, onProgress) {
       const chunkSize = 10 * 1024 * 1024;
       const totalSize = file.size || 0;
@@ -2895,11 +3305,6 @@
             chunkDone = true;
 
           } catch (error) {
-            console.warn(
-              `Fallo en bloque ${startByte}-${endByte - 1}, intento ${attempt}/5:`,
-              error
-            );
-
             if (attempt >= 5) {
               throw new Error(
                 `No se pudo subir el bloque del video después de varios intentos. ${error.message || ""}`
@@ -2931,7 +3336,6 @@
       };
     }
 
-    // SUBIDA A FIREBASE PARA FOTOS / RESPALDO DE ARCHIVOS PEQUEÑOS
     async function uploadToFirebaseStorageDirect(file, onProgress) {
       return new Promise((resolve, reject) => {
         try {
@@ -3002,7 +3406,6 @@
       });
     }
 
-    // SUBIDA A CLOUDINARY PARA FOTOS LIGERAS
     function uploadToCloudinaryViaXHR(file, onProgress) {
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -3049,7 +3452,6 @@
       });
     }
 
-    // DESPACHADOR UNIVERSAL ROBUSTO
     async function uploadMediaUniversal(file, onProgress) {
       const isVideo = (file.type && file.type.startsWith('video/')) || 
                       (file.name && file.name.match(/\.(mp4|mov|webm|m4v|3gp|avi|mkv|hevc|quicktime)$/i));
@@ -3061,7 +3463,6 @@
       try {
         return await uploadToCloudinaryViaXHR(file, onProgress);
       } catch (err) {
-        console.warn("Fallo subida a Cloudinary, respaldando en Firebase Storage...", err);
         return await uploadToFirebaseStorageDirect(file, onProgress);
       }
     }
@@ -3370,14 +3771,13 @@
       }
     }
 
-    /* CONTROL DEL MENÚ LATERAL Y ACTIVACIÓN DE MINIJUEGOS */
     function selectMinigameFromSidebar(stageNum) {
       const badge = document.getElementById(`badge-game-${stageNum}`);
       if (badge) {
         badge.style.display = 'none';
       }
 
-      for (let i = 1; i <= 7; i++) {
+      for (let i = 1; i <= 8; i++) {
         const navItem = document.getElementById(`nav-game-${i}`);
         if (navItem) {
           if (i === stageNum) {
@@ -3391,7 +3791,7 @@
       goToStage(stageNum);
     }
 
-    /* MINIJUEGO 1: MEMORIA */
+    /* MINIJUEGO 1 */
     const memoryIcons = ['💖', '🌹', '🧸', '💍', '💌', '👑', '💖', '🌹', '🧸', '💍', '💌', '👑'];
     let flippedCards = [];
     let matchedCount = 0;
@@ -3444,53 +3844,29 @@
     }
 
     function goToStage(stageNum) {
-      document.getElementById('game-stage-1').style.display = 'none';
-      document.getElementById('game-stage-2').style.display = 'none';
-      document.getElementById('game-stage-3').style.display = 'none';
-      document.getElementById('game-stage-4').style.display = 'none';
-      document.getElementById('game-stage-5').style.display = 'none';
-      document.getElementById('game-stage-6').style.display = 'none';
-      document.getElementById('game-stage-7').style.display = 'none';
-
-      for (let i = 1; i <= 7; i++) {
+      for(let i=1; i<=8; i++) {
+        document.getElementById(`game-stage-${i}`).style.display = 'none';
         const navItem = document.getElementById(`nav-game-${i}`);
-        if (navItem) {
-          if (i === stageNum) {
-            navItem.classList.add('active');
-          } else {
-            navItem.classList.remove('active');
-          }
+        if(navItem) {
+          if(i === stageNum) navItem.classList.add('active');
+          else navItem.classList.remove('active');
         }
       }
 
       const badge = document.getElementById(`badge-game-${stageNum}`);
-      if (badge) {
-        badge.style.display = 'none';
-      }
+      if (badge) badge.style.display = 'none';
 
-      if (stageNum === 1) {
-        document.getElementById('game-stage-1').style.display = 'block';
-      } else if (stageNum === 2) {
-        document.getElementById('game-stage-2').style.display = 'block';
-        loadDiffLevel(0);
-      } else if (stageNum === 3) {
-        document.getElementById('game-stage-3').style.display = 'block';
-        loadCryptoLevel(0);
-      } else if (stageNum === 4) {
-        document.getElementById('game-stage-4').style.display = 'block';
-      } else if (stageNum === 5) {
-        document.getElementById('game-stage-5').style.display = 'block';
-        initCupsGame();
-      } else if (stageNum === 6) {
-        document.getElementById('game-stage-6').style.display = 'block';
-        initPinturilloSystem();
-      } else if (stageNum === 7) {
-        document.getElementById('game-stage-7').style.display = 'block';
-        initChefVersusSystem();
-      }
+      document.getElementById(`game-stage-${stageNum}`).style.display = 'block';
+
+      if (stageNum === 2) loadDiffLevel(0);
+      else if (stageNum === 3) loadCryptoLevel(0);
+      else if (stageNum === 5) initCupsGame();
+      else if (stageNum === 6) initPinturilloSystem();
+      else if (stageNum === 7) initChefVersusSystem();
+      else if (stageNum === 8) initBastaSystem();
     }
 
-    /* MINIJUEGO 2: DIFERENCIA */
+    /* MINIJUEGO 2 */
     const diffLevels = [
        {
         name: "Fácil",
@@ -3613,7 +3989,7 @@
       });
     }
 
-    /* MINIJUEGO 3: CRIPTOGRAMA */
+    /* MINIJUEGO 3 */
     const cryptoQuestions = [
       { clue: "Pista: Alguien muy especial...", encoded: "SPOJUB", solution: "TOÑITA" },
       { clue: "Pista: Tú eres mi persona...", encoded: "GBWOSUB", solution: "FAVORITA" },
@@ -3648,7 +4024,7 @@
       }
     }
 
-    /* MINIJUEGO 4: SIMON SAYS */
+    /* MINIJUEGO 4 */
     let simonSequence = [];
     let playerSequence = [];
     let simonRound = 0;
@@ -3714,7 +4090,7 @@
       }
     }
 
-    /* MINIJUEGO 5: VASOS */
+    /* MINIJUEGO 5 */
     let cupLevel = 1; 
     let cupLives = 3; 
     let ballLocation = 1; 
@@ -3871,6 +4247,7 @@
       const stage5 = document.getElementById('game-stage-5');
       const stage6 = document.getElementById('game-stage-6');
       const stage7 = document.getElementById('game-stage-7');
+      const stage8 = document.getElementById('game-stage-8');
 
       if (stage1.style.display !== 'none') {
         goToStage(2);
@@ -3885,13 +4262,15 @@
       } else if (stage6.style.display !== 'none') {
         goToStage(7);
       } else if (stage7.style.display !== 'none') {
-        stage7.style.display = 'none';
+        goToStage(8);
+      } else if (stage8.style.display !== 'none') {
+        stage8.style.display = 'none';
         document.getElementById('rewardModal').style.display = 'block';
-      }
-    }
+     }
+   }
 
     /* ==========================================================================
-       MINIJUEGO 6: PINTURILLO MULTIJUGADOR ONLINE EN TIEMPO REAL (100 PALABRAS)
+       MINIJUEGO 6: PINTURILLO MULTIJUGADOR ONLINE (CON CUBETA, BORRADOR Y PINCELES)
        ========================================================================== */
     const PINTURILLO_WORDS_POOL = [
       "Perro", "Gato", "Casa", "Carro", "Sol", "Luna", "Flor", "Corazón", "Árbol", "Pelota",
@@ -3912,12 +4291,15 @@
     let myPinturilloUser = "";
     let isDrawingOnCanvas = false;
     let currentColor = "#000000";
+    let currentLineWidth = 4;
+    let currentTool = "pencil"; // pencil, eraser, bucket
     let lastDrawX = 0;
     let lastDrawY = 0;
     let pinturilloTimerInterval = null;
     let localCurrentRole = "guess";
     let localCurrentWord = "";
     let lastClearSignal = 0;
+    let amIPinturilloReady = false;
 
     function initPinturilloSystem() {
       const savedUser = localStorage.getItem('pinturillo_saved_user');
@@ -3965,22 +4347,51 @@
       listenPinturilloStrokes();
     }
 
+    function togglePinturilloReady() {
+      amIPinturilloReady = !amIPinturilloReady;
+      const btn = document.getElementById('pinturilloReadyBtn');
+      if (amIPinturilloReady) {
+        btn.textContent = "✅ ¡Listo! (Esperando a tu amorcito...)";
+        btn.style.background = "#800020";
+      } else {
+        btn.textContent = "✨ ¡Estoy Listo para Jugar! ✨";
+        btn.style.background = "#2a9d8f";
+      }
+      rtdb.ref(`pinturillo_ready/${myPinturilloUser}`).set(amIPinturilloReady);
+    }
+
     function listenPinturilloPresence() {
       const allPresenceRef = rtdb.ref('pinturillo_presence');
+      const readyRef = rtdb.ref('pinturillo_ready');
+
       allPresenceRef.on('value', (snap) => {
         const presence = snap.val() || {};
         const crissOnline = presence.Criss === true;
         const andreitaOnline = presence.Andreita === true;
 
-        document.getElementById('waitStatusCriss').textContent = `👑 Criss: ${crissOnline ? 'Conectado ✅' : 'Desconectado ❌'}`;
+        document.getElementById('waitStatusCriss').textContent = `👑 Criss: ${crissOnline ? 'En Sala ✅' : 'Ausente ❌'}`;
         document.getElementById('waitStatusCriss').className = `presence-badge ${crissOnline ? 'online' : ''}`;
         
-        document.getElementById('waitStatusAndreita').textContent = `🌸 Andreita: ${andreitaOnline ? 'Conectada ✅' : 'Desconectada ❌'}`;
+        document.getElementById('waitStatusAndreita').textContent = `🌸 Andreita: ${andreitaOnline ? 'En Sala ✅' : 'Ausente ❌'}`;
         document.getElementById('waitStatusAndreita').className = `presence-badge ${andreitaOnline ? 'online' : ''}`;
 
-        if (crissOnline && andreitaOnline) {
-          document.getElementById('pinturilloWaitingBox').style.display = 'none';
-          
+        document.getElementById('livePlayerCriss').textContent = `👑 Criss: ${crissOnline ? 'Online' : 'Reconectando...'}`;
+        document.getElementById('livePlayerAndreita').textContent = `🌸 Andreita: ${andreitaOnline ? 'Online' : 'Reconectando...'}`;
+      });
+
+      readyRef.on('value', (snap) => {
+        const readyData = snap.val() || {};
+        const crissReady = readyData.Criss === true;
+        const andreitaReady = readyData.Andreita === true;
+
+        document.getElementById('readyBadgeCriss').textContent = `👑 Criss: ${crissReady ? '¡Listo! ✅' : 'No listo ⏳'}`;
+        document.getElementById('readyBadgeCriss').className = `presence-badge ${crissReady ? 'ready-ok' : 'ready'}`;
+
+        document.getElementById('readyBadgeAndreita').textContent = `🌸 Andreita: ${andreitaReady ? '¡Lista! ✅' : 'No lista ⏳'}`;
+        document.getElementById('readyBadgeAndreita').className = `presence-badge ${andreitaReady ? 'ready-ok' : 'ready'}`;
+
+        // Iniciar solo si ambos están listos y la sala no está jugando
+        if (crissReady && andreitaReady) {
           rtdb.ref('pinturillo_room').once('value').then(roomSnap => {
             const roomData = roomSnap.val();
             if (!roomData || roomData.status === 'waiting' || !roomData.status) {
@@ -3989,11 +4400,6 @@
               }
             }
           });
-        } else {
-          document.getElementById('pinturilloWaitingBox').style.display = 'block';
-          document.getElementById('pinturilloWordChoiceModal').style.display = 'none';
-          document.getElementById('pinturilloPlayArena').style.display = 'none';
-          if (pinturilloTimerInterval) clearInterval(pinturilloTimerInterval);
         }
       });
     }
@@ -4014,6 +4420,7 @@
         localCurrentWord = data.secretWord || "";
 
         if (data.status === "choosing_word") {
+          document.getElementById('pinturilloWaitingBox').style.display = 'none';
           if (isDrawer) {
             document.getElementById('pinturilloWordChoiceModal').style.display = 'block';
             document.getElementById('pinturilloPlayArena').style.display = 'none';
@@ -4025,6 +4432,7 @@
           }
         } 
         else if (data.status === "playing") {
+          document.getElementById('pinturilloWaitingBox').style.display = 'none';
           document.getElementById('pinturilloWordChoiceModal').style.display = 'none';
           document.getElementById('pinturilloPlayArena').style.display = 'block';
 
@@ -4088,7 +4496,7 @@
 
       rtdb.ref('pinturillo_chat').push({
         author: "Sistema",
-        text: `✨ Nueva ronda: ¡Turno de dibujar para ${nextDrawer}! ✨`,
+        text: `✨ ¡Ronda Iniciada! Turno de dibujar para ${nextDrawer} ✨`,
         type: "system",
         timestamp: Date.now()
       });
@@ -4154,6 +4562,136 @@
       startNewPinturilloRound(otherUser);
     }
 
+    // HERRAMIENTAS DE DIBUJO Y BOTE DE PINTURA (FLOOD FILL)
+    function setPinturilloColor(colorHex, el) {
+      currentColor = colorHex;
+      if (currentTool === 'eraser') {
+        setPinturilloTool('pencil');
+      }
+      document.querySelectorAll('.color-swatch-btn').forEach(btn => btn.classList.remove('selected'));
+      if (el) el.classList.add('selected');
+    }
+
+    function setPinturilloLineWidth(w, el) {
+      currentLineWidth = w;
+      document.querySelectorAll('.brush-size-btn').forEach(btn => btn.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+
+    function setPinturilloTool(toolName) {
+      currentTool = toolName;
+      document.getElementById('toolPencilBtn').classList.remove('active');
+      document.getElementById('toolEraserBtn').classList.remove('active');
+      document.getElementById('toolBucketBtn').classList.remove('active');
+
+      if (toolName === 'pencil') document.getElementById('toolPencilBtn').classList.add('active');
+      else if (toolName === 'eraser') document.getElementById('toolEraserBtn').classList.add('active');
+      else if (toolName === 'bucket') document.getElementById('toolBucketBtn').classList.add('active');
+    }
+
+    function hexToRgba(hex) {
+      hex = hex.replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const num = parseInt(hex, 16);
+      return [num >> 16, (num >> 8) & 255, num & 255, 255];
+    }
+
+    function floodFillCanvas(startX, startY, fillColorHex) {
+      const canvas = document.getElementById('pinturilloCanvas');
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+
+      const imgData = ctx.getImageData(0, 0, width, height);
+      const data = imgData.data;
+
+      startX = Math.floor(startX);
+      startY = Math.floor(startY);
+
+      if (startX < 0 || startX >= width || startY < 0 || startY >= height) return;
+
+      const startIndex = (startY * width + startX) * 4;
+      const startR = data[startIndex];
+      const startG = data[startIndex + 1];
+      const startB = data[startIndex + 2];
+      const startA = data[startIndex + 3];
+
+      const fillColor = hexToRgba(fillColorHex);
+
+      function matchStartColor(pixelPos) {
+        const r = data[pixelPos];
+        const g = data[pixelPos + 1];
+        const b = data[pixelPos + 2];
+        const a = data[pixelPos + 3];
+
+        return Math.abs(r - startR) <= 30 &&
+               Math.abs(g - startG) <= 30 &&
+               Math.abs(b - startB) <= 30 &&
+               Math.abs(a - startA) <= 30;
+      }
+
+      function colorPixel(pixelPos) {
+        data[pixelPos] = fillColor[0];
+        data[pixelPos + 1] = fillColor[1];
+        data[pixelPos + 2] = fillColor[2];
+        data[pixelPos + 3] = 255;
+      }
+
+      if (Math.abs(fillColor[0] - startR) < 5 && Math.abs(fillColor[1] - startG) < 5 && Math.abs(fillColor[2] - startB) < 5) {
+        return;
+      }
+
+      const pixelStack = [[startX, startY]];
+
+      while (pixelStack.length) {
+        const newPos = pixelStack.pop();
+        const x = newPos[0];
+        let y = newPos[1];
+
+        let pixelPos = (y * width + x) * 4;
+
+        while (y-- >= 0 && matchStartColor(pixelPos)) {
+          pixelPos -= width * 4;
+        }
+
+        pixelPos += width * 4;
+        ++y;
+
+        let reachLeft = false;
+        let reachRight = false;
+
+        while (y++ < height - 1 && matchStartColor(pixelPos)) {
+          colorPixel(pixelPos);
+
+          if (x > 0) {
+            if (matchStartColor(pixelPos - 4)) {
+              if (!reachLeft) {
+                pixelStack.push([x - 1, y]);
+                reachLeft = true;
+              }
+            } else if (reachLeft) {
+              reachLeft = false;
+            }
+          }
+
+          if (x < width - 1) {
+            if (matchStartColor(pixelPos + 4)) {
+              if (!reachRight) {
+                pixelStack.push([x + 1, y]);
+                reachRight = true;
+              }
+            } else if (reachRight) {
+              reachRight = false;
+            }
+          }
+
+          pixelPos += width * 4;
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+    }
+
     function setupPinturilloCanvasEvents() {
       const canvas = document.getElementById('pinturilloCanvas');
       const ctx = canvas.getContext('2d');
@@ -4172,8 +4710,20 @@
 
       function startDraw(e) {
         if (localCurrentRole !== "drawer") return;
-        isDrawingOnCanvas = true;
         const pos = getPos(e);
+
+        if (currentTool === 'bucket') {
+          floodFillCanvas(pos.x, pos.y, currentColor);
+          rtdb.ref('pinturillo_strokes').push({
+            type: 'fill',
+            x: pos.x,
+            y: pos.y,
+            color: currentColor
+          });
+          return;
+        }
+
+        isDrawingOnCanvas = true;
         lastDrawX = pos.x;
         lastDrawY = pos.y;
       }
@@ -4183,8 +4733,11 @@
         e.preventDefault();
         const pos = getPos(e);
 
-        ctx.strokeStyle = currentColor;
-        ctx.lineWidth = 4;
+        const drawColor = (currentTool === 'eraser') ? '#ffffff' : currentColor;
+        const width = (currentTool === 'eraser') ? currentLineWidth * 2.5 : currentLineWidth;
+
+        ctx.strokeStyle = drawColor;
+        ctx.lineWidth = width;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
 
@@ -4194,11 +4747,13 @@
         ctx.stroke();
 
         rtdb.ref('pinturillo_strokes').push({
+          type: 'stroke',
           x1: lastDrawX,
           y1: lastDrawY,
           x2: pos.x,
           y2: pos.y,
-          color: currentColor
+          color: drawColor,
+          width: width
         });
 
         lastDrawX = pos.x;
@@ -4213,8 +4768,8 @@
       canvas.addEventListener('mousemove', drawMove);
       window.addEventListener('mouseup', stopDraw);
 
-      canvas.addEventListener('touchstart', startDraw, { passive: false });
-      canvas.addEventListener('touchmove', drawMove, { passive: false });
+      canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e); }, { passive: false });
+      canvas.addEventListener('touchmove', (e) => { e.preventDefault(); drawMove(e); }, { passive: false });
       window.addEventListener('touchend', stopDraw);
     }
 
@@ -4226,21 +4781,21 @@
           const canvas = document.getElementById('pinturilloCanvas');
           const ctx = canvas.getContext('2d');
 
-          ctx.strokeStyle = s.color || "#000000";
-          ctx.lineWidth = 4;
-          ctx.lineCap = 'round';
-          ctx.lineJoin = 'round';
+          if (s.type === 'fill') {
+            floodFillCanvas(s.x, s.y, s.color || "#000000");
+          } else {
+            ctx.strokeStyle = s.color || "#000000";
+            ctx.lineWidth = s.width || 4;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
 
-          ctx.beginPath();
-          ctx.moveTo(s.x1, s.y1);
-          ctx.lineTo(s.x2, s.y2);
-          ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(s.x1, s.y1);
+            ctx.lineTo(s.x2, s.y2);
+            ctx.stroke();
+          }
         }
       });
-    }
-
-    function setPinturilloColor(colorHex) {
-      currentColor = colorHex;
     }
 
     function clearPinturilloCanvasOnline() {
@@ -4289,7 +4844,7 @@
       const roomData = snap.val();
 
       if (!roomData || roomData.status !== "playing") {
-        showToast("La partida no ha comenzado mi amor 💕");
+        showToast("La partida no está activa mi amor 💕");
         return;
       }
 
@@ -4330,7 +4885,7 @@
     }
 
     /* ==========================================================================
-       MINIJUEGO 7: RESTAURANTE CHEF VERSUS 1v1 (COMPETITIVO ONLINE)
+       MINIJUEGO 7: RESTAURANTE CHEF VERSUS 1v1 (SISTEMA LISTO Y PERSISTENCIA)
        ========================================================================== */
     const CHEF_CATEGORIES_DATA = {
       burger: {
@@ -4494,6 +5049,7 @@
     let myChefPlate = [];
     let chefOrderTimerInterval = null;
     let isBankrupt = false;
+    let amIBurgerReady = false;
 
     function initChefVersusSystem() {
       const savedUser = localStorage.getItem('burger_saved_user') || localStorage.getItem('pinturillo_saved_user');
@@ -4539,40 +5095,55 @@
       listenChefMatchState();
     }
 
+    function toggleBurgerReady() {
+      amIBurgerReady = !amIBurgerReady;
+      const btn = document.getElementById('burgerReadyBtn');
+      if (amIBurgerReady) {
+        btn.textContent = "✅ ¡Chef Listo! (Esperando rival...)";
+        btn.style.background = "#800020";
+      } else {
+        btn.textContent = "👩‍🍳 ¡Chef Listo para Cocinar! ✨";
+        btn.style.background = "#2a9d8f";
+      }
+      rtdb.ref(`chef_ready/${myChefUser}`).set(amIBurgerReady);
+    }
+
     function listenChefPresence() {
       const allPresenceRef = rtdb.ref('chef_presence');
+      const readyRef = rtdb.ref('chef_ready');
+
       allPresenceRef.on('value', (snap) => {
         const presence = snap.val() || {};
         const crissOnline = presence.Criss === true;
         const andreitaOnline = presence.Andreita === true;
 
-        document.getElementById('burgerWaitCriss').textContent = `👑 Criss: ${crissOnline ? 'Conectado ✅' : 'Desconectado ❌'}`;
+        document.getElementById('burgerWaitCriss').textContent = `👑 Criss: ${crissOnline ? 'En Cocina ✅' : 'Ausente ❌'}`;
         document.getElementById('burgerWaitCriss').className = `presence-badge ${crissOnline ? 'online' : ''}`;
         
-        document.getElementById('burgerWaitAndreita').textContent = `🌸 Andreita: ${andreitaOnline ? 'Conectada ✅' : 'Desconectada ❌'}`;
+        document.getElementById('burgerWaitAndreita').textContent = `🌸 Andreita: ${andreitaOnline ? 'En Cocina ✅' : 'Ausente ❌'}`;
         document.getElementById('burgerWaitAndreita').className = `presence-badge ${andreitaOnline ? 'online' : ''}`;
+      });
 
-        const isGameActive = (document.getElementById('burgerPlayArena').style.display === 'block' || document.getElementById('bankruptcyRoom').style.display === 'block');
+      readyRef.on('value', (snap) => {
+        const readyData = snap.val() || {};
+        const crissReady = readyData.Criss === true;
+        const andreitaReady = readyData.Andreita === true;
 
-        if (crissOnline && andreitaOnline) {
-          document.getElementById('burgerWaitingBox').style.display = 'none';
-          
+        document.getElementById('burgerReadyCriss').textContent = `👑 Criss: ${crissReady ? '¡Listo! ✅' : 'No listo ⏳'}`;
+        document.getElementById('burgerReadyCriss').className = `presence-badge ${crissReady ? 'ready-ok' : 'ready'}`;
+
+        document.getElementById('burgerReadyAndreita').textContent = `🌸 Andreita: ${andreitaReady ? '¡Lista! ✅' : 'No lista ⏳'}`;
+        document.getElementById('burgerReadyAndreita').className = `presence-badge ${andreitaReady ? 'ready-ok' : 'ready'}`;
+
+        if (crissReady && andreitaReady) {
           rtdb.ref('chef_match').once('value').then(matchSnap => {
             const data = matchSnap.val();
-            if (!data || data.status === 'idle') {
+            if (!data || data.status === 'idle' || data.status === 'finished') {
               if (myChefUser === 'Criss') {
                 startVersusMatchOnline();
               }
-            } else if (data.status === 'in_progress' && !isGameActive && !isBankrupt) {
-              startPlayerChefGame();
             }
           });
-        } else if (!isGameActive) {
-          document.getElementById('burgerWaitingBox').style.display = 'block';
-          document.getElementById('burgerPlayArena').style.display = 'none';
-          document.getElementById('bankruptcyRoom').style.display = 'none';
-          document.getElementById('matchSummarySection').style.display = 'none';
-          if (chefOrderTimerInterval) clearInterval(chefOrderTimerInterval);
         }
       });
     }
@@ -4606,6 +5177,8 @@
         document.getElementById('statusAndreitaVersus').className = `presence-badge ${bAndreita ? 'lost' : 'online'}`;
 
         if (data.status === "in_progress") {
+          document.getElementById('burgerWaitingBox').style.display = 'none';
+          
           if (!isBankrupt && document.getElementById('burgerPlayArena').style.display === 'none' && !bCriss && !bAndreita) {
             startPlayerChefGame();
           }
@@ -4833,7 +5406,7 @@
       } else if (andreitaScore > crissScore) {
         winnerText = `🌸 ¡Ganó Andreita con ${andreitaScore} pedidos completados! ¡Eres la reina de la cocina mi vida! 🥰`;
       } else {
-        winnerText = `🤝 ¡Empate perfecto con ${crissScore} pedidos cada uno! Hechos el uno para el otro ❤️`;
+        winnerText = `🤝 ¡Empate con ${crissScore} pedidos cada uno! Hechos el uno para el otro ❤️`;
       }
       document.getElementById('matchWinnerDeclaration').textContent = winnerText;
 
@@ -4928,16 +5501,18 @@
     }
 
     function restartChefVersusMatch() {
-      if (myChefUser === 'Criss') {
-        startVersusMatchOnline();
-      } else {
-        showToast("Iniciando nueva partida con tu amorcito 💕");
-        rtdb.ref('chef_match').update({
-          status: "in_progress",
-          scores: { Criss: 0, Andreita: 0 },
-          bankrupt: { Criss: false, Andreita: false }
-        });
-      }
+      amIBurgerReady = false;
+      rtdb.ref('chef_ready/Criss').set(false);
+      rtdb.ref('chef_ready/Andreita').set(false);
+      rtdb.ref('chef_match').set({
+        status: "idle",
+        scores: { Criss: 0, Andreita: 0 },
+        bankrupt: { Criss: false, Andreita: false }
+      });
+      document.getElementById('burgerReadyBtn').textContent = "👩‍🍳 ¡Chef Listo para Cocinar! ✨";
+      document.getElementById('burgerReadyBtn').style.background = "#2a9d8f";
+      document.getElementById('matchSummarySection').style.display = 'none';
+      document.getElementById('burgerWaitingBox').style.display = 'block';
     }
 
     function toggleBurgerFullscreen() {
@@ -4950,6 +5525,407 @@
         else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
       }
     }
+
+    /* ==========================================================================
+   LÓGICA DEL MINIJUEGO 8: BASTA ONLINE 1v1 EN TIEMPO REAL
+   ========================================================================== */
+const BASTA_CATEGORIES = [
+  { id: "nombre", label: "👤 1. NOMBRE" },
+  { id: "pais", label: "🌎 2. PAÍS O CIUDAD" },
+  { id: "animal", label: "🐶 3. ANIMAL" },
+  { id: "color", label: "🎨 4. COLOR" },
+  { id: "objeto", label: "📦 5. OBJETO" },
+  { id: "fruta", label: "🍎 6. FRUTA O VERDURA" },
+  { id: "apellido", label: "🏷️ 7. APELLIDO" },
+  { id: "comida", label: "🍕 8. COMIDA" },
+  { id: "excusa", label: "⏰ 9. EXCUSA PARA LLEGAR TARDE" },
+  { id: "pelicula", label: "🎬 10. PELÍCULA" },
+  { id: "serie", label: "📺 11. SERIE O PELÍCULA" }
+];
+
+const BASTA_LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "L", "M", "N", "O", "P", "R", "S", "T", "U", "V"];
+
+let myBastaUser = "";
+let amIBastaReady = false;
+let currentBastaLetter = "A";
+let currentBastaRound = 1;
+let localBastaVotes = {};
+
+function initBastaSystem() {
+  const savedUser = localStorage.getItem('basta_saved_user') || localStorage.getItem('pinturillo_saved_user');
+  if (savedUser && (savedUser === 'Criss' || savedUser === 'Andreita')) {
+    chooseBastaUser(savedUser);
+  }
+}
+
+function chooseBastaUser(name) {
+  if (name !== 'Criss' && name !== 'Andreita') return;
+  myBastaUser = name;
+  localStorage.setItem('basta_saved_user', name);
+  document.getElementById('bastaUserCriss').classList.remove('selected');
+  document.getElementById('bastaUserAndreita').classList.remove('selected');
+  if (name === 'Criss') {
+    document.getElementById('bastaUserCriss').classList.add('selected');
+  } else if (name === 'Andreita') {
+    document.getElementById('bastaUserAndreita').classList.add('selected');
+  }
+}
+
+function connectBasta() {
+  if (!myBastaUser || (myBastaUser !== 'Criss' && myBastaUser !== 'Andreita')) {
+    showToast("Por favor selecciona si eres Criss o Andreita 💕");
+    return;
+  }
+
+  document.getElementById('bastaLoginBox').style.display = 'none';
+  document.getElementById('bastaWaitingBox').style.display = 'block';
+
+  const presenceRef = rtdb.ref(`basta_presence/${myBastaUser}`);
+  const connectedRef = rtdb.ref('.info/connected');
+
+  connectedRef.on('value', (snap) => {
+    if (snap.val() === true) {
+      presenceRef.onDisconnect().set(false);
+      presenceRef.set(true);
+    }
+  });
+
+  listenBastaPresence();
+  listenBastaGameState();
+}
+
+function toggleBastaReady() {
+  amIBastaReady = !amIBastaReady;
+  const btn = document.getElementById('bastaReadyBtn');
+  if (amIBastaReady) {
+    btn.textContent = "✅ ¡Listo! (Esperando a tu amorcito...)";
+    btn.style.background = "#800020";
+  } else {
+    btn.textContent = "✨ ¡Estoy Listo para el Basta! ✨";
+    btn.style.background = "#2a9d8f";
+  }
+  rtdb.ref(`basta_ready/${myBastaUser}`).set(amIBastaReady);
+}
+
+function listenBastaPresence() {
+  const allPresenceRef = rtdb.ref('basta_presence');
+  const readyRef = rtdb.ref('basta_ready');
+
+  allPresenceRef.on('value', (snap) => {
+    const presence = snap.val() || {};
+    const crissOnline = presence.Criss === true;
+    const andreitaOnline = presence.Andreita === true;
+
+    document.getElementById('bastaWaitCriss').textContent = `👑 Criss: ${crissOnline ? 'En Sala ✅' : 'Ausente ❌'}`;
+    document.getElementById('bastaWaitCriss').className = `presence-badge ${crissOnline ? 'online' : ''}`;
+    
+    document.getElementById('bastaWaitAndreita').textContent = `🌸 Andreita: ${andreitaOnline ? 'En Sala ✅' : 'Ausente ❌'}`;
+    document.getElementById('bastaWaitAndreita').className = `presence-badge ${andreitaOnline ? 'online' : ''}`;
+  });
+
+  readyRef.on('value', (snap) => {
+    const readyData = snap.val() || {};
+    const crissReady = readyData.Criss === true;
+    const andreitaReady = readyData.Andreita === true;
+
+    document.getElementById('bastaReadyCriss').textContent = `👑 Criss: ${crissReady ? '¡Listo! ✅' : 'No listo ⏳'}`;
+    document.getElementById('bastaReadyCriss').className = `presence-badge ${crissReady ? 'ready-ok' : 'ready'}`;
+
+    document.getElementById('bastaReadyAndreita').textContent = `🌸 Andreita: ${andreitaReady ? '¡Lista! ✅' : 'No lista ⏳'}`;
+    document.getElementById('bastaReadyAndreita').className = `presence-badge ${andreitaReady ? 'ready-ok' : 'ready'}`;
+
+    if (crissReady && andreitaReady) {
+      rtdb.ref('basta_room').once('value').then(snapRoom => {
+        const data = snapRoom.val();
+        if (!data || data.status === 'idle' || data.status === 'finished') {
+          if (myBastaUser === 'Criss') {
+            startBastaRound(1, []);
+          }
+        }
+      });
+    }
+  });
+}
+
+function startBastaRound(roundNum, usedLetters) {
+  const remainingLetters = BASTA_LETTERS.filter(l => !usedLetters.includes(l));
+  const chosenLetter = remainingLetters[Math.floor(Math.random() * remainingLetters.length)] || "A";
+  const newUsed = [...usedLetters, chosenLetter];
+
+  rtdb.ref('basta_room').set({
+    status: "roulette",
+    round: roundNum,
+    letter: chosenLetter,
+    usedLetters: newUsed,
+    stoppedBy: "",
+    scores: { Criss: 0, Andreita: 0 },
+    rouletteEnd: Date.now() + 3500
+  });
+}
+
+function listenBastaGameState() {
+  const roomRef = rtdb.ref('basta_room');
+  roomRef.on('value', async (snap) => {
+    const data = snap.val();
+    if (!data) return;
+
+    currentBastaRound = data.round || 1;
+    currentBastaLetter = data.letter || "A";
+
+    if (data.status === "roulette") {
+      document.getElementById('bastaWaitingBox').style.display = 'none';
+      document.getElementById('bastaPlayArena').style.display = 'none';
+      document.getElementById('bastaVotingArena').style.display = 'none';
+      document.getElementById('bastaFinalSummarySection').style.display = 'none';
+      document.getElementById('bastaRouletteSection').style.display = 'block';
+
+      document.getElementById('bastaRoundInfo').textContent = `Ronda ${currentBastaRound} de 3`;
+      runBastaRouletteAnimation(data.letter, data.rouletteEnd);
+    }
+    else if (data.status === "playing") {
+      document.getElementById('bastaWaitingBox').style.display = 'none';
+      document.getElementById('bastaRouletteSection').style.display = 'none';
+      document.getElementById('bastaVotingArena').style.display = 'none';
+      document.getElementById('bastaFinalSummarySection').style.display = 'none';
+      document.getElementById('bastaPlayArena').style.display = 'block';
+
+      document.getElementById('bastaCurrentLetterTitle').textContent = `Letra Activa: [ ${data.letter} ]`;
+      document.getElementById('bastaRoundBadge').textContent = `Ronda ${currentBastaRound}/3`;
+
+      BASTA_CATEGORIES.forEach(cat => {
+        const input = document.getElementById(`basta_${cat.id}`);
+        if (input) {
+          input.disabled = false;
+          input.value = '';
+        }
+      });
+      checkBastaFieldsComplete();
+    }
+    else if (data.status === "stopped") {
+      BASTA_CATEGORIES.forEach(cat => {
+        const input = document.getElementById(`basta_${cat.id}`);
+        if (input) input.disabled = true;
+      });
+
+      const myAnswers = {};
+      BASTA_CATEGORIES.forEach(cat => {
+        myAnswers[cat.id] = document.getElementById(`basta_${cat.id}`).value.trim() || "";
+      });
+      await rtdb.ref(`basta_answers/round_${currentBastaRound}/${myBastaUser}`).set(myAnswers);
+
+      const opponentUser = (myBastaUser === "Criss") ? "Andreita" : "Criss";
+      const oppSnap = await rtdb.ref(`basta_answers/round_${currentBastaRound}/${opponentUser}`).once('value');
+      const opponentAnswers = oppSnap.val() || {};
+
+      document.getElementById('bastaPlayArena').style.display = 'none';
+      document.getElementById('bastaVotingArena').style.display = 'block';
+      document.getElementById('bastaNextRoundBtn').disabled = false;
+      document.getElementById('bastaNextRoundBtn').textContent = "Siguiente Ronda 🚀";
+
+      showToast(`🛑 ¡BASTA PARA TODOS! presionado por ${data.stoppedBy}`);
+      renderBastaVotingScreen(opponentUser, opponentAnswers, myAnswers);
+    }
+    else if (data.status === "finished") {
+      showBastaFinalSummary(data.scores || { Criss: 0, Andreita: 0 });
+    }
+  });
+}
+
+function runBastaRouletteAnimation(targetLetter, endTime) {
+  const display = document.getElementById('bastaRouletteLetter');
+  const interval = setInterval(() => {
+    const randomChar = BASTA_LETTERS[Math.floor(Math.random() * BASTA_LETTERS.length)];
+    display.textContent = randomChar;
+
+    if (Date.now() >= endTime) {
+      clearInterval(interval);
+      display.textContent = targetLetter;
+      setTimeout(() => {
+        if (myBastaUser === 'Criss') {
+          rtdb.ref('basta_room').update({
+            status: "playing",
+            rouletteEnd: 0
+          });
+        }
+      }, 1000);
+    }
+  }, 100);
+}
+
+function checkBastaFieldsComplete() {
+  const finishBtn = document.getElementById('bastaFinishBtn');
+  let allFilled = true;
+
+  BASTA_CATEGORIES.forEach(cat => {
+    const val = document.getElementById(`basta_${cat.id}`).value.trim();
+    if (!val) allFilled = false;
+  });
+
+  if (allFilled) {
+    finishBtn.disabled = false;
+    finishBtn.style.background = "#2a9d8f";
+    finishBtn.textContent = "🛑 ¡BASTA PARA TODOS! (Toca para terminar)";
+  } else {
+    finishBtn.disabled = true;
+    finishBtn.style.background = "#e63946";
+    finishBtn.textContent = "🛑 ¡BASTA PARA TODOS! (Completa todas las casillas)";
+  }
+}
+
+async function triggerBastaStop() {
+  const finishBtn = document.getElementById('bastaFinishBtn');
+  if (finishBtn.disabled) return;
+
+  const myAnswers = {};
+  BASTA_CATEGORIES.forEach(cat => {
+    myAnswers[cat.id] = document.getElementById(`basta_${cat.id}`).value.trim() || "";
+  });
+
+  await rtdb.ref(`basta_answers/round_${currentBastaRound}/${myBastaUser}`).set(myAnswers);
+
+  rtdb.ref('basta_room').update({
+    status: "stopped",
+    stoppedBy: myBastaUser
+  });
+}
+
+function renderBastaVotingScreen(opponentUser, opponentAnswers, myAnswers) {
+  const listContainer = document.getElementById('bastaVotingItemsList');
+  listContainer.innerHTML = '';
+  localBastaVotes = {};
+
+  BASTA_CATEGORIES.forEach(cat => {
+    const oppVal = (opponentAnswers && opponentAnswers[cat.id]) ? opponentAnswers[cat.id] : "";
+    const myVal = (myAnswers && myAnswers[cat.id]) ? myAnswers[cat.id] : "";
+
+    const card = document.createElement('div');
+    card.className = 'basta-vote-card';
+
+    const defaultVote = oppVal ? 10 : 0;
+    localBastaVotes[cat.id] = defaultVote;
+
+    card.innerHTML = `
+      <div style="flex: 1; min-width: 200px;">
+        <div style="font-weight: 800; color: var(--title-burgundy); font-size: 0.9rem;">${cat.label}</div>
+        <div style="font-size: 0.85rem; color: #555; margin-top: 3px;">
+          <b>${opponentUser}:</b> <span style="color: #0d47a1; font-weight: 800;">${oppVal || '(Vacío)'}</span> | 
+          <b>Tú:</b> <span style="color: #880e4f; font-weight: 800;">${myVal || '(Vacío)'}</span>
+        </div>
+      </div>
+      <div class="vote-btn-group" id="vote_group_${cat.id}">
+        <button class="vote-point-btn ${defaultVote === 10 ? 'active-10' : ''}" onclick="setBastaVote('${cat.id}', 10, this)">+10</button>
+        <button class="vote-point-btn ${defaultVote === 5 ? 'active-5' : ''}" onclick="setBastaVote('${cat.id}', 5, this)">+5</button>
+        <button class="vote-point-btn ${defaultVote === 0 ? 'active-0' : ''}" onclick="setBastaVote('${cat.id}', 0, this)">0</button>
+      </div>
+    `;
+    listContainer.appendChild(card);
+  });
+}
+
+function setBastaVote(catId, points, btn) {
+  localBastaVotes[catId] = points;
+  const group = document.getElementById(`vote_group_${catId}`);
+  group.querySelectorAll('.vote-point-btn').forEach(b => {
+    b.className = 'vote-point-btn';
+  });
+
+  if (points === 10) btn.className = 'vote-point-btn active-10';
+  else if (points === 5) btn.className = 'vote-point-btn active-5';
+  else if (points === 0) btn.className = 'vote-point-btn active-0';
+}
+
+async function confirmBastaVotesAndNext() {
+  const nextBtn = document.getElementById('bastaNextRoundBtn');
+  nextBtn.disabled = true;
+  nextBtn.textContent = "Guardando votos... ✨";
+
+  const opponentUser = (myBastaUser === "Criss") ? "Andreita" : "Criss";
+
+  let givenPoints = 0;
+  Object.values(localBastaVotes).forEach(p => givenPoints += p);
+
+  await rtdb.ref(`basta_votes/round_${currentBastaRound}/${myBastaUser}`).set({
+    votes: localBastaVotes,
+    totalGiven: givenPoints
+  });
+
+  await rtdb.ref(`basta_round_ready/${currentBastaRound}/${myBastaUser}`).set(true);
+
+  rtdb.ref(`basta_round_ready/${currentBastaRound}`).on('value', async (readySnap) => {
+    const readyData = readySnap.val() || {};
+    if (readyData.Criss === true && readyData.Andreita === true) {
+      if (myBastaUser === 'Criss') {
+        const votesSnap = await rtdb.ref(`basta_votes/round_${currentBastaRound}`).once('value');
+        const vData = votesSnap.val() || {};
+
+        const pointsForCriss = (vData.Andreita && vData.Andreita.totalGiven) ? vData.Andreita.totalGiven : 0;
+        const pointsForAndreita = (vData.Criss && vData.Criss.totalGiven) ? vData.Criss.totalGiven : 0;
+
+        const roomSnap = await rtdb.ref('basta_room').once('value');
+        const roomData = roomSnap.val() || {};
+        const currentScores = roomData.scores || { Criss: 0, Andreita: 0 };
+
+        currentScores.Criss = (currentScores.Criss || 0) + pointsForCriss;
+        currentScores.Andreita = (currentScores.Andreita || 0) + pointsForAndreita;
+
+        if (currentBastaRound >= 3) {
+          rtdb.ref('basta_room').update({
+            status: "finished",
+            scores: currentScores
+          });
+        } else {
+          startBastaRound(currentBastaRound + 1, roomData.usedLetters || []);
+        }
+      }
+    }
+  });
+}
+
+function showBastaFinalSummary(scores) {
+  document.getElementById('bastaPlayArena').style.display = 'none';
+  document.getElementById('bastaVotingArena').style.display = 'none';
+  document.getElementById('bastaFinalSummarySection').style.display = 'block';
+
+  const sCriss = scores.Criss || 0;
+  const sAndreita = scores.Andreita || 0;
+
+  document.getElementById('bastaFinalScoreCriss').textContent = sCriss;
+  document.getElementById('bastaFinalScoreAndreita').textContent = sAndreita;
+
+  let winnerText = "";
+  if (sCriss > sAndreita) {
+    winnerText = `👑 ¡Ganó Criss con ${sCriss} puntos en el Basta! ¡Qué rapidez mi amor! 💕`;
+  } else if (sAndreita > sCriss) {
+    winnerText = `🌸 ¡Ganó Andreita con ${sAndreita} puntos en el Basta! ¡Eres la más inteligente y veloz mi vida! 🥰`;
+  } else {
+    winnerText = `🤝 ¡Empate perfecto con ${sCriss} puntos! ¡Conexión mental total mi amor! ❤️`;
+  }
+
+  document.getElementById('bastaFinalWinnerTitle').textContent = winnerText;
+}
+
+function restartBastaGame() {
+  amIBastaReady = false;
+  rtdb.ref('basta_ready/Criss').set(false);
+  rtdb.ref('basta_ready/Andreita').set(false);
+  rtdb.ref('basta_answers').remove();
+  rtdb.ref('basta_votes').remove();
+  rtdb.ref('basta_round_ready').remove();
+
+  rtdb.ref('basta_room').set({
+    status: "idle",
+    round: 1,
+    letter: "A",
+    usedLetters: [],
+    stoppedBy: "",
+    scores: { Criss: 0, Andreita: 0 }
+  });
+
+  document.getElementById('bastaReadyBtn').textContent = "✨ ¡Estoy Listo para el Basta! ✨";
+  document.getElementById('bastaReadyBtn').style.background = "#2a9d8f";
+  document.getElementById('bastaFinalSummarySection').style.display = 'none';
+  document.getElementById('bastaWaitingBox').style.display = 'block';
+}
 
     createBgHearts();
     initMemoryGame();
