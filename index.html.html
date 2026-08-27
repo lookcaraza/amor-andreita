@@ -1519,17 +1519,21 @@
     }
 
     .burger-plate-area {
-      min-height: 180px;
+      height: 190px;
+      max-height: 190px;
+      overflow-y: auto;
+      overflow-x: hidden;
       background: #fff;
       border: 3px dashed var(--rose-pink);
       border-radius: 20px;
-      margin: 15px 0;
+      margin: 12px 0;
       display: flex;
       flex-direction: column-reverse;
       align-items: center;
       justify-content: flex-start;
-      padding: 15px;
-      gap: 6px;
+      padding: 10px;
+      gap: 5px;
+      scroll-behavior: smooth;
     }
 
     .stacked-ingredient {
