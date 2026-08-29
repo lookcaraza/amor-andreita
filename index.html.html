@@ -3897,45 +3897,37 @@
 
 
   <script>
+const makeHeroAvatar = (bg, color, icon, role) => {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="${bg}"/><stop offset="100%" stop-color="${color}"/></linearGradient></defs><rect width="160" height="160" rx="20" fill="url(#g)"/><circle cx="80" cy="70" r="42" fill="white" opacity="0.25"/><text x="80" y="85" font-size="48" text-anchor="middle" font-family="Arial, sans-serif">${icon}</text><rect x="15" y="122" width="130" height="24" rx="8" fill="rgba(0,0,0,0.45)"/><text x="80" y="138" font-size="11" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">${role}</text></svg>`;
+  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+};
+
 const MLBB_HEROES = [
-  { id: "natalia", name: "Natalia", img: "https://static.wikia.nocookie.net/mobile-legends/images/6/6f/Hero0241-portrait.png" },
-  { id: "paquito", name: "Paquito", img: "https://static.wikia.nocookie.net/mobile-legends/images/a/a8/Hero1031-portrait.png" },
-  { id: "ling", name: "Ling", img: "https://static.wikia.nocookie.net/mobile-legends/images/5/52/Hero0841-portrait.png" },
-  { id: "fanny", name: "Fanny", img: "https://static.wikia.nocookie.net/mobile-legends/images/0/07/Hero0171-portrait.png" },
-  { id: "granger", name: "Granger", img: "https://static.wikia.nocookie.net/mobile-legends/images/4/4e/Hero0781-portrait.png" },
-  { id: "gusion", name: "Gusion", img: "https://static.wikia.nocookie.net/mobile-legends/images/e/e4/Hero0561-portrait.png" },
-  { id: "chou", name: "Chou", img: "https://static.wikia.nocookie.net/mobile-legends/images/f/f6/Hero0261-portrait.png" },
-  { id: "angela", name: "Angela", img: "https://static.wikia.nocookie.net/mobile-legends/images/8/86/Hero0551-portrait.png" },
-  { id: "nana", name: "Nana", img: "https://static.wikia.nocookie.net/mobile-legends/images/d/df/Hero0051-portrait.png" },
-  { id: "layla", name: "Layla", img: "https://static.wikia.nocookie.net/mobile-legends/images/5/57/Hero0181-portrait.png" },
-  { id: "miya", name: "Miya", img: "https://static.wikia.nocookie.net/mobile-legends/images/6/62/Hero0011-portrait.png" },
-  { id: "alucard", name: "Alucard", img: "https://static.wikia.nocookie.net/mobile-legends/images/7/73/Hero0071-portrait.png" },
-  { id: "lancelot", name: "Lancelot", img: "https://static.wikia.nocookie.net/mobile-legends/images/2/25/Hero0471-portrait.png" },
-  { id: "hayabusa", name: "Hayabusa", img: "https://static.wikia.nocookie.net/mobile-legends/images/4/41/Hero0211-portrait.png" },
-  { id: "kagura", name: "Kagura", img: "https://static.wikia.nocookie.net/mobile-legends/images/5/5e/Hero0251-portrait.png" },
-  { id: "lesley", name: "Lesley", img: "https://static.wikia.nocookie.net/mobile-legends/images/f/f9/Hero0531-portrait.png" },
-  { id: "claude", name: "Claude", img: "https://static.wikia.nocookie.net/mobile-legends/images/b/b5/Hero0651-portrait.png" },
-  { id: "franco", name: "Franco", img: "https://static.wikia.nocookie.net/mobile-legends/images/e/e2/Hero0101-portrait.png" },
-  { id: "tigreal", name: "Tigreal", img: "https://static.wikia.nocookie.net/mobile-legends/images/4/44/Hero0061-portrait.png" },
-  { id: "johnson", name: "Johnson", img: "https://static.wikia.nocookie.net/mobile-legends/images/0/0a/Hero0351-portrait.png" },
-  { id: "esmeralda", name: "Esmeralda", img: "https://static.wikia.nocookie.net/mobile-legends/images/4/45/Hero0801-portrait.png" },
-  { id: "guinevere", name: "Guinevere", img: "https://static.wikia.nocookie.net/mobile-legends/images/d/d6/Hero0791-portrait.png" },
-  { id: "lunox", name: "Lunox", img: "https://static.wikia.nocookie.net/mobile-legends/images/a/a2/Hero0681-portrait.png" },
-  { id: "harley", name: "Harley", img: "https://static.wikia.nocookie.net/mobile-legends/images/5/5b/Hero0421-portrait.png" }
+  { id: "natalia", name: "Natalia", img: makeHeroAvatar("#2b2d42", "#8d99ae", "🗡️", "ASESINO") },
+  { id: "paquito", name: "Paquito", img: makeHeroAvatar("#b7094c", "#ff4d6d", "🥊", "COMBATIENTE") },
+  { id: "ling", name: "Ling", img: makeHeroAvatar("#3a86ff", "#8338ec", "⚔️", "ASESINO") },
+  { id: "fanny", name: "Fanny", img: makeHeroAvatar("#ff758f", "#c9184a", "⛓️", "ASESINO") },
+  { id: "granger", name: "Granger", img: makeHeroAvatar("#212529", "#495057", "🔫", "TIRADOR") },
+  { id: "gusion", name: "Gusion", img: makeHeroAvatar("#5a189a", "#7b2cbf", "🗡️", "ASESINO / MAGO") },
+  { id: "chou", name: "Chou", img: makeHeroAvatar("#e76f51", "#f4a261", "🥋", "COMBATIENTE") },
+  { id: "angela", name: "Angela", img: makeHeroAvatar("#ffb3c1", "#ff758f", "🎀", "APOYO") },
+  { id: "nana", name: "Nana", img: makeHeroAvatar("#ff85a1", "#f72585", "🦝", "MAGO / APOYO") },
+  { id: "layla", name: "Layla", img: makeHeroAvatar("#00b4d8", "#90e0ef", "💥", "TIRADOR") },
+  { id: "miya", name: "Miya", img: makeHeroAvatar("#48cae4", "#0077b6", "🏹", "TIRADOR") },
+  { id: "alucard", name: "Alucard", img: makeHeroAvatar("#1d3557", "#457b9d", "🗡️", "COMBATIENTE") },
+  { id: "lancelot", name: "Lancelot", img: makeHeroAvatar("#e0a96d", "#c68b59", "🌹", "ASESINO") },
+  { id: "hayabusa", name: "Hayabusa", img: makeHeroAvatar("#212529", "#c1121f", "🥷", "NINJA / ASESINO") },
+  { id: "kagura", name: "Kagura", img: makeHeroAvatar("#b5179e", "#7209b7", "☂️", "MAGO") },
+  { id: "lesley", name: "Lesley", img: makeHeroAvatar("#6a040f", "#9d0208", "🎯", "TIRADOR") },
+  { id: "claude", name: "Claude", img: makeHeroAvatar("#fb8500", "#ffb703", "🐒", "TIRADOR") },
+  { id: "franco", name: "Franco", img: makeHeroAvatar("#023e8a", "#0077b6", "⚓", "TANQUE") },
+  { id: "tigreal", name: "Tigreal", img: makeHeroAvatar("#b08968", "#7f4f24", "🛡️", "TANQUE") },
+  { id: "johnson", name: "Johnson", img: makeHeroAvatar("#3d5a80", "#293241", "🚗", "TANQUE") },
+  { id: "esmeralda", name: "Esmeralda", img: makeHeroAvatar("#007f5f", "#2b9348", "💃", "MAGO / TANQUE") },
+  { id: "guinevere", name: "Guinevere", img: makeHeroAvatar("#c77dff", "#9d4edd", "👗", "COMBATIENTE") },
+  { id: "lunox", name: "Lunox", img: makeHeroAvatar("#ffd166", "#06d6a0", "🌗", "MAGO") },
+  { id: "harley", name: "Harley", img: makeHeroAvatar("#f77f00", "#d62828", "🎩", "MAGO") }
 ];
-
-let myGuessWhoUser = "";
-let amIGuessWhoReady = false;
-let myCurrentFlippedState = {};
-let currentGuessWhoMatch = null;
-
-function initGuessWhoSystem() {
-  const savedUser = localStorage.getItem('basta_saved_user') || localStorage.getItem('pinturillo_saved_user');
-  if (savedUser && (savedUser === 'Criss' || savedUser === 'Andreita')) {
-    chooseGuessWhoUser(savedUser);
-  }
-}
-
 function chooseGuessWhoUser(name) {
   if (name !== 'Criss' && name !== 'Andreita') return;
   myGuessWhoUser = name;
@@ -4106,41 +4098,23 @@ function renderGuessWhoBoard() {
     card.id = `gw_card_${hero.id}`;
     card.onclick = () => toggleCardFlip(hero.id);
 
-    card.innerHTML = `
-      <img src="${hero.img}" alt="${hero.name}" referrerpolicy="no-referrer" loading="lazy">
-      <div class="guesswho-card-name">${hero.name}</div>
-    `;
+    const img = document.createElement('img');
+    img.src = hero.img;
+    img.alt = hero.name;
+
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'guesswho-card-name';
+    nameDiv.textContent = hero.name;
+
+    card.appendChild(img);
+    card.appendChild(nameDiv);
     container.appendChild(card);
   });
-}
-
-function toggleCardFlip(heroId) {
-  myCurrentFlippedState[heroId] = !myCurrentFlippedState[heroId];
-  const card = document.getElementById(`gw_card_${heroId}`);
-  if (card) {
-    if (myCurrentFlippedState[heroId]) {
-      card.classList.add('flipped');
-    } else {
-      card.classList.remove('flipped');
-    }
-  }
-}
-
-async function endGuessWhoTurn() {
-  if (!currentGuessWhoMatch || currentGuessWhoMatch.turn !== myGuessWhoUser) return;
-  const nextTurn = (myGuessWhoUser === 'Criss') ? 'Andreita' : 'Criss';
-
-  await rtdb.ref('guesswho_room').update({
-    turn: nextTurn
-  });
-
-  showToast(`¡Turno terminado! Le toca a ${nextTurn} 🚀`);
 }
 
 function openGuessSelectionModal() {
   const container = document.getElementById('guessModalHeroOptions');
   container.innerHTML = '';
-
   MLBB_HEROES.forEach(hero => {
     const btn = document.createElement('button');
     btn.className = 'burger-ingredient-btn';
