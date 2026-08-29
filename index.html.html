@@ -2221,6 +2221,245 @@
   font-size: 0.78rem;
   font-weight: 800;
 }
+.songs-recipients-bar {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.song-recipient-btn {
+  flex: 1;
+  max-width: 250px;
+  padding: 12px 16px;
+  border-radius: 20px;
+  border: 2px solid var(--rose-pink);
+  background: #ffffff;
+  color: var(--title-burgundy);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px var(--shadow-pink);
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.song-recipient-btn.active {
+  background: var(--soft-red);
+  color: white;
+  border-color: var(--title-burgundy);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px var(--shadow-pink);
+}
+.songs-add-card {
+  border: 3px dashed var(--rose-pink);
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 25px;
+  transition: border-color 0.3s, transform 0.2s;
+}
+.songs-add-card:hover {
+  border-color: var(--soft-red);
+  transform: translateY(-2px);
+}
+.spotify-live-search-box {
+  position: relative;
+  margin-bottom: 15px;
+}
+.spotify-search-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  border: 2px solid var(--rose-pink);
+  font-weight: 700;
+  font-size: 0.95rem;
+  outline: none;
+  background: #fff;
+}
+.spotify-search-input:focus {
+  border-color: var(--soft-red);
+}
+.spotify-results-dropdown {
+  max-height: 220px;
+  overflow-y: auto;
+  background: white;
+  border: 2px solid var(--rose-pink);
+  border-radius: 16px;
+  margin-top: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+.spotify-result-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.spotify-result-item:hover {
+  background: #fff0f3;
+}
+.spotify-result-thumb {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.selected-song-preview-card {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  background: #fff0f3;
+  border: 2px solid var(--soft-red);
+  border-radius: 16px;
+  padding: 10px 14px;
+  margin-bottom: 15px;
+}
+.songs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 18px;
+  margin-top: 15px;
+}
+.song-card {
+  background: #ffffff;
+  border: 2px solid var(--rose-pink);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(230, 92, 101, 0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.song-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px rgba(230, 92, 101, 0.2);
+}
+.song-card-cover {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  background: #222;
+}
+.song-card-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.song-date-badge {
+  display: inline-block;
+  background: #fff0f3;
+  color: var(--title-burgundy);
+  font-weight: 800;
+  font-size: 0.78rem;
+  padding: 3px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--rose-pink);
+  margin-bottom: 6px;
+  align-self: flex-start;
+}
+.song-title-text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--title-burgundy);
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+.song-artist-text {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+.song-author-tag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--soft-red);
+  margin-bottom: 10px;
+}
+.song-listen-btn {
+  background: var(--soft-red);
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.2s, transform 0.15s;
+  width: 100%;
+}
+.song-listen-btn:hover {
+  background: var(--title-burgundy);
+  transform: scale(1.02);
+}
+.delete-song-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(230, 57, 70, 0.9);
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  z-index: 5;
+}
+.delete-song-btn:hover {
+  transform: scale(1.15);
+}
+.song-player-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 6000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.song-player-modal {
+  background: #ffffff;
+  border-radius: 30px;
+  border: 4px solid var(--soft-red);
+  box-shadow: 0 20px 45px rgba(230, 92, 101, 0.4);
+  max-width: 520px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  position: relative;
+  animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
   </style>
 </head>
 <body>
@@ -2264,9 +2503,30 @@
     <button class="tab-btn active" onclick="openTab('gallery', event)">📸 Galería</button>
     <button class="tab-btn" onclick="openTab('minigames-section', event)">🎮 Minijuegos</button>
     <button class="tab-btn" onclick="openTab('quiz-game', event)">💌 Preguntados</button>
+    <button class="tab-btn" onclick="openTab('songs-section', event)">🎵 Canciones</button>
   </nav>
 
   <main>
+    <section id="songs-section" class="tab-content">
+      <h2>Nuestras Canciones & Videos de Amor 🎵</h2>
+
+      <div class="songs-recipients-bar">
+        <button class="song-recipient-btn active" id="filterAndreitaBtn" onclick="filterSongsRecipient('Andreita')">
+          🌸 Canciones para Andreita
+        </button>
+        <button class="song-recipient-btn" id="filterCrissBtn" onclick="filterSongsRecipient('Criss')">
+          👑 Canciones para Criss
+        </button>
+      </div>
+
+      <div class="songs-add-card" onclick="openAddSongModal()">
+        <p style="font-size: 1.15rem; color: var(--title-burgundy); font-weight: 800;">✨ Dedicar una Canción o Video</p>
+        <p style="font-size: 0.85rem; color: #555; margin-top: 4px;">Busca en YouTube, elige la canción y dedícasela a tu amor</p>
+      </div>
+
+      <div class="songs-grid" id="songsContainer"></div>
+    </section>
+
     <section id="gallery" class="tab-content active">
       <h2>Álbum de Recuerdos 🌹</h2>
       <div class="drop-zone" onclick="openAuthModal('upload')">
@@ -3119,8 +3379,267 @@
     </div>
   </div>
 
+<div class="modal-overlay" id="addSongModal">
+    <div class="modal-box" style="max-width: 460px; text-align: left;">
+      <h3 style="text-align: center;">Dedicar Video de YouTube 🎬🎶</h3>
+      
+      <form id="addSongForm" onsubmit="saveSongToFirestore(event)">
+        <label for="ytUrlInput">1. Pega el enlace de YouTube:</label>
+        <input 
+          type="url" 
+          id="ytUrlInput" 
+          placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..." 
+          required 
+          oninput="previewYouTubeLink(this.value)"
+        >
+
+        <div class="selected-song-preview-card" id="selectedSongPreview" style="margin-top: 12px;">
+          <img id="previewCoverImg" src="" class="spotify-result-thumb" style="width: 60px; height: 45px; object-fit: cover;">
+          <div style="flex: 1; min-width: 0;">
+            <div id="previewTitle" style="font-weight: 800; color: var(--title-burgundy); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Video detectado</div>
+            <div id="previewArtist" style="font-weight: 700; color: #2a9d8f; font-size: 0.82rem;">✅ Enlace válido</div>
+          </div>
+        </div>
+
+        <label for="songTitleInput">2. Nombre de la canción / video:</label>
+        <input type="text" id="songTitleInput" placeholder="Ej: un x100to - Grupo Frontera & Bad Bunny" required>
+
+        <label for="songDateInput">3. Fecha especial:</label>
+        <input type="date" id="songDateInput" required>
+
+        <label>4. ¿Quién la está dedicando?</label>
+        <div class="profile-selector">
+          <div class="profile-card" id="songAuthorCriss" onclick="selectSongAuthor('Criss')">👑 Criss</div>
+          <div class="profile-card" id="songAuthorAndreita" onclick="selectSongAuthor('Andreita')">🌸 Andreita</div>
+        </div>
+
+        <button type="submit" id="saveSongBtn" class="modal-btn">Dedicar Video ❤️</button>
+        <button type="button" class="modal-btn modal-btn-cancel" onclick="closeAddSongModal()">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL REPRODUCTOR YOUTUBE -->
+  <div class="song-player-overlay" id="songPlayerOverlay">
+    <div class="song-player-modal">
+      <button class="close-viewer-btn" onclick="closeSongPlayer()">✕</button>
+      
+      <div style="text-align: center; margin-bottom: 8px;">
+        <span class="song-date-badge" id="playerDateBadge">📅 Canción especial</span>
+        <h3 style="color: var(--title-burgundy); font-family: 'Montserrat', sans-serif; font-weight: 800; margin-top: 4px;" id="playerSongTitle">Título</h3>
+        <p style="font-weight: 700; color: #666; font-size: 0.88rem;" id="playerSongArtist">Artista</p>
+      </div>
+
+      <div id="youtubeEmbedContainer" style="width: 100%; aspect-ratio: 16/9; margin-top: 8px; border-radius: 16px; overflow: hidden;"></div>
+    </div>
+  </div>
+
+
+
   <script>
-let myCoopUser = "";
+let allSongsList = [];
+let currentActiveRecipient = "Andreita";
+let detectedYoutubeId = null;
+let selectedSongAuthor = "";
+
+function initSongsSystem() {
+  db.collection("canciones").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+    allSongsList = [];
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      data.id = doc.id;
+      allSongsList.push(data);
+    });
+    renderSongsForCurrentRecipient();
+  });
+}
+
+function filterSongsRecipient(recipient) {
+  currentActiveRecipient = recipient;
+  document.getElementById('filterAndreitaBtn').classList.remove('active');
+  document.getElementById('filterCrissBtn').classList.remove('active');
+
+  if (recipient === 'Andreita') {
+    document.getElementById('filterAndreitaBtn').classList.add('active');
+  } else {
+    document.getElementById('filterCrissBtn').classList.add('active');
+  }
+
+  renderSongsForCurrentRecipient();
+}
+
+function renderSongsForCurrentRecipient() {
+  const container = document.getElementById('songsContainer');
+  container.innerHTML = '';
+
+  const filtered = allSongsList.filter(s => s.recipient === currentActiveRecipient);
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; font-weight: 700; color: #777;">
+        🎵 Aún no hay videos dedicados para ${currentActiveRecipient}. ¡Dedícale uno arriba! 💕
+      </div>
+    `;
+    return;
+  }
+
+  filtered.forEach(song => {
+    const card = document.createElement('div');
+    card.className = 'song-card';
+
+    const coverUrl = song.coverUrl || `https://img.youtube.com/vi/${song.ytId}/hqdefault.jpg`;
+
+    card.innerHTML = `
+      <button class="delete-song-btn" onclick="deleteSong('${song.id}')" title="Eliminar">🗑️</button>
+      <img src="${coverUrl}" class="song-card-cover" alt="Portada de ${song.title}">
+      <div class="song-card-body">
+        <span class="song-date-badge">📅 ${song.dateLabel || 'Fecha especial'}</span>
+        <div class="song-title-text">${song.title}</div>
+        <div class="song-author-tag" style="margin-top: 6px;">💝 De: <b>${song.author}</b> para <b>${song.recipient}</b></div>
+        <button class="song-listen-btn" onclick="openSongPlayer('${song.id}')" style="margin-top: 10px;">
+          ▶️ Ver Video
+        </button>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+function openAddSongModal() {
+  detectedYoutubeId = null;
+  selectedSongAuthor = "";
+  document.getElementById('songAuthorCriss').classList.remove('selected');
+  document.getElementById('songAuthorAndreita').classList.remove('selected');
+  document.getElementById('ytUrlInput').value = '';
+  document.getElementById('songTitleInput').value = '';
+  document.getElementById('selectedSongPreview').style.display = 'none';
+  document.getElementById('songDateInput').valueAsDate = new Date();
+  document.getElementById('saveSongBtn').disabled = false;
+  document.getElementById('addSongModal').style.display = 'flex';
+}
+
+function closeAddSongModal() {
+  document.getElementById('addSongModal').style.display = 'none';
+}
+
+function selectSongAuthor(author) {
+  selectedSongAuthor = author;
+  document.getElementById('songAuthorCriss').classList.remove('selected');
+  document.getElementById('songAuthorAndreita').classList.remove('selected');
+  if (author === 'Criss') {
+    document.getElementById('songAuthorCriss').classList.add('selected');
+  } else {
+    document.getElementById('songAuthorAndreita').classList.add('selected');
+  }
+}
+
+function extractYouTubeId(url) {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
+function previewYouTubeLink(url) {
+  const ytId = extractYouTubeId(url.trim());
+  const previewCard = document.getElementById('selectedSongPreview');
+  
+  if (ytId) {
+    detectedYoutubeId = ytId;
+    const thumbUrl = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+    document.getElementById('previewCoverImg').src = thumbUrl;
+    previewCard.style.display = 'flex';
+  } else {
+    detectedYoutubeId = null;
+    previewCard.style.display = 'none';
+  }
+}
+
+async function saveSongToFirestore(e) {
+  e.preventDefault();
+
+  const urlVal = document.getElementById('ytUrlInput').value.trim();
+  const ytId = extractYouTubeId(urlVal);
+
+  if (!ytId) {
+    showToast("Por favor ingresa un enlace válido de YouTube 🎬");
+    return;
+  }
+
+  if (!selectedSongAuthor) {
+    showToast("Selecciona si eres Criss o Andreita 💕");
+    return;
+  }
+
+  const titleVal = document.getElementById('songTitleInput').value.trim();
+  const dateVal = document.getElementById('songDateInput').value;
+  const btn = document.getElementById('saveSongBtn');
+  const recipient = (selectedSongAuthor === "Criss") ? "Andreita" : "Criss";
+
+  let formattedDate = "";
+  if (dateVal) {
+    const [y, m, d] = dateVal.split('-');
+    const monthNum = parseInt(m, 10) - 1;
+    const nameMonth = monthNames[monthNum] || m;
+    formattedDate = `Canción del día ${parseInt(d, 10)} de ${nameMonth} de ${y}`;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Guardando video... ✨";
+
+  try {
+    await db.collection("canciones").add({
+      title: titleVal,
+      ytId: ytId,
+      coverUrl: `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`,
+      dateLabel: formattedDate,
+      author: selectedSongAuthor,
+      recipient: recipient,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    closeAddSongModal();
+    showToast(`¡Video dedicado con amor a ${recipient}! 🎶❤️`);
+    filterSongsRecipient(recipient);
+  } catch (error) {
+    console.error("Error guardando video:", error);
+    showToast("Error al guardar el video 🥺");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Dedicar Video ❤️";
+  }
+}
+
+function openSongPlayer(songId) {
+  const song = allSongsList.find(s => s.id === songId);
+  if (!song || !song.ytId) return;
+
+  document.getElementById('playerDateBadge').textContent = `📅 ${song.dateLabel || 'Video de amor'}`;
+  document.getElementById('playerSongTitle').textContent = song.title;
+  document.getElementById('playerSongArtist').textContent = `Dedicado por ${song.author}`;
+
+  const embedContainer = document.getElementById('youtubeEmbedContainer');
+  embedContainer.innerHTML = `
+    <iframe 
+      style="width: 100%; height: 100%; border: none; border-radius: 16px;" 
+      src="https://www.youtube-nocookie.com/embed/${song.ytId}?autoplay=1&rel=0&playsinline=1" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+      allowfullscreen>
+    </iframe>
+  `;
+
+  document.getElementById('songPlayerOverlay').style.display = 'flex';
+}
+
+function closeSongPlayer() {
+  document.getElementById('youtubeEmbedContainer').innerHTML = '';
+  document.getElementById('songPlayerOverlay').style.display = 'none';
+}
+
+function deleteSong(songId) {
+  openAuthModal('delete_song', { songId: songId });
+}let myCoopUser = "";
 let amICoopReady = false;
 let currentChoppingItem = null;
 let currentChopTaps = 0;
@@ -3628,6 +4147,7 @@ function restartCoopMatch() {
       initQuiz();
       loadSavedMedia();
       initBastaSystem();
+      initSongsSystem();
     });
 
     function startAppAndAudio() {
@@ -3682,6 +4202,11 @@ function restartCoopMatch() {
           mediaToDelete = deleteData;
           document.getElementById('deleteConfirmModal').style.display = 'flex';
         }
+          else if (action === 'delete_song' && deleteData) {
+         db.collection("canciones").doc(deleteData.songId).delete()
+    .then(() => showToast("Canción eliminada correctamente ✨"))
+    .catch(() => showToast("Error al eliminar la canción 🥺"));
+}
 
         currentAuthAction = null;
         pendingDeleteData = null;
