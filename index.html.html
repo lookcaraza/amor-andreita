@@ -2621,23 +2621,25 @@
       flex-direction: column;
       align-items: center;
       box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s, opacity 0.3s;
+      transition: transform 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
       user-select: none;
       -webkit-user-select: none;
+      touch-action: manipulation;
     }
-    .guesswho-card:hover {
-      transform: translateY(-3px) scale(1.02);
+   .guesswho-card:hover {
+      transform: translateY(-2px);
       border-color: var(--soft-red);
     }
     .guesswho-card img {
       width: 100%;
       aspect-ratio: 1;
       object-fit: cover;
+      object-position: center 20%;
       display: block;
       border-bottom: 2px solid var(--rose-pink);
-      image-rendering: -webkit-optimize-contrast;
+      pointer-events: none; /* Evita que el celular intente arrastrar la foto */
     }
-    .guesswho-card-name {
+   .guesswho-card-name {
       font-size: 0.75rem;
       font-weight: 800;
       color: var(--title-burgundy);
@@ -2648,24 +2650,26 @@
       overflow: hidden;
       text-overflow: ellipsis;
       background: #ffffff;
+      pointer-events: none;
     }
-    /* Estado Bajado / Descartado */
-    .guesswho-card.flipped {
-      transform: rotateX(70deg) translateY(12px) scale(0.92);
-      opacity: 0.35;
-      filter: grayscale(100%);
-      border-color: #999 !important;
+   .guesswho-card.flipped {
+      opacity: 0.35 !important;
+      filter: grayscale(100%) brightness(0.7) !important;
+      border-color: #888888 !important;
+      transform: scale(0.92) !important;
     }
     .guesswho-card.flipped::after {
       content: "✕";
       position: absolute;
-      top: 50%;
+      top: 40%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 2.2rem;
+      font-size: 2.5rem;
       font-weight: 900;
       color: #e63946;
-      text-shadow: 0 0 6px white;
+      text-shadow: 0 0 8px #ffffff, 0 0 12px #ffffff;
+      pointer-events: none;
+      z-index: 10;
     }
     .guesswho-myhero-bar {
       background: linear-gradient(135deg, #fff0f3 0%, #ffe3e8 100%);
@@ -2683,13 +2687,16 @@
       align-items: center;
       gap: 10px;
     }
-    .guesswho-myhero-img {
-      width: 52px;
-      height: 52px;
-      border-radius: 12px;
+   .guesswho-myhero-img {
+      width: 65px;
+      height: 65px;
+      border-radius: 14px;
       object-fit: cover;
-      border: 2.5px solid var(--soft-red);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      object-position: center 20%;
+      border: 3px solid var(--soft-red);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+      display: block;
+      background: #ffffff;
     }
     .guesswho-actions-row {
       display: flex;
@@ -3680,7 +3687,7 @@
                   <div class="guesswho-myhero-preview">
                     <img id="myAssignedHeroImg" src="" class="guesswho-myhero-img" alt="Tu Héroe Secreto">
                     <div>
-                      <div style="font-size: 0.78rem; font-weight: 800; color: var(--soft-red);">TU HÉROE SECRETO (Que deben adivinar):</div>
+                      <div style="font-size: 0.78rem; font-weight: 800; color: var(--soft-red);">TU HÉROE SECRETO ES (Que debe adivinar):</div>
                       <div style="font-size: 1.1rem; font-weight: 800; color: var(--title-burgundy);" id="myAssignedHeroName">Héroe</div>
                     </div>
                   </div>
@@ -3903,31 +3910,36 @@ const makeHeroAvatar = (bg, color, icon, role) => {
 };
 
 const MLBB_HEROES = [
-  { id: "natalia", name: "Natalia", img: makeHeroAvatar("#2b2d42", "#8d99ae", "🗡️", "ASESINO") },
-  { id: "paquito", name: "Paquito", img: makeHeroAvatar("#b7094c", "#ff4d6d", "🥊", "COMBATIENTE") },
-  { id: "ling", name: "Ling", img: makeHeroAvatar("#3a86ff", "#8338ec", "⚔️", "ASESINO") },
-  { id: "fanny", name: "Fanny", img: makeHeroAvatar("#ff758f", "#c9184a", "⛓️", "ASESINO") },
-  { id: "granger", name: "Granger", img: makeHeroAvatar("#212529", "#495057", "🔫", "TIRADOR") },
-  { id: "gusion", name: "Gusion", img: makeHeroAvatar("#5a189a", "#7b2cbf", "🗡️", "ASESINO / MAGO") },
-  { id: "chou", name: "Chou", img: makeHeroAvatar("#e76f51", "#f4a261", "🥋", "COMBATIENTE") },
-  { id: "angela", name: "Angela", img: makeHeroAvatar("#ffb3c1", "#ff758f", "🎀", "APOYO") },
-  { id: "nana", name: "Nana", img: makeHeroAvatar("#ff85a1", "#f72585", "🦝", "MAGO / APOYO") },
-  { id: "layla", name: "Layla", img: makeHeroAvatar("#00b4d8", "#90e0ef", "💥", "TIRADOR") },
-  { id: "miya", name: "Miya", img: makeHeroAvatar("#48cae4", "#0077b6", "🏹", "TIRADOR") },
-  { id: "alucard", name: "Alucard", img: makeHeroAvatar("#1d3557", "#457b9d", "🗡️", "COMBATIENTE") },
-  { id: "lancelot", name: "Lancelot", img: makeHeroAvatar("#e0a96d", "#c68b59", "🌹", "ASESINO") },
-  { id: "hayabusa", name: "Hayabusa", img: makeHeroAvatar("#212529", "#c1121f", "🥷", "NINJA / ASESINO") },
-  { id: "kagura", name: "Kagura", img: makeHeroAvatar("#b5179e", "#7209b7", "☂️", "MAGO") },
-  { id: "lesley", name: "Lesley", img: makeHeroAvatar("#6a040f", "#9d0208", "🎯", "TIRADOR") },
-  { id: "claude", name: "Claude", img: makeHeroAvatar("#fb8500", "#ffb703", "🐒", "TIRADOR") },
-  { id: "franco", name: "Franco", img: makeHeroAvatar("#023e8a", "#0077b6", "⚓", "TANQUE") },
-  { id: "tigreal", name: "Tigreal", img: makeHeroAvatar("#b08968", "#7f4f24", "🛡️", "TANQUE") },
-  { id: "johnson", name: "Johnson", img: makeHeroAvatar("#3d5a80", "#293241", "🚗", "TANQUE") },
-  { id: "esmeralda", name: "Esmeralda", img: makeHeroAvatar("#007f5f", "#2b9348", "💃", "MAGO / TANQUE") },
-  { id: "guinevere", name: "Guinevere", img: makeHeroAvatar("#c77dff", "#9d4edd", "👗", "COMBATIENTE") },
-  { id: "lunox", name: "Lunox", img: makeHeroAvatar("#ffd166", "#06d6a0", "🌗", "MAGO") },
-  { id: "harley", name: "Harley", img: makeHeroAvatar("#f77f00", "#d62828", "🎩", "MAGO") }
+  { id: "natalia", name: "Natalia", img: "https://lh3.googleusercontent.com/d/1IB9Cuga0Vav7i9nHdIYejjE3mJp8liAl" },
+  { id: "nana", name: "Nana", img: "https://lh3.googleusercontent.com/d/1L17gcWCWuAdUyejCPS-Br22OjDa9xo1d" },
+  { id: "paquito", name: "Paquito", img: "https://lh3.googleusercontent.com/d/1ASeOD9vTLRyTf2bXnTzXw3mpzR1jMZaA" },
+  { id: "tigreal", name: "Tigreal", img: "https://lh3.googleusercontent.com/d/1qn0BBLtiFcfLZdsdhbJD0RGRKwcU8YKM" },
+  { id: "miya", name: "Miya", img: "https://lh3.googleusercontent.com/d/1_Y7L84UV1bksPVT9qlNX-tPm6wgAaLkv" },
+  { id: "lunox", name: "Lunox", img: "https://lh3.googleusercontent.com/d/14grn6nj67UdbhfudIomSRkMSAGOehvqP" },
+  { id: "ling", name: "Ling", img: "https://lh3.googleusercontent.com/d/1O7jZ_q4jj27SLVnYeUnGZ3oJPrJm5oyj" },
+  { id: "lesley", name: "Lesley", img: "https://lh3.googleusercontent.com/d/1CO4RwJHp4BDw7rStasyJP4YwlVr7zG-t" },
+  { id: "layla", name: "Layla", img: "https://lh3.googleusercontent.com/d/1xckO8kxXbIOTHW_o7K0xHIOr0dUBfsNy" },
+  { id: "lancelot", name: "Lancelot", img: "https://lh3.googleusercontent.com/d/18aHERcaJj4OncbfKzzbW16DMoXTfZQ0g" },
+  { id: "kagura", name: "Kagura", img: "https://lh3.googleusercontent.com/d/1umtMbQLbDy1pqyQJMucAxWbR6FnXLxYj" },
+  { id: "johnson", name: "Johnson", img: "https://lh3.googleusercontent.com/d/167noeayMPei33XVNOFzJjuLo_0PHbe2U" },
+  { id: "hayabusa", name: "Hayabusa", img: "https://lh3.googleusercontent.com/d/1GyhVVuTi7qbm6nv6kT-yZyQ10TI3J9D0" },
+  { id: "harley", name: "Harley", img: "https://lh3.googleusercontent.com/d/1oKVhELHFGxnAO0h2SntxKnJtGkyGM-s1" },
+  { id: "gusion", name: "Gusion", img: "https://lh3.googleusercontent.com/d/1kuNWliHqK1RLBrR-QLjCvvI6vh8tGUm5" },
+  { id: "guinevere", name: "Guinevere", img: "https://lh3.googleusercontent.com/d/1aFWQgst3lCJtgXbI3goVWyy65hcRJW2e" },
+  { id: "granger", name: "Granger", img: "https://lh3.googleusercontent.com/d/13Ka5YBL3RiMpftTdjZXlSuzJcLIMpxs8" },
+  { id: "franco", name: "Franco", img: "https://lh3.googleusercontent.com/d/1qNo2aHh4HfO-pLgOkjrzzlF80Rcza8Ih" },
+  { id: "fanny", name: "Fanny", img: "https://lh3.googleusercontent.com/d/1Ke6k-2qyV-Tj0KRCScxKksxvxzEMkCSq" },
+  { id: "esmeralda", name: "Esmeralda", img: "https://lh3.googleusercontent.com/d/1yh8UWMjc0BVHkajTsZWH7NdEcq0BhVJP" },
+  { id: "claude", name: "Claude", img: "https://lh3.googleusercontent.com/d/1619ZRmq89UT2SsHspEfRxaBpNypaA-3Z" },
+  { id: "chou", name: "Chou", img: "https://lh3.googleusercontent.com/d/1RL4GQbvgNnPHMula9Ihd-kt_yUNPsT66" },
+  { id: "angela", name: "Angela", img: "https://lh3.googleusercontent.com/d/1-EDtKgThp2wIBWzHOXx-ccA6TmCpkz67" },
+  { id: "alucard", name: "Alucard", img: "https://lh3.googleusercontent.com/d/1r7R8X4COncEALjfTmA0Ox-WO54jJFSFO" }
 ];
+let myGuessWhoUser = "";
+let amIGuessWhoReady = false;
+let currentGuessWhoMatch = null;
+let myCurrentFlippedState = {};
+
 function chooseGuessWhoUser(name) {
   if (name !== 'Criss' && name !== 'Andreita') return;
   myGuessWhoUser = name;
@@ -3949,6 +3961,13 @@ function connectGuessWho() {
 
   document.getElementById('guessWhoLoginBox').style.display = 'none';
   document.getElementById('guessWhoWaitingBox').style.display = 'block';
+
+  // Reiniciar estado local y en Firebase
+  amIGuessWhoReady = false;
+  const readyBtn = document.getElementById('guessWhoReadyBtn');
+  readyBtn.textContent = "✨ ¡Estoy Listo para Jugar! ✨";
+  readyBtn.style.background = "#2a9d8f";
+  rtdb.ref(`guesswho_ready/${myGuessWhoUser}`).set(false);
 
   const presenceRef = rtdb.ref(`guesswho_presence/${myGuessWhoUser}`);
   const connectedRef = rtdb.ref('.info/connected');
@@ -4004,18 +4023,15 @@ function listenGuessWhoPresence() {
     document.getElementById('guessWhoReadyAndreita').textContent = `🌸 Andreita: ${andreitaReady ? '¡Lista! ✅' : 'No lista ⏳'}`;
     document.getElementById('guessWhoReadyAndreita').className = `presence-badge ${andreitaReady ? 'ready-ok' : 'ready'}`;
 
+    // Arranca automáticamente en cuanto ambos marquen Listo
     if (crissReady && andreitaReady) {
-      rtdb.ref('guesswho_room').once('value').then(snapRoom => {
-        const data = snapRoom.val();
-        if (!data || data.status === 'idle' || data.status === 'finished') {
-          if (myGuessWhoUser === 'Criss') {
-            startNewGuessWhoMatch();
-          }
-        }
-      });
+      if (myGuessWhoUser === 'Criss') {
+        startNewGuessWhoMatch();
+      }
     }
   });
 }
+ 
 
 function startNewGuessWhoMatch() {
   const shuffledH = [...MLBB_HEROES].sort(() => 0.5 - Math.random());
@@ -4027,14 +4043,14 @@ function startNewGuessWhoMatch() {
     status: "playing",
     turn: randomFirstTurn,
     secretHeroes: {
-      Criss: heroCriss,
-      Andreita: heroAndreita
+      Criss: { id: heroCriss.id, name: heroCriss.name, img: heroCriss.img },
+      Andreita: { id: heroAndreita.id, name: heroAndreita.name, img: heroAndreita.img }
     },
+    startedAt: Date.now(),
     winner: null,
     reason: ""
   });
 }
-
 function listenGuessWhoGameState() {
   rtdb.ref('guesswho_room').on('value', (snap) => {
     const data = snap.val();
@@ -4046,28 +4062,40 @@ function listenGuessWhoGameState() {
       document.getElementById('guessWhoSummarySection').style.display = 'none';
       document.getElementById('guessWhoPlayArena').style.display = 'block';
 
-      // Si es una partida nueva, barajar tablero local y restablecer volteos
-      if (!window.localShuffledBoardHeroes || window.currentMatchRoomId !== snap.key) {
+      // Barajar tablero solo al iniciar una nueva partida
+      const matchId = data.startedAt || "default_match";
+      if (window.currentMatchRoomId !== matchId) {
         window.localShuffledBoardHeroes = [...MLBB_HEROES].sort(() => 0.5 - Math.random());
-        window.currentMatchRoomId = snap.key;
+        window.currentMatchRoomId = matchId;
         myCurrentFlippedState = {};
         renderGuessWhoBoard();
       }
 
-      // Mostrar el héroe asignado al jugador actual
-      const myHero = data.secretHeroes ? data.secretHeroes[myGuessWhoUser] : null;
-      if (myHero) {
-        document.getElementById('myAssignedHeroImg').src = myHero.img;
-        document.getElementById('myAssignedHeroName').textContent = myHero.name;
+      // ASIGNACIÓN SEGURA DE LA FOTO DEL HÉROE SECRETO
+      if (data.secretHeroes && data.secretHeroes[myGuessWhoUser]) {
+        const assignedData = data.secretHeroes[myGuessWhoUser];
+        // Busca el héroe en la lista local para garantizar la URL correcta de Drive
+        const realHero = MLBB_HEROES.find(h => h.id === assignedData.id || h.name === assignedData.name) || assignedData;
+        
+        const heroImgEl = document.getElementById('myAssignedHeroImg');
+        const heroNameEl = document.getElementById('myAssignedHeroName');
+        
+        if (heroImgEl) {
+          heroImgEl.src = realHero.img;
+          heroImgEl.alt = realHero.name;
+        }
+        if (heroNameEl) {
+          heroNameEl.textContent = realHero.name;
+        }
       }
 
-      // Actualizar turno
+      // Control del Turno
       const isMyTurn = (data.turn === myGuessWhoUser);
       const turnBadge = document.getElementById('guessWhoTurnDisplay');
       const endBtn = document.getElementById('guessWhoEndTurnBtn');
 
       if (isMyTurn) {
-        turnBadge.textContent = "✨ ¡ES TU TURNO! (Pregunta o descarta)";
+        turnBadge.textContent = "✨ ¡ES TU TURNO! (Haz tu pregunta y descarta)";
         turnBadge.classList.add('my-turn');
         endBtn.disabled = false;
         endBtn.style.background = "#2a9d8f";
@@ -4075,7 +4103,7 @@ function listenGuessWhoGameState() {
         turnBadge.textContent = `⏳ Turno de ${data.turn}...`;
         turnBadge.classList.remove('my-turn');
         endBtn.disabled = true;
-        endBtn.style.background = "#888";
+        endBtn.style.background = "#888888";
       }
     } 
     else if (data.status === "finished") {
@@ -4086,6 +4114,17 @@ function listenGuessWhoGameState() {
   });
 }
 
+function toggleCardFlip(heroId) {
+  myCurrentFlippedState[heroId] = !myCurrentFlippedState[heroId];
+  const card = document.getElementById(`gw_card_${heroId}`);
+  if (card) {
+    if (myCurrentFlippedState[heroId]) {
+      card.classList.add('flipped');
+    } else {
+      card.classList.remove('flipped');
+    }
+  }
+}
 function renderGuessWhoBoard() {
   const container = document.getElementById('guessWhoBoardGrid');
   container.innerHTML = '';
@@ -4111,19 +4150,34 @@ function renderGuessWhoBoard() {
     container.appendChild(card);
   });
 }
-
 function openGuessSelectionModal() {
   const container = document.getElementById('guessModalHeroOptions');
   container.innerHTML = '';
+
   MLBB_HEROES.forEach(hero => {
     const btn = document.createElement('button');
     btn.className = 'burger-ingredient-btn';
     btn.style.padding = '8px 4px';
     btn.onclick = () => confirmHeroGuess(hero.id, hero.name);
-    btn.innerHTML = `
-      <img src="${hero.img}" referrerpolicy="no-referrer" style="width: 44px; height: 44px; border-radius: 10px; object-fit: cover;">
-      <span style="font-size: 0.8rem; font-weight: 800; margin-top: 4px;">${hero.name}</span>
-    `;
+
+    const img = document.createElement('img');
+    img.src = hero.img;
+    img.alt = hero.name;
+    img.style.width = '48px';
+    img.style.height = '48px';
+    img.style.borderRadius = '10px';
+    img.style.objectFit = 'cover';
+    img.style.objectPosition = 'center 20%';
+    img.style.display = 'block';
+
+    const span = document.createElement('span');
+    span.style.fontSize = '0.8rem';
+    span.style.fontWeight = '800';
+    span.style.marginTop = '4px';
+    span.textContent = hero.name;
+
+    btn.appendChild(img);
+    btn.appendChild(span);
     container.appendChild(btn);
   });
 
@@ -4521,11 +4575,19 @@ function startCoopGameOnline() {
     COOP_RECIPES_CATALOG[1]
   ];
 
+  // Sorteo de roles: 50% de probabilidad para cada combinación
+  const isCrissPrep = Math.random() < 0.5;
+  const assignedRoles = {
+    Criss: isCrissPrep ? "prep" : "cook",
+    Andreita: isCrissPrep ? "cook" : "prep"
+  };
+
   rtdb.ref('coop_match').set({
     status: "playing",
     score: 0,
     timerEnd: Date.now() + (3 * 60 * 1000),
     orders: initialOrders,
+    roles: assignedRoles,
     passTable: [],
     stoves: {
       stove1: { status: "empty", ingredient: "", timer: 0 },
@@ -4533,7 +4595,6 @@ function startCoopGameOnline() {
     }
   });
 }
-
 function listenCoopGameState() {
   rtdb.ref('coop_match').on('value', (snap) => {
     const data = snap.val();
@@ -4547,15 +4608,17 @@ function listenCoopGameState() {
       document.getElementById('coopScoreDisplay').textContent = data.score || 0;
       syncCoopTimer(data.timerEnd);
 
-      // Asignación de estaciones: Criss = Picador, Andreita = Cocinera
-      if (myCoopUser === "Criss") {
+      // Asignación dinámica según el sorteo de roles
+      const myAssignedRole = (data.roles && data.roles[myCoopUser]) ? data.roles[myCoopUser] : (myCoopUser === "Criss" ? "prep" : "cook");
+
+      if (myAssignedRole === "prep") {
         document.getElementById('stationPrep').style.display = 'block';
         document.getElementById('stationCook').style.display = 'none';
-        document.getElementById('coopMyRoleTag').textContent = "👑 Tu Rol: Despensa & Corte";
+        document.getElementById('coopMyRoleTag').textContent = `👑 ${myCoopUser}: Despensa & Corte 🔪`;
       } else {
         document.getElementById('stationPrep').style.display = 'none';
         document.getElementById('stationCook').style.display = 'block';
-        document.getElementById('coopMyRoleTag').textContent = "🌸 Tu Rol: Estufas & Entrega";
+        document.getElementById('coopMyRoleTag').textContent = `🌸 ${myCoopUser}: Estufas & Entrega 🍳`;
       }
 
       renderCoopOrders(data.orders || []);
@@ -4668,12 +4731,17 @@ async function putItemOnPassTable(itemName) {
 
 /* ACCIONES JUGADOR 2 (COCINERA / EMPLATADORA) */
 async function takeItemFromPassTable(index, itemName) {
-  const snap = await rtdb.ref('coop_match/passTable').once('value');
-  const items = snap.val() || [];
+  const snap = await rtdb.ref('coop_match').once('value');
+  const matchData = snap.val();
+  if (!matchData) return;
+
+  const items = matchData.passTable || [];
   items.splice(index, 1);
   await rtdb.ref('coop_match/passTable').set(items);
 
-  if (myCoopUser === "Andreita") {
+  const myAssignedRole = (matchData.roles && matchData.roles[myCoopUser]) ? matchData.roles[myCoopUser] : (myCoopUser === "Criss" ? "prep" : "cook");
+
+  if (myAssignedRole === "cook") {
     myAssembledItems.push(itemName);
     renderCurrentAssembledPlate();
     showToast(`Recogiste ${itemName} para armar el plato 🍽️`);
@@ -7139,6 +7207,14 @@ function restartCoopMatch() {
       document.getElementById('burgerLoginBox').style.display = 'none';
       document.getElementById('burgerWaitingBox').style.display = 'block';
 
+      // Reiniciar estado local y en base de datos al entrar
+      amIBurgerReady = false;
+      const readyBtn = document.getElementById('burgerReadyBtn');
+      readyBtn.textContent = "👩‍🍳 ¡Chef Listo para Cocinar! ✨";
+      readyBtn.style.background = "#2a9d8f";
+
+      rtdb.ref(`chef_ready/${myChefUser}`).set(false);
+
       const presenceRef = rtdb.ref(`chef_presence/${myChefUser}`);
       const connectedRef = rtdb.ref('.info/connected');
 
@@ -7193,18 +7269,15 @@ function restartCoopMatch() {
         document.getElementById('burgerReadyAndreita').textContent = `🌸 Andreita: ${andreitaReady ? '¡Lista! ✅' : 'No lista ⏳'}`;
         document.getElementById('burgerReadyAndreita').className = `presence-badge ${andreitaReady ? 'ready-ok' : 'ready'}`;
 
+        // Iniciar la cocina ÚNICAMENTE cuando AMBOS estén listos
         if (crissReady && andreitaReady) {
-          rtdb.ref('chef_match').once('value').then(matchSnap => {
-            const data = matchSnap.val();
-            if (!data || data.status === 'idle' || data.status === 'finished') {
-              if (myChefUser === 'Criss') {
-                startVersusMatchOnline();
-              }
-            }
-          });
+          if (myChefUser === 'Criss') {
+            startVersusMatchOnline();
+          }
         }
       });
     }
+     
 
     function startVersusMatchOnline() {
       rtdb.ref('chef_match').set({
@@ -7225,8 +7298,8 @@ function restartCoopMatch() {
         document.getElementById('versusScoreCriss').textContent = `👑 Criss: ${sCriss} pedidos`;
         document.getElementById('versusScoreAndreita').textContent = `🌸 Andreita: ${sAndreita} pedidos`;
 
-        const bCriss = data.bankrupt && data.bankrupt.Criss;
-        const bAndreita = data.bankrupt && data.bankrupt.Andreita;
+        const bCriss = data.bankrupt && data.bankrupt.Criss === true;
+        const bAndreita = data.bankrupt && data.bankrupt.Andreita === true;
 
         document.getElementById('statusCrissVersus').textContent = `👑 Criss: ${bCriss ? 'Bancarrota ❌' : 'Cocinando 🔥'}`;
         document.getElementById('statusCrissVersus').className = `presence-badge ${bCriss ? 'lost' : 'online'}`;
@@ -7236,13 +7309,20 @@ function restartCoopMatch() {
 
         if (data.status === "in_progress") {
           document.getElementById('burgerWaitingBox').style.display = 'none';
+          document.getElementById('matchSummarySection').style.display = 'none';
           
-          if (!isBankrupt && document.getElementById('burgerPlayArena').style.display === 'none' && !bCriss && !bAndreita) {
+          if (!isBankrupt && document.getElementById('burgerPlayArena').style.display !== 'block') {
             startPlayerChefGame();
           }
 
           if (bCriss && bAndreita) {
             finishVersusMatch(sCriss, sAndreita);
+          }
+        } else if (data.status === "idle") {
+          document.getElementById('burgerPlayArena').style.display = 'none';
+          document.getElementById('bankruptcyRoom').style.display = 'none';
+          if (document.getElementById('burgerLoginBox').style.display === 'none') {
+            document.getElementById('burgerWaitingBox').style.display = 'block';
           }
         }
       });
@@ -7692,7 +7772,7 @@ function listenBastaPresence() {
     document.getElementById('bastaReadyAndreita').textContent = `🌸 Andreita: ${andreitaReady ? '¡Lista! ✅' : 'No lista ⏳'}`;
     document.getElementById('bastaReadyAndreita').className = `presence-badge ${andreitaReady ? 'ready-ok' : 'ready'}`;
 
-    if (crissReady && andreitaReady) {
+   if (crissReady && andreitaReady) {
       rtdb.ref('basta_room').once('value').then(snapRoom => {
         const data = snapRoom.val();
         if (!data || data.status === 'idle' || data.status === 'finished') {
