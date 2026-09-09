@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -2724,7 +2725,86 @@
         flex: 1;
       }
     }
-  </style>
+.reactions-container {
+  position: relative;
+  display: inline-block;
+  margin-top: 6px;
+}
+
+/* Botón principal de reacción */
+.btn-react-trigger {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid var(--rose-pink);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--title-burgundy);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.btn-react-trigger:hover:not(:disabled) {
+  transform: scale(1.05);
+  background: #fff0f3;
+  border-color: var(--soft-red);
+}
+
+.btn-react-trigger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #e0e0e0;
+  border-color: #ccc;
+  color: #777;
+}
+
+/* Menú flotante de emojis (Pop-up) */
+.reaction-picker-popup {
+  display: none;
+  position: absolute;
+  bottom: 110%;
+  left: 0;
+  background: white;
+  border: 2px solid var(--rose-pink);
+  border-radius: 30px;
+  padding: 6px 10px;
+  gap: 8px;
+  box-shadow: 0 10px 25px rgba(230, 92, 101, 0.3);
+  z-index: 100;
+  animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.reaction-picker-popup.show {
+  display: flex;
+}
+
+.emoji-option {
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+  user-select: none;
+}
+
+.emoji-option:hover {
+  transform: scale(1.4) translateY(-4px);
+}
+  .reaction-badge-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--title-burgundy);
+  background: #fff0f3;
+  padding: 3px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--rose-pink);
+}
+</style>
 </head>
 <body>
 
@@ -2910,6 +2990,15 @@
             </div>
             <span class="new-badge-pill" id="badge-game-11">NEW</span>
           </div>
+
+<div class="minigame-nav-item" id="nav-game-12" onclick="selectMinigameFromSidebar(12)">
+  <span class="minigame-nav-icon">🌀</span>
+  <div class="minigame-nav-info">
+    <span class="minigame-nav-name">Laberinto Dúo</span>
+    <span class="minigame-nav-sub">Carrera de Bolitas 1v1</span>
+  </div>
+  <span class="new-badge-pill" id="badge-game-12">NEW</span>
+</div>
         </aside>
 
         <div class="minigames-main-stage">
@@ -3725,6 +3814,56 @@
             </div>
           </div>
 
+<div id="game-stage-12" style="display: none; width: 100%;">
+  <div class="laberinto-container">
+    <h3 class="custom-game-title" style="font-size: 1.4rem; margin-bottom: 5px;">🌀 Laberinto Dúo: Carrera de Amor 🏁</h3>
+    <p class="custom-game-subtitle">¡Llega primero a la meta arriba 🏁 sin chocar con las paredes!</p>
+
+    <!-- SALA DE ESPERA -->
+    <div id="laberintoLobby" style="text-align: center; padding: 20px;">
+      <div class="profile-selector" style="margin-bottom: 15px;">
+        <div class="profile-card" id="labRoleCriss" onclick="selectLaberintoRole('Criss')">👑 Jugar como Criss (🔴 Rojo)</div>
+        <div class="profile-card" id="labRoleAndreita" onclick="selectLaberintoRole('Andreita')">🌸 Jugar como Andreita (🔵 Azul)</div>
+      </div>
+      <div id="laberintoPresenceStatus" class="presence-badge" style="margin: 10px auto;">Esperando rival...</div>
+      <button class="modal-btn" id="laberintoReadyBtn" onclick="toggleLaberintoReady()" style="max-width: 250px; margin: 10px auto; display: none;">✨ ¡LISTO PARA CORRER! ✨</button>
+    </div>
+
+    <!-- ARENA DE JUEGO -->
+    <div id="laberintoGameArea" style="display: none; text-align: center;">
+      <div class="burger-score-board" style="margin-bottom: 10px;">
+        <span>⏱️ Tiempo: <strong id="laberintoTimer">0.0s</strong></span>
+        <span>🔴 Rojo: <span id="labScoreRed">0</span></span>
+        <span>🔵 Azul: <span id="labScoreBlue">0</span></span>
+      </div>
+
+      <div style="position: relative; max-width: 450px; margin: 0 auto; background: #111; border-radius: 20px; border: 3px solid var(--soft-red); overflow: hidden; touch-action: none;">
+        <canvas id="laberintoCanvas" width="400" height="500" style="display: block; width: 100%; height: auto; background: #222;"></canvas>
+      </div>
+
+      <!-- CONTROLES TÁCTILES PARA CELULAR -->
+      <div class="laberinto-touch-controls" style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
+        <div style="display: grid; grid-template-columns: repeat(3, 45px); grid-template-rows: repeat(2, 45px); gap: 5px; justify-content: center;">
+          <div></div>
+          <button class="modal-btn" style="margin:0; padding:0; font-size:1.2rem;" ontouchstart="setLaberintoTouchDir('UP')" onmousedown="setLaberintoTouchDir('UP')">⬆️</button>
+          <div></div>
+          <button class="modal-btn" style="margin:0; padding:0; font-size:1.2rem;" ontouchstart="setLaberintoTouchDir('LEFT')" onmousedown="setLaberintoTouchDir('LEFT')">⬅️</button>
+          <button class="modal-btn" style="margin:0; padding:0; font-size:1.2rem;" ontouchstart="setLaberintoTouchDir('DOWN')" onmousedown="setLaberintoTouchDir('DOWN')">⬇️</button>
+          <button class="modal-btn" style="margin:0; padding:0; font-size:1.2rem;" ontouchstart="setLaberintoTouchDir('RIGHT')" onmousedown="setLaberintoTouchDir('RIGHT')">➡️</button>
+        </div>
+      </div>
+      <p style="font-size: 0.8rem; color: #666; margin-top: 8px;">⌨️ PC: Flechas / WASD | 📱 Celular: Botones táctiles</p>
+    </div>
+
+    <!-- PANTALLA DE VICTORIA -->
+    <div id="laberintoVictoryModal" style="display: none; text-align: center; padding: 25px; background: #fff0f3; border-radius: 20px; border: 3px solid var(--soft-red); margin-top: 15px;">
+      <h3 style="color: var(--title-burgundy); font-size: 1.6rem; font-weight: 800;" id="laberintoWinnerTitle">🎉 ¡GANÓ LA BOLITA ROJA! 🎉</h3>
+      <p style="font-size: 1.05rem; color: var(--text-subtle); margin: 10px 0;">¡Qué carrerita tan emocionante mi amor!</p>
+      <button class="modal-btn" onclick="resetLaberintoGame()" style="max-width: 200px; margin: 10px auto;">🔄 Volver a Jugar</button>
+    </div>
+  </div>
+</div>
+
           <!-- RECOMPENSA FINAL -->
           <div class="reward-modal" id="rewardModal">
             <h3>🎉 ¡ENHORABUENA MI VIDA! 🎉</h3>
@@ -3901,9 +4040,32 @@
     </div>
   </div>
 
+<script>
+function toggleReactionPicker(button) {
+  const popup = button.nextElementSibling;
+  // Cierra otros popups abiertos
+  document.querySelectorAll('.reaction-picker-popup').forEach(p => {
+    if (p !== popup) p.classList.remove('show');
+  });
+  popup.classList.toggle('show');
+}
 
+function sendReaction(emojiElement, emoji) {
+  const popup = emojiElement.parentElement;
+  const container = popup.parentElement;
+  const badge = container.querySelector('.reaction-badge-counter');
+  const emojiSpan = badge.querySelector('.reaction-emoji');
+  const countSpan = badge.querySelector('.reaction-count');
 
-  <script>
+  // Actualizar UI
+  emojiSpan.textContent = emoji;
+  let currentCount = parseInt(countSpan.textContent) || 0;
+  countSpan.textContent = currentCount + 1;
+  badge.style.display = 'inline-flex';
+
+  // Ocultar selector
+  popup.classList.remove('show');
+}
 const makeHeroAvatar = (bg, color, icon, role) => {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="${bg}"/><stop offset="100%" stop-color="${color}"/></linearGradient></defs><rect width="160" height="160" rx="20" fill="url(#g)"/><circle cx="80" cy="70" r="42" fill="white" opacity="0.25"/><text x="80" y="85" font-size="48" text-anchor="middle" font-family="Arial, sans-serif">${icon}</text><rect x="15" y="122" width="130" height="24" rx="8" fill="rgba(0,0,0,0.45)"/><text x="80" y="138" font-size="11" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">${role}</text></svg>`;
   return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
@@ -4315,10 +4477,27 @@ function renderSongsForCurrentRecipient() {
         <span class="song-date-badge">📅 ${song.dateLabel || 'Fecha especial'}</span>
         <div class="song-title-text">${song.title}</div>
         <div class="song-author-tag" style="margin-top: 6px;">💝 De: <b>${song.author}</b> para <b>${song.recipient}</b></div>
-        <button class="song-listen-btn" onclick="openSongPlayer('${song.id}')" style="margin-top: 10px;">
-          ▶️ Ver Video
-        </button>
-      </div>
+        <div class="reactions-container" style="margin-top: 10px;">
+<button
+    class="btn-react-trigger"
+    onclick="event.stopPropagation(); toggleReactionPicker('picker-song-${song.id}')">
+    <span id="label-song-${song.id}">😃 Reaccionar</span>
+  </button>
+
+  <div class="reaction-picker-popup" id="picker-song-${song.id}">
+    <span class="emoji-option" onclick="event.stopPropagation(); submitReaction('song', '${song.id}', '❤️')">❤️</span>
+    <span class="emoji-option" onclick="event.stopPropagation(); submitReaction('song', '${song.id}', '😍')">😍</span>
+    <span class="emoji-option" onclick="event.stopPropagation(); submitReaction('song', '${song.id}', '😂')">😂</span>
+    <span class="emoji-option" onclick="event.stopPropagation(); submitReaction('song', '${song.id}', '🥺')">🥺</span>
+    <span class="emoji-option" onclick="event.stopPropagation(); submitReaction('song', '${song.id}', '🔥')">🔥</span>
+    <span class="emoji-option" onclick="event.stopPropagation(); submitReaction('song', '${song.id}', '😮')">😮</span>
+  </div>
+
+  <div class="reaction-badge-counter" id="count-song-${song.id}">
+    <span>0 reacciones</span>
+  </div>
+
+</div>
     `;
 
     container.appendChild(card);
@@ -4981,6 +5160,7 @@ function restartCoopMatch() {
       loadSavedMedia();
       initBastaSystem();
       initSongsSystem();
+      initReactionsSystem();
     });
 
     function startAppAndAudio() {
@@ -5727,7 +5907,32 @@ function restartCoopMatch() {
 
       let authorHTML = `<div class="author-tag">👤 Subido por: ${authorName}</div>`;
 
-      card.innerHTML = `${deleteBtnHTML}${mediaHTML}<div class="media-info"><div class="date">${item.date}</div><div class="reason">${item.reason}</div>${authorHTML}</div>`;
+      let reactionsHTML = `
+  <div class="reactions-container" onclick="event.stopPropagation();">
+
+    <button
+      class="btn-react-trigger"
+      onclick="event.stopPropagation(); toggleReactionPicker('picker-photo-${item.id}')">
+      <span id="my-react-photo-${item.id}">😃 Reaccionar</span>
+    </button>
+
+    <div class="reaction-picker-popup" id="picker-photo-${item.id}">
+      <span class="emoji-option" onclick="event.stopPropagation(); submitReaction('photo', '${item.id}', '❤️')">❤️</span>
+      <span class="emoji-option" onclick="event.stopPropagation(); submitReaction('photo', '${item.id}', '😍')">😍</span>
+      <span class="emoji-option" onclick="event.stopPropagation(); submitReaction('photo', '${item.id}', '😂')">😂</span>
+      <span class="emoji-option" onclick="event.stopPropagation(); submitReaction('photo', '${item.id}', '🥺')">🥺</span>
+      <span class="emoji-option" onclick="event.stopPropagation(); submitReaction('photo', '${item.id}', '🔥')">🔥</span>
+      <span class="emoji-option" onclick="event.stopPropagation(); submitReaction('photo', '${item.id}', '😮')">😮</span>
+    </div>
+
+    <div class="reaction-badge-counter" id="count-photo-${item.id}">
+      <span>0 reacciones</span>
+    </div>
+
+  </div>
+`;
+
+      card.innerHTML = `${deleteBtnHTML}${mediaHTML}<div class="media-info"><div class="date">${item.date}</div><div class="reason">${item.reason}</div>${authorHTML}${reactionsHTML}</div>`;
 
       return card;
     }
@@ -8471,6 +8676,370 @@ function restartPreguntadosGame() {
 
     createBgHearts();
     initMemoryGame();
+// Objeto en memoria para almacenar las reacciones localmente / Firebase
+window.appReactions = window.appReactions || {};
+function initReactionsSystem() {
+  db.collection('reactions').onSnapshot(snapshot => {
+
+    window.appReactions = {};
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      window.appReactions[doc.id] = data.reactions || {};
+    });
+
+    document.querySelectorAll('[id^="count-song-"]').forEach(el => {
+      const id = el.id.replace('count-song-', '');
+      updateReactionUI('song', id);
+    });
+
+    document.querySelectorAll('[id^="count-photo-"]').forEach(el => {
+      const id = el.id.replace('count-photo-', '');
+      updateReactionUI('photo', id);
+    });
+
+  }, error => {
+    console.error('Error cargando reacciones:', error);
+  });
+}
+
+// 1. Mostrar/Ocultar Selector de Emojis
+function toggleReactionPicker(pickerId) {
+  // Cierra otros pickers abiertos
+  document.querySelectorAll('.reaction-picker-popup').forEach(el => {
+    if (el.id !== pickerId) el.classList.remove('show');
+  });
+
+  const picker = document.getElementById(pickerId);
+  if (picker) {
+    picker.classList.toggle('show');
+  }
+}
+
+// Cierra pickers si se hace clic fuera
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.reactions-container')) {
+    document.querySelectorAll('.reaction-picker-popup').forEach(el => el.classList.remove('show'));
+  }
+});
+
+// 2. Desbloquear Reacción de Canción al Finalizar Audio
+function unlockSongReaction(songId) {
+  const btn = document.getElementById(`btn-react-song-${songId}`);
+  const label = document.getElementById(`label-song-${songId}`);
+  
+  if (btn) {
+    btn.disabled = false;
+    if (label && label.innerText.includes('🔒')) {
+      label.innerHTML = '😃 Reaccionar';
+    }
+    showToastNotification('✨ ¡Has escuchado la canción completa! Ya puedes reaccionar.');
+  }
+}
+
+// 3. Registrar o Cambiar Reacción (Lógica de 1 Reacción por Usuario)
+function submitReaction(type, id, emoji) {
+  const userProfile = window.currentUserProfile || 'Usuario'; // Identificador del perfil (ej. Criss / Andreita)
+  const key = `${type}_${id}`;
+
+  if (!window.appReactions[key]) {
+    window.appReactions[key] = {};
+  }
+
+  // Guardar la única reacción del usuario activo
+  window.appReactions[key][userProfile] = emoji;
+
+  // Ocultar menú emergente
+  const picker = document.getElementById(`picker-${type}-${id}`);
+  if (picker) picker.classList.remove('show');
+
+  // Actualizar la interfaz (Texto del botón y Contador)
+  updateReactionUI(type, id);
+
+  // Si usas Firebase Firestore para sincronizar en tiempo real:
+  if (typeof db !== 'undefined') {
+    db.collection('reactions').doc(key).set({
+      reactions: window.appReactions[key]
+    }, { merge: true }).catch(err => console.error("Error guardando reacción:", err));
+  }
+}
+
+// 4. Actualizar la Interfaz Gráfica del Contador y Estado
+function updateReactionUI(type, id) {
+  const key = `${type}_${id}`;
+  const userProfile = window.currentUserProfile || 'Usuario';
+  const reactionsMap = window.appReactions[key] || {};
+
+  // Actualizar el botón con tu propia reacción
+  const myReaction = reactionsMap[userProfile];
+  const labelEl = document.getElementById(type === 'song' ? `label-song-${id}` : `my-react-photo-${id}`);
+  
+  if (labelEl) {
+    if (myReaction) {
+      labelEl.innerHTML = `${myReaction} Tu reacción`;
+    } else {
+      labelEl.innerHTML = `😃 Reaccionar`;
+    }
+  }
+
+  // Calcular conteo total y emojis únicos usados
+  const totalCount = Object.keys(reactionsMap).length;
+  const uniqueEmojis = [...new Set(Object.values(reactionsMap))].join(' ');
+
+  const counterEl = document.getElementById(`count-${type}-${id}`);
+  if (counterEl) {
+    if (totalCount > 0) {
+      counterEl.innerHTML = `<span>${uniqueEmojis} ${totalCount} ${totalCount === 1 ? 'reacción' : 'reacciones'}</span>`;
+    } else {
+      counterEl.innerHTML = `<span>0 reacciones</span>`;
+    }
+  }
+}
+function toggleReactionPicker(pickerId) {
+  const picker = document.getElementById(pickerId);
+  if (!picker) return;
+  
+  document.querySelectorAll('.reaction-picker-popup').forEach(p => {
+    if (p.id !== pickerId) p.classList.remove('show');
+  });
+
+  picker.classList.toggle('show');
+}
+let labRole = null; // 'Criss' o 'Andreita'
+let laberintoStateRef = null;
+let laberintoInterval = null;
+let laberintoStartTime = 0;
+let laberintoGameActive = false;
+
+// Posiciones iniciales y del juego
+let labX = {
+  red: 50, yRed: 460,
+  blue: 350, yBlue: 460,
+  vxRed: 0, vyRed: 0,
+  vxBlue: 0, vyBlue: 0
+};
+
+// Paredes del laberinto (coordenadas x, y, ancho, alto)
+const labWalls = [
+  {x: 0, y: 0, w: 400, h: 20}, // Borde superior (meta en medio)
+  {x: 0, y: 480, w: 400, h: 20}, // Borde inferior
+  {x: 0, y: 0, w: 20, h: 500}, // Borde izquierdo
+  {x: 380, y: 0, w: 20, h: 500}, // Borde derecho
+  // Obstáculos internos
+  {x: 60, y: 380, w: 280, h: 20},
+  {x: 60, y: 260, w: 20, h: 140},
+  {x: 120, y: 140, w: 220, h: 20},
+  {x: 120, y: 260, w: 220, h: 20},
+  {x: 220, y: 60, w: 20, h: 100}
+];
+
+// Zona de Meta (🏁 ARRIBA)
+const labFinishZone = { x: 160, y: 10, w: 80, h: 25 };
+
+function selectLaberintoRole(role) {
+  labRole = role;
+  document.getElementById('labRoleCriss').classList.remove('selected');
+  document.getElementById('labRoleAndreita').classList.remove('selected');
+  if (role === 'Criss') document.getElementById('labRoleCriss').classList.add('selected');
+  if (role === 'Andreita') document.getElementById('labRoleAndreita').classList.add('selected');
+  
+  document.getElementById('laberintoReadyBtn').style.display = 'block';
+  showToast(`Elegiste ser ${role === 'Criss' ? '🔴 Rojo (Criss)' : '🔵 Azul (Andreita)'}`);
+}
+
+function toggleLaberintoReady() {
+  if (!labRole) return showToast('Elige tu personaje primero ❤️');
+  
+  if (!database) {
+    showToast('Modo Local (Firebase no conectado)');
+    startLaberintoGameLoop();
+    return;
+  }
+
+  laberintoStateRef = database.ref('minigames/laberinto');
+  laberintoStateRef.child(labRole.toLowerCase() + 'Ready').set(true);
+  document.getElementById('laberintoPresenceStatus').innerText = '¡Listo! Esperando al otro jugador...';
+  document.getElementById('laberintoPresenceStatus').className = 'presence-badge ready';
+
+  // Escuchar estado de ambos
+  laberintoStateRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    if (data && data.crissReady && data.andreitaReady) {
+      startLaberintoGameLoop();
+    }
+  });
+}
+
+function startLaberintoGameLoop() {
+  document.getElementById('laberintoLobby').style.display = 'none';
+  document.getElementById('laberintoGameArea').style.display = 'block';
+  document.getElementById('laberintoVictoryModal').style.display = 'none';
+
+  // Reset posiciones
+  labX.red = 70; labX.yRed = 450;
+  labX.blue = 330; labX.yBlue = 450;
+  laberintoGameActive = true;
+  laberintoStartTime = Date.now();
+
+  if (laberintoInterval) clearInterval(laberintoInterval);
+  laberintoInterval = setInterval(updateLaberintoFrame, 30);
+}
+
+// Controles por teclado
+window.addEventListener('keydown', (e) => {
+  if (!laberintoGameActive) return;
+  const speed = 6;
+  let key = e.key.toLowerCase();
+
+  if (labRole === 'Criss') { // Rojo: Flechas o WASD
+    if (key === 'arrowup' || key === 'w') labX.vyRed = -speed;
+    if (key === 'arrowdown' || key === 's') labX.vyRed = speed;
+    if (key === 'arrowleft' || key === 'a') labX.vxRed = -speed;
+    if (key === 'arrowright' || key === 'd') labX.vxRed = speed;
+  } else if (labRole === 'Andreita') { // Azul: Flechas o WASD
+    if (key === 'arrowup' || key === 'w') labX.vyBlue = -speed;
+    if (key === 'arrowdown' || key === 's') labX.vyBlue = speed;
+    if (key === 'arrowleft' || key === 'a') labX.vxBlue = -speed;
+    if (key === 'arrowright' || key === 'd') labX.vxBlue = speed;
+  }
+});
+
+window.addEventListener('keyup', (e) => {
+  let key = e.key.toLowerCase();
+  if (labRole === 'Criss') {
+    if (['arrowup','w','arrowdown','s'].includes(key)) labX.vyRed = 0;
+    if (['arrowleft','a','arrowright','d'].includes(key)) labX.vxRed = 0;
+  } else if (labRole === 'Andreita') {
+    if (['arrowup','w','arrowdown','s'].includes(key)) labX.vyBlue = 0;
+    if (['arrowleft','a','arrowright','d'].includes(key)) labX.vxBlue = 0;
+  }
+});
+
+function setLaberintoTouchDir(dir) {
+  if (!laberintoGameActive) return;
+  const speed = 6;
+  let vx = 0, vy = 0;
+  if (dir === 'UP') vy = -speed;
+  if (dir === 'DOWN') vy = speed;
+  if (dir === 'LEFT') vx = -speed;
+  if (dir === 'RIGHT') vx = speed;
+
+  if (labRole === 'Criss') {
+    if (vx !== 0) labX.vxRed = vx;
+    if (vy !== 0) labX.vyRed = vy;
+  } else {
+    if (vx !== 0) labX.vxBlue = vx;
+    if (vy !== 0) labX.vyBlue = vy;
+  }
+}
+
+function checkCollision(nx, ny, radius) {
+  for (let w of labWalls) {
+    if (nx + radius > w.x && nx - radius < w.x + w.w &&
+        ny + radius > w.y && ny - radius < w.y + w.h) {
+      return true; // Colisión detectada
+    }
+  }
+  return false;
+}
+
+function updateLaberintoFrame() {
+  if (!laberintoGameActive) return;
+
+  // Actualizar cronómetro
+  let elapsed = ((Date.now() - laberintoStartTime) / 1000).toFixed(1);
+  document.getElementById('laberintoTimer').innerText = elapsed + 's';
+
+  // Movimiento Bolita Roja (Criss)
+  let nextRedX = labX.red + labX.vxRed;
+  let nextRedY = labX.yRed + labX.vyRed;
+  if (!checkCollision(nextRedX, nextRedY, 12)) {
+    labX.red = nextRedX;
+    labX.yRed = nextRedY;
+  } else {
+    // 💥 Chocó contra pared -> Retrocede un poco
+    labX.red -= labX.vxRed * 1.5;
+    labX.yRed -= labX.vyRed * 1.5;
+    labX.vxRed = 0; labX.vyRed = 0;
+  }
+
+  // Movimiento Bolita Azul (Andreita)
+  let nextBlueX = labX.blue + labX.vxBlue;
+  let nextBlueY = labX.yBlue + labX.vyBlue;
+  if (!checkCollision(nextBlueX, nextBlueY, 12)) {
+    labX.blue = nextBlueX;
+    labX.yBlue = nextBlueY;
+  } else {
+    // 💥 Chocó contra pared -> Retrocede un poco
+    labX.blue -= labX.vxBlue * 1.5;
+    labX.yBlue -= labX.vyBlue * 1.5;
+    labX.vxBlue = 0; labX.vyBlue = 0;
+  }
+
+  // Sincronizar en Firebase si existe conexión
+  if (database && labRole) {
+    database.ref('minigames/laberinto/positions/' + labRole.toLowerCase()).set({
+      x: labRole === 'Criss' ? labX.red : labX.blue,
+      y: labRole === 'Criss' ? labX.yRed : labX.yBlue
+    });
+  }
+
+  // Dibujar Canvas
+  const canvas = document.getElementById('laberintoCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Dibujar Paredes
+  ctx.fillStyle = '#ff758f';
+  for (let w of labWalls) {
+    ctx.fillRect(w.x, w.y, w.w, w.h);
+  }
+
+  // Dibujar Meta (FINISH)
+  ctx.fillStyle = '#ffd166';
+  ctx.fillRect(labFinishZone.x, labFinishZone.y, labFinishZone.w, labFinishZone.h);
+  ctx.fillStyle = '#111';
+  ctx.font = 'bold 12px Montserrat';
+  ctx.fillText('🏁 FINISH', labFinishZone.x + 12, labFinishZone.y + 17);
+
+  // Dibujar Bolita Roja
+  ctx.beginPath();
+  ctx.arc(labX.red, labX.yRed, 12, 0, Math.PI * 2);
+  ctx.fillStyle = '#ff4d6d';
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#fff';
+  ctx.stroke();
+
+  // Dibujar Bolita Azul
+  ctx.beginPath();
+  ctx.arc(labX.blue, labX.yBlue, 12, 0, Math.PI * 2);
+  ctx.fillStyle = '#3a86ff';
+  ctx.fill();
+  ctx.stroke();
+
+  // Comprobar Victoria (Llegar a la meta arriba)
+  if (labX.red >= labFinishZone.x && labX.red <= labFinishZone.x + labFinishZone.w &&
+      labX.yRed - 12 <= labFinishZone.y + labFinishZone.h) {
+    endLaberintoGame('🔴 ¡Ganó la Bolita Roja (Criss)!');
+  } else if (labX.blue >= labFinishZone.x && labX.blue <= labFinishZone.x + labFinishZone.w &&
+             labX.yBlue - 12 <= labFinishZone.y + labFinishZone.h) {
+    endLaberintoGame('🔵 ¡Ganó la Bolita Azul (Andreita)!');
+  }
+}
+
+function endLaberintoGame(msg) {
+  laberintoGameActive = false;
+  clearInterval(laberintoInterval);
+  document.getElementById('laberintoWinnerTitle').innerText = msg;
+  document.getElementById('laberintoVictoryModal').style.display = 'block';
+  showToast(msg);
+}
+
+function resetLaberintoGame() {
+  document.getElementById('laberintoVictoryModal').style.display = 'none';
+  startLaberintoGameLoop();
+}
   </script>
 </body>
 </html>
