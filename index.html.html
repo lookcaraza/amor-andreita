@@ -2940,6 +2940,128 @@
       background: #787c7e !important;
       color: white !important;
     }
+/* ==========================================================================
+       ESTILOS MINIJUEGO 14: DUELO DE NÚMEROS 1v1
+       ========================================================================== */
+    .numduel-container {
+      background: #ffffff;
+      border: 3px solid var(--rose-pink);
+      border-radius: 25px;
+      padding: 20px 15px;
+      box-shadow: 0 10px 25px rgba(230, 92, 101, 0.15);
+      text-align: center;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .numduel-secret-setup {
+      background: #fff0f3;
+      border: 2px dashed var(--soft-red);
+      border-radius: 20px;
+      padding: 16px;
+      margin: 15px 0;
+    }
+    .numduel-input-secret {
+      width: 100%;
+      max-width: 280px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 2px solid var(--rose-pink);
+      font-size: 1.6rem;
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: 8px;
+      text-align: center;
+      font-weight: 800;
+      color: var(--title-burgundy);
+      outline: none;
+      background: #ffffff;
+      margin: 10px auto;
+      display: block;
+    }
+    .numduel-history-area {
+      max-height: 290px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 8px 4px;
+      margin-bottom: 15px;
+    }
+    .numduel-row {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+    }
+    .numduel-tile {
+      width: 44px;
+      height: 48px;
+      border: 2px solid #d3d6da;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+      font-family: 'Montserrat', sans-serif;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #111;
+      transition: transform 0.15s ease;
+    }
+    .numduel-tile.typing {
+      border-color: var(--soft-red);
+      background: #fff8f9;
+      transform: scale(1.05);
+    }
+    .numduel-tile.correct {
+      background: #2a9d8f !important;
+      border-color: #1b5e20 !important;
+      color: white !important;
+    }
+    .numduel-tile.present {
+      background: #e9c46a !important;
+      border-color: #d4a373 !important;
+      color: #800020 !important;
+    }
+    .numduel-tile.absent {
+      background: #787c7e !important;
+      border-color: #555 !important;
+      color: white !important;
+    }
+    .numduel-keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+    .numduel-key {
+      background: #fff0f3;
+      border: 2px solid var(--rose-pink);
+      color: var(--title-burgundy);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      padding: 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .numduel-key:active {
+      transform: scale(0.92);
+      background: var(--soft-red);
+      color: white;
+    }
+    .numduel-key.enter-btn {
+      background: #2a9d8f;
+      color: white;
+      border-color: #1b5e20;
+      font-size: 0.95rem;
+    }
+    .numduel-key.back-btn {
+      background: #e63946;
+      color: white;
+      border-color: #b7094c;
+      font-size: 1.1rem;
+    }
 </style>
 </head>
 <body>
@@ -3143,6 +3265,15 @@
     <span class="minigame-nav-sub">Duelo de Palabras 1v1</span>
   </div>
   <span class="new-badge-pill" id="badge-game-13">NEW</span>
+</div>
+
+<div class="minigame-nav-item" id="nav-game-14" onclick="selectMinigameFromSidebar(14)">
+  <span class="minigame-nav-icon">🔢</span>
+  <div class="minigame-nav-info">
+    <span class="minigame-nav-name">Duelo de Números</span>
+    <span class="minigame-nav-sub">Cifras Secretas 1v1</span>
+  </div>
+  <span class="new-badge-pill" id="badge-game-14">NEW</span>
 </div>
         </aside>
 
@@ -4138,6 +4269,99 @@
         <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.4rem;" id="wordleSummaryTitle">¡RONDA COMPLETADA!</h3>
         <p style="font-weight: 700; color: #555; margin: 10px 0;" id="wordleSummaryMsg"></p>
         <button class="modal-btn" onclick="nextWordleTurnOrNewGame()" style="max-width: 260px; margin: 15px auto 0 auto;" id="wordleNextTurnBtn">Turno de tu pareja 🚀</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MINIJUEGO 14: DUELO DE NÚMEROS 1V1 (CIFRAS SECRETAS) -->
+<div id="game-stage-14" style="display: none; width: 100%;">
+  <div class="numduel-container">
+    <h3 class="custom-game-title" style="font-size: 1.4rem; margin-bottom: 5px;">🔢 Duelo de Números 1v1 💕</h3>
+    <p class="custom-game-subtitle" style="margin-bottom: 12px;">¡Adivina la combinación secreta de 6 dígitos de tu amor!</p>
+
+    <!-- 1. LOGIN / IDENTIFICACIÓN -->
+    <div id="numDuelLoginBox" style="padding: 15px 10px;">
+      <p style="font-weight: 700; color: #555; margin-bottom: 15px;">Selecciona tu nombre para conectarte con tu amor:</p>
+      <div class="profile-selector" style="max-width: 320px; margin: 0 auto 15px auto;">
+        <div class="profile-card" id="numDuelUserCriss" onclick="chooseNumDuelUser('Criss')">👑 Soy Criss</div>
+        <div class="profile-card" id="numDuelUserAndreita" onclick="chooseNumDuelUser('Andreita')">🌸 Soy Andreita</div>
+      </div>
+      <button class="modal-btn" onclick="connectNumDuelOnline()" style="max-width: 250px; margin: 0 auto;">Entrar a la Sala 🚀</button>
+    </div>
+
+    <!-- 2. SALA DE ESPERA & ELECCIÓN DEL NÚMERO SECRETO (6 DÍGITOS) -->
+    <div id="numDuelWaitingBox" style="display: none; padding: 15px 10px;">
+      <div style="font-size: 3rem; margin-bottom: 6px; animation: heartPulse 1.2s infinite ease-in-out;">🔐🔢💖</div>
+      <h4 style="color: var(--title-burgundy); font-weight: 800; margin-bottom: 6px;">Configura tu Número Secreto</h4>
+      <p style="font-weight: 700; color: #666; font-size: 0.88rem;">Escribe exactamente 6 dígitos que tu amorcito deberá adivinar:</p>
+
+      <div class="numduel-secret-setup">
+        <label style="font-weight:800; color:var(--title-burgundy); font-size:0.9rem;">Tu combinación secreta (6 números):</label>
+        <input type="password" maxlength="6" id="numDuelMySecretInput" class="numduel-input-secret" placeholder="••••••" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        <p style="font-size:0.78rem; font-weight:700; color:#777; margin-top:4px;">🔒 No te preocupes, tu pareja no podrá verlo.</p>
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+        <span class="presence-badge" id="numDuelWaitCriss">👑 Criss: Desconectado</span>
+        <span class="presence-badge" id="numDuelWaitAndreita">🌸 Andreita: Desconectada</span>
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+        <span class="presence-badge ready" id="numDuelReadyCriss">👑 Criss: Sin número ⏳</span>
+        <span class="presence-badge ready" id="numDuelReadyAndreita">🌸 Andreita: Sin número ⏳</span>
+      </div>
+
+      <button class="modal-btn" id="numDuelReadyBtn" onclick="toggleNumDuelReadyOnline()" style="max-width: 290px; margin: 8px auto; background: #2a9d8f;">✨ ¡Listo con mi Número Secreto! ✨</button>
+    </div>
+
+    <!-- 3. ARENA DE JUEGO (ESTILO WORDLE POR TURNOS) -->
+    <div id="numDuelPlayArena" style="display: none;">
+      <div class="pinturillo-header" style="margin-bottom: 10px;">
+        <div class="guesswho-turn-badge" id="numDuelTurnDisplay">Turno: Esperando...</div>
+        <div style="font-weight: 800; color: var(--title-burgundy);" id="numDuelAttemptsBadge">Intentos ilimitados</div>
+      </div>
+
+      <!-- Historial scrolleable de intentos pasados -->
+      <div class="numduel-history-area" id="numDuelHistoryArea"></div>
+
+      <!-- Fila activa de 6 dígitos que se están escribiendo -->
+      <div style="margin-bottom: 15px;">
+        <div style="font-weight:800; font-size:0.85rem; color:#555; margin-bottom:6px;" id="numDuelActiveAuthorLabel">Tu intento actual:</div>
+        <div class="numduel-row" id="numDuelActiveInputRow">
+          <div class="numduel-tile typing" id="nd_tile_0"></div>
+          <div class="numduel-tile typing" id="nd_tile_1"></div>
+          <div class="numduel-tile typing" id="nd_tile_2"></div>
+          <div class="numduel-tile typing" id="nd_tile_3"></div>
+          <div class="numduel-tile typing" id="nd_tile_4"></div>
+          <div class="numduel-tile typing" id="nd_tile_5"></div>
+        </div>
+      </div>
+
+      <!-- Teclado numérico 0-9 con Enter y Borrar -->
+      <div class="numduel-keypad" id="numDuelKeypad">
+        <button class="numduel-key" onclick="handleNumDuelKeyInput('1')">1</button>
+        <button class="numduel-key" onclick="handleNumDuelKeyInput('2')">2</button>
+        <button class="numduel-key" onclick="handleNumDuelKeyInput('3')">3</button>
+        <button class="numduel-key" onclick="handleNumDuelKeyInput('4')">4</button>
+        <button class="numduel-key" onclick="handleNumDuelKeyInput('5')">5</button>
+        <button class="numduel-key" onclick="handleNumDuelKeyInput('6')">6</button>
+        <button class="numduel-key" onclick="handleNumDuelKeyInput('7')">7</button>
+        <button class="numduel-key" onclick="handleNumDuelKeyInput('8')">8</button>
+        <button class="numduel-key" onclick="handleNumDuelKeyInput('9')">9</button>
+        <button class="numduel-key back-btn" onclick="handleNumDuelKeyInput('BACKSPACE')">⌫</button>
+        <button class="numduel-key" onclick="handleNumDuelKeyInput('0')">0</button>
+        <button class="numduel-key enter-btn" onclick="handleNumDuelKeyInput('ENTER')">ENVIAR</button>
+      </div>
+    </div>
+
+    <!-- 4. PANTALLA DE VICTORIA -->
+    <div id="numDuelSummarySection" style="display: none; margin-top: 20px;">
+      <div class="cute-records-container">
+        <div style="font-size: 3rem; margin-bottom: 8px;" id="numDuelSummaryEmoji">🎉👑💕</div>
+        <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.4rem;" id="numDuelSummaryTitle">¡COMBINACIÓN ADIVINADA!</h3>
+        <p style="font-weight: 700; color: #555; margin: 10px 0;" id="numDuelSummaryMsg"></p>
+        <button class="modal-btn" onclick="restartNumDuelOnline()" style="max-width: 260px; margin: 15px auto 0 auto;">🔄 Jugar Otra Partida</button>
       </div>
     </div>
   </div>
@@ -6385,7 +6609,7 @@ function restartCoopMatch() {
         badge.style.display = 'none';
       }
 
-       for (let i = 1; i <= 13; i++) {
+       for (let i = 1; i <= 14; i++) {
         const navItem = document.getElementById(`nav-game-${i}`);
         if (navItem) {
           if (i === stageNum) {
@@ -6452,7 +6676,7 @@ function restartCoopMatch() {
     }
 
     function goToStage(stageNum) {
-      for(let i=1; i<=13; i++) {
+      for(let i=1; i<=14; i++) {
   document.getElementById(`game-stage-${i}`).style.display = 'none';
   const navItem = document.getElementById(`nav-game-${i}`);
   if(navItem) {
@@ -6477,6 +6701,7 @@ function restartCoopMatch() {
       else if (stageNum === 11) initGuessWhoSystem();
       else if (stageNum === 12) initLaberintoSystem();
       else if (stageNum === 13) initWordleSystem();
+      else if (stageNum === 14) initNumDuelSystem();
     }
 
     /* MINIJUEGO 2 */
@@ -6865,6 +7090,8 @@ function restartCoopMatch() {
       const stage10 = document.getElementById('game-stage-10');
       const stage11 = document.getElementById('game-stage-11');
       const stage12 = document.getElementById('game-stage-12');
+      const stage13 = document.getElementById('game-stage-13');
+      const stage14 = document.getElementById('game-stage-14');
 
       if (stage1 && stage1.style.display !== 'none') goToStage(2);
       else if (stage2 && stage2.style.display !== 'none') goToStage(3);
@@ -6878,8 +7105,9 @@ function restartCoopMatch() {
       else if (stage10 && stage10.style.display !== 'none') goToStage(11);
       else if (stage11 && stage11.style.display !== 'none') goToStage(12);
       else if (stage12 && stage12.style.display !== 'none') goToStage(13);
-     else if (stage13 && stage13.style.display !== 'none') {
-        stage13.style.display = 'none';
+      else if (stage13 && stage13.style.display !== 'none') goToStage(14);
+      else if (stage14 && stage14.style.display !== 'none') {
+        stage14.style.display = 'none';
         document.getElementById('rewardModal').style.display = 'block';
       }
     }
@@ -8961,10 +9189,30 @@ function restartPreguntadosGame() {
     createBgHearts();
     initMemoryGame();
 // Objeto en memoria para almacenar las reacciones localmente / Firebase
+/* ==========================================================================
+   SISTEMA DE REACCIONES EN TIEMPO REAL MULTIDISPOSITIVO (FIRESTORE)
+   ========================================================================== */
 window.appReactions = window.appReactions || {};
-function initReactionsSystem() {
-  db.collection('reactions').onSnapshot(snapshot => {
 
+// Identificador único persistente para cada celular/navegador
+function getDeviceUserId() {
+  // Si ya seleccionó perfil en algún minijuego, usa ese nombre ('Criss' o 'Andreita')
+  const savedProfile = localStorage.getItem('basta_saved_user') || localStorage.getItem('pinturillo_saved_user');
+  let deviceId = localStorage.getItem('love_device_id');
+
+  if (!deviceId) {
+    deviceId = 'dev_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+    localStorage.setItem('love_device_id', deviceId);
+  }
+
+  return savedProfile ? `${savedProfile}_${deviceId}` : deviceId;
+}
+
+function initReactionsSystem() {
+  if (typeof db === 'undefined') return;
+
+  // Escuchar la colección de reacciones en tiempo real
+  db.collection('reactions').onSnapshot(snapshot => {
     window.appReactions = {};
 
     snapshot.forEach(doc => {
@@ -8972,92 +9220,85 @@ function initReactionsSystem() {
       window.appReactions[doc.id] = data.reactions || {};
     });
 
+    // Actualizar las canciones
     document.querySelectorAll('[id^="count-song-"]').forEach(el => {
       const id = el.id.replace('count-song-', '');
       updateReactionUI('song', id);
     });
 
+    // Actualizar las fotos/videos de la galería
     document.querySelectorAll('[id^="count-photo-"]').forEach(el => {
       const id = el.id.replace('count-photo-', '');
       updateReactionUI('photo', id);
     });
-
   }, error => {
     console.error('Error cargando reacciones:', error);
   });
 }
 
-// 1. Mostrar/Ocultar Selector de Emojis
+// 1. Mostrar/Ocultar Menú Desplegable de Emojis
 function toggleReactionPicker(pickerId) {
-  // Cierra otros pickers abiertos
-  document.querySelectorAll('.reaction-picker-popup').forEach(el => {
-    if (el.id !== pickerId) el.classList.remove('show');
+  const picker = document.getElementById(pickerId);
+  if (!picker) return;
+
+  // Cerrar otros menús abiertos
+  document.querySelectorAll('.reaction-picker-popup').forEach(p => {
+    if (p.id !== pickerId) p.classList.remove('show');
   });
 
-  const picker = document.getElementById(pickerId);
-  if (picker) {
-    picker.classList.toggle('show');
-  }
+  picker.classList.toggle('show');
 }
 
-// Cierra pickers si se hace clic fuera
+// Cerrar selector si se hace clic afuera
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.reactions-container')) {
     document.querySelectorAll('.reaction-picker-popup').forEach(el => el.classList.remove('show'));
   }
 });
 
-// 2. Desbloquear Reacción de Canción al Finalizar Audio
-function unlockSongReaction(songId) {
-  const btn = document.getElementById(`btn-react-song-${songId}`);
-  const label = document.getElementById(`label-song-${songId}`);
-  
-  if (btn) {
-    btn.disabled = false;
-    if (label && label.innerText.includes('🔒')) {
-      label.innerHTML = '😃 Reaccionar';
-    }
-    showToastNotification('✨ ¡Has escuchado la canción completa! Ya puedes reaccionar.');
-  }
-}
-
-// 3. Registrar o Cambiar Reacción (Lógica de 1 Reacción por Usuario)
-function submitReaction(type, id, emoji) {
-  const userProfile = window.currentUserProfile || 'Usuario'; // Identificador del perfil (ej. Criss / Andreita)
+// 2. Guardar Reacción Independiente por Celular en Firestore
+async function submitReaction(type, id, emoji) {
+  const userId = getDeviceUserId();
   const key = `${type}_${id}`;
 
   if (!window.appReactions[key]) {
     window.appReactions[key] = {};
   }
 
-  // Guardar la única reacción del usuario activo
-  window.appReactions[key][userProfile] = emoji;
+  // Si toca el mismo emoji que ya tenía, se quita; si es distinto, se actualiza
+  if (window.appReactions[key][userId] === emoji) {
+    delete window.appReactions[key][userId];
+  } else {
+    window.appReactions[key][userId] = emoji;
+  }
 
-  // Ocultar menú emergente
+  // Cerrar el popup de emojis
   const picker = document.getElementById(`picker-${type}-${id}`);
   if (picker) picker.classList.remove('show');
 
-  // Actualizar la interfaz (Texto del botón y Contador)
+  // Reflejo instantáneo local
   updateReactionUI(type, id);
 
-  // Si usas Firebase Firestore para sincronizar en tiempo real:
-  if (typeof db !== 'undefined') {
-    db.collection('reactions').doc(key).set({
+  // Sincronización en la nube con Firestore
+  try {
+    await db.collection('reactions').doc(key).set({
       reactions: window.appReactions[key]
-    }, { merge: true }).catch(err => console.error("Error guardando reacción:", err));
+    }, { merge: true });
+  } catch (err) {
+    console.error("Error guardando reacción en Firestore:", err);
   }
 }
 
-// 4. Actualizar la Interfaz Gráfica del Contador y Estado
+// 3. Renderizar conteo total y emojis únicos en tiempo real
 function updateReactionUI(type, id) {
   const key = `${type}_${id}`;
-  const userProfile = window.currentUserProfile || 'Usuario';
+  const userId = getDeviceUserId();
   const reactionsMap = window.appReactions[key] || {};
 
-  // Actualizar el botón con tu propia reacción
-  const myReaction = reactionsMap[userProfile];
+  // Mi propia reacción en este celular
+  const myReaction = reactionsMap[userId];
   const labelEl = document.getElementById(type === 'song' ? `label-song-${id}` : `my-react-photo-${id}`);
-  
+
   if (labelEl) {
     if (myReaction) {
       labelEl.innerHTML = `${myReaction} Tu reacción`;
@@ -9066,7 +9307,7 @@ function updateReactionUI(type, id) {
     }
   }
 
-  // Calcular conteo total y emojis únicos usados
+  // Total de reacciones sumadas entre todos los dispositivos que votaron
   const totalCount = Object.keys(reactionsMap).length;
   const uniqueEmojis = [...new Set(Object.values(reactionsMap))].join(' ');
 
@@ -9993,6 +10234,350 @@ function nextWordleTurnOrNewGame() {
     currentTyping: "",
     result: null
   });
+}
+/* ==========================================================================
+   MINIJUEGO 14: DUELO DE NÚMEROS 1V1 (CIFRAS SECRETAS - ESTILO WORDLE)
+   ========================================================================== */
+let myNumDuelUser = "";
+let amINumDuelReady = false;
+let currentNumDuelMatch = null;
+
+function initNumDuelSystem() {
+  const saved = localStorage.getItem('basta_saved_user') || localStorage.getItem('pinturillo_saved_user');
+  if (saved && (saved === 'Criss' || saved === 'Andreita')) {
+    chooseNumDuelUser(saved);
+  }
+}
+
+function chooseNumDuelUser(name) {
+  if (name !== 'Criss' && name !== 'Andreita') return;
+  myNumDuelUser = name;
+  localStorage.setItem('basta_saved_user', name);
+  document.getElementById('numDuelUserCriss').classList.remove('selected');
+  document.getElementById('numDuelUserAndreita').classList.remove('selected');
+  if (name === 'Criss') {
+    document.getElementById('numDuelUserCriss').classList.add('selected');
+  } else {
+    document.getElementById('numDuelUserAndreita').classList.add('selected');
+  }
+}
+
+function connectNumDuelOnline() {
+  if (!myNumDuelUser) {
+    showToast("Por favor selecciona si eres Criss o Andreita 💕");
+    return;
+  }
+
+  document.getElementById('numDuelLoginBox').style.display = 'none';
+  document.getElementById('numDuelWaitingBox').style.display = 'block';
+
+  amINumDuelReady = false;
+  const readyBtn = document.getElementById('numDuelReadyBtn');
+  readyBtn.textContent = "✨ ¡Listo con mi Número Secreto! ✨";
+  readyBtn.style.background = "#2a9d8f";
+  rtdb.ref(`numduel_ready/${myNumDuelUser}`).set(false);
+
+  const presenceRef = rtdb.ref(`numduel_presence/${myNumDuelUser}`);
+  const connectedRef = rtdb.ref('.info/connected');
+
+  connectedRef.on('value', (snap) => {
+    if (snap.val() === true) {
+      presenceRef.onDisconnect().set(false);
+      presenceRef.set(true);
+    }
+  });
+
+  listenNumDuelPresence();
+  listenNumDuelGameState();
+  setupNumDuelPhysicalKeyboard();
+}
+
+function toggleNumDuelReadyOnline() {
+  const secretInput = document.getElementById('numDuelMySecretInput').value.trim();
+  if (secretInput.length !== 6) {
+    showToast("¡Debes ingresar exactamente 6 números para tu código secreto! 🔢");
+    return;
+  }
+
+  amINumDuelReady = !amINumDuelReady;
+  const btn = document.getElementById('numDuelReadyBtn');
+
+  if (amINumDuelReady) {
+    btn.textContent = "✅ ¡Número Guardado! (Esperando a tu amor...)";
+    btn.style.background = "#800020";
+    // Guarda el número secreto en Firebase de forma privada para la partida
+    rtdb.ref(`numduel_secrets/${myNumDuelUser}`).set(secretInput);
+    rtdb.ref(`numduel_ready/${myNumDuelUser}`).set(true);
+  } else {
+    btn.textContent = "✨ ¡Listo con mi Número Secreto! ✨";
+    btn.style.background = "#2a9d8f";
+    rtdb.ref(`numduel_ready/${myNumDuelUser}`).set(false);
+  }
+}
+
+function listenNumDuelPresence() {
+  rtdb.ref('numduel_presence').on('value', (snap) => {
+    const presence = snap.val() || {};
+    const crissOnline = presence.Criss === true;
+    const andreitaOnline = presence.Andreita === true;
+
+    document.getElementById('numDuelWaitCriss').textContent = `👑 Criss: ${crissOnline ? 'En Sala ✅' : 'Ausente ❌'}`;
+    document.getElementById('numDuelWaitCriss').className = `presence-badge ${crissOnline ? 'online' : ''}`;
+
+    document.getElementById('numDuelWaitAndreita').textContent = `🌸 Andreita: ${andreitaOnline ? 'En Sala ✅' : 'Ausente ❌'}`;
+    document.getElementById('numDuelWaitAndreita').className = `presence-badge ${andreitaOnline ? 'online' : ''}`;
+  });
+
+  rtdb.ref('numduel_ready').on('value', (snap) => {
+    const readyData = snap.val() || {};
+    const crissReady = readyData.Criss === true;
+    const andreitaReady = readyData.Andreita === true;
+
+    document.getElementById('numDuelReadyCriss').textContent = `👑 Criss: ${crissReady ? '¡Número Listo! ✅' : 'Sin número ⏳'}`;
+    document.getElementById('numDuelReadyCriss').className = `presence-badge ${crissReady ? 'ready-ok' : 'ready'}`;
+
+    document.getElementById('numDuelReadyAndreita').textContent = `🌸 Andreita: ${andreitaReady ? '¡Número Listo! ✅' : 'Sin número ⏳'}`;
+    document.getElementById('numDuelReadyAndreita').className = `presence-badge ${andreitaReady ? 'ready-ok' : 'ready'}`;
+
+    if (crissReady && andreitaReady) {
+      if (myNumDuelUser === 'Criss') {
+        startNewNumDuelMatch();
+      }
+    }
+  });
+}
+
+async function startNewNumDuelMatch() {
+  const secretsSnap = await rtdb.ref('numduel_secrets').once('value');
+  const secrets = secretsSnap.val() || {};
+
+  if (!secrets.Criss || !secrets.Andreita) return;
+
+  const randomTurn = Math.random() < 0.5 ? 'Criss' : 'Andreita';
+
+  rtdb.ref('numduel_room').set({
+    status: "playing",
+    turn: randomTurn,
+    secrets: {
+      Criss: secrets.Criss,
+      Andreita: secrets.Andreita
+    },
+    attempts: {
+      Criss: [],    // Intentos hechos por Criss para adivinar a Andreita
+      Andreita: [] // Intentos hechos por Andreita para adivinar a Criss
+    },
+    currentTyping: "",
+    winner: null
+  });
+}
+
+function listenNumDuelGameState() {
+  rtdb.ref('numduel_room').on('value', (snap) => {
+    const data = snap.val();
+    if (!data) return;
+    currentNumDuelMatch = data;
+
+    if (data.status === "playing") {
+      document.getElementById('numDuelWaitingBox').style.display = 'none';
+      document.getElementById('numDuelSummarySection').style.display = 'none';
+      document.getElementById('numDuelPlayArena').style.display = 'block';
+
+      const isMyTurn = (data.turn === myNumDuelUser);
+      const turnBadge = document.getElementById('numDuelTurnDisplay');
+
+      if (isMyTurn) {
+        turnBadge.textContent = "✨ ¡ES TU TURNO DE ADIVINAR!";
+        turnBadge.classList.add('my-turn');
+        document.getElementById('numDuelActiveAuthorLabel').textContent = "Tu intento actual (6 números):";
+      } else {
+        turnBadge.textContent = `⏳ Turno de ${data.turn}... (Observando)`;
+        turnBadge.classList.remove('my-turn');
+        document.getElementById('numDuelActiveAuthorLabel').textContent = `${data.turn} está escribiendo...`;
+      }
+
+      renderNumDuelHistory();
+      renderNumDuelActiveTyping();
+    } else if (data.status === "finished") {
+      document.getElementById('numDuelPlayArena').style.display = 'none';
+      document.getElementById('numDuelSummarySection').style.display = 'block';
+
+      const isWinner = (data.winner === myNumDuelUser);
+      const opponent = (myNumDuelUser === 'Criss') ? 'Andreita' : 'Criss';
+      const opponentSecret = data.secrets ? data.secrets[opponent] : "••••••";
+
+      document.getElementById('numDuelSummaryEmoji').textContent = isWinner ? "🏆🎉💕" : "🥺💔🌸";
+      document.getElementById('numDuelSummaryTitle').textContent = isWinner ? "¡ERES INCREÍBLE MI AMOR!" : "¡TE ADIVINARON PRIMERO!";
+      document.getElementById('numDuelSummaryMsg').innerHTML = `
+        ¡<b>${data.winner}</b> logró descifrar la combinación de 6 números!<br>
+        El código secreto de ${opponent} era: <b style="color:var(--title-burgundy); font-size:1.2rem;">${opponentSecret}</b>
+      `;
+    }
+  });
+}
+
+function renderNumDuelHistory() {
+  const container = document.getElementById('numDuelHistoryArea');
+  if (!container || !currentNumDuelMatch) return;
+  container.innerHTML = '';
+
+  const attemptsData = currentNumDuelMatch.attempts || {};
+  // Mostramos los intentos que YO he hecho para adivinar el número del rival
+  const myAttempts = attemptsData[myNumDuelUser] || [];
+  const opponent = (myNumDuelUser === 'Criss') ? 'Andreita' : 'Criss';
+  const targetSecret = currentNumDuelMatch.secrets ? currentNumDuelMatch.secrets[opponent] : "";
+
+  if (myAttempts.length === 0) {
+    container.innerHTML = `<p style="color:#999; font-size:0.85rem; font-weight:700; padding:15px;">Aún no has hecho ningún intento. ¡Escribe 6 números y pulsa ENVIAR!</p>`;
+    return;
+  }
+
+  myAttempts.forEach((attemptStr, idx) => {
+    const row = document.createElement('div');
+    row.className = 'numduel-row';
+
+    const evaluation = evaluateNumDuelAttempt(attemptStr, targetSecret);
+
+    for (let i = 0; i < 6; i++) {
+      const tile = document.createElement('div');
+      tile.className = `numduel-tile ${evaluation[i]}`;
+      tile.textContent = attemptStr[i];
+      row.appendChild(tile);
+    }
+
+    container.appendChild(row);
+  });
+
+  // Scroll automático hacia abajo para ver el intento más reciente
+  container.scrollTop = container.scrollHeight;
+}
+
+function renderNumDuelActiveTyping() {
+  const typing = (currentNumDuelMatch && currentNumDuelMatch.currentTyping) ? currentNumDuelMatch.currentTyping : "";
+
+  for (let i = 0; i < 6; i++) {
+    const tile = document.getElementById(`nd_tile_${i}`);
+    if (tile) {
+      tile.textContent = typing[i] || "";
+    }
+  }
+}
+
+// Evaluación estilo Wordle: verde para posición exacta, amarillo si existe en otro sitio
+function evaluateNumDuelAttempt(guess, secret) {
+  const result = new Array(6).fill('absent');
+  const secretArr = secret.split('');
+  const guessArr = guess.split('');
+
+  // 1. Verdes (aciertos en posición exacta)
+  for (let i = 0; i < 6; i++) {
+    if (guessArr[i] === secretArr[i]) {
+      result[i] = 'correct';
+      secretArr[i] = null;
+      guessArr[i] = null;
+    }
+  }
+
+  // 2. Amarillos (el número existe pero en otra casilla)
+  for (let i = 0; i < 6; i++) {
+    if (guessArr[i] !== null) {
+      const idx = secretArr.indexOf(guessArr[i]);
+      if (idx !== -1) {
+        result[i] = 'present';
+        secretArr[idx] = null;
+      }
+    }
+  }
+
+  return result;
+}
+
+function setupNumDuelPhysicalKeyboard() {
+  window.addEventListener('keydown', (e) => {
+    const stage = document.getElementById('game-stage-14');
+    if (!stage || stage.style.display === 'none') return;
+    if (!currentNumDuelMatch || currentNumDuelMatch.status !== 'playing') return;
+
+    if (e.key === 'Enter') {
+      handleNumDuelKeyInput('ENTER');
+    } else if (e.key === 'Backspace') {
+      handleNumDuelKeyInput('BACKSPACE');
+    } else if (/^[0-9]$/.test(e.key)) {
+      handleNumDuelKeyInput(e.key);
+    }
+  });
+}
+
+async function handleNumDuelKeyInput(key) {
+  if (!currentNumDuelMatch || currentNumDuelMatch.status !== 'playing') return;
+
+  if (currentNumDuelMatch.turn !== myNumDuelUser) {
+    showToast("Espera tu turno mi amor ⏳");
+    return;
+  }
+
+  let typing = currentNumDuelMatch.currentTyping || "";
+
+  if (key === 'BACKSPACE') {
+    if (typing.length > 0) {
+      typing = typing.slice(0, -1);
+      rtdb.ref('numduel_room/currentTyping').set(typing);
+    }
+  } else if (key === 'ENTER') {
+    if (typing.length !== 6) {
+      showToast("¡Debes ingresar exactamente 6 números! 🔢");
+      return;
+    }
+
+    const opponent = (myNumDuelUser === 'Criss') ? 'Andreita' : 'Criss';
+    const opponentSecret = currentNumDuelMatch.secrets[opponent];
+
+    const attemptsData = currentNumDuelMatch.attempts || {};
+    const myAttempts = attemptsData[myNumDuelUser] || [];
+    myAttempts.push(typing);
+
+    const isVictory = (typing === opponentSecret);
+    const nextTurn = opponent;
+
+    const updates = {};
+    updates[`attempts/${myNumDuelUser}`] = myAttempts;
+    updates['currentTyping'] = "";
+
+    if (isVictory) {
+      updates['status'] = "finished";
+      updates['winner'] = myNumDuelUser;
+    } else {
+      updates['turn'] = nextTurn;
+    }
+
+    await rtdb.ref('numduel_room').update(updates);
+
+    if (!isVictory) {
+      showToast("Intento enviado. Turno de tu amor 🚀");
+    }
+  } else if (/^[0-9]$/.test(key)) {
+    if (typing.length < 6) {
+      typing += key;
+      rtdb.ref('numduel_room/currentTyping').set(typing);
+    }
+  }
+}
+
+function restartNumDuelOnline() {
+  amINumDuelReady = false;
+  document.getElementById('numDuelMySecretInput').value = '';
+  document.getElementById('numDuelReadyBtn').textContent = "✨ ¡Listo con mi Número Secreto! ✨";
+  document.getElementById('numDuelReadyBtn').style.background = "#2a9d8f";
+
+  rtdb.ref('numduel_ready/Criss').set(false);
+  rtdb.ref('numduel_ready/Andreita').set(false);
+  rtdb.ref('numduel_secrets').remove();
+  rtdb.ref('numduel_room').set({
+    status: "idle",
+    winner: null
+  });
+
+  document.getElementById('numDuelSummarySection').style.display = 'none';
+  document.getElementById('numDuelWaitingBox').style.display = 'block';
 }
 </script>
 </body>
