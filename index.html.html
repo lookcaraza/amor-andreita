@@ -3062,6 +3062,337 @@
       border-color: #b7094c;
       font-size: 1.1rem;
     }
+/* ==========================================================================
+       ESTILOS DEL SISTEMA DE COMENTARIOS TIPO FACEBOOK (FOTOS & CANCIONES)
+       ========================================================================== */
+    .btn-comment-trigger {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1.5px solid var(--rose-pink);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--title-burgundy);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      margin-left: 6px;
+    }
+    .btn-comment-trigger:hover {
+      background: #fff0f3;
+      border-color: var(--soft-red);
+      transform: scale(1.05);
+    }
+    .comment-badge-pill {
+      background: #fff0f3;
+      color: var(--title-burgundy);
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 900;
+      border: 1px solid var(--rose-pink);
+    }
+
+    /* Modal emergente estilo red social */
+    .post-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 6500;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+    }
+    .post-modal-container {
+      background: #ffffff;
+      border: 3.5px solid #ff758f;
+      border-radius: 28px;
+      max-width: 860px;
+      width: 100%;
+      height: 88vh;
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 20px 45px rgba(230, 92, 101, 0.35);
+      position: relative;
+      animation: popIn 0.3s ease;
+    }
+    .post-modal-media-col {
+      flex: 1.2;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .post-modal-media-col img, .post-modal-media-col video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .post-modal-comments-col {
+      flex: 1;
+      min-width: 320px;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border-left: 2px solid #ffccd5;
+    }
+ .post-modal-header {
+      padding: 12px 55px 12px 16px; /* Espacio reservado para que el botón no tape el texto ni el contador */
+      border-bottom: 2px dashed var(--rose-pink);
+      background: #fff0f3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    /* Posición exacta de la X adentro del modal para que nunca se recorte */
+    .post-modal-container .close-viewer-btn {
+      top: 10px;
+      right: 12px;
+      width: 36px;
+      height: 36px;
+      font-size: 1.1rem;
+      border-width: 2.5px;
+      z-index: 120;
+    }
+    .post-modal-title {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--title-burgundy);
+    }
+    .comments-feed-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #ffffff;
+    }
+    .comment-card-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: #fff0f3;
+      border-radius: 16px;
+      padding: 10px 12px;
+      border: 1.5px solid #ffccd5;
+      animation: popIn 0.2s ease;
+    }
+    .comment-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+    .comment-author-chip {
+      font-weight: 800;
+      color: var(--title-burgundy);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .comment-time-ago {
+      color: #777;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .comment-text-content {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #111;
+      word-break: break-word;
+      line-height: 1.35;
+    }
+    .comment-sticker-img {
+      max-width: 130px;
+      max-height: 130px;
+      border-radius: 12px;
+      margin-top: 6px;
+      display: block;
+    }
+    .comment-actions-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 4px;
+    }
+    .comment-like-btn {
+      background: white;
+      border: 1.5px solid var(--rose-pink);
+      border-radius: 15px;
+      padding: 3px 9px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #e63946;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: transform 0.15s;
+    }
+    .comment-like-btn:hover {
+      transform: scale(1.1);
+      background: #ffe3e8;
+    }
+
+    /* Caja de redacción */
+    .post-modal-composer {
+      border-top: 2px solid #ffccd5;
+      padding: 12px 14px;
+      background: #fff8f9;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .composer-author-selector {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+    .composer-author-btn {
+      flex: 1;
+      padding: 6px 10px;
+      border: 2px solid var(--rose-pink);
+      border-radius: 12px;
+      background: white;
+      font-weight: 800;
+      font-size: 0.8rem;
+      color: var(--title-burgundy);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .composer-author-btn.selected {
+      background: var(--soft-red);
+      color: white;
+      border-color: var(--title-burgundy);
+    }
+    .composer-input-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .composer-text-input {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: 14px;
+      border: 2px solid var(--rose-pink);
+      font-weight: 700;
+      font-size: 0.88rem;
+      outline: none;
+      background: white;
+    }
+    .composer-text-input:focus {
+      border-color: var(--soft-red);
+    }
+    .composer-send-btn {
+      background: var(--soft-red);
+      color: white;
+      border: none;
+      padding: 9px 14px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.88rem;
+    }
+
+    /* Bandeja desplegable de Emojis, Stickers y GIFs */
+    .drawer-toggle-btn {
+      background: white;
+      border: 1.5px solid var(--rose-pink);
+      border-radius: 12px;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--title-burgundy);
+      cursor: pointer;
+    }
+    .media-drawer-box {
+      display: none;
+      max-height: 150px;
+      overflow-y: auto;
+      border: 1.5px solid var(--rose-pink);
+      border-radius: 14px;
+      padding: 8px;
+      background: white;
+      margin-top: 4px;
+    }
+    .media-drawer-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+      border-bottom: 1px dashed var(--rose-pink);
+      padding-bottom: 4px;
+    }
+    .drawer-tab-btn {
+      background: #fff0f3;
+      border: 1px solid var(--rose-pink);
+      border-radius: 8px;
+      padding: 3px 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      cursor: pointer;
+      color: var(--title-burgundy);
+    }
+    .drawer-tab-btn.active {
+      background: var(--soft-red);
+      color: white;
+    }
+    .drawer-content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+      gap: 6px;
+    }
+    .drawer-emoji-item {
+      font-size: 1.3rem;
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.15s;
+    }
+    .drawer-emoji-item:hover {
+      transform: scale(1.3);
+    }
+    .drawer-sticker-thumb {
+      width: 100%;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid #ffccd5;
+      transition: transform 0.15s;
+    }
+    .drawer-sticker-thumb:hover {
+      transform: scale(1.12);
+    }
+
+    /* Adaptación celular */
+    @media (max-width: 768px) {
+      .post-modal-container {
+        flex-direction: column;
+        height: 92vh;
+      }
+      .post-modal-media-col {
+        height: 38%;
+        flex: none;
+      }
+      .post-modal-comments-col {
+        height: 62%;
+        flex: none;
+        border-left: none;
+        border-top: 2px solid #ffccd5;
+      }
+    }
 </style>
 </head>
 <body>
@@ -4402,6 +4733,52 @@
       </div>
     </section>
   </main>
+<!-- MODAL ESTILO FACEBOOK: VISUALIZAR FOTO/CANCIÓN Y COMENTARIOS -->
+  <div class="post-modal-overlay" id="postCommentsModal">
+    <div class="post-modal-container">
+      <button class="close-viewer-btn" onclick="closePostCommentsModal()">✕</button>
+
+      <!-- Columna izquierda: Foto, Video o Canción -->
+      <div class="post-modal-media-col" id="postModalMediaDisplay"></div>
+
+      <!-- Columna derecha: Feed de Comentarios y Caja de Envío -->
+      <div class="post-modal-comments-col">
+        <div class="post-modal-header">
+          <span class="post-modal-title" id="postModalHeaderTitle">💬 Comentarios de Amor</span>
+          <span class="comment-badge-pill" id="postModalCounterBadge">0 comentarios</span>
+        </div>
+
+        <div class="comments-feed-area" id="postModalCommentsFeed">
+          <p style="text-align:center; color:#888; font-weight:700; padding:20px;">Cargando comentarios con amor... 💕</p>
+        </div>
+
+        <!-- Caja para Escribir Comentarios -->
+        <div class="post-modal-composer">
+          <!-- Selector obligatorio de Autor -->
+          <div class="composer-author-selector">
+            <button type="button" class="composer-author-btn" id="commentAuthorCriss" onclick="selectCommentAuthor('Criss')">👑 Comentar como Criss</button>
+            <button type="button" class="composer-author-btn" id="commentAuthorAndreita" onclick="selectCommentAuthor('Andreita')">🌸 Comentar como Andreita</button>
+          </div>
+
+          <div class="composer-input-row">
+            <input type="text" id="commentTextInput" class="composer-text-input" placeholder="Escribe un comentario bonito..." onkeydown="if(event.key==='Enter') submitPostComment()">
+            <button class="drawer-toggle-btn" onclick="toggleMediaDrawer()">🎨 Stickers</button>
+            <button class="composer-send-btn" onclick="submitPostComment()">Enviar</button>
+          </div>
+
+          <!-- Pestañas de Emojis, Stickers y GIFs -->
+          <div class="media-drawer-box" id="mediaDrawerBox">
+            <div class="media-drawer-tabs">
+              <button class="drawer-tab-btn active" id="tabDrawerEmoji" onclick="switchDrawerTab('emoji')">Emojis</button>
+              <button class="drawer-tab-btn" id="tabDrawerStickers" onclick="switchDrawerTab('stickers')">Stickers</button>
+              <button class="drawer-tab-btn" id="tabDrawerGifs" onclick="switchDrawerTab('gifs')">GIFs Amor</button>
+            </div>
+            <div class="drawer-content-grid" id="drawerContentGrid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL DE PROGRESO DE SUBIDA EN TIEMPO REAL -->
   <div class="upload-progress-overlay" id="uploadProgressOverlay">
@@ -4999,6 +5376,11 @@ function renderSongsForCurrentRecipient() {
   <div class="reaction-badge-counter" id="count-song-${song.id}">
     <span>0 reacciones</span>
   </div>
+
+<!-- Botón para Abrir Modal de Comentarios -->
+          <button class="btn-comment-trigger" onclick="event.stopPropagation(); openPostCommentsModal('song', '${song.id}', '${coverUrl}', '${song.title}')">
+            💬 Comentar <span class="comment-badge-pill" id="badge-comments-song-${song.id}">0</span>
+          </button>
 
 </div>
     `;
@@ -6412,7 +6794,6 @@ function restartCoopMatch() {
 
       let reactionsHTML = `
   <div class="reactions-container" onclick="event.stopPropagation();">
-
     <button
       class="btn-react-trigger"
       onclick="event.stopPropagation(); toggleReactionPicker('picker-photo-${item.id}')">
@@ -6432,6 +6813,10 @@ function restartCoopMatch() {
       <span>0 reacciones</span>
     </div>
 
+    <!-- Botón para Abrir Modal de Comentarios -->
+    <button class="btn-comment-trigger" onclick="event.stopPropagation(); openPostCommentsModal('photo', '${item.id}', '${item.mediaUrl || item.dataUrl || ''}', '${item.reason || ''}')">
+      💬 Comentar <span class="comment-badge-pill" id="badge-comments-photo-${item.id}">0</span>
+    </button>
   </div>
 `;
 
@@ -10579,6 +10964,297 @@ function restartNumDuelOnline() {
   document.getElementById('numDuelSummarySection').style.display = 'none';
   document.getElementById('numDuelWaitingBox').style.display = 'block';
 }
+/* ==========================================================================
+   SISTEMA DE COMENTARIOS TIPO FACEBOOK EN TIEMPO REAL CON FIRESTORE
+   ========================================================================== */
+let activeCommentPost = null; // { type: 'photo'|'song', id: '', mediaSrc: '', title: '' }
+let selectedCommentAuthor = "";
+let commentsUnsubscribeListener = null;
+
+const COMMENT_EMOJIS_LIST = ["❤️", "💖", "😍", "🥰", "😘", "🥺", "💍", "🌹", "🧸", "✨", "👑", "🌸", "💏", "💌", "🤤", "😭", "🔥", "😻"];
+
+const COMMENT_STICKERS_LIST = [
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExczJqcXQ4ZGhyOWJ4bWprMW4yNDN2Z21iaWtzYmZqenlsM3VqbjZpOCZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/MDJ9IbxxvDUQM/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2I0anN1N214dHoxanFocGZ1anpkZ2JpOWpza2NxdG1iZ2Mzbnd2eSZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/KztT2c4u8AGinUqm95/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGJ3cmZ4ZXBtb2xpcW9hNDNrdzE1YzhpOHFhbjN1bmRoNTB1bjFwbiZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/3oD3YqPwr89pI4mnOE/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHk3d2w0MndscjlzYW13eHdrZTFubXphc3R5cTZmcWVhbjE4bjZqciZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/l4pTfx2qLszoacZRS/giphy.gif"
+];
+
+const COMMENT_GIFS_LIST = [
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWpmbjY2eGZqb296cDlraWhhOW9ib3BvaWNocjV2cmJmbjM5c2kydCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/R6gVNROjZa40w/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcGpmOXpxaDB4OHpibWNsdWZvZTV2YmhpY3YzaW42aHVyM2Uzbnd2aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/uw0KqTWJPAUnC/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaW50Zms5bnA1Nnp6NXpsNmszNG4xMnZobml6NGFvaWZsdzN6cmxkaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26BRv0ThflsHCqDrG/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOWJ0dmIxbzR1cDhzeXRnd2JubXZ1bDZicHFrMGpmd2VveWcwb2JubyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/OpfkuToK5NLig/giphy.gif"
+];
+
+// 1. Abrir Modal de Comentarios estilo Facebook
+function openPostCommentsModal(type, id, mediaSrc, title) {
+  activeCommentPost = { type, id, mediaSrc, title };
+  selectedCommentAuthor = "";
+
+  document.getElementById('commentAuthorCriss').classList.remove('selected');
+  document.getElementById('commentAuthorAndreita').classList.remove('selected');
+  document.getElementById('commentTextInput').value = '';
+  document.getElementById('mediaDrawerBox').style.display = 'none';
+
+  // Si ya tiene guardado el usuario en sesión
+  const savedUser = localStorage.getItem('basta_saved_user') || localStorage.getItem('pinturillo_saved_user');
+  if (savedUser === 'Criss' || savedUser === 'Andreita') {
+    selectCommentAuthor(savedUser);
+  }
+
+  // Renderizar la foto o portada a la izquierda
+  const mediaCol = document.getElementById('postModalMediaDisplay');
+  const isVid = (mediaSrc && (mediaSrc.includes('/video/upload/') || mediaSrc.match(/\.(mp4|mov|webm)/i)));
+
+  if (isVid) {
+    mediaCol.innerHTML = `<video src="${mediaSrc}" controls autoplay playsinline style="max-height:85vh; width:100%; object-fit:contain;"></video>`;
+  } else {
+    mediaCol.innerHTML = `<img src="${mediaSrc}" alt="${title}" style="max-height:85vh; width:100%; object-fit:contain;">`;
+  }
+
+  document.getElementById('postModalHeaderTitle').textContent = `💬 ${title || 'Publicación de nuestro amor'}`;
+  document.getElementById('postCommentsModal').style.display = 'flex';
+
+  // Escuchar los comentarios en Firestore en vivo
+  listenPostCommentsRealtime(type, id);
+}
+
+function closePostCommentsModal() {
+  const mediaCol = document.getElementById('postModalMediaDisplay');
+  const vid = mediaCol.querySelector('video');
+  if (vid) vid.pause();
+  mediaCol.innerHTML = '';
+
+  if (commentsUnsubscribeListener) {
+    commentsUnsubscribeListener();
+    commentsUnsubscribeListener = null;
+  }
+
+  document.getElementById('postCommentsModal').style.display = 'none';
+  activeCommentPost = null;
+}
+
+// 2. Selección de autor obligatoria (Criss o Andreita)
+function selectCommentAuthor(author) {
+  if (author !== 'Criss' && author !== 'Andreita') return;
+  selectedCommentAuthor = author;
+  document.getElementById('commentAuthorCriss').classList.toggle('selected', author === 'Criss');
+  document.getElementById('commentAuthorAndreita').classList.toggle('selected', author === 'Andreita');
+}
+
+// 3. Escucha en tiempo real de los comentarios
+function listenPostCommentsRealtime(type, id) {
+  const postKey = `${type}_${id}`;
+  const feed = document.getElementById('postModalCommentsFeed');
+
+  if (commentsUnsubscribeListener) commentsUnsubscribeListener();
+
+  commentsUnsubscribeListener = db.collection('post_comments')
+    .where('postKey', '==', postKey)
+    .onSnapshot(snapshot => {
+      const comments = [];
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        d.id = doc.id;
+        comments.push(d);
+      });
+
+      // Ordenar por fecha cronológica
+      comments.sort((a, b) => (a.createdAt?.toMillis() || 0) - (b.createdAt?.toMillis() || 0));
+
+      // Actualizar contador del badge
+      document.getElementById('postModalCounterBadge').textContent = `${comments.length} ${comments.length === 1 ? 'comentario' : 'comentarios'}`;
+      const cardBadge = document.getElementById(`badge-comments-${type}-${id}`);
+      if (cardBadge) cardBadge.textContent = comments.length;
+
+      if (comments.length === 0) {
+        feed.innerHTML = `
+          <div style="text-align:center; padding:35px 15px; color:#888;">
+            <div style="font-size:2.5rem; margin-bottom:6px;">💌✨</div>
+            <p style="font-weight:700;">Aún no hay comentarios aquí mi amor.<br>¡Sé el primero en dejar una dedicatoria tierna!</p>
+          </div>
+        `;
+        return;
+      }
+
+      feed.innerHTML = '';
+      comments.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'comment-card-item';
+
+        const likesCount = c.likesCount || 0;
+        const stickerHTML = c.stickerUrl ? `<img src="${c.stickerUrl}" class="comment-sticker-img" alt="Sticker">` : '';
+
+        card.innerHTML = `
+          <div class="comment-card-header">
+            <span class="comment-author-chip">
+              ${c.author === 'Criss' ? '👑 <b>Criss</b>' : '🌸 <b>Andreita</b>'}
+            </span>
+            <span class="comment-time-ago">${formatCommentDate(c.createdAt)}</span>
+          </div>
+          <div class="comment-text-content">${escapeHTML(c.text || '')}</div>
+          ${stickerHTML}
+          <div class="comment-actions-bar">
+            <button class="comment-like-btn" onclick="toggleCommentLike('${c.id}', ${likesCount})">
+              ❤️ <span>${likesCount}</span>
+            </button>
+          </div>
+        `;
+        feed.appendChild(card);
+      });
+
+      // Bajar automáticamente al último comentario
+      feed.scrollTop = feed.scrollHeight;
+    }, error => {
+      console.error("Error al cargar comentarios:", error);
+    });
+}
+
+function formatCommentDate(timestamp) {
+  if (!timestamp) return "hace un momento";
+  const date = timestamp.toDate();
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${day}/${month} ${hours}:${minutes}`;
+}
+
+function escapeHTML(str) {
+  return str.replace(/[&<>'"]/g, tag => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[tag] || tag));
+}
+
+// 4. Enviar Comentario de Texto
+async function submitPostComment(attachedMediaUrl = null) {
+  if (!activeCommentPost) return;
+
+  if (!selectedCommentAuthor) {
+    showToast("Por favor selecciona si eres Criss o Andreita para comentar 💕");
+    return;
+  }
+
+  const input = document.getElementById('commentTextInput');
+  const textVal = input.value.trim();
+
+  if (!textVal && !attachedMediaUrl) {
+    showToast("Escribe algo o elige un sticker para enviar 🥺");
+    return;
+  }
+
+  const postKey = `${activeCommentPost.type}_${activeCommentPost.id}`;
+
+  try {
+    await db.collection('post_comments').add({
+      postKey: postKey,
+      postTitle: activeCommentPost.title || "",
+      author: selectedCommentAuthor,
+      text: textVal,
+      stickerUrl: attachedMediaUrl || null,
+      likesCount: 0,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    input.value = '';
+    document.getElementById('mediaDrawerBox').style.display = 'none';
+    showToast("¡Comentario publicado con amor! 💌✨");
+  } catch (error) {
+    console.error("Error enviando comentario:", error);
+    showToast("Error al publicar el comentario 🥺");
+  }
+}
+
+// 5. Dar "Me Gusta" con corazón a un comentario
+async function toggleCommentLike(commentId, currentLikes) {
+  try {
+    const commentRef = db.collection('post_comments').doc(commentId);
+    await commentRef.update({
+      likesCount: currentLikes + 1
+    });
+  } catch (err) {
+    console.error("Error al dar like:", err);
+  }
+}
+
+// 6. Manejo de Pestañas de Emojis, Stickers y GIFs
+function toggleMediaDrawer() {
+  const box = document.getElementById('mediaDrawerBox');
+  const isHidden = (box.style.display === 'none' || !box.style.display);
+  box.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) {
+    switchDrawerTab('emoji');
+  }
+}
+
+function switchDrawerTab(tab) {
+  document.getElementById('tabDrawerEmoji').classList.toggle('active', tab === 'emoji');
+  document.getElementById('tabDrawerStickers').classList.toggle('active', tab === 'stickers');
+  document.getElementById('tabDrawerGifs').classList.toggle('active', tab === 'gifs');
+
+  const container = document.getElementById('drawerContentGrid');
+  container.innerHTML = '';
+
+  if (tab === 'emoji') {
+    container.style.gridTemplateColumns = 'repeat(auto-fill, minmax(36px, 1fr))';
+    COMMENT_EMOJIS_LIST.forEach(em => {
+      const span = document.createElement('span');
+      span.className = 'drawer-emoji-item';
+      span.textContent = em;
+      span.onclick = () => {
+        document.getElementById('commentTextInput').value += em;
+      };
+      container.appendChild(span);
+    });
+  } else if (tab === 'stickers') {
+    container.style.gridTemplateColumns = 'repeat(auto-fill, minmax(60px, 1fr))';
+    COMMENT_STICKERS_LIST.forEach(url => {
+      const img = document.createElement('img');
+      img.src = url;
+      img.className = 'drawer-sticker-thumb';
+      img.onclick = () => submitPostComment(url);
+      container.appendChild(img);
+    });
+  } else if (tab === 'gifs') {
+    container.style.gridTemplateColumns = 'repeat(auto-fill, minmax(60px, 1fr))';
+    COMMENT_GIFS_LIST.forEach(url => {
+      const img = document.createElement('img');
+      img.src = url;
+      img.className = 'drawer-sticker-thumb';
+      img.onclick = () => submitPostComment(url);
+      container.appendChild(img);
+    });
+  }
+}
+
+// Actualizar conteos iniciales de comentarios en las tarjetas
+function initCommentCounters() {
+  if (typeof db === 'undefined') return;
+  db.collection('post_comments').onSnapshot(snapshot => {
+    const counts = {};
+    snapshot.forEach(doc => {
+      const d = doc.data();
+      if (d.postKey) {
+        counts[d.postKey] = (counts[d.postKey] || 0) + 1;
+      }
+    });
+
+    document.querySelectorAll('[id^="badge-comments-"]').forEach(el => {
+      const key = el.id.replace('badge-comments-', '');
+      el.textContent = counts[key] || 0;
+    });
+  });
+}
+
+// Llamar al inicio para vincular los contadores
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(initCommentCounters, 1500);
+});
 </script>
 </body>
 </html>
