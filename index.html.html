@@ -2804,6 +2804,142 @@
       align-items: center;
       gap: 10px;
     }
+/* ==========================================================================
+       ESTILOS MINIJUEGO 13: WORDLE DEL AMOR
+       ========================================================================== */
+    .wordle-container {
+      background: #ffffff;
+      border: 3px solid var(--rose-pink);
+      border-radius: 25px;
+      padding: 20px 15px;
+      box-shadow: 0 10px 25px rgba(230, 92, 101, 0.15);
+      text-align: center;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .wordle-length-selector {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 15px 0;
+    }
+    .wordle-len-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 16px;
+      border: 2px solid var(--rose-pink);
+      background: #fff0f3;
+      font-weight: 800;
+      color: var(--title-burgundy);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .wordle-len-btn.selected {
+      background: var(--soft-red);
+      color: white;
+      border-color: var(--title-burgundy);
+      transform: scale(1.04);
+    }
+    .wordle-board-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+      margin: 15px 0 20px;
+    }
+    .wordle-row {
+      display: flex;
+      gap: 6px;
+    }
+    .wordle-tile {
+      width: 52px;
+      height: 52px;
+      border: 2px solid #d3d6da;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.8rem;
+      font-weight: 800;
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      user-select: none;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #111;
+      transition: transform 0.15s ease;
+    }
+    .wordle-tile.pop {
+      animation: tilePop 0.12s ease-in-out;
+      border-color: #878a8c;
+    }
+    @keyframes tilePop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+    .wordle-tile.correct {
+      background: #6aaa64 !important;
+      border-color: #6aaa64 !important;
+      color: white !important;
+    }
+    .wordle-tile.present {
+      background: #c9b458 !important;
+      border-color: #c9b458 !important;
+      color: white !important;
+    }
+    .wordle-tile.absent {
+      background: #787c7e !important;
+      border-color: #787c7e !important;
+      color: white !important;
+    }
+    .wordle-keyboard {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    .wordle-keyboard-row {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+    .wordle-key {
+      background: #d3d6da;
+      border: none;
+      border-radius: 6px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 14px 10px;
+      cursor: pointer;
+      color: #111;
+      min-width: 32px;
+      font-family: 'Nunito', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .wordle-key:active {
+      transform: scale(0.95);
+    }
+    .wordle-key.wide {
+      min-width: 52px;
+      font-size: 0.8rem;
+    }
+    .wordle-key.correct {
+      background: #6aaa64 !important;
+      color: white !important;
+    }
+    .wordle-key.present {
+      background: #c9b458 !important;
+      color: white !important;
+    }
+    .wordle-key.absent {
+      background: #787c7e !important;
+      color: white !important;
+    }
 </style>
 </head>
 <body>
@@ -2998,6 +3134,15 @@
     <span class="minigame-nav-sub">Carrera de Bolitas 1v1</span>
   </div>
   <span class="new-badge-pill" id="badge-game-12">NEW</span>
+</div>
+
+<div class="minigame-nav-item" id="nav-game-13" onclick="selectMinigameFromSidebar(13)">
+  <span class="minigame-nav-icon">🔤</span>
+  <div class="minigame-nav-info">
+    <span class="minigame-nav-name">Wordle del Amor</span>
+    <span class="minigame-nav-sub">Duelo de Palabras 1v1</span>
+  </div>
+  <span class="new-badge-pill" id="badge-game-13">NEW</span>
 </div>
         </aside>
 
@@ -3815,51 +3960,185 @@
           </div>
 
 <div id="game-stage-12" style="display: none; width: 100%;">
-  <div class="laberinto-container">
-    <h3 class="custom-game-title" style="font-size: 1.4rem; margin-bottom: 5px;">🌀 Laberinto Dúo: Carrera de Amor 🏁</h3>
-    <p class="custom-game-subtitle">¡Llega primero a la meta arriba 🏁 sin chocar con las paredes!</p>
+  <div class="laberinto-container" style="background:#ffffff; border:3px solid var(--rose-pink); border-radius:25px; padding:18px; box-shadow:0 10px 25px rgba(230,92,101,0.15); text-align:center;">
+    <h3 class="custom-game-title" style="font-size: 1.4rem; margin-bottom: 5px;">🌀 Laberinto Dúo: Carrera de Paredes 🏁</h3>
+    <p class="custom-game-subtitle" style="margin-bottom:15px;">Llega primero a la meta arriba. ¡Muévete o coloca paredes para bloquear a tu amor!</p>
 
-    <!-- SALA DE ESPERA -->
-    <div id="laberintoLobby" style="text-align: center; padding: 20px;">
-      <div class="profile-selector" style="margin-bottom: 15px;">
-        <div class="profile-card" id="labRoleCriss" onclick="selectLaberintoRole('Criss')">👑 Jugar como Criss (🔴 Rojo)</div>
-        <div class="profile-card" id="labRoleAndreita" onclick="selectLaberintoRole('Andreita')">🌸 Jugar como Andreita (🔵 Azul)</div>
+    <!-- 1. LOGIN / SELECCIÓN DE PERFIL -->
+    <div id="laberintoLoginBox" style="padding: 15px 10px;">
+      <p style="font-weight: 700; color: #555; margin-bottom: 15px;">Selecciona con quién vas a jugar:</p>
+      <div class="profile-selector" style="max-width: 320px; margin: 0 auto 15px auto;">
+        <div class="profile-card" id="labRoleCriss" onclick="selectLaberintoRole('Criss')">👑 Soy Criss (🔴)</div>
+        <div class="profile-card" id="labRoleAndreita" onclick="selectLaberintoRole('Andreita')">🌸 Soy Andreita (🔵)</div>
       </div>
-      <div id="laberintoPresenceStatus" class="presence-badge" style="margin: 10px auto;">Esperando rival...</div>
-      <button class="modal-btn" id="laberintoReadyBtn" onclick="toggleLaberintoReady()" style="max-width: 250px; margin: 10px auto; display: none;">✨ ¡LISTO PARA CORRER! ✨</button>
+      <button class="modal-btn" onclick="connectLaberintoOnline()" style="max-width: 250px; margin: 0 auto;">Entrar a la Carrera 🚀</button>
     </div>
 
-    <!-- ARENA DE JUEGO -->
-    <div id="laberintoGameArea" style="display: none; text-align: center;">
-      <div class="burger-score-board" style="margin-bottom: 10px;">
-        <span>⏱️ Tiempo: <strong id="laberintoTimer">0.0s</strong></span>
-        <span>🔴 Rojo: <span id="labScoreRed">0</span></span>
-        <span>🔵 Azul: <span id="labScoreBlue">0</span></span>
+    <!-- 2. SALA DE ESPERA -->
+    <div id="laberintoWaitingBox" style="display: none; padding: 20px 10px;">
+      <div style="font-size: 3rem; margin-bottom: 8px; animation: heartPulse 1.2s infinite ease-in-out;">🧱🏁💕</div>
+      <h4 style="color: var(--title-burgundy); font-weight: 800; margin-bottom: 8px;">Sala de Espera - Laberinto Dúo</h4>
+      <p style="font-weight: 700; color: #666; max-width: 400px; margin: 0 auto 15px auto;">Ambos deben conectarse y marcar <b>"¡Estoy Listo!"</b> para iniciar el duelo:</p>
+
+      <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+        <span class="presence-badge" id="labWaitCriss">👑 Criss: Desconectado</span>
+        <span class="presence-badge" id="labWaitAndreita">🌸 Andreita: Desconectada</span>
       </div>
 
-      <div style="position: relative; max-width: 450px; margin: 0 auto; background: #111; border-radius: 20px; border: 3px solid var(--soft-red); overflow: hidden; touch-action: none;">
-        <canvas id="laberintoCanvas" width="400" height="500" style="display: block; width: 100%; height: auto; background: #222;"></canvas>
+      <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+        <span class="presence-badge ready" id="labReadyCriss">👑 Criss: No listo ⏳</span>
+        <span class="presence-badge ready" id="labReadyAndreita">🌸 Andreita: No lista ⏳</span>
       </div>
 
-      <!-- CONTROLES TÁCTILES PARA CELULAR -->
-      <div class="laberinto-touch-controls" style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
-        <div style="display: grid; grid-template-columns: repeat(3, 45px); grid-template-rows: repeat(2, 45px); gap: 5px; justify-content: center;">
+      <button class="modal-btn" id="laberintoReadyBtn" onclick="toggleLaberintoReadyOnline()" style="max-width: 280px; margin: 10px auto; background: #2a9d8f;">✨ ¡Estoy Listo para Correr! ✨</button>
+    </div>
+
+    <!-- 3. ARENA DE JUEGO -->
+    <div id="laberintoGameArea" style="display: none;">
+      <div class="pinturillo-header" style="margin-bottom:10px;">
+        <div class="guesswho-turn-badge" id="labTurnDisplay">Turno: Esperando...</div>
+        <div style="font-weight: 800; color: var(--title-burgundy);" id="labWallsCountDisplay">🧱 Paredes: 8/8</div>
+      </div>
+
+      <!-- Tablero Cuadrícula con Canvas -->
+      <div style="position: relative; max-width: 360px; margin: 0 auto; background: #ffffff; border-radius: 20px; border: 3px solid #ff758f; box-shadow: 0 8px 25px rgba(230,92,101,0.2); overflow: hidden; touch-action: manipulation;">
+        <canvas id="laberintoCanvas" width="360" height="400" onclick="handleLabCanvasClick(event)" style="display: block; width: 100%; height: auto; cursor: pointer;"></canvas>
+      </div>
+
+      <!-- PANEL DE CONTROL / ACCIONES -->
+      <div style="margin-top: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+        <!-- Selector de Modo de Acción -->
+        <div style="display: flex; gap: 8px;">
+          <button class="tool-btn active" id="labModeMoveBtn" onclick="setLabAction('move')">🏃 Modo Moverse</button>
+          <button class="tool-btn" id="labModeWallBtn" onclick="setLabAction('wall')">🧱 Modo Poner Pared</button>
+          <button class="tool-btn" id="labWallOrientBtn" onclick="toggleWallOrientation()">Orientación: ↔️ Horiz</button>
+        </div>
+
+        <!-- Controles Táctiles para Moverse -->
+        <div id="labTouchControlsBox" style="display: grid; grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(2, 50px); gap: 6px; justify-content: center;">
           <div></div>
-          <button class="modal-btn" style="margin:0; padding:0; font-size:1.2rem;" ontouchstart="setLaberintoTouchDir('UP')" onmousedown="setLaberintoTouchDir('UP')">⬆️</button>
+          <button class="modal-btn" style="margin:0; padding:0; font-size:1.3rem; background:var(--soft-red);" onclick="moveLabPlayer('UP')">⬆️</button>
           <div></div>
-          <button class="modal-btn" style="margin:0; padding:0; font-size:1.2rem;" ontouchstart="setLaberintoTouchDir('LEFT')" onmousedown="setLaberintoTouchDir('LEFT')">⬅️</button>
-          <button class="modal-btn" style="margin:0; padding:0; font-size:1.2rem;" ontouchstart="setLaberintoTouchDir('DOWN')" onmousedown="setLaberintoTouchDir('DOWN')">⬇️</button>
-          <button class="modal-btn" style="margin:0; padding:0; font-size:1.2rem;" ontouchstart="setLaberintoTouchDir('RIGHT')" onmousedown="setLaberintoTouchDir('RIGHT')">➡️</button>
+          <button class="modal-btn" style="margin:0; padding:0; font-size:1.3rem; background:var(--soft-red);" onclick="moveLabPlayer('LEFT')">⬅️</button>
+          <button class="modal-btn" style="margin:0; padding:0; font-size:1.3rem; background:var(--soft-red);" onclick="moveLabPlayer('DOWN')">⬇️</button>
+          <button class="modal-btn" style="margin:0; padding:0; font-size:1.3rem; background:var(--soft-red);" onclick="moveLabPlayer('RIGHT')">➡️</button>
+        </div>
+
+        <p style="font-size: 0.8rem; font-weight: 700; color: #666;" id="labActionTip">👉 Toca las flechas para moverte una casilla hacia la meta arriba.</p>
+      </div>
+    </div>
+
+    <!-- 4. PANTALLA DE VICTORIA -->
+    <div id="laberintoVictoryModal" style="display: none; margin-top: 20px;">
+      <div class="cute-records-container">
+        <div style="font-size: 3rem; margin-bottom: 8px;">🏁🎉❤️</div>
+        <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.4rem;" id="labWinnerTitle">¡VICTORIA!</h3>
+        <p style="font-weight: 700; color: #555; margin: 10px 0;" id="labWinnerSubtitle">¡Llegó a la meta primero mi amor!</p>
+        <button class="modal-btn" onclick="restartLaberintoOnline()" style="max-width: 250px; margin: 15px auto 0 auto;">🔄 Jugar Otra Carrera</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MINIJUEGO 13: WORDLE DEL AMOR 1v1 -->
+<div id="game-stage-13" style="display: none; width: 100%;">
+  <div class="wordle-container">
+    <h3 class="custom-game-title" style="font-size: 1.4rem; margin-bottom: 5px;">🔤 Wordle del Amor 1v1 💕</h3>
+    <p class="custom-game-subtitle" style="margin-bottom: 12px;">Adivina la palabra secreta de nuestro amor en 6 intentos</p>
+
+    <!-- 1. LOGIN / IDENTIFICACIÓN -->
+    <div id="wordleLoginBox" style="padding: 15px 10px;">
+      <p style="font-weight: 700; color: #555; margin-bottom: 15px;">Selecciona tu nombre para conectarte con tu amor:</p>
+      <div class="profile-selector" style="max-width: 320px; margin: 0 auto 15px auto;">
+        <div class="profile-card" id="wordleUserCriss" onclick="chooseWordleUser('Criss')">👑 Soy Criss</div>
+        <div class="profile-card" id="wordleUserAndreita" onclick="chooseWordleUser('Andreita')">🌸 Soy Andreita</div>
+      </div>
+      <button class="modal-btn" onclick="connectWordleOnline()" style="max-width: 250px; margin: 0 auto;">Entrar a la Sala 🚀</button>
+    </div>
+
+    <!-- 2. SALA DE ESPERA & ELECCIÓN DE LETRAS -->
+    <div id="wordleWaitingBox" style="display: none; padding: 20px 10px;">
+      <div style="font-size: 3rem; margin-bottom: 8px; animation: heartPulse 1.2s infinite ease-in-out;">🟩🟨⬜</div>
+      <h4 style="color: var(--title-burgundy); font-weight: 800; margin-bottom: 8px;">Sala de Espera - Wordle del Amor</h4>
+      <p style="font-weight: 700; color: #666; font-size: 0.9rem; margin-bottom: 10px;">Elige de cuántas letras quieren jugar la ronda:</p>
+
+      <div class="wordle-length-selector">
+        <button class="wordle-len-btn" id="wordleLen4" onclick="selectWordleLength(4)">4 Letras</button>
+        <button class="wordle-len-btn selected" id="wordleLen5" onclick="selectWordleLength(5)">5 Letras</button>
+        <button class="wordle-len-btn" id="wordleLen6" onclick="selectWordleLength(6)">6 Letras</button>
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+        <span class="presence-badge" id="wordleWaitCriss">👑 Criss: Desconectado</span>
+        <span class="presence-badge" id="wordleWaitAndreita">🌸 Andreita: Desconectada</span>
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+        <span class="presence-badge ready" id="wordleReadyCriss">👑 Criss: No listo ⏳</span>
+        <span class="presence-badge ready" id="wordleReadyAndreita">🌸 Andreita: No lista ⏳</span>
+      </div>
+
+      <button class="modal-btn" id="wordleReadyBtn" onclick="toggleWordleReadyOnline()" style="max-width: 280px; margin: 10px auto; background: #2a9d8f;">✨ ¡Estoy Listo para Jugar! ✨</button>
+    </div>
+
+    <!-- 3. ARENA DE JUEGO PRINCIPAL -->
+    <div id="wordlePlayArena" style="display: none;">
+      <div class="pinturillo-header" style="margin-bottom: 12px;">
+        <div class="guesswho-turn-badge" id="wordleTurnDisplay">Turno: Esperando...</div>
+        <div style="font-weight: 800; color: var(--title-burgundy);" id="wordleRoundBadge">Palabra de 5 Letras</div>
+      </div>
+
+      <!-- Cuadrícula 6 intentos -->
+      <div class="wordle-board-wrapper" id="wordleBoard"></div>
+
+      <!-- Teclado en pantalla interactivo -->
+      <div class="wordle-keyboard" id="wordleKeyboard">
+        <div class="wordle-keyboard-row">
+          <button class="wordle-key" onclick="handleWordleKeyInput('Q')">Q</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('W')">W</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('E')">E</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('R')">R</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('T')">T</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('Y')">Y</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('U')">U</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('I')">I</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('O')">O</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('P')">P</button>
+        </div>
+        <div class="wordle-keyboard-row">
+          <button class="wordle-key" onclick="handleWordleKeyInput('A')">A</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('S')">S</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('D')">D</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('F')">F</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('G')">G</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('H')">H</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('J')">J</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('K')">K</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('L')">L</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('Ñ')">Ñ</button>
+        </div>
+        <div class="wordle-keyboard-row">
+          <button class="wordle-key wide" onclick="handleWordleKeyInput('ENTER')">ENTER</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('Z')">Z</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('X')">X</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('C')">C</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('V')">V</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('B')">B</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('N')">N</button>
+          <button class="wordle-key" onclick="handleWordleKeyInput('M')">M</button>
+          <button class="wordle-key wide" onclick="handleWordleKeyInput('BACKSPACE')">⌫</button>
         </div>
       </div>
-      <p style="font-size: 0.8rem; color: #666; margin-top: 8px;">⌨️ PC: Flechas / WASD | 📱 Celular: Botones táctiles</p>
     </div>
 
-    <!-- PANTALLA DE VICTORIA -->
-    <div id="laberintoVictoryModal" style="display: none; text-align: center; padding: 25px; background: #fff0f3; border-radius: 20px; border: 3px solid var(--soft-red); margin-top: 15px;">
-      <h3 style="color: var(--title-burgundy); font-size: 1.6rem; font-weight: 800;" id="laberintoWinnerTitle">🎉 ¡GANÓ LA BOLITA ROJA! 🎉</h3>
-      <p style="font-size: 1.05rem; color: var(--text-subtle); margin: 10px 0;">¡Qué carrerita tan emocionante mi amor!</p>
-      <button class="modal-btn" onclick="resetLaberintoGame()" style="max-width: 200px; margin: 10px auto;">🔄 Volver a Jugar</button>
+    <!-- 4. PANTALLA DE RESULTADO / VICTORIA O DERROTA -->
+    <div id="wordleSummarySection" style="display: none; margin-top: 20px;">
+      <div class="cute-records-container">
+        <div style="font-size: 3rem; margin-bottom: 8px;" id="wordleSummaryEmoji">🎉❤️</div>
+        <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.4rem;" id="wordleSummaryTitle">¡RONDA COMPLETADA!</h3>
+        <p style="font-weight: 700; color: #555; margin: 10px 0;" id="wordleSummaryMsg"></p>
+        <button class="modal-btn" onclick="nextWordleTurnOrNewGame()" style="max-width: 260px; margin: 15px auto 0 auto;" id="wordleNextTurnBtn">Turno de tu pareja 🚀</button>
+      </div>
     </div>
   </div>
 </div>
@@ -6106,7 +6385,7 @@ function restartCoopMatch() {
         badge.style.display = 'none';
       }
 
-      for (let i = 1; i <= 11; i++) {
+       for (let i = 1; i <= 13; i++) {
         const navItem = document.getElementById(`nav-game-${i}`);
         if (navItem) {
           if (i === stageNum) {
@@ -6173,7 +6452,7 @@ function restartCoopMatch() {
     }
 
     function goToStage(stageNum) {
-      for(let i=1; i<=11; i++) {
+      for(let i=1; i<=13; i++) {
   document.getElementById(`game-stage-${i}`).style.display = 'none';
   const navItem = document.getElementById(`nav-game-${i}`);
   if(navItem) {
@@ -6196,6 +6475,8 @@ function restartCoopMatch() {
       else if (stageNum === 9) initCoopSystem();
       else if (stageNum === 10) initPreguntadosOnlineSystem();
       else if (stageNum === 11) initGuessWhoSystem();
+      else if (stageNum === 12) initLaberintoSystem();
+      else if (stageNum === 13) initWordleSystem();
     }
 
     /* MINIJUEGO 2 */
@@ -6583,6 +6864,7 @@ function restartCoopMatch() {
       const stage9 = document.getElementById('game-stage-9');
       const stage10 = document.getElementById('game-stage-10');
       const stage11 = document.getElementById('game-stage-11');
+      const stage12 = document.getElementById('game-stage-12');
 
       if (stage1 && stage1.style.display !== 'none') goToStage(2);
       else if (stage2 && stage2.style.display !== 'none') goToStage(3);
@@ -6594,8 +6876,10 @@ function restartCoopMatch() {
       else if (stage8 && stage8.style.display !== 'none') goToStage(9);
       else if (stage9 && stage9.style.display !== 'none') goToStage(10);
       else if (stage10 && stage10.style.display !== 'none') goToStage(11);
-      else if (stage11 && stage11.style.display !== 'none') {
-        stage11.style.display = 'none';
+      else if (stage11 && stage11.style.display !== 'none') goToStage(12);
+      else if (stage12 && stage12.style.display !== 'none') goToStage(13);
+     else if (stage13 && stage13.style.display !== 'none') {
+        stage13.style.display = 'none';
         document.getElementById('rewardModal').style.display = 'block';
       }
     }
@@ -8805,250 +9089,911 @@ function toggleReactionPicker(pickerId) {
 
   picker.classList.toggle('show');
 }
-let labRole = null; // 'Criss' o 'Andreita'
-let laberintoStateRef = null;
-let laberintoInterval = null;
-let laberintoStartTime = 0;
-let laberintoGameActive = false;
+/* ==========================================================================
+   MINIJUEGO 12: LABERINTO DÚO - WALL RUSH 1v1 POR TURNOS (SINCRONIZADO EN LÍNEA)
+   ========================================================================== */
+const LAB_COLS = 8;
+const LAB_ROWS = 9;
+let myLabUser = "";
+let amILabReady = false;
+let currentLabState = null;
+let currentLabActionMode = "move"; // 'move' o 'wall'
+let currentWallOrientation = "H";  // 'H' (horizontal) o 'V' (vertical)
 
-// Posiciones iniciales y del juego
-let labX = {
-  red: 50, yRed: 460,
-  blue: 350, yBlue: 460,
-  vxRed: 0, vyRed: 0,
-  vxBlue: 0, vyBlue: 0
-};
-
-// Paredes del laberinto (coordenadas x, y, ancho, alto)
-const labWalls = [
-  {x: 0, y: 0, w: 400, h: 20}, // Borde superior (meta en medio)
-  {x: 0, y: 480, w: 400, h: 20}, // Borde inferior
-  {x: 0, y: 0, w: 20, h: 500}, // Borde izquierdo
-  {x: 380, y: 0, w: 20, h: 500}, // Borde derecho
-  // Obstáculos internos
-  {x: 60, y: 380, w: 280, h: 20},
-  {x: 60, y: 260, w: 20, h: 140},
-  {x: 120, y: 140, w: 220, h: 20},
-  {x: 120, y: 260, w: 220, h: 20},
-  {x: 220, y: 60, w: 20, h: 100}
-];
-
-// Zona de Meta (🏁 ARRIBA)
-const labFinishZone = { x: 160, y: 10, w: 80, h: 25 };
-
-function selectLaberintoRole(role) {
-  labRole = role;
-  document.getElementById('labRoleCriss').classList.remove('selected');
-  document.getElementById('labRoleAndreita').classList.remove('selected');
-  if (role === 'Criss') document.getElementById('labRoleCriss').classList.add('selected');
-  if (role === 'Andreita') document.getElementById('labRoleAndreita').classList.add('selected');
-  
-  document.getElementById('laberintoReadyBtn').style.display = 'block';
-  showToast(`Elegiste ser ${role === 'Criss' ? '🔴 Rojo (Criss)' : '🔵 Azul (Andreita)'}`);
+function initLaberintoSystem() {
+  const savedUser = localStorage.getItem('basta_saved_user') || localStorage.getItem('pinturillo_saved_user');
+  if (savedUser && (savedUser === 'Criss' || savedUser === 'Andreita')) {
+    selectLaberintoRole(savedUser);
+  }
 }
 
-function toggleLaberintoReady() {
-  if (!labRole) return showToast('Elige tu personaje primero ❤️');
-  
-  if (!database) {
-    showToast('Modo Local (Firebase no conectado)');
-    startLaberintoGameLoop();
+function selectLaberintoRole(name) {
+  if (name !== 'Criss' && name !== 'Andreita') return;
+  myLabUser = name;
+  localStorage.setItem('basta_saved_user', name);
+  document.getElementById('labRoleCriss').classList.remove('selected');
+  document.getElementById('labRoleAndreita').classList.remove('selected');
+  if (name === 'Criss') {
+    document.getElementById('labRoleCriss').classList.add('selected');
+  } else if (name === 'Andreita') {
+    document.getElementById('labRoleAndreita').classList.add('selected');
+  }
+}
+
+function connectLaberintoOnline() {
+  if (!myLabUser) {
+    showToast("Por favor selecciona si eres Criss o Andreita 💕");
     return;
   }
 
-  laberintoStateRef = database.ref('minigames/laberinto');
-  
-  // Escribir el estado de listo del rol actual
-  laberintoStateRef.child(labRole.toLowerCase() + 'Ready').set(true).then(() => {
-    document.getElementById('laberintoPresenceStatus').innerText = '¡Listo! Esperando al otro jugador...';
-    document.getElementById('laberintoPresenceStatus').className = 'presence-badge ready';
-  }).catch((error) => {
-    console.error("Error al conectar con Firebase:", error);
-    showToast('Error de conexión con Firebase');
+  document.getElementById('laberintoLoginBox').style.display = 'none';
+  document.getElementById('laberintoWaitingBox').style.display = 'block';
+
+  amILabReady = false;
+  const readyBtn = document.getElementById('laberintoReadyBtn');
+  readyBtn.textContent = "✨ ¡Estoy Listo para Correr! ✨";
+  readyBtn.style.background = "#2a9d8f";
+
+  rtdb.ref(`laberinto_ready/${myLabUser}`).set(false);
+
+  const presenceRef = rtdb.ref(`laberinto_presence/${myLabUser}`);
+  const connectedRef = rtdb.ref('.info/connected');
+
+  connectedRef.on('value', (snap) => {
+    if (snap.val() === true) {
+      presenceRef.onDisconnect().set(false);
+      presenceRef.set(true);
+    }
   });
 
-  // Limpiar listeners anteriores para evitar conflictos y escuchar cambios en tiempo real
-  laberintoStateRef.off('value');
-  laberintoStateRef.on('value', (snapshot) => {
-    const data = snapshot.val();
-    if (data && data.crissReady && data.andreitaReady) {
-      // Desactivar el listener temporalmente para que no se reinicie en bucle
-      laberintoStateRef.off('value');
-      startLaberintoGameLoop();
+  listenLaberintoPresence();
+  listenLaberintoGameState();
+}
+
+function toggleLaberintoReadyOnline() {
+  amILabReady = !amILabReady;
+  const btn = document.getElementById('laberintoReadyBtn');
+  if (amILabReady) {
+    btn.textContent = "✅ ¡Listo! (Esperando a tu amor...)";
+    btn.style.background = "#800020";
+  } else {
+    btn.textContent = "✨ ¡Estoy Listo para Correr! ✨";
+    btn.style.background = "#2a9d8f";
+  }
+  rtdb.ref(`laberinto_ready/${myLabUser}`).set(amILabReady);
+}
+
+function listenLaberintoPresence() {
+  rtdb.ref('laberinto_presence').on('value', (snap) => {
+    const presence = snap.val() || {};
+    const crissOnline = presence.Criss === true;
+    const andreitaOnline = presence.Andreita === true;
+
+    document.getElementById('labWaitCriss').textContent = `👑 Criss: ${crissOnline ? 'En Sala ✅' : 'Ausente ❌'}`;
+    document.getElementById('labWaitCriss').className = `presence-badge ${crissOnline ? 'online' : ''}`;
+
+    document.getElementById('labWaitAndreita').textContent = `🌸 Andreita: ${andreitaOnline ? 'En Sala ✅' : 'Ausente ❌'}`;
+    document.getElementById('labWaitAndreita').className = `presence-badge ${andreitaOnline ? 'online' : ''}`;
+  });
+
+  rtdb.ref('laberinto_ready').on('value', (snap) => {
+    const readyData = snap.val() || {};
+    const crissReady = readyData.Criss === true;
+    const andreitaReady = readyData.Andreita === true;
+
+    document.getElementById('labReadyCriss').textContent = `👑 Criss: ${crissReady ? '¡Listo! ✅' : 'No listo ⏳'}`;
+    document.getElementById('labReadyCriss').className = `presence-badge ${crissReady ? 'ready-ok' : 'ready'}`;
+
+    document.getElementById('labReadyAndreita').textContent = `🌸 Andreita: ${andreitaReady ? '¡Lista! ✅' : 'No lista ⏳'}`;
+    document.getElementById('labReadyAndreita').className = `presence-badge ${andreitaReady ? 'ready-ok' : 'ready'}`;
+
+    if (crissReady && andreitaReady) {
+      if (myLabUser === 'Criss') {
+        startNewLaberintoMatch();
+      }
     }
   });
 }
 
-function startLaberintoGameLoop() {
-  document.getElementById('laberintoLobby').style.display = 'none';
-  document.getElementById('laberintoGameArea').style.display = 'block';
-  document.getElementById('laberintoVictoryModal').style.display = 'none';
-
-  // Reset posiciones
-  labX.red = 70; labX.yRed = 450;
-  labX.blue = 330; labX.yBlue = 450;
-  laberintoGameActive = true;
-  laberintoStartTime = Date.now();
-
-  if (laberintoInterval) clearInterval(laberintoInterval);
-  laberintoInterval = setInterval(updateLaberintoFrame, 30);
+function startNewLaberintoMatch() {
+  const randomTurn = Math.random() < 0.5 ? 'Criss' : 'Andreita';
+  rtdb.ref('laberinto_room').set({
+    status: "playing",
+    turn: randomTurn,
+    players: {
+      Criss: { c: 5, r: 8, wallsLeft: 8, color: "#e63946" },      // Fila inferior
+      Andreita: { c: 2, r: 8, wallsLeft: 8, color: "#3a86ff" }   // Fila inferior
+    },
+    walls: [], // { c, r, orient: 'H'|'V', placedBy: 'Criss'|'Andreita' }
+    winner: null
+  });
 }
 
-// Controles por teclado
-window.addEventListener('keydown', (e) => {
-  if (!laberintoGameActive) return;
-  const speed = 6;
-  let key = e.key.toLowerCase();
+function listenLaberintoGameState() {
+  rtdb.ref('laberinto_room').on('value', (snap) => {
+    const data = snap.val();
+    if (!data) return;
+    currentLabState = data;
 
-  if (labRole === 'Criss') { // Rojo: Flechas o WASD
-    if (key === 'arrowup' || key === 'w') labX.vyRed = -speed;
-    if (key === 'arrowdown' || key === 's') labX.vyRed = speed;
-    if (key === 'arrowleft' || key === 'a') labX.vxRed = -speed;
-    if (key === 'arrowright' || key === 'd') labX.vxRed = speed;
-  } else if (labRole === 'Andreita') { // Azul: Flechas o WASD
-    if (key === 'arrowup' || key === 'w') labX.vyBlue = -speed;
-    if (key === 'arrowdown' || key === 's') labX.vyBlue = speed;
-    if (key === 'arrowleft' || key === 'a') labX.vxBlue = -speed;
-    if (key === 'arrowright' || key === 'd') labX.vxBlue = speed;
-  }
-});
+    if (data.status === "playing") {
+      document.getElementById('laberintoWaitingBox').style.display = 'none';
+      document.getElementById('laberintoVictoryModal').style.display = 'none';
+      document.getElementById('laberintoGameArea').style.display = 'block';
 
-window.addEventListener('keyup', (e) => {
-  let key = e.key.toLowerCase();
-  if (labRole === 'Criss') {
-    if (['arrowup','w','arrowdown','s'].includes(key)) labX.vyRed = 0;
-    if (['arrowleft','a','arrowright','d'].includes(key)) labX.vxRed = 0;
-  } else if (labRole === 'Andreita') {
-    if (['arrowup','w','arrowdown','s'].includes(key)) labX.vyBlue = 0;
-    if (['arrowleft','a','arrowright','d'].includes(key)) labX.vxBlue = 0;
-  }
-});
+      const isMyTurn = (data.turn === myLabUser);
+      const turnBadge = document.getElementById('labTurnDisplay');
+      if (isMyTurn) {
+        turnBadge.textContent = "✨ ¡ES TU TURNO! (Muévete o pon pared)";
+        turnBadge.classList.add('my-turn');
+      } else {
+        turnBadge.textContent = `⏳ Turno de ${data.turn}...`;
+        turnBadge.classList.remove('my-turn');
+      }
 
-function setLaberintoTouchDir(dir) {
-  if (!laberintoGameActive) return;
-  const speed = 6;
-  let vx = 0, vy = 0;
-  if (dir === 'UP') vy = -speed;
-  if (dir === 'DOWN') vy = speed;
-  if (dir === 'LEFT') vx = -speed;
-  if (dir === 'RIGHT') vx = speed;
+      const myWalls = (data.players && data.players[myLabUser]) ? data.players[myLabUser].wallsLeft : 0;
+      document.getElementById('labWallsCountDisplay').textContent = `🧱 Tus Paredes: ${myWalls}/8`;
 
-  if (labRole === 'Criss') {
-    if (vx !== 0) labX.vxRed = vx;
-    if (vy !== 0) labX.vyRed = vy;
+      renderLaberintoCanvas();
+    } else if (data.status === "finished") {
+      document.getElementById('laberintoGameArea').style.display = 'none';
+      document.getElementById('laberintoVictoryModal').style.display = 'block';
+
+      const isWinner = (data.winner === myLabUser);
+      document.getElementById('labWinnerTitle').textContent = isWinner ? "🏆 ¡GANASTE MI AMOR! 🎉" : "🥺 ¡GANÓ TU AMORCITO! 💕";
+      document.getElementById('labWinnerSubtitle').textContent = `¡${data.winner} llegó primero a la meta!`;
+    }
+  });
+}
+
+function setLabAction(mode) {
+  currentLabActionMode = mode;
+  document.getElementById('labModeMoveBtn').classList.toggle('active', mode === 'move');
+  document.getElementById('labModeWallBtn').classList.toggle('active', mode === 'wall');
+
+  const tip = document.getElementById('labActionTip');
+  const touchBox = document.getElementById('labTouchControlsBox');
+
+  if (mode === 'move') {
+    touchBox.style.display = 'grid';
+    tip.textContent = "👉 Toca las flechas para moverte una casilla.";
   } else {
-    if (vx !== 0) labX.vxBlue = vx;
-    if (vy !== 0) labX.vyBlue = vy;
+    touchBox.style.display = 'none';
+    tip.textContent = "👉 Toca una línea en el tablero para colocar tu pared.";
   }
 }
 
-function checkCollision(nx, ny, radius) {
-  for (let w of labWalls) {
-    if (nx + radius > w.x && nx - radius < w.x + w.w &&
-        ny + radius > w.y && ny - radius < w.y + w.h) {
-      return true; // Colisión detectada
+function toggleWallOrientation() {
+  currentWallOrientation = (currentWallOrientation === 'H') ? 'V' : 'H';
+  document.getElementById('labWallOrientBtn').textContent = `Orientación: ${currentWallOrientation === 'H' ? '↔️ Horiz' : '↕️ Vert'}`;
+}
+
+// LÓGICA DE DIBUJO DEL TABLERO
+function renderLaberintoCanvas() {
+  const canvas = document.getElementById('laberintoCanvas');
+  if (!canvas || !currentLabState) return;
+  const ctx = canvas.getContext('2d');
+
+  const cellW = canvas.width / LAB_COLS;
+  const cellH = (canvas.height - 40) / LAB_ROWS;
+  const offsetY = 40; // Espacio superior de la meta
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Zona Meta (FINISH)
+  ctx.fillStyle = '#e8f5e9';
+  ctx.fillRect(0, 0, canvas.width, offsetY);
+  ctx.strokeStyle = '#2a9d8f';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(0, 0, canvas.width, offsetY);
+
+  ctx.fillStyle = '#2a9d8f';
+  ctx.font = '800 16px Montserrat';
+  ctx.textAlign = 'center';
+  ctx.fillText('🏁 FINISH 🏁', canvas.width / 2, 26);
+
+  // Cuadrícula
+  ctx.strokeStyle = '#f0c2cd';
+  ctx.lineWidth = 1.5;
+  for (let r = 0; r <= LAB_ROWS; r++) {
+    const y = offsetY + r * cellH;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(canvas.width, y);
+    ctx.stroke();
+  }
+  for (let c = 0; c <= LAB_COLS; c++) {
+    const x = c * cellW;
+    ctx.beginPath();
+    ctx.moveTo(x, offsetY);
+    ctx.lineTo(x, canvas.height);
+    ctx.stroke();
+  }
+
+  // Paredes colocadas
+  const walls = currentLabState.walls || [];
+  walls.forEach(w => {
+    ctx.strokeStyle = (w.placedBy === 'Criss') ? '#e63946' : '#3a86ff';
+    ctx.lineWidth = 6;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+
+    if (w.orient === 'H') {
+      const y = offsetY + w.r * cellH;
+      const x1 = w.c * cellW;
+      const x2 = (w.c + 2) * cellW;
+      ctx.moveTo(x1, y);
+      ctx.lineTo(x2, y);
+    } else {
+      const x = w.c * cellW;
+      const y1 = offsetY + w.r * cellH;
+      const y2 = offsetY + (w.r + 2) * cellH;
+      ctx.moveTo(x, y1);
+      ctx.lineTo(x, y2);
+    }
+    ctx.stroke();
+  });
+
+  // Fichas de los Jugadores
+  const players = currentLabState.players || {};
+  ['Criss', 'Andreita'].forEach(name => {
+    const p = players[name];
+    if (!p) return;
+
+    const cx = p.c * cellW + cellW / 2;
+    const cy = offsetY + p.r * cellH + cellH / 2;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, cellW * 0.35, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#ffffff';
+    ctx.stroke();
+
+    // Sombra de relieve
+    ctx.beginPath();
+    ctx.arc(cx, cy, cellW * 0.35, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+}
+
+// COMPROBACIÓN DE BLOQUEO POR PARED
+function isPathBlockedByWall(c1, r1, c2, r2) {
+  const walls = (currentLabState && currentLabState.walls) ? currentLabState.walls : [];
+  
+  // Arriba / Abajo
+  if (c1 === c2) {
+    const minR = Math.min(r1, r2);
+    const borderR = minR + 1; // La línea horizontal divisoria
+    return walls.some(w => w.orient === 'H' && w.r === borderR && (c1 === w.c || c1 === w.c + 1));
+  }
+
+  // Izquierda / Derecha
+  if (r1 === r2) {
+    const minC = Math.min(c1, c2);
+    const borderC = minC + 1; // La línea vertical divisoria
+    return walls.some(w => w.orient === 'V' && w.c === borderC && (r1 === w.r || r1 === w.r + 1));
+  }
+
+  return false;
+}
+
+// MOVIMIENTO DE LA FICHA
+async function moveLabPlayer(dir) {
+  if (!currentLabState || currentLabState.status !== 'playing') return;
+  if (currentLabState.turn !== myLabUser) {
+    showToast("Espera tu turno mi amor ⏳");
+    return;
+  }
+
+  const myData = currentLabState.players[myLabUser];
+  let targetC = myData.c;
+  let targetR = myData.r;
+
+  if (dir === 'UP') targetR--;
+  if (dir === 'DOWN') targetR++;
+  if (dir === 'LEFT') targetC--;
+  if (dir === 'RIGHT') targetC++;
+
+  // Límites del tablero
+  if (targetC < 0 || targetC >= LAB_COLS || targetR < 0 || targetR >= LAB_ROWS) {
+    showToast("No te puedes salir del tablero 🥺");
+    return;
+  }
+
+  // Chocar contra pared
+  if (isPathBlockedByWall(myData.c, myData.r, targetC, targetR)) {
+    showToast("¡Hay una pared en ese camino! 🧱❌");
+    return;
+  }
+
+  // Chocar contra la ficha del rival
+  const otherUser = (myLabUser === 'Criss') ? 'Andreita' : 'Criss';
+  const otherData = currentLabState.players[otherUser];
+  if (otherData && otherData.c === targetC && otherData.r === targetR) {
+    showToast("¡La casilla está ocupada por tu pareja! 💕");
+    return;
+  }
+
+  // Victoria: llegar a la fila superior (r = 0)
+  const isVictory = (targetR === 0);
+  const nextTurn = otherUser;
+
+  const updates = {};
+  updates[`players/${myLabUser}/c`] = targetC;
+  updates[`players/${myLabUser}/r`] = targetR;
+
+  if (isVictory) {
+    updates['status'] = "finished";
+    updates['winner'] = myLabUser;
+  } else {
+    updates['turn'] = nextTurn;
+  }
+
+  await rtdb.ref('laberinto_room').update(updates);
+}
+
+// PONER PARED TOCANDO EL CANVAS
+// PONER PARED TOCANDO EL CANVAS CON REGLA DE NO ENCERRAR
+async function handleLabCanvasClick(event) {
+  if (currentLabActionMode !== 'wall') return;
+  if (!currentLabState || currentLabState.status !== 'playing') return;
+  if (currentLabState.turn !== myLabUser) {
+    showToast("Espera tu turno mi amor ⏳");
+    return;
+  }
+
+  const myData = currentLabState.players[myLabUser];
+  if (myData.wallsLeft <= 0) {
+    showToast("¡Ya no te quedan paredes! Debes moverte 🥺");
+    return;
+  }
+
+  const canvas = document.getElementById('laberintoCanvas');
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+
+  const clickX = (event.clientX - rect.left) * scaleX;
+  const clickY = (event.clientY - rect.top) * scaleY;
+
+  const offsetY = 40;
+  const cellW = canvas.width / LAB_COLS;
+  const cellH = (canvas.height - offsetY) / LAB_ROWS;
+
+  let wallC = 0;
+  let wallR = 0;
+
+  if (currentWallOrientation === 'H') {
+    wallC = Math.floor((clickX - cellW * 0.2) / cellW);
+    wallR = Math.round((clickY - offsetY) / cellH);
+    if (wallC < 0) wallC = 0;
+    if (wallC > LAB_COLS - 2) wallC = LAB_COLS - 2;
+    if (wallR < 1 || wallR > LAB_ROWS - 1) return;
+  } else {
+    wallC = Math.round(clickX / cellW);
+    wallR = Math.floor((clickY - offsetY - cellH * 0.2) / cellH);
+    if (wallR < 0) wallR = 0;
+    if (wallR > LAB_ROWS - 2) wallR = LAB_ROWS - 2;
+    if (wallC < 1 || wallC > LAB_COLS - 1) return;
+  }
+
+  const walls = currentLabState.walls || [];
+
+  // 1. Verificar si se cruza o se superpone con otra pared
+  const overlap = walls.some(w => {
+    if (w.orient === currentWallOrientation) {
+      if (w.orient === 'H' && w.r === wallR && Math.abs(w.c - wallC) < 2) return true;
+      if (w.orient === 'V' && w.c === wallC && Math.abs(w.r - wallR) < 2) return true;
+    } else {
+      if (w.orient === 'H' && currentWallOrientation === 'V' && w.r === wallR + 1 && w.c === wallC - 1) return true;
+      if (w.orient === 'V' && currentWallOrientation === 'H' && w.c === wallC + 1 && w.r === wallR - 1) return true;
+    }
+    return false;
+  });
+
+  if (overlap) {
+    showToast("Ya hay una pared colocada o cruzando ahí 🥺");
+    return;
+  }
+
+  // 2. REGLA IRROMPIBLE: Simular la pared y comprobar si deja atrapado a Criss o a Andreita
+  const simulatedWalls = [...walls, {
+    c: wallC,
+    r: wallR,
+    orient: currentWallOrientation,
+    placedBy: myLabUser
+  }];
+
+  const pCriss = currentLabState.players.Criss;
+  const pAndreita = currentLabState.players.Andreita;
+
+  const crissHasPath = hasPathToFinish(pCriss.c, pCriss.r, simulatedWalls);
+  const andreitaHasPath = hasPathToFinish(pAndreita.c, pAndreita.r, simulatedWalls);
+
+  if (!crissHasPath || !andreitaHasPath) {
+    showToast("🚫 ¡Regla: No puedes encerrar por completo a ninguna bolita hacia la meta!");
+    return;
+  }
+
+  // Si no encierra a nadie, se guarda la pared en Firebase
+  walls.push({
+    c: wallC,
+    r: wallR,
+    orient: currentWallOrientation,
+    placedBy: myLabUser
+  });
+
+  const otherUser = (myLabUser === 'Criss') ? 'Andreita' : 'Criss';
+  await rtdb.ref('laberinto_room').update({
+    walls: walls,
+    [`players/${myLabUser}/wallsLeft`]: myData.wallsLeft - 1,
+    turn: otherUser
+  });
+
+  showToast("¡Pared colocada! Turno de tu amor 🧱✨");
+  setLabAction('move');
+}
+function restartLaberintoOnline() {
+  amILabReady = false;
+  rtdb.ref('laberinto_ready/Criss').set(false);
+  rtdb.ref('laberinto_ready/Andreita').set(false);
+  rtdb.ref('laberinto_room').set({
+    status: "idle",
+    winner: null
+  });
+
+  document.getElementById('laberintoReadyBtn').textContent = "✨ ¡Estoy Listo para Correr! ✨";
+  document.getElementById('laberintoReadyBtn').style.background = "#2a9d8f";
+  document.getElementById('laberintoVictoryModal').style.display = 'none';
+  document.getElementById('laberintoWaitingBox').style.display = 'block';
+}  
+
+// REGLA DE ORO: Verificar que ambos jugadores conserven al menos un camino libre hacia la meta (r = 0)
+function hasPathToFinish(startC, startR, testWalls) {
+  const queue = [{ c: startC, r: startR }];
+  const visited = new Set();
+  visited.add(`${startC},${startR}`);
+
+  while (queue.length > 0) {
+    const { c, r } = queue.shift();
+
+    // Si llegó a la fila superior (meta)
+    if (r === 0) return true;
+
+    // Movimientos posibles: arriba, abajo, izquierda, derecha
+    const directions = [
+      { dc: 0, dr: -1 }, // UP
+      { dc: 0, dr: 1 },  // DOWN
+      { dc: -1, dr: 0 }, // LEFT
+      { dc: 1, dr: 0 }   // RIGHT
+    ];
+
+    for (const dir of directions) {
+      const nc = c + dir.dc;
+      const nr = r + dir.dr;
+      const key = `${nc},${nr}`;
+
+      if (nc >= 0 && nc < LAB_COLS && nr >= 0 && nr < LAB_ROWS && !visited.has(key)) {
+        // Verificar si hay pared bloqueando este paso
+        let blocked = false;
+        if (c === nc) {
+          const minR = Math.min(r, nr);
+          const borderR = minR + 1;
+          blocked = testWalls.some(w => w.orient === 'H' && w.r === borderR && (c === w.c || c === w.c + 1));
+        } else if (r === nr) {
+          const minC = Math.min(c, nc);
+          const borderC = minC + 1;
+          blocked = testWalls.some(w => w.orient === 'V' && w.c === borderC && (r === w.r || r === w.r + 1));
+        }
+
+        if (!blocked) {
+          visited.add(key);
+          queue.push({ c: nc, r: nr });
+        }
+      }
     }
   }
   return false;
 }
+/* ==========================================================================
+   MINIJUEGO 13: WORDLE DEL AMOR 1v1 MULTIJUGADOR EN VIVO (NYT STYLE)
+   ========================================================================== */
+const WORDLE_DICT = {
+  4: [
+    "AMOR", "VIDA", "BESO", "CIELO", "ALMA", "BEBE", "ROSA", "DULCE", "LUNA", "OJOS",
+    "SOLO", "TUYO", "MIOZ", "NUBE", "CASA", "FLOR", "RISA", "PEPA", "MIEL", "LUNA",
+    "GATO", "PAZ", "FOTO", "BODA", "ABRA", "BELLA", "RAYO", "CALOR", "DIOS", "NENE",
+    "LINO", "VINO", "NIDO", "LADO", "CUNA", "MAPA", "LUZ", "ROJO", "AZUL", "CUTE",
+    "LIME", "PEÑA", "COCO", "DADO", "GEMA", "HADA", "LOMA", "MANO", "MESA", "MINA",
+    "MORA", "MURO", "NAVE", "NOTA", "OLLA", "OLAS", "ONDA", "PASO", "PATO", "PELO",
+    "PIEL", "PINA", "PISO", "RAMA", "RANA", "RETO", "RICO", "ROCA", "RUTA", "SALA",
+    "SELLO", "SEDA", "SOPA", "TAZA", "TELA", "TINA", "TORO", "TUBO", "VASO", "VELA",
+    "YATE", "ZUMO", "ARCO", "ARTE", "AVEN", "AYER", "BAÑO", "BASE", "BAUL", "BOCA",
+    "BOTA", "CAFE", "CAJA", "CANTO", "CAPA", "CARO", "CENA", "CHIC", "CINE", "DEDO"
+  ],
+  5: [
+    "AMORE", "BESOS", "CORAZ", "CIELO", "DULCE", "REINA", "ROSAS", "FLORE", "ALMAS", "BEBES",
+    "LINDA", "BELLA", "GUAPA", "UNICO", "UNICA", "SUEÑO", "SUEÑS", "FELIZ", "JUNTZ", "CARAS",
+    "MIRAR", "VIVIR", "AMADO", "AMADA", "DESEO", "PASIO", "FUEGO", "CALOR", "NOVIO", "NOVIA",
+    "ABRAZ", "DICHZ", "RISAS", "GOZAR", "CUIDO", "DIVIN", "ROMAN", "APOYO", "PACTO", "CARTE",
+    "MAGIA", "ANGEL", "TESOR", "GEMAS", "SOLAR", "LUNAR", "PERLA", "FIEST", "PASEO", "CANTO",
+    "LETRA", "RITMO", "POEMA", "VERSO", "CALMA", "GUSTO", "SABOR", "AROMA", "SUAVE", "TERNO",
+    "NIDAL", "CHULA", "BOMBO", "OJITO", "MANOS", "PECHO", "VAPOR", "VUELO", "PLUMA", "BRISA",
+    "PLAYA", "NOCHE", "TARDE", "LUCES", "VERDE", "RUBIA", "DULCE", "FOCAL", "FRESA", "LIMON",
+    "MELON", "PASTA", "CHICA", "CHICO", "PIZZA", "DONAS", "QUESO", "CREMA", "CAFES", "CHILE",
+    "TACOS", "SUSHI", "RAMEN", "CREPE", "CHURR", "WAFFL", "MANGO", "PIÑAS", "CANEL", "CACAO"
+  ],
+  6: [
+    "AMORES", "BESITO", "CIELOS", "TIERNO", "TIERNA", "LINDOS", "LINDAS", "ETURNO", "ETERNA", "CORAZO",
+    "ABRAZO", "PASION", "DULCES", "ENAMOR", "SUEÑOS", "JUNTOS", "JUNTAS", "QUERER", "CARIÑO", "VALIOS",
+    "AMARTE", "DIVINA", "DIVINO", "BELLEZ", "GRACIA", "UNIDOS", "UNIDAS", "FUTURO", "DESTIN", "HECHIZ",
+    "MAGICO", "MAGICA", "SIEMPR", "PERDON", "LEALTD", "BONDAD", "CUIDAR", "MIMADO", "MIMADA", "CARICI",
+    "BOMBON", "OJITOS", "MANITA", "LABIOS", "POESIA", "CANCIO", "RITMOS", "BAILAR", "FIESTA", "REGALO",
+    "DETALL", "CARTAS", "VERANO", "NOCHES", "TARDES", "AURORA", "LUCERO", "BRILLO", "FLORES", "JARDIN",
+    "BLANCA", "DORADO", "CORONA", "PRINCE", "CASTIL", "CAMINO", "VIAJES", "VIAJAR", "VISITA", "CIUDAD",
+    "PARQUE", "PLAYAS", "BOSQUE", "LAGOON", "PUERTO", "ABRIGO", "FRESAS", "HELADO", "POSTRE", "DULZUR",
+    "CANELA", "VAINIL", "CEREZA", "CHOCOL", "GALLET", "PANQUE", "COMIDA", "BRUNCH", "CENITA", "BRINDI",
+    "AMIGOS", "PAREJA", "EQUIPO", "FUERZA", "PACIEN", "SONRIA", "ALEGRE", "RISITA", "BROMAS", "GRACIO"
+  ]
+};
 
-function updateLaberintoFrame() {
-  if (!laberintoGameActive) return;
+// Normalizar a mayúsculas y 4, 5, 6 exactos
+for (let len in WORDLE_DICT) {
+  WORDLE_DICT[len] = WORDLE_DICT[len].map(w => w.toUpperCase().slice(0, parseInt(len)));
+}
 
-  // Actualizar cronómetro
-  let elapsed = ((Date.now() - laberintoStartTime) / 1000).toFixed(1);
-  document.getElementById('laberintoTimer').innerText = elapsed + 's';
+let myWordleUser = "";
+let amIWordleReady = false;
+let selectedWordleLength = 5;
+let currentWordleMatch = null;
+let currentLocalWordleInput = "";
 
-  // Movimiento Bolita Roja (Criss)
-  let nextRedX = labX.red + labX.vxRed;
-  let nextRedY = labX.yRed + labX.vyRed;
-  if (!checkCollision(nextRedX, nextRedY, 12)) {
-    labX.red = nextRedX;
-    labX.yRed = nextRedY;
+function initWordleSystem() {
+  const saved = localStorage.getItem('basta_saved_user') || localStorage.getItem('pinturillo_saved_user');
+  if (saved && (saved === 'Criss' || saved === 'Andreita')) {
+    chooseWordleUser(saved);
+  }
+}
+
+function chooseWordleUser(name) {
+  if (name !== 'Criss' && name !== 'Andreita') return;
+  myWordleUser = name;
+  localStorage.setItem('basta_saved_user', name);
+  document.getElementById('wordleUserCriss').classList.remove('selected');
+  document.getElementById('wordleUserAndreita').classList.remove('selected');
+  if (name === 'Criss') {
+    document.getElementById('wordleUserCriss').classList.add('selected');
   } else {
-    // 💥 Chocó contra pared -> Retrocede un poco
-    labX.red -= labX.vxRed * 1.5;
-    labX.yRed -= labX.vyRed * 1.5;
-    labX.vxRed = 0; labX.vyRed = 0;
+    document.getElementById('wordleUserAndreita').classList.add('selected');
+  }
+}
+
+function selectWordleLength(len) {
+  selectedWordleLength = len;
+  document.getElementById('wordleLen4').classList.toggle('selected', len === 4);
+  document.getElementById('wordleLen5').classList.toggle('selected', len === 5);
+  document.getElementById('wordleLen6').classList.toggle('selected', len === 6);
+  rtdb.ref('wordle_room/targetLength').set(len);
+}
+
+function connectWordleOnline() {
+  if (!myWordleUser) {
+    showToast("Por favor selecciona si eres Criss o Andreita 💕");
+    return;
   }
 
-  // Movimiento Bolita Azul (Andreita)
-  let nextBlueX = labX.blue + labX.vxBlue;
-  let nextBlueY = labX.yBlue + labX.vyBlue;
-  if (!checkCollision(nextBlueX, nextBlueY, 12)) {
-    labX.blue = nextBlueX;
-    labX.yBlue = nextBlueY;
+  document.getElementById('wordleLoginBox').style.display = 'none';
+  document.getElementById('wordleWaitingBox').style.display = 'block';
+
+  amIWordleReady = false;
+  const readyBtn = document.getElementById('wordleReadyBtn');
+  readyBtn.textContent = "✨ ¡Estoy Listo para Jugar! ✨";
+  readyBtn.style.background = "#2a9d8f";
+  rtdb.ref(`wordle_ready/${myWordleUser}`).set(false);
+
+  const presenceRef = rtdb.ref(`wordle_presence/${myWordleUser}`);
+  const connectedRef = rtdb.ref('.info/connected');
+
+  connectedRef.on('value', (snap) => {
+    if (snap.val() === true) {
+      presenceRef.onDisconnect().set(false);
+      presenceRef.set(true);
+    }
+  });
+
+  listenWordlePresence();
+  listenWordleGameState();
+  setupWordlePhysicalKeyboard();
+}
+
+function toggleWordleReadyOnline() {
+  amIWordleReady = !amIWordleReady;
+  const btn = document.getElementById('wordleReadyBtn');
+  if (amIWordleReady) {
+    btn.textContent = "✅ ¡Listo! (Esperando a tu amor...)";
+    btn.style.background = "#800020";
   } else {
-    // 💥 Chocó contra pared -> Retrocede un poco
-    labX.blue -= labX.vxBlue * 1.5;
-    labX.yBlue -= labX.vyBlue * 1.5;
-    labX.vxBlue = 0; labX.vyBlue = 0;
+    btn.textContent = "✨ ¡Estoy Listo para Jugar! ✨";
+    btn.style.background = "#2a9d8f";
+  }
+  rtdb.ref(`wordle_ready/${myWordleUser}`).set(amIWordleReady);
+}
+
+function listenWordlePresence() {
+  rtdb.ref('wordle_presence').on('value', (snap) => {
+    const presence = snap.val() || {};
+    const crissOnline = presence.Criss === true;
+    const andreitaOnline = presence.Andreita === true;
+
+    document.getElementById('wordleWaitCriss').textContent = `👑 Criss: ${crissOnline ? 'En Sala ✅' : 'Ausente ❌'}`;
+    document.getElementById('wordleWaitCriss').className = `presence-badge ${crissOnline ? 'online' : ''}`;
+
+    document.getElementById('wordleWaitAndreita').textContent = `🌸 Andreita: ${andreitaOnline ? 'En Sala ✅' : 'Ausente ❌'}`;
+    document.getElementById('wordleWaitAndreita').className = `presence-badge ${andreitaOnline ? 'online' : ''}`;
+  });
+
+  rtdb.ref('wordle_ready').on('value', (snap) => {
+    const readyData = snap.val() || {};
+    const crissReady = readyData.Criss === true;
+    const andreitaReady = readyData.Andreita === true;
+
+    document.getElementById('wordleReadyCriss').textContent = `👑 Criss: ${crissReady ? '¡Listo! ✅' : 'No listo ⏳'}`;
+    document.getElementById('wordleReadyCriss').className = `presence-badge ${crissReady ? 'ready-ok' : 'ready'}`;
+
+    document.getElementById('wordleReadyAndreita').textContent = `🌸 Andreita: ${andreitaReady ? '¡Lista! ✅' : 'No lista ⏳'}`;
+    document.getElementById('wordleReadyAndreita').className = `presence-badge ${andreitaReady ? 'ready-ok' : 'ready'}`;
+
+    if (crissReady && andreitaReady) {
+      if (myWordleUser === 'Criss') {
+        startNewWordleMatch();
+      }
+    }
+  });
+}
+
+function startNewWordleMatch() {
+  const len = selectedWordleLength || 5;
+  const list = WORDLE_DICT[len];
+  const chosenWord = list[Math.floor(Math.random() * list.length)];
+  const randomGuesser = Math.random() < 0.5 ? 'Criss' : 'Andreita';
+
+  rtdb.ref('wordle_room').set({
+    status: "playing",
+    targetLength: len,
+    secretWord: chosenWord,
+    activeGuesser: randomGuesser,
+    guesses: [], // Array de palabras enviadas
+    currentTyping: "",
+    result: null // 'won' o 'lost'
+  });
+}
+
+function listenWordleGameState() {
+  rtdb.ref('wordle_room').on('value', (snap) => {
+    const data = snap.val();
+    if (!data) return;
+    currentWordleMatch = data;
+
+    if (data.targetLength) {
+      selectedWordleLength = data.targetLength;
+      document.getElementById('wordleLen4').classList.toggle('selected', data.targetLength === 4);
+      document.getElementById('wordleLen5').classList.toggle('selected', data.targetLength === 5);
+      document.getElementById('wordleLen6').classList.toggle('selected', data.targetLength === 6);
+    }
+
+    if (data.status === "playing") {
+      document.getElementById('wordleWaitingBox').style.display = 'none';
+      document.getElementById('wordleSummarySection').style.display = 'none';
+      document.getElementById('wordlePlayArena').style.display = 'block';
+
+      const isMyTurn = (data.activeGuesser === myWordleUser);
+      const turnBadge = document.getElementById('wordleTurnDisplay');
+      if (isMyTurn) {
+        turnBadge.textContent = "✨ ¡ES TU TURNO DE ADIVINAR!";
+        turnBadge.classList.add('my-turn');
+      } else {
+        turnBadge.textContent = `👀 Observando a ${data.activeGuesser} en vivo...`;
+        turnBadge.classList.remove('my-turn');
+      }
+
+      document.getElementById('wordleRoundBadge').textContent = `Palabra de ${data.targetLength} Letras`;
+
+      renderWordleBoardAndKeyboard();
+    } else if (data.status === "finished") {
+      document.getElementById('wordlePlayArena').style.display = 'none';
+      document.getElementById('wordleSummarySection').style.display = 'block';
+
+      const winnerText = (data.result === 'won')
+        ? `🎉 ¡${data.activeGuesser} adivinó la palabra secreta "${data.secretWord}"! 🥰`
+        : `💔 ¡Se acabaron los 6 intentos! La palabra era: "${data.secretWord}".`;
+
+      document.getElementById('wordleSummaryEmoji').textContent = (data.result === 'won') ? "🏆💖🎉" : "🥺💔🌸";
+      document.getElementById('wordleSummaryTitle').textContent = (data.result === 'won') ? "¡PALABRA ACERTADA!" : "¡CASI MI AMOR!";
+      document.getElementById('wordleSummaryMsg').textContent = winnerText;
+
+      const nextPerson = (data.activeGuesser === 'Criss') ? 'Andreita' : 'Criss';
+      document.getElementById('wordleNextTurnBtn').textContent = `Turno de ${nextPerson} 🚀`;
+    }
+  });
+}
+
+function renderWordleBoardAndKeyboard() {
+  if (!currentWordleMatch) return;
+  const container = document.getElementById('wordleBoard');
+  container.innerHTML = '';
+
+  const targetLen = currentWordleMatch.targetLength || 5;
+  const guesses = currentWordleMatch.guesses || [];
+  const currentTyping = currentWordleMatch.currentTyping || "";
+  const secret = currentWordleMatch.secretWord || "";
+
+  const keyboardColors = {}; // Letra -> 'correct', 'present', 'absent'
+
+  // Renderizar 6 filas fijas
+  for (let r = 0; r < 6; r++) {
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'wordle-row';
+
+    const guessedWord = guesses[r];
+    const isCurrentTypingRow = (r === guesses.length);
+
+    let rowEvaluation = null;
+    if (guessedWord) {
+      rowEvaluation = evaluateWordleGuess(guessedWord, secret);
+    }
+
+    for (let c = 0; c < targetLen; c++) {
+      const tile = document.createElement('div');
+      tile.className = 'wordle-tile';
+
+      if (guessedWord) {
+        tile.textContent = guessedWord[c];
+        const status = rowEvaluation[c];
+        tile.classList.add(status);
+
+        // Prioridad de color en teclado: correct > present > absent
+        const char = guessedWord[c];
+        if (status === 'correct') {
+          keyboardColors[char] = 'correct';
+        } else if (status === 'present' && keyboardColors[char] !== 'correct') {
+          keyboardColors[char] = 'present';
+        } else if (status === 'absent' && !keyboardColors[char]) {
+          keyboardColors[char] = 'absent';
+        }
+      } else if (isCurrentTypingRow && c < currentTyping.length) {
+        tile.textContent = currentTyping[c];
+        tile.classList.add('pop');
+      }
+
+      rowDiv.appendChild(tile);
+    }
+    container.appendChild(rowDiv);
   }
 
-  // Sincronizar en Firebase si existe conexión
-  if (database && labRole) {
-    database.ref('minigames/laberinto/positions/' + labRole.toLowerCase()).set({
-      x: labRole === 'Criss' ? labX.red : labX.blue,
-      y: labRole === 'Criss' ? labX.yRed : labX.yBlue
-    });
+  // Actualizar colores del teclado interactivo
+  document.querySelectorAll('.wordle-key').forEach(btn => {
+    const key = btn.textContent.trim().toUpperCase();
+    btn.classList.remove('correct', 'present', 'absent');
+    if (keyboardColors[key]) {
+      btn.classList.add(keyboardColors[key]);
+    }
+  });
+}
+
+function evaluateWordleGuess(guess, secret) {
+  const result = new Array(guess.length).fill('absent');
+  const secretArr = secret.split('');
+  const guessArr = guess.split('');
+
+  // Paso 1: Letras verdes (Correctas en posición exacta)
+  for (let i = 0; i < guess.length; i++) {
+    if (guessArr[i] === secretArr[i]) {
+      result[i] = 'correct';
+      secretArr[i] = null;
+      guessArr[i] = null;
+    }
   }
 
-  // Dibujar Canvas
-  const canvas = document.getElementById('laberintoCanvas');
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Dibujar Paredes
-  ctx.fillStyle = '#ff758f';
-  for (let w of labWalls) {
-    ctx.fillRect(w.x, w.y, w.w, w.h);
+  // Paso 2: Letras amarillas (Presentes en otra posición)
+  for (let i = 0; i < guess.length; i++) {
+    if (guessArr[i] !== null) {
+      const idx = secretArr.indexOf(guessArr[i]);
+      if (idx !== -1) {
+        result[i] = 'present';
+        secretArr[idx] = null;
+      }
+    }
   }
 
-  // Dibujar Meta (FINISH)
-  ctx.fillStyle = '#ffd166';
-  ctx.fillRect(labFinishZone.x, labFinishZone.y, labFinishZone.w, labFinishZone.h);
-  ctx.fillStyle = '#111';
-  ctx.font = 'bold 12px Montserrat';
-  ctx.fillText('🏁 FINISH', labFinishZone.x + 12, labFinishZone.y + 17);
+  return result;
+}
 
-  // Dibujar Bolita Roja
-  ctx.beginPath();
-  ctx.arc(labX.red, labX.yRed, 12, 0, Math.PI * 2);
-  ctx.fillStyle = '#ff4d6d';
-  ctx.fill();
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = '#fff';
-  ctx.stroke();
+// CONTROL DE TECLADO FÍSICO Y VIRTUAL
+function setupWordlePhysicalKeyboard() {
+  window.addEventListener('keydown', (e) => {
+    const stage = document.getElementById('game-stage-13');
+    if (!stage || stage.style.display === 'none') return;
+    if (!currentWordleMatch || currentWordleMatch.status !== 'playing') return;
 
-  // Dibujar Bolita Azul
-  ctx.beginPath();
-  ctx.arc(labX.blue, labX.yBlue, 12, 0, Math.PI * 2);
-  ctx.fillStyle = '#3a86ff';
-  ctx.fill();
-  ctx.stroke();
+    if (e.key === 'Enter') {
+      handleWordleKeyInput('ENTER');
+    } else if (e.key === 'Backspace') {
+      handleWordleKeyInput('BACKSPACE');
+    } else {
+      const char = e.key.toUpperCase();
+      if (/^[A-ZÑ]$/.test(char)) {
+        handleWordleKeyInput(char);
+      }
+    }
+  });
+}
 
-  // Comprobar Victoria (Llegar a la meta arriba)
-  if (labX.red >= labFinishZone.x && labX.red <= labFinishZone.x + labFinishZone.w &&
-      labX.yRed - 12 <= labFinishZone.y + labFinishZone.h) {
-    endLaberintoGame('🔴 ¡Ganó la Bolita Roja (Criss)!');
-  } else if (labX.blue >= labFinishZone.x && labX.blue <= labFinishZone.x + labFinishZone.w &&
-             labX.yBlue - 12 <= labFinishZone.y + labFinishZone.h) {
-    endLaberintoGame('🔵 ¡Ganó la Bolita Azul (Andreita)!');
+async function handleWordleKeyInput(key) {
+  if (!currentWordleMatch || currentWordleMatch.status !== 'playing') return;
+  if (currentWordleMatch.activeGuesser !== myWordleUser) {
+    showToast("Solo el jugador activo puede escribir letras 🤫");
+    return;
+  }
+
+  const targetLen = currentWordleMatch.targetLength || 5;
+  let typing = currentWordleMatch.currentTyping || "";
+
+  if (key === 'BACKSPACE') {
+    if (typing.length > 0) {
+      typing = typing.slice(0, -1);
+      rtdb.ref('wordle_room/currentTyping').set(typing);
+    }
+  } else if (key === 'ENTER') {
+    if (typing.length < targetLen) {
+      showToast(`¡Debes completar las ${targetLen} letras! ✍️`);
+      return;
+    }
+
+    const guesses = currentWordleMatch.guesses || [];
+    guesses.push(typing);
+
+    const isWon = (typing === currentWordleMatch.secretWord);
+    const isLost = (!isWon && guesses.length >= 6);
+
+    const updates = {
+      guesses: guesses,
+      currentTyping: ""
+    };
+
+    if (isWon || isLost) {
+      updates.status = "finished";
+      updates.result = isWon ? "won" : "lost";
+    }
+
+    await rtdb.ref('wordle_room').update(updates);
+  } else if (/^[A-ZÑ]$/.test(key)) {
+    if (typing.length < targetLen) {
+      typing += key;
+      rtdb.ref('wordle_room/currentTyping').set(typing);
+    }
   }
 }
 
-function endLaberintoGame(msg) {
-  laberintoGameActive = false;
-  clearInterval(laberintoInterval);
-  document.getElementById('laberintoWinnerTitle').innerText = msg;
-  document.getElementById('laberintoVictoryModal').style.display = 'block';
-  showToast(msg);
-}
+function nextWordleTurnOrNewGame() {
+  if (!currentWordleMatch) return;
+  const nextGuesser = (currentWordleMatch.activeGuesser === 'Criss') ? 'Andreita' : 'Criss';
+  const len = currentWordleMatch.targetLength || 5;
+  const list = WORDLE_DICT[len];
+  const nextWord = list[Math.floor(Math.random() * list.length)];
 
-function resetLaberintoGame() {
-  document.getElementById('laberintoVictoryModal').style.display = 'none';
-  startLaberintoGameLoop();
+  rtdb.ref('wordle_room').set({
+    status: "playing",
+    targetLength: len,
+    secretWord: nextWord,
+    activeGuesser: nextGuesser,
+    guesses: [],
+    currentTyping: "",
+    result: null
+  });
 }
-  </script>
+</script>
 </body>
 </html>
