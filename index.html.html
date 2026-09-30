@@ -3437,6 +3437,8 @@
     <button class="tab-btn" onclick="openTab('minigames-section', event)">🎮 Minijuegos</button>
     <button class="tab-btn" onclick="openTab('quiz-game', event)">💌 Preguntados</button>
     <button class="tab-btn" onclick="openTab('songs-section', event)">🎵 Canciones</button>
+    <button class="tab-btn" onclick="openTab('time-section', event)">⏳ Nuestro Tiempo</button>
+    <button class="tab-btn" onclick="openTab('pet-section', event)">🐶 Nuestra Mascota</button>
   </nav>
 
   <main>
@@ -3458,6 +3460,91 @@
       </div>
 
       <div class="songs-grid" id="songsContainer"></div>
+    </section>
+
+<!-- APARTADO 1: NUESTRO TIEMPO JUNTOS -->
+    <section id="time-section" class="tab-content">
+      <h2>Nuestro Tiempo Juntos 💕</h2>
+      <p class="custom-game-subtitle">Comenzamos a ser novios el 29 de marzo. Cada segundo a tu lado es mágico ✨</p>
+      
+      <div class="basta-roulette-box" style="max-width: 600px; margin: 0 auto; text-align: center;">
+        <div style="font-size: 1.2rem; font-weight: 800; color: var(--title-burgundy); margin-bottom: 15px;">
+          🌸 Llevamos 6 meses hermosos juntos 🌸
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 15px;">
+          <div style="background: white; padding: 18px; border-radius: 20px; border: 2.5px solid var(--soft-red); box-shadow: 0 5px 15px rgba(230,92,101,0.15);">
+            <div style="font-size: 2.2rem; font-weight: 900; color: var(--title-burgundy); font-family: 'Montserrat', sans-serif;" id="loveDaysCount">0</div>
+            <div style="font-size: 0.9rem; font-weight: 800; color: var(--soft-red); text-transform: uppercase; margin-top: 4px;">Días</div>
+          </div>
+
+          <div style="background: white; padding: 18px; border-radius: 20px; border: 2.5px solid var(--soft-red); box-shadow: 0 5px 15px rgba(230,92,101,0.15);">
+            <div style="font-size: 2.2rem; font-weight: 900; color: var(--title-burgundy); font-family: 'Montserrat', sans-serif;" id="loveMinutesCount">0</div>
+            <div style="font-size: 0.9rem; font-weight: 800; color: var(--soft-red); text-transform: uppercase; margin-top: 4px;">Minutos</div>
+          </div>
+
+          <div style="background: white; padding: 18px; border-radius: 20px; border: 2.5px solid var(--soft-red); box-shadow: 0 5px 15px rgba(230,92,101,0.15);">
+            <div style="font-size: 2.2rem; font-weight: 900; color: var(--title-burgundy); font-family: 'Montserrat', sans-serif;" id="loveSecondsCount">0</div>
+            <div style="font-size: 0.9rem; font-weight: 800; color: var(--soft-red); text-transform: uppercase; margin-top: 4px;">Segundos</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- APARTADO 2: NUESTRA MASCOTA (PUG 3D INTERACTIVO CON HISTORIAL DE ACCIONES) -->
+    <section id="pet-section" class="tab-content">
+      <h2>Nuestra Mascota: Toñita la Pug 🐶💖</h2>
+      <p class="custom-game-subtitle">¡Cuida, alimenta y baña a nuestro perrito tierno! Cada acción queda registrada con quién lo hizo.</p>
+
+      <div class="basta-container" style="max-width: 650px; margin: 0 auto; text-align: center;">
+        
+        <!-- Estado del Pug -->
+        <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 15px; font-weight: 800;">
+          <span class="presence-badge online" id="petHungerBadge">🍗 Hambre: 100%</span>
+          <span class="presence-badge online" id="petCleanBadge">✨ Higiene: 100%</span>
+          <span class="presence-badge online" id="petMoodBadge">🥰 Felicidad: 100%</span>
+        </div>
+
+        <!-- Visor 3D / Animado del Pug interactivo estilo Pou -->
+        <div style="position: relative; width: 100%; height: 340px; background: linear-gradient(135deg, #fff0f3, #ffe3e8); border-radius: 24px; border: 3px solid var(--soft-red); overflow: hidden; display: flex; justify-content: center; align-items: center; box-shadow: inset 0 0 20px rgba(230,92,101,0.2);">
+          
+        <!-- Contenedor del Pug 3D Interactivo Verificado -->
+          <iframe title="Pug 3D Cute" 
+                  style="width: 100%; height: 100%; border: none;" 
+                  src="https://sketchfab.com/models/1df43bf67b84439c8903e1e21b033d59/embed?autostart=1&transparent=1&ui_controls=0&ui_infos=0&ui_stop=0&ui_watermark=0">
+          </iframe>
+
+          <!-- Sello flotante de estado -->
+          <div style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.9); padding: 6px 16px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; color: var(--title-burgundy); border: 2px solid var(--rose-pink); backdrop-filter: blur(4px);" id="petStatusText">
+            🐾 ¡Toñita está feliz y lista para jugar!
+          </div>
+        </div>
+
+        <!-- Selector de Perfil para las acciones -->
+        <div style="margin: 20px 0 10px 0;">
+          <p style="font-weight: 800; color: var(--title-burgundy); margin-bottom: 8px;">¿Quién está interactuando con Toñita?</p>
+          <div class="profile-selector" style="max-width: 320px; margin: 0 auto;">
+            <div class="profile-card" id="petUserCriss" onclick="choosePetUser('Criss')">👑 Criss</div>
+            <div class="profile-card" id="petUserAndreita" onclick="choosePetUser('Andreita')">🌸 Andreita</div>
+          </div>
+        </div>
+
+        <!-- Botones de Acción (Alimentar, Bañar, Jugar) -->
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap;">
+          <button class="modal-btn" style="margin: 0; flex: 1; min-width: 130px; background: #2a9d8f;" onclick="interactPet('feed')">🍖 Dar Comida</button>
+          <button class="modal-btn" style="margin: 0; flex: 1; min-width: 130px; background: #3a86ff;" onclick="interactPet('bath')">🛁 Bañar</button>
+          <button class="modal-btn" style="margin: 0; flex: 1; min-width: 130px; background: var(--soft-red);" onclick="interactPet('play')">🎾 Jugar</button>
+        </div>
+
+        <!-- Historial en Vivo de Acciones (Quién lo hizo) -->
+        <div style="margin-top: 25px; text-align: left; background: #fff; border: 2px solid var(--rose-pink); border-radius: 18px; padding: 15px;">
+          <div style="font-weight: 800; color: var(--title-burgundy); font-size: 0.95rem; margin-bottom: 8px; text-align: center;">📜 Historial de Cuidados de Toñita</div>
+          <div id="petHistoryFeed" style="max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; font-weight: 700;">
+            <div style="color: #666; text-align: center;">Cargando historial en tiempo real... 💕</div>
+          </div>
+        </div>
+
+      </div>
     </section>
 
     <section id="gallery" class="tab-content active">
@@ -6046,6 +6133,8 @@ function restartCoopMatch() {
       initBastaSystem();
       initSongsSystem();
       initReactionsSystem();
+      initLoveTimer();   // NUEVO
+      initPetSystem();   // NUEVO
     });
 
     function startAppAndAudio() {
@@ -11255,6 +11344,131 @@ function initCommentCounters() {
 window.addEventListener('DOMContentLoaded', () => {
   setTimeout(initCommentCounters, 1500);
 });
+/* ==========================================================================
+       LÓGICA DE TIEMPO REAL: NUESTRO TIEMPO JUNTOS (29 DE MARZO)
+       ========================================================================== */
+    function initLoveTimer() {
+      // Fecha de inicio de noviazgo: 29 de marzo de 2026 (o el año correspondiente)
+      const startDate = new Date("2026-03-29T00:00:00");
+
+      function updateTimer() {
+        const now = new Date();
+        const diffMs = now - startDate;
+
+        if (diffMs > 0) {
+          const totalSeconds = Math.floor(diffMs / 1000);
+          const totalMinutes = Math.floor(totalSeconds / 60);
+          const totalDays = Math.floor(totalMinutes / (60 * 24));
+
+          document.getElementById('loveDaysCount').textContent = totalDays.toLocaleString();
+          document.getElementById('loveMinutesCount').textContent = totalMinutes.toLocaleString();
+          document.getElementById('loveSecondsCount').textContent = totalSeconds.toLocaleString();
+        }
+      }
+
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    }
+
+    /* ==========================================================================
+       LÓGICA EN TIEMPO REAL: NUESTRA MASCOTA PUG 3D (CON REGISTRO DE QUIÉN LO HIZO)
+       ========================================================================== */
+    let myPetUser = "";
+
+    function initPetSystem() {
+      const savedUser = localStorage.getItem('basta_saved_user') || localStorage.getItem('pinturillo_saved_user');
+      if (savedUser && (savedUser === 'Criss' || savedUser === 'Andreita')) {
+        choosePetUser(savedUser);
+      }
+
+      // Escuchar cambios de la mascota en Firebase Realtime Database
+      rtdb.ref('pet_tonita').on('value', (snap) => {
+        const data = snap.val() || { hunger: 100, clean: 100, mood: 100 };
+        document.getElementById('petHungerBadge').textContent = `🍗 Hambre: ${data.hunger}%`;
+        document.getElementById('petCleanBadge').textContent = `✨ Higiene: ${data.clean}%`;
+        document.getElementById('petMoodBadge').textContent = `🥰 Felicidad: ${data.mood}%`;
+      });
+
+      // Escuchar el historial de acciones en Firebase Firestore
+      db.collection('pet_history').orderBy('timestamp', 'desc').limit(15).onSnapshot((snapshot) => {
+        const feed = document.getElementById('petHistoryFeed');
+        feed.innerHTML = '';
+
+        if (snapshot.empty) {
+          feed.innerHTML = `<div style="color: #666; text-align: center;">Aún no hay acciones registradas. ¡Cuida a Toñita! 💕</div>`;
+          return;
+        }
+
+        snapshot.forEach((doc) => {
+          const item = doc.data();
+          const row = document.createElement('div');
+          row.style.padding = '6px 10px';
+          row.style.background = '#fff0f3';
+          row.style.borderRadius = '10px';
+          row.style.border = '1px solid #ffccd5';
+          row.style.display = 'flex';
+          row.style.justifyContent = 'space-between';
+          row.style.alignItems = 'center';
+
+          const authorBadge = item.author === 'Criss' ? '👑 Criss' : '🌸 Andreita';
+          row.innerHTML = `<span><b>${authorBadge}</b> ${item.actionText}</span> <span style="font-size: 0.75rem; color: #777;">${item.timeStr || ''}</span>`;
+          feed.appendChild(row);
+        });
+      });
+    }
+
+    function choosePetUser(name) {
+      if (name !== 'Criss' && name !== 'Andreita') return;
+      myPetUser = name;
+      localStorage.setItem('basta_saved_user', name);
+      document.getElementById('petUserCriss').classList.remove('selected');
+      document.getElementById('petUserAndreita').classList.remove('selected');
+      if (name === 'Criss') {
+        document.getElementById('petUserCriss').classList.add('selected');
+      } else if (name === 'Andreita') {
+        document.getElementById('petUserAndreita').classList.add('selected');
+      }
+    }
+
+    async function interactPet(actionType) {
+      if (!myPetUser || (myPetUser !== 'Criss' && myPetUser !== 'Andreita')) {
+        showToast("Por favor selecciona primero si eres Criss o Andreita 💕");
+        return;
+      }
+
+      let actionText = "";
+      let statUpdate = {};
+
+      if (actionType === 'feed') {
+        actionText = "le dio deliciosa comidita a Toñita 🍖🐶";
+        statUpdate = { hunger: 100, mood: 100 };
+        document.getElementById('petStatusText').textContent = "🐾 ¡Mmm qué rico! A Toñita le encantó su comida.";
+      } else if (actionType === 'bath') {
+        actionText = "bañó y dejó reluciente a Toñita 🛁✨";
+        statUpdate = { clean: 100, mood: 100 };
+        document.getElementById('petStatusText').textContent = "🐾 ¡Qué limpiecita y suavecita huele Toñita!";
+      } else if (actionType === 'play') {
+        actionText = "jugó con la pelota y apapachó a Toñita 🎾🥰";
+        statUpdate = { mood: 100 };
+        document.getElementById('petStatusText').textContent = "🐾 ¡Guau guau! Toñita está saltando de la emoción.";
+      }
+
+      // Actualizar estado en Firebase RTDB
+      await rtdb.ref('pet_tonita').update(statUpdate);
+
+      // Guardar en el historial en Firestore quién lo hizo
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+      await db.collection('pet_history').add({
+        author: myPetUser,
+        actionText: actionText,
+        timeStr: timeStr,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      showToast(`¡Acción guardada! ${myPetUser} ${actionText} ✨`);
+    }
 </script>
 </body>
 </html>
