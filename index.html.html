@@ -3393,6 +3393,577 @@
         border-top: 2px solid #ffccd5;
       }
     }
+/* ANIMACIONES DE TOÑITA Y SUS OBJETOS */
+    @keyframes pugIdleLive {
+      0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+      50% { transform: translateY(-8px) rotate(-1.5deg) scale(1.02); }
+    }
+    @keyframes pugActionJump {
+      0% { transform: translateY(0) scale(1) rotate(0deg); }
+      30% { transform: translateY(-30px) scale(1.12) rotate(-8deg); }
+      60% { transform: translateY(0) scale(0.92) rotate(6deg); }
+      100% { transform: translateY(0) scale(1) rotate(0deg); }
+    }
+    @keyframes pugBored {
+      0%, 100% { transform: translateY(20px) rotate(90deg) scale(0.9); }
+      50% { transform: translateY(22px) rotate(90deg) scale(0.92); }
+    }
+    @keyframes showBark {
+      0% { opacity: 0; transform: scale(0.5) translateY(0); }
+      20% { opacity: 1; transform: scale(1.2) translateY(-20px); }
+      80% { opacity: 1; transform: scale(1) translateY(-25px); }
+      100% { opacity: 0; transform: scale(0.8) translateY(-30px); }
+    }
+    
+   /* COMIDA: EL POLLO VIAJA HASTA LA BOCA REAL DE TOÑITA */
+@keyframes feedAnimDirect {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4) rotate(25deg);
+  }
+
+  15% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1.15) rotate(15deg);
+  }
+
+  70% {
+    opacity: 1;
+    transform:
+      translate(var(--feed-x), var(--feed-y))
+      scale(0.85)
+      rotate(-10deg);
+  }
+
+  88% {
+    opacity: 1;
+    transform:
+      translate(var(--feed-x), var(--feed-y))
+      scale(0.45)
+      rotate(-15deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate(var(--feed-x), var(--feed-y))
+      scale(0)
+      rotate(-20deg);
+  }
+}
+
+   /* Tina entrando por la izquierda y saliendo por la derecha */
+    @keyframes bathAnimLeft {
+      0% { opacity: 0; transform: translateX(-150px) scale(0.8); }
+      15% { opacity: 1; transform: translateX(0px) scale(1); }
+      85% { opacity: 1; transform: translateX(0px) scale(1); }
+      100% { opacity: 0; transform: translateX(150px) scale(0.8); }
+    }
+    
+    /* Pug se hunde en la tina */
+    @keyframes pugBathDrop {
+      0%, 100% { transform: translateY(0); }
+      20%, 80% { transform: translateY(35px); }
+    }
+
+/* ==========================================================
+   BAÑERA COMPLETA DE TOÑITA
+   ========================================================== */
+
+.tonita-bath-scene {
+  display: none;
+  position: absolute;
+
+  left: 50%;
+  bottom: 20px;
+
+  width: min(430px, 92%);
+  height: 185px;
+
+  transform: translateX(-50%);
+
+  z-index: 25;
+  pointer-events: none;
+
+  opacity: 0;
+
+  filter: drop-shadow(
+    0 15px 18px rgba(0, 0, 0, 0.20)
+  );
+}
+
+
+/* Interior oscuro/sombra de la bañera */
+.tonita-bath-inside {
+  position: absolute;
+
+  left: 5%;
+  bottom: 43px;
+
+  width: 90%;
+  height: 100px;
+
+  background: #d98fa5;
+
+  border-radius:
+    50% 50% 35px 35px;
+
+  border: 5px solid #ffffff;
+
+  z-index: 1;
+}
+
+
+/* Agua azul */
+.tonita-bath-water {
+  position: absolute;
+
+  left: 8%;
+  bottom: 112px;
+
+  width: 84%;
+  height: 32px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #b9f2ff 0%,
+      #76d9f7 100%
+    );
+
+  border-radius: 50%;
+
+  z-index: 2;
+
+  box-shadow:
+    inset 0 5px 10px
+    rgba(255,255,255,0.8);
+
+  animation:
+    tonitaWaterMove 1.3s
+    ease-in-out infinite;
+}
+
+
+/* Frente grande de la bañera */
+.tonita-bath-front {
+  position: absolute;
+
+  left: 3%;
+  bottom: 30px;
+
+  width: 94%;
+  height: 100px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fff8fb 0%,
+      #ffd5e2 50%,
+      #f5a9bf 100%
+    );
+
+  border: 5px solid white;
+
+  border-radius:
+    35px 35px 60px 60px;
+
+  z-index: 7;
+
+  box-shadow:
+    inset 0 -10px 15px
+    rgba(197, 89, 121, 0.16),
+    0 8px 15px
+    rgba(0,0,0,0.12);
+}
+
+
+/* Corazón de la bañera */
+.tonita-bath-heart {
+  position: absolute;
+
+  left: 50%;
+  top: 45%;
+
+  transform:
+    translate(-50%, -50%);
+
+  font-size: 38px;
+
+  color: #e65c65;
+
+  text-shadow:
+    0 3px 0 white;
+}
+
+
+/* Patas de la bañera */
+.tonita-bath-leg {
+  position: absolute;
+
+  bottom: 15px;
+
+  width: 45px;
+  height: 35px;
+
+  background: #e99ab2;
+
+  border-radius:
+    5px 5px 18px 18px;
+
+  z-index: 0;
+}
+
+.tonita-bath-leg.leg-left {
+  left: 18%;
+}
+
+.tonita-bath-leg.leg-right {
+  right: 18%;
+}
+
+
+/* ==========================================================
+   ESPUMA
+   ========================================================== */
+
+.tonita-foam {
+  position: absolute;
+
+  width: 43px;
+  height: 43px;
+
+  background:
+    rgba(255,255,255,0.96);
+
+  border-radius: 50%;
+
+  z-index: 9;
+
+  box-shadow:
+    inset -5px -5px 10px
+    rgba(190,220,255,0.35),
+    0 3px 5px
+    rgba(0,0,0,0.08);
+
+  animation:
+    tonitaFoamMove 1.4s
+    ease-in-out infinite alternate;
+}
+
+.foam-1 {
+  left: 8%;
+  bottom: 105px;
+}
+
+.foam-2 {
+  left: 20%;
+  bottom: 115px;
+  width: 55px;
+  height: 55px;
+}
+
+.foam-3 {
+  left: 35%;
+  bottom: 108px;
+}
+
+.foam-4 {
+  right: 35%;
+  bottom: 112px;
+  width: 52px;
+  height: 52px;
+}
+
+.foam-5 {
+  right: 18%;
+  bottom: 108px;
+}
+
+.foam-6 {
+  right: 6%;
+  bottom: 116px;
+  width: 48px;
+  height: 48px;
+}
+
+
+/* ==========================================================
+   BURBUJAS FLOTANTES
+   ========================================================== */
+
+.tonita-bubble {
+  position: absolute;
+
+  bottom: 80px;
+
+  width: 25px;
+  height: 25px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255,255,255,0.65);
+
+  border:
+    2px solid rgba(255,255,255,0.95);
+
+  box-shadow:
+    inset 3px 3px 5px
+    rgba(255,255,255,0.9);
+
+  z-index: 12;
+
+  opacity: 0;
+
+  animation:
+    tonitaBubbleRise 2.2s
+    ease-in infinite;
+}
+
+
+.bubble-1 {
+  left: 8%;
+  animation-delay: 0s;
+}
+
+.bubble-2 {
+  left: 17%;
+  animation-delay: .3s;
+}
+
+.bubble-3 {
+  left: 28%;
+  animation-delay: .7s;
+}
+
+.bubble-4 {
+  left: 39%;
+  animation-delay: .15s;
+}
+
+.bubble-5 {
+  left: 48%;
+  animation-delay: .9s;
+}
+
+.bubble-6 {
+  left: 58%;
+  animation-delay: .4s;
+}
+
+.bubble-7 {
+  left: 68%;
+  animation-delay: 1.1s;
+}
+
+.bubble-8 {
+  left: 78%;
+  animation-delay: .6s;
+}
+
+.bubble-9 {
+  left: 88%;
+  animation-delay: .2s;
+}
+
+.bubble-10 {
+  left: 52%;
+  animation-delay: 1.3s;
+}
+
+
+/* ==========================================================
+   ANIMACIONES DE LA BAÑERA
+   ========================================================== */
+
+@keyframes tonitaBathEnter {
+
+  0% {
+    opacity: 0;
+
+    transform:
+      translateX(-50%)
+      translateY(170px)
+      scale(0.85);
+  }
+
+  15% {
+    opacity: 1;
+
+    transform:
+      translateX(-50%)
+      translateY(0)
+      scale(1.03);
+  }
+
+  22% {
+    transform:
+      translateX(-50%)
+      translateY(0)
+      scale(1);
+  }
+
+  85% {
+    opacity: 1;
+
+    transform:
+      translateX(-50%)
+      translateY(0)
+      scale(1);
+  }
+
+  100% {
+    opacity: 0;
+
+    transform:
+      translateX(-50%)
+      translateY(150px)
+      scale(0.9);
+  }
+}
+
+
+@keyframes tonitaPugBath {
+
+  0%,
+  10% {
+    transform:
+      translateY(0)
+      rotate(0deg);
+  }
+
+  25% {
+    transform:
+      translateY(65px)
+      rotate(-2deg);
+  }
+
+  38% {
+    transform:
+      translateY(60px)
+      rotate(3deg);
+  }
+
+  50% {
+    transform:
+      translateY(65px)
+      rotate(-3deg);
+  }
+
+  62% {
+    transform:
+      translateY(60px)
+      rotate(2deg);
+  }
+
+  78% {
+    transform:
+      translateY(65px)
+      rotate(0deg);
+  }
+
+  90% {
+    transform:
+      translateY(15px)
+      rotate(0deg);
+  }
+
+  100% {
+    transform:
+      translateY(0)
+      rotate(0deg);
+  }
+}
+
+
+@keyframes tonitaBubbleRise {
+
+  0% {
+    opacity: 0;
+
+    transform:
+      translateY(0)
+      scale(0.4);
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+
+    transform:
+      translateY(-120px)
+      translateX(15px)
+      scale(1.25);
+  }
+}
+
+
+@keyframes tonitaFoamMove {
+
+  from {
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+  to {
+    transform:
+      translateY(-6px)
+      scale(1.08);
+  }
+}
+
+
+@keyframes tonitaWaterMove {
+
+  0%,
+  100% {
+    transform:
+      scaleX(1)
+      translateY(0);
+  }
+
+  50% {
+    transform:
+      scaleX(0.97)
+      translateY(3px);
+  }
+}
+
+
+/* CELULAR */
+@media (max-width: 600px) {
+
+  .tonita-bath-scene {
+    width: 94%;
+    height: 170px;
+    bottom: 15px;
+  }
+
+  .tonita-bath-front {
+    height: 88px;
+  }
+
+  .tonita-bath-heart {
+    font-size: 30px;
+  }
+}
+    /* Pelota desde el frente */
+    @keyframes playSoccerFront {
+      0% { opacity: 0; transform: translate(0, 150px) scale(2.5) rotate(0deg); } /* Viene de cerca */
+      30% { opacity: 1; transform: translate(0, 20px) scale(1.2) rotate(360deg); } /* Llega a Toñita */
+      50% { transform: translate(0, -60px) scale(1) rotate(540deg); } /* Toñita cabecea arriba */
+      80% { transform: translate(0, 50px) scale(0.8) rotate(720deg); } /* Cae y rebota */
+      100% { opacity: 0; transform: translate(0, 100px) scale(0.5) rotate(900deg); } /* Se va perdiendo */
+    }
 </style>
 </head>
 <body>
@@ -3472,55 +4043,148 @@
           🌸 Llevamos 6 meses hermosos juntos 🌸
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 15px;">
-          <div style="background: white; padding: 18px; border-radius: 20px; border: 2.5px solid var(--soft-red); box-shadow: 0 5px 15px rgba(230,92,101,0.15);">
-            <div style="font-size: 2.2rem; font-weight: 900; color: var(--title-burgundy); font-family: 'Montserrat', sans-serif;" id="loveDaysCount">0</div>
-            <div style="font-size: 0.9rem; font-weight: 800; color: var(--soft-red); text-transform: uppercase; margin-top: 4px;">Días</div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px;">
+          <div style="background: white; padding: 15px 5px; border-radius: 20px; border: 2.5px solid var(--soft-red); box-shadow: 0 5px 15px rgba(230,92,101,0.15);">
+            <div style="font-size: 1.8rem; font-weight: 900; color: var(--title-burgundy); font-family: 'Montserrat', sans-serif;" id="loveDaysCount">0</div>
+            <div style="font-size: 0.8rem; font-weight: 800; color: var(--soft-red); text-transform: uppercase; margin-top: 4px;">Días</div>
           </div>
 
-          <div style="background: white; padding: 18px; border-radius: 20px; border: 2.5px solid var(--soft-red); box-shadow: 0 5px 15px rgba(230,92,101,0.15);">
-            <div style="font-size: 2.2rem; font-weight: 900; color: var(--title-burgundy); font-family: 'Montserrat', sans-serif;" id="loveMinutesCount">0</div>
-            <div style="font-size: 0.9rem; font-weight: 800; color: var(--soft-red); text-transform: uppercase; margin-top: 4px;">Minutos</div>
+          <div style="background: white; padding: 15px 5px; border-radius: 20px; border: 2.5px solid var(--soft-red); box-shadow: 0 5px 15px rgba(230,92,101,0.15);">
+            <div style="font-size: 1.8rem; font-weight: 900; color: var(--title-burgundy); font-family: 'Montserrat', sans-serif;" id="loveMinutesCount">0</div>
+            <div style="font-size: 0.8rem; font-weight: 800; color: var(--soft-red); text-transform: uppercase; margin-top: 4px;">Minutos</div>
           </div>
 
-          <div style="background: white; padding: 18px; border-radius: 20px; border: 2.5px solid var(--soft-red); box-shadow: 0 5px 15px rgba(230,92,101,0.15);">
-            <div style="font-size: 2.2rem; font-weight: 900; color: var(--title-burgundy); font-family: 'Montserrat', sans-serif;" id="loveSecondsCount">0</div>
-            <div style="font-size: 0.9rem; font-weight: 800; color: var(--soft-red); text-transform: uppercase; margin-top: 4px;">Segundos</div>
+          <div style="background: white; padding: 15px 5px; border-radius: 20px; border: 2.5px solid var(--soft-red); box-shadow: 0 5px 15px rgba(230,92,101,0.15);">
+            <div style="font-size: 1.8rem; font-weight: 900; color: var(--title-burgundy); font-family: 'Montserrat', sans-serif;" id="loveSecondsCount">0</div>
+            <div style="font-size: 0.8rem; font-weight: 800; color: var(--soft-red); text-transform: uppercase; margin-top: 4px;">Segundos</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- APARTADO 2: NUESTRA MASCOTA (PUG 3D INTERACTIVO CON HISTORIAL DE ACCIONES) -->
+<!-- APARTADO 2: NUESTRA MASCOTA (PUG 3D INTERACTIVO ESTILO JUEGO DE CELULAR) -->
     <section id="pet-section" class="tab-content">
       <h2>Nuestra Mascota: Toñita la Pug 🐶💖</h2>
-      <p class="custom-game-subtitle">¡Cuida, alimenta y baña a nuestro perrito tierno! Cada acción queda registrada con quién lo hizo.</p>
+      <p class="custom-game-subtitle">¡Cuida, alimenta y baña a Toñita! Cada acción queda registrada.</p>
 
       <div class="basta-container" style="max-width: 650px; margin: 0 auto; text-align: center;">
         
         <!-- Estado del Pug -->
-        <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 15px; font-weight: 800;">
+        <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; font-weight: 800; flex-wrap: wrap;">
           <span class="presence-badge online" id="petHungerBadge">🍗 Hambre: 100%</span>
           <span class="presence-badge online" id="petCleanBadge">✨ Higiene: 100%</span>
           <span class="presence-badge online" id="petMoodBadge">🥰 Felicidad: 100%</span>
         </div>
 
-        <!-- Visor 3D / Animado del Pug interactivo estilo Pou -->
-        <div style="position: relative; width: 100%; height: 340px; background: linear-gradient(135deg, #fff0f3, #ffe3e8); border-radius: 24px; border: 3px solid var(--soft-red); overflow: hidden; display: flex; justify-content: center; align-items: center; box-shadow: inset 0 0 20px rgba(230,92,101,0.2);">
+        <!-- Visor Interactivo 3D/Perspectiva Estilo Juego de Celular -->
+        <div style="position: relative; width: 100%; height: 350px; background: linear-gradient(135deg, #e2f0d9, #fff0f3); border-radius: 24px; border: 3px solid var(--soft-red); overflow: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: inset 0 0 25px rgba(0,0,0,0.1); perspective: 1000px;">
           
-        <!-- Contenedor del Pug 3D Interactivo Verificado -->
-          <iframe title="Pug 3D Cute" 
-                  style="width: 100%; height: 100%; border: none;" 
-                  src="https://sketchfab.com/models/1df43bf67b84439c8903e1e21b033d59/embed?autostart=1&transparent=1&ui_controls=0&ui_infos=0&ui_stop=0&ui_watermark=0">
-          </iframe>
+          <!-- Pantalla de Muerte / Cero Stats -->
+          <div id="petDeadOverlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; flex-direction: column; justify-content: center; align-items: center; color: white;">
+            <div style="font-size: 4.5rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));">🥺😭</div>
+            <h3 style="font-weight: 900; color: #ff758f; margin-top: 10px; font-size: 1.5rem; text-align: center; line-height: 1.2;">¡DAME AMOR O ME VOY A MORIR!</h3>
+            <p style="font-weight: 700; font-size: 0.95rem; margin-top: 5px; color: #ddd;">Aliméntame, báñame y juega conmigo rápido...</p>
+          </div>
+
+          <!-- PUG AUTÉNTICO ANIMADO -->
+          <div id="realPugAvatar" style="position: relative; width: 180px; height: 160px; transform-style: preserve-3d; animation: pugIdleLive 3s infinite ease-in-out; cursor: pointer;" onclick="interactPet('play')">
+            
+            <!-- Burbuja de Pensamiento (Hambre o Aburrimiento) -->
+            <div id="petThoughtBubble" style="display: none; position: absolute; top: -45px; right: -25px; background: white; border: 2.5px solid var(--rose-pink); border-radius: 50%; padding: 12px; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 20;">
+              🦴
+            </div>
+
+            <!-- Suciedad y Popó (Higiene Baja) -->
+            <div id="petDirtOverlay" style="display: none; position: absolute; top: -10px; left: -10px; width: 200px; height: 180px; background: radial-gradient(circle, rgba(101,67,33,0.3) 0%, transparent 60%); z-index: 15; pointer-events: none;">
+              <span style="position: absolute; bottom: 10px; left: 10px; font-size: 2rem;">💩</span>
+              <span style="position: absolute; top: 40px; right: 10px; font-size: 1.5rem; filter: sepia(1);">🪰</span>
+            </div>
+
+            <!-- Ladrido Visual -->
+            <div id="petBarkVisual" style="display: none; position: absolute; top: -20px; left: -30px; background: white; border: 2px solid #111; border-radius: 12px; padding: 6px 12px; font-weight: 900; font-size: 1rem; color: #111; z-index: 25;">
+              ¡Guau! 🐶
+            </div>
+
+            <!-- Cuerpo del Pug -->
+            <div style="position: absolute; top: 35px; left: 15px; width: 150px; height: 110px; background: #e3d0b9; border-radius: 50% 50% 40% 40%; box-shadow: inset -10px -10px 20px rgba(0,0,0,0.15);"></div>
+            
+            <!-- Patitas Delanteras -->
+            <div style="position: absolute; bottom: 0; left: 40px; width: 22px; height: 40px; background: #d4bf9f; border-radius: 10px;"></div>
+            <div style="position: absolute; bottom: 0; right: 40px; width: 22px; height: 40px; background: #d4bf9f; border-radius: 10px;"></div>
+            <!-- Colita enroscada -->
+            <div style="position: absolute; top: 40px; right: 2px; width: 20px; height: 20px; border: 5px solid #d4bf9f; border-radius: 50%; border-left-color: transparent; border-bottom-color: transparent; transform: rotate(45deg);"></div>
+
+            <!-- Cabezota Redonda de Pug -->
+            <div style="position: absolute; top: 10px; left: 25px; width: 130px; height: 110px; background: #e3d0b9; border-radius: 50%; box-shadow: inset -8px -8px 15px rgba(0,0,0,0.15);">
+              
+              <!-- Orejitas -->
+              <div style="position: absolute; top: 15px; left: -8px; width: 32px; height: 42px; background: #2b1d0c; border-radius: 50% 20% 60% 40%; transform: rotate(-25deg);"></div>
+              <div style="position: absolute; top: 15px; right: -8px; width: 32px; height: 42px; background: #2b1d0c; border-radius: 20% 50% 40% 60%; transform: rotate(25deg);"></div>
+
+              <!-- Arruguitas -->
+              <div style="position: absolute; top: 12px; left: 42px; width: 45px; height: 15px; border-top: 2.5px solid #bda88c; border-radius: 50%;"></div>
+              <div style="position: absolute; top: 18px; left: 48px; width: 32px; height: 12px; border-top: 2px solid #bda88c; border-radius: 50%;"></div>
+
+             <!-- OJOS (SUBIDOS POR ENCIMA DE LA NARIZ) -->
+              <div style="position: absolute; top: 32px; width: 100%; display: flex; justify-content: space-around; padding: 0 22px; z-index: 5;">
+                <div style="width: 22px; height: 22px; background: #000; border-radius: 50%; position: relative; box-shadow: 0 0 5px rgba(255,255,255,0.4);">
+                  <div style="position: absolute; top: 3px; left: 3px; width: 7px; height: 7px; background: white; border-radius: 50%;"></div>
+                </div>
+                <div style="width: 22px; height: 22px; background: #000; border-radius: 50%; position: relative; box-shadow: 0 0 5px rgba(255,255,255,0.4);">
+                  <div style="position: absolute; top: 3px; left: 3px; width: 7px; height: 7px; background: white; border-radius: 50%;"></div>
+                </div>
+              </div>
+
+              <!-- Mascara Negra del Hocico -->
+              <div style="position: absolute; bottom: 8px; left: 19px; width: 92px; height: 50px; background: #1c1208; border-radius: 45px 45px 35px 35px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 4px 8px rgba(0,0,0,0.6);">
+                <!-- Narizota Chata -->
+                <div style="width: 28px; height: 14px; background: #000; border-radius: 12px; margin-top: 4px; box-shadow: 0 2px 4px rgba(255,255,255,0.2);"></div>
+                <!-- Boquita -->
+                <div id="petMouth" style="width: 14px; height: 6px; border-bottom: 3px solid #e3d0b9; border-radius: 0 0 10px 10px; margin-top: 4px; transition: all 0.3s;"></div>
+              </div>
+
+              <!-- Chapitas -->
+              <div style="position: absolute; top: 55px; width: 100%; display: flex; justify-content: space-between; padding: 0 10px; pointer-events: none;">
+                <div style="width: 14px; height: 9px; background: rgba(230,92,101,0.4); border-radius: 50%;"></div>
+                <div style="width: 14px; height: 9px; background: rgba(230,92,101,0.4); border-radius: 50%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- OBJETOS DE ANIMACIÓN (COMIDA, BAÑERA, FÚTBOL) -->
+          <div id="animPropFeed" style="display: none; position: absolute; top: 30px; right: 30px; font-size: 4rem; z-index: 30; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));">🍗</div>
+
+
+<!-- CONTENEDOR DE LA BAÑERA (Oculto por defecto) -->
+          <div id="animPropBath" style="display: none; position: absolute; left: 0; right: 0; margin: 0 auto; bottom: 15px; width: min(430px, 92%); height: 185px; z-index: 25;">
+            <!-- Interior de la bañera -->
+            <div class="tonita-bath-inside"></div>
+            <!-- Agua -->
+            <div class="tonita-bath-water"></div>
+            <!-- Espuma -->
+            <div class="tonita-foam foam-1"></div>
+            <div class="tonita-foam foam-2"></div>
+            <div class="tonita-foam foam-3"></div>
+            <div class="tonita-foam foam-4"></div>
+            <div class="tonita-foam foam-5"></div>
+            <div class="tonita-foam foam-6"></div>
+            <!-- Frente de la bañera -->
+            <div class="tonita-bath-front"><div class="tonita-bath-heart">♥</div></div>
+            <!-- Patitas -->
+            <div class="tonita-bath-leg leg-left"></div>
+            <div class="tonita-bath-leg leg-right"></div>
+          </div>
+
+
+<div id="animPropPlay" style="display: none; position: absolute; bottom: 30px; font-size: 3.5rem; z-index: 30; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));">⚽</div>
 
           <!-- Sello flotante de estado -->
-          <div style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.9); padding: 6px 16px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; color: var(--title-burgundy); border: 2px solid var(--rose-pink); backdrop-filter: blur(4px);" id="petStatusText">
-            🐾 ¡Toñita está feliz y lista para jugar!
+          <div style="position: absolute; bottom: 10px; background: rgba(255,255,255,0.95); padding: 6px 18px; border-radius: 20px; font-weight: 800; font-size: 0.95rem; color: var(--title-burgundy); border: 2px solid var(--rose-pink); backdrop-filter: blur(4px); box-shadow: 0 4px 10px rgba(0,0,0,0.08);" id="petStatusText">
+            🐾 ¡Toñita está moviendo la colita feliz!
           </div>
         </div>
 
-        <!-- Selector de Perfil para las acciones -->
+        <!-- Selector de Perfil -->
         <div style="margin: 20px 0 10px 0;">
           <p style="font-weight: 800; color: var(--title-burgundy); margin-bottom: 8px;">¿Quién está interactuando con Toñita?</p>
           <div class="profile-selector" style="max-width: 320px; margin: 0 auto;">
@@ -3529,14 +4193,14 @@
           </div>
         </div>
 
-        <!-- Botones de Acción (Alimentar, Bañar, Jugar) -->
+        <!-- Botones de Acción -->
         <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap;">
           <button class="modal-btn" style="margin: 0; flex: 1; min-width: 130px; background: #2a9d8f;" onclick="interactPet('feed')">🍖 Dar Comida</button>
           <button class="modal-btn" style="margin: 0; flex: 1; min-width: 130px; background: #3a86ff;" onclick="interactPet('bath')">🛁 Bañar</button>
-          <button class="modal-btn" style="margin: 0; flex: 1; min-width: 130px; background: var(--soft-red);" onclick="interactPet('play')">🎾 Jugar</button>
+          <button class="modal-btn" style="margin: 0; flex: 1; min-width: 130px; background: var(--soft-red);" onclick="interactPet('play')">⚽ Jugar</button>
         </div>
 
-        <!-- Historial en Vivo de Acciones (Quién lo hizo) -->
+        <!-- Historial en Vivo -->
         <div style="margin-top: 25px; text-align: left; background: #fff; border: 2px solid var(--rose-pink); border-radius: 18px; padding: 15px;">
           <div style="font-weight: 800; color: var(--title-burgundy); font-size: 0.95rem; margin-bottom: 8px; text-align: center;">📜 Historial de Cuidados de Toñita</div>
           <div id="petHistoryFeed" style="max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; font-weight: 700;">
@@ -11370,35 +12034,48 @@ window.addEventListener('DOMContentLoaded', () => {
       setInterval(updateTimer, 1000);
     }
 
-    /* ==========================================================================
-       LÓGICA EN TIEMPO REAL: NUESTRA MASCOTA PUG 3D (CON REGISTRO DE QUIÉN LO HIZO)
+  /* ==========================================================================
+       LÓGICA EN TIEMPO REAL: NUESTRA MASCOTA PUG CON METABOLISMO Y ANIMACIONES
        ========================================================================== */
     let myPetUser = "";
+    let currentPetStats = { hunger: 100, clean: 100, mood: 100, lastUpdate: Date.now() };
+    let isPetAnimating = false; // Bloquea clics mientras hace una animación
 
-    function initPetSystem() {
+    // Efectos de Sonido
+    const sndEat = new Audio('https://www.myinstants.com/media/sounds/minecraft-eating-sound-effect.mp3');
+    const sndBark = new Audio('https://www.myinstants.com/media/sounds/dog-bark-1.mp3');
+    const sndSplash = new Audio('https://www.myinstants.com/media/sounds/splash-water.mp3');
+    const sndBoing = new Audio('https://www.myinstants.com/media/sounds/boing_1.mp3');
+    const sndRumble = new Audio('https://www.myinstants.com/media/sounds/stomach-growling.mp3');
+
+  function initPetSystem() {
       const savedUser = localStorage.getItem('basta_saved_user') || localStorage.getItem('pinturillo_saved_user');
       if (savedUser && (savedUser === 'Criss' || savedUser === 'Andreita')) {
         choosePetUser(savedUser);
       }
 
-      // Escuchar cambios de la mascota en Firebase Realtime Database
       rtdb.ref('pet_tonita').on('value', (snap) => {
-        const data = snap.val() || { hunger: 100, clean: 100, mood: 100 };
-        document.getElementById('petHungerBadge').textContent = `🍗 Hambre: ${data.hunger}%`;
-        document.getElementById('petCleanBadge').textContent = `✨ Higiene: ${data.clean}%`;
-        document.getElementById('petMoodBadge').textContent = `🥰 Felicidad: ${data.mood}%`;
+        const data = snap.val();
+        if (data) {
+          currentPetStats = data;
+          applyTimeDecay(); 
+        } else {
+          updatePetVisuals(); 
+        }
       });
 
-      // Escuchar el historial de acciones en Firebase Firestore
+      // Se ejecuta cada 10 segundos para ver cómo baja suavemente de 1% en 1%
+      setInterval(() => {
+        applyTimeDecay();
+      }, 10000); 
+
       db.collection('pet_history').orderBy('timestamp', 'desc').limit(15).onSnapshot((snapshot) => {
         const feed = document.getElementById('petHistoryFeed');
         feed.innerHTML = '';
-
         if (snapshot.empty) {
           feed.innerHTML = `<div style="color: #666; text-align: center;">Aún no hay acciones registradas. ¡Cuida a Toñita! 💕</div>`;
           return;
         }
-
         snapshot.forEach((doc) => {
           const item = doc.data();
           const row = document.createElement('div');
@@ -11409,12 +12086,92 @@ window.addEventListener('DOMContentLoaded', () => {
           row.style.display = 'flex';
           row.style.justifyContent = 'space-between';
           row.style.alignItems = 'center';
-
           const authorBadge = item.author === 'Criss' ? '👑 Criss' : '🌸 Andreita';
           row.innerHTML = `<span><b>${authorBadge}</b> ${item.actionText}</span> <span style="font-size: 0.75rem; color: #777;">${item.timeStr || ''}</span>`;
           feed.appendChild(row);
         });
       });
+    }
+
+    function applyTimeDecay() {
+      const now = Date.now();
+      // Tiempo pasado en minutos (incluso con decimales)
+      const diffMinutes = (now - (currentPetStats.lastUpdate || now)) / 60000;
+      
+      // Hambre: 15% en 10 min -> 1.5% por minuto
+      // Higiene: 30% en 20 min -> 1.5% por minuto
+      // Felicidad: 10% en 10 min -> 1.0% por minuto
+      
+      if (diffMinutes >= 0.1) { // Actualiza en pedacitos pequeños
+        const dropsHunger = diffMinutes * 1.5;
+        const dropsClean = diffMinutes * 1.5;
+        const dropsMood = diffMinutes * 1.0;
+
+        currentPetStats.hunger = Math.max(0, currentPetStats.hunger - dropsHunger);
+        currentPetStats.clean = Math.max(0, currentPetStats.clean - dropsClean);
+        currentPetStats.mood = Math.max(0, currentPetStats.mood - dropsMood);
+        currentPetStats.lastUpdate = now;
+        
+        rtdb.ref('pet_tonita').update(currentPetStats);
+        updatePetVisuals();
+      }
+    }
+
+    function updatePetVisuals() {
+      // Usamos Math.round para que siempre veas números enteros (ej. 98%, 97%)
+      document.getElementById('petHungerBadge').textContent = `🍗 Hambre: ${Math.round(currentPetStats.hunger)}%`;
+      document.getElementById('petCleanBadge').textContent = `✨ Higiene: ${Math.round(currentPetStats.clean)}%`;
+      document.getElementById('petMoodBadge').textContent = `🥰 Felicidad: ${Math.round(currentPetStats.mood)}%`;
+
+      const pug = document.getElementById('realPugAvatar');
+      const mouth = document.getElementById('petMouth');
+      const bubble = document.getElementById('petThoughtBubble');
+      const dirt = document.getElementById('petDirtOverlay');
+      const deadOverlay = document.getElementById('petDeadOverlay');
+
+      if (!isPetAnimating) {
+        pug.style.animation = 'pugIdleLive 3s infinite ease-in-out';
+      }
+      
+      mouth.style.borderBottom = '3px solid #e3d0b9';
+      mouth.style.borderTop = 'none';
+      mouth.style.borderRadius = '0 0 10px 10px';
+      bubble.style.display = 'none';
+      dirt.style.display = 'none';
+      deadOverlay.style.display = 'none';
+
+      // 1. Muerte si las 3 llegan a cero redondeado
+      if (Math.round(currentPetStats.hunger) === 0 && Math.round(currentPetStats.clean) === 0 && Math.round(currentPetStats.mood) === 0) {
+        deadOverlay.style.display = 'flex';
+        pug.style.animation = 'none'; 
+        return; 
+      }
+
+      if (currentPetStats.hunger <= 25) {
+        bubble.style.display = 'block';
+        bubble.textContent = '🦴';
+        mouth.style.borderBottom = 'none';
+        mouth.style.borderTop = '3px solid #e3d0b9';
+        mouth.style.borderRadius = '10px 10px 0 0';
+        if(!window.rumblePlayed) {
+          sndRumble.play().catch(e=>{});
+          window.rumblePlayed = true;
+        }
+      } else {
+        window.rumblePlayed = false; 
+      }
+
+      if (currentPetStats.clean <= 25) {
+        dirt.style.display = 'block';
+      }
+
+      if (currentPetStats.mood <= 25) {
+        if (currentPetStats.hunger > 25) {
+          bubble.style.display = 'block';
+          bubble.textContent = '⚽';
+        }
+        if (!isPetAnimating) pug.style.animation = 'pugBored 3s infinite ease-in-out';
+      }
     }
 
     function choosePetUser(name) {
@@ -11430,36 +12187,116 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    async function interactPet(actionType) {
+    function triggerBark() {
+  const bark = document.getElementById('petBarkVisual');
+
+  // Mostrar el "WOOF" visual
+  bark.style.display = 'block';
+  bark.style.animation = 'none';
+  void bark.offsetWidth;
+  bark.style.animation = 'showBark 0.8s ease forwards';
+
+  // Reiniciar el audio para que siempre empiece desde el principio
+  sndBark.pause();
+  sndBark.currentTime = 0;
+
+  // Reproducir solo un ladrido corto
+  sndBark.play().catch(e => {});
+
+  // Cortar el audio rápidamente para evitar varios ladridos
+  setTimeout(() => {
+    sndBark.pause();
+    sndBark.currentTime = 0;
+  }, 500);
+
+  // Ocultar el WOOF
+  setTimeout(() => {
+    bark.style.display = 'none';
+  }, 800);
+}
+
+  async function interactPet(actionType) {
       if (!myPetUser || (myPetUser !== 'Criss' && myPetUser !== 'Andreita')) {
         showToast("Por favor selecciona primero si eres Criss o Andreita 💕");
         return;
       }
+      
+      if (isPetAnimating) return; 
+      isPetAnimating = true;
 
       let actionText = "";
-      let statUpdate = {};
+      const pug = document.getElementById('realPugAvatar');
+      pug.style.animation = 'none';
+      void pug.offsetWidth;
 
       if (actionType === 'feed') {
-        actionText = "le dio deliciosa comidita a Toñita 🍖🐶";
-        statUpdate = { hunger: 100, mood: 100 };
-        document.getElementById('petStatusText').textContent = "🐾 ¡Mmm qué rico! A Toñita le encantó su comida.";
+        actionText = "le dio un rico pollo a Toñita 🍗🐶";
+        currentPetStats.hunger = Math.min(100, currentPetStats.hunger + 15); // +15% de hambre
+        document.getElementById('petStatusText').textContent = "🐾 ¡Ñam ñam! A Toñita le encantó su pollito.";
+        
+        const prop = document.getElementById('animPropFeed');
+        prop.style.display = 'block';
+        prop.style.animation = 'feedAnimDirect 2.5s ease forwards';
+        
+        setTimeout(() => sndEat.play().catch(e=>{}), 400); 
+        setTimeout(() => { triggerBark(); }, 1800);
+
+        setTimeout(() => {
+          prop.style.display = 'none';
+          isPetAnimating = false;
+          updatePetVisuals();
+        }, 2500);
+
       } else if (actionType === 'bath') {
         actionText = "bañó y dejó reluciente a Toñita 🛁✨";
-        statUpdate = { clean: 100, mood: 100 };
-        document.getElementById('petStatusText').textContent = "🐾 ¡Qué limpiecita y suavecita huele Toñita!";
+        currentPetStats.clean = 100; // El baño SÍ sube al 100% directamente
+        document.getElementById('petStatusText').textContent = "🐾 ¡Splash! Toñita disfruta su baño calientito.";
+        
+        const prop = document.getElementById('animPropBath');
+        prop.style.display = 'block';
+        prop.style.animation = 'bathAnimLeft 3.5s ease forwards';
+        pug.style.animation = 'pugBathDrop 3.5s ease forwards'; 
+        
+        setTimeout(() => sndSplash.play().catch(e=>{}), 500);
+        setTimeout(() => { triggerBark(); }, 2900);
+
+        setTimeout(() => {
+          prop.style.display = 'none';
+          isPetAnimating = false;
+          updatePetVisuals();
+        }, 3500);
+
       } else if (actionType === 'play') {
-        actionText = "jugó con la pelota y apapachó a Toñita 🎾🥰";
-        statUpdate = { mood: 100 };
-        document.getElementById('petStatusText').textContent = "🐾 ¡Guau guau! Toñita está saltando de la emoción.";
+        actionText = "jugó fútbol con Toñita ⚽🥰";
+        currentPetStats.mood = Math.min(100, currentPetStats.mood + 15); // +15% de felicidad
+        document.getElementById('petStatusText').textContent = "🐾 ¡Toñita cabeceó la pelota de regreso!";
+        
+        const prop = document.getElementById('animPropPlay');
+        prop.style.display = 'block';
+        prop.style.animation = 'playSoccerFront 2.5s ease forwards';
+        
+        setTimeout(() => sndBoing.play().catch(e=>{}), 400); 
+        setTimeout(() => {
+          pug.style.animation = 'pugActionJump 0.6s ease'; 
+          sndBoing.play().catch(e=>{}); 
+        }, 1000);
+
+        setTimeout(() => { triggerBark(); }, 1800);
+
+        setTimeout(() => {
+          prop.style.display = 'none';
+          isPetAnimating = false;
+          updatePetVisuals();
+        }, 2500);
       }
 
-      // Actualizar estado en Firebase RTDB
-      await rtdb.ref('pet_tonita').update(statUpdate);
+      currentPetStats.lastUpdate = Date.now();
+      updatePetVisuals(); 
 
-      // Guardar en el historial en Firestore quién lo hizo
+      await rtdb.ref('pet_tonita').update(currentPetStats);
+
       const now = new Date();
       const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-
       await db.collection('pet_history').add({
         author: myPetUser,
         actionText: actionText,
@@ -11472,3 +12309,4 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+la felicidad ni hambre ni higiene baja y antes si bajaba, tampoco funcionan todos los botones
