@@ -19,6 +19,30 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
   <style>
+/* Corrección general para evitar desbordamientos laterales en celulares */
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden !important;
+  margin: 0;
+  padding: 0;
+}
+
+header, nav, main {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+
+.tab-content {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 0 auto !important;
+}
     :root {
       --bg-cream: #fff0f3;
       --soft-red: #e65c65;
@@ -1881,29 +1905,54 @@
         flex-direction: column;
         gap: 15px;
       }
-      .minigames-sidebar {
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-        padding: 10px;
-      }
-      .minigames-sidebar-title {
-        grid-column: span 2;
-        padding-bottom: 4px;
-      }
-      .minigame-nav-item {
-        padding: 8px 6px;
-      }
-      .minigame-nav-icon {
-        font-size: 1.1rem;
-      }
-      .minigame-nav-name {
-        font-size: 0.78rem;
-      }
-      .minigame-nav-sub {
-        display: none;
-      }
+      @media (max-width: 768px) {
+  /* Convertir el menú lateral de minijuegos en una barra con scroll horizontal fluido */
+  .minigames-layout {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .minigames-sidebar {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    gap: 10px !important;
+    padding: 10px !important;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .minigames-sidebar-title {
+    display: none !important; /* Ocultar el título repetido en celular para ahorrar espacio */
+  }
+
+  .minigame-nav-item {
+    flex: 0 0 auto !important;
+    width: 140px !important;
+    scroll-snap-align: start;
+    padding: 10px 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .minigame-nav-info {
+    align-items: center !important;
+  }
+
+  .minigame-nav-sub {
+    display: block !important; /* Volver a mostrar subtítulo corto adaptado */
+    font-size: 0.65rem !important;
+  }
+
+  /* Ocultar scrollbar fea en celulares pero mantener el deslizamiento */
+  .minigames-sidebar::-webkit-scrollbar {
+    display: none;
+  }
+}
       .memory-grid { 
         grid-template-columns: repeat(4, 1fr); 
         gap: 6px; 
@@ -3965,11 +4014,18 @@
       100% { opacity: 0; transform: translate(0, 100px) scale(0.5) rotate(900deg); } /* Se va perdiendo */
     }
 @media (max-width: 768px) {
-  /* Organizar los contadores de tiempo en columna o más compactos para que no se desborden */
-  #time-section .basta-roulette-box div[style*="grid-template-columns"] {
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
+  #time-section div[style*="grid-template-columns"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: center !important;
   }
+
+  #time-section div[style*="grid-template-columns"] > div {
+    width: 100% !important;
+    max-width: 280px !important;
+  }
+}
 
   /* Ajustar márgenes de los apartados en celular */
   #time-section .basta-roulette-box,
