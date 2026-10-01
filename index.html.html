@@ -257,20 +257,20 @@
       padding: 0 20px 50px;
     }
 
-    .tab-content {
-      display: none;
-      background: var(--card-white);
-      border-radius: 30px;
-      padding: 35px;
-      border: 3px solid white;
-      box-shadow: 0 20px 40px var(--shadow-pink);
-      backdrop-filter: blur(10px);
-      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+   .tab-content {
+  display: none; /* Ocultas por defecto */
+  background: var(--card-white);
+  border-radius: 30px;
+  padding: 35px;
+  border: 3px solid white;
+  box-shadow: 0 20px 40px var(--shadow-pink);
+  backdrop-filter: blur(10px);
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
-    .tab-content.active {
-      display: block;
-    }
+.tab-content.active {
+  display: block; /* Solo se muestra la que tenga la clase active */
+}
 
     @keyframes popIn {
       from { opacity: 0; transform: scale(0.96); }
@@ -3964,21 +3964,19 @@
       80% { transform: translate(0, 50px) scale(0.8) rotate(720deg); } /* Cae y rebota */
       100% { opacity: 0; transform: translate(0, 100px) scale(0.5) rotate(900deg); } /* Se va perdiendo */
     }
-/* Corrección de centrado para celdas de Nuestro Tiempo y Nuestra Mascota */
-#time-section .basta-roulette-box,
-#pet-section .basta-container {
-  margin: 0 auto !important;
-  width: 100% !important;
-  max-width: 500px !important;
-}
-
 @media (max-width: 768px) {
-  #time-section, #pet-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 15px 10px !important;
+  /* Organizar los contadores de tiempo en columna o más compactos para que no se desborden */
+  #time-section .basta-roulette-box div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* Ajustar márgenes de los apartados en celular */
+  #time-section .basta-roulette-box,
+  #pet-section .basta-container {
+    padding: 12px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
   }
 }
 </style>
@@ -7078,12 +7076,32 @@ function restartCoopMatch() {
       }, 4000);
     }
 
-    function openTab(tabId, evt) {
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      if(evt) evt.currentTarget.classList.add('active');
-    }
+   function openTab(tabId, evt) {
+  // 1. Ocultar todas las pestañas de contenido forzosamente
+  const allTabs = document.querySelectorAll('.tab-content');
+  allTabs.forEach(tab => {
+    tab.classList.remove('active');
+    tab.style.display = 'none'; // Forzar ocultamiento en CSS inline
+  });
+
+  // 2. Quitar la clase active de todos los botones del menú superior
+  const allBtns = document.querySelectorAll('.tab-btn');
+  allBtns.forEach(btn => {
+    btn.classList.remove('active');
+  });
+
+  // 3. Mostrar únicamente la pestaña seleccionada
+  const targetTab = document.getElementById(tabId);
+  if (targetTab) {
+    targetTab.classList.add('active');
+    targetTab.style.display = 'block'; // Forzar visualización
+  }
+
+  // 4. Activar el botón que se presionó (si se pasó el evento)
+  if (evt && evt.currentTarget) {
+    evt.currentTarget.classList.add('active');
+  }
+}
 
     let pendingFiles = [];
     let selectedAuthorProfile = "";
