@@ -3964,6 +3964,23 @@
       80% { transform: translate(0, 50px) scale(0.8) rotate(720deg); } /* Cae y rebota */
       100% { opacity: 0; transform: translate(0, 100px) scale(0.5) rotate(900deg); } /* Se va perdiendo */
     }
+/* Corrección de centrado para celdas de Nuestro Tiempo y Nuestra Mascota */
+#time-section .basta-roulette-box,
+#pet-section .basta-container {
+  margin: 0 auto !important;
+  width: 100% !important;
+  max-width: 500px !important;
+}
+
+@media (max-width: 768px) {
+  #time-section, #pet-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 10px !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -12304,8 +12321,8 @@ window.addEventListener('DOMContentLoaded', () => {
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
 
-      showToast(`¡Acción guardada! ${myPetUser} ${actionText} ✨`);
-    }
+          }
 </script>
 </body>
 </html>
+
