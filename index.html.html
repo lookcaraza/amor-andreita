@@ -4097,6 +4097,32 @@
       </div>
   </div>
 
+<!-- MODAL DE EDICIÓN DE ARTÍCULO -->
+  <div class="sg-modal" id="sgEditModal">
+      <div class="sg-modal-content">
+          <h3 style="margin-top:0; color:#4CAF50;">✏️ Editar Artículo</h3>
+          
+          <input type="hidden" id="sgEditItemId">
+          <input type="hidden" id="sgEditGroupKey">
+          <input type="hidden" id="sgEditOldCost">
+          
+          <div class="sg-form-group">
+              <label>Nombre del Producto:</label>
+              <input type="text" id="sgEditItemName">
+          </div>
+          <div class="sg-form-group">
+              <label>Costo (Inversión original):</label>
+              <input type="number" id="sgEditItemCost" min="0">
+          </div>
+          <div class="sg-form-group">
+              <label>Venta (Precio final):</label>
+              <input type="number" id="sgEditItemSale" min="0">
+          </div>
+          <button class="sg-btn-main" style="margin-bottom: 0; margin-top: 10px;" onclick="sgGuardarEdicion()">GUARDAR CAMBIOS</button>
+          <button onclick="document.getElementById('sgEditModal').style.display='none'" style="background: none; border: none; color: #888; cursor: pointer; padding: 10px;">Cancelar</button>
+      </div>
+  </div>
+
   <button class="sg-btn-main" onclick="document.getElementById('sgFileInput').click()">AÑADIR OBJETO</button>
   <input type="file" id="sgFileInput" accept="image/*" style="display:none;" onchange="sgPreviewImage(event)">
 
@@ -12697,11 +12723,14 @@ function sgCrearObjetoDOM(groupKey, itemId, name, imgSrc, cost, sale, estado, ah
     
     let badgeColor = isVendido ? '#e63946' : (estado === 'PENDIENTE' ? '#f0ad4e' : '#0275d8');
     let textColor = estado === 'PENDIENTE' ? '#000' : '#fff';
-    let statusBadge = `<span style="background:${badgeColor}; color:${textColor}; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-left: 10px; vertical-align: middle;">${estado}</span>`;
-    if(isAhorrado) statusBadge += `<span style="background:#ffd700; color:#000; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-left: 5px; vertical-align: middle;">🐷 AHORRADO</span>`;
+    
+    // Etiquetas de estado
+    let statusBadge = `<span style="background:${badgeColor}; color:${textColor}; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-left: 5px; vertical-align: middle; display: inline-block; margin-top: 5px;">${estado}</span>`;
+    if(isAhorrado) statusBadge += `<span style="background:#ffd700; color:#000; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-left: 5px; vertical-align: middle; display: inline-block; margin-top: 5px;">🐷 AHORRADO</span>`;
 
+    // Botón individual de ahorrar más compacto y centrado con la X
     let addCerditoIndividual = (isVendido && !isAhorrado) 
-        ? `<button style="background:#ff6b81; color:white; border:none; border-radius:5px; padding:5px 10px; font-weight:bold; cursor:pointer;" title="Añadir solo esta ganancia al cerdito" onclick="sgAhorrarIndividual('${itemId}', '${groupKey}')">🐷 Añadir al cerdito</button>` 
+        ? `<button style="background:#ff6b81; color:white; border:none; border-radius:15px; padding:6px 12px; font-size:12px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);" title="Añadir solo esta ganancia al cerdito" onclick="sgAhorrarIndividual('${itemId}', '${groupKey}')">🐷 Ahorrar</button>` 
         : '';
 
     let actionButtons = '';
@@ -12718,16 +12747,20 @@ function sgCrearObjetoDOM(groupKey, itemId, name, imgSrc, cost, sale, estado, ah
     }
 
     card.innerHTML = `
-        <div style="position:absolute; top:10px; right:10px; display:flex; gap:8px;">
+        <div style="position:absolute; top:12px; right:12px; display:flex; gap:8px; align-items:center; z-index:10;">
             ${addCerditoIndividual}
-            <button class="sg-btn-delete" title="Quitar este artículo" onclick="sgEliminarObjeto('${itemId}', ${cost}, '${groupKey}')">X</button>
+            <button class="sg-btn-delete" title="Quitar este artículo" onclick="sgEliminarObjeto('${itemId}', ${cost}, '${groupKey}', '${estado}')" style="position:relative; top:0; right:0;">X</button>
         </div>
         <img src="${imgSrc}" alt="Producto" loading="lazy">
         <div class="sg-product-info">
-            <h4 style="margin: 0 0 10px 0; font-size: 18px;">${name} ${statusBadge}</h4>
+            <h4 style="margin: 0 0 10px 0; font-size: 18px; padding-right: 90px; line-height: 1.4;">
+                ${name} 
+                <button onclick="sgAbrirEdicion('${itemId}')" style="background:none; border:none; cursor:pointer; font-size:16px; margin-left:5px;" title="Editar artículo">✏️</button>
+                <br>${statusBadge}
+            </h4>
             <p><strong>Costo:</strong> Q${cost.toFixed(2)}</p>
             <p><strong>Venta:</strong> Q${sale.toFixed(2)}</p>
-            <p style="color:#5cb85c; font-size:14px; margin-top:5px;">Ganancia Esperada: Q${(sale-cost).toFixed(2)}</p>
+            <p style="color:#5cb85c; font-size:14px; margin-top:5px; font-weight:bold;">Ganancia Esperada: Q${(sale-cost).toFixed(2)}</p>
             ${actionButtons}
         </div>
     `;
@@ -12886,6 +12919,63 @@ function sgAnimarMoneda() {
     setTimeout(() => { icon.style.transform = "scale(1.1) translateY(-5px)"; }, 300);
     setTimeout(() => { icon.style.transform = "scale(1) translateY(0)"; }, 500);
     setTimeout(() => { coin.style.display = "none"; }, 700);
+}
+// --- FUNCIONES PARA EDITAR ARTÍCULOS ---
+function sgAbrirEdicion(itemId) {
+    const item = sgItems[itemId];
+    if(!item) return;
+    
+    if(item.ahorrado) {
+        alert("No puedes editar un artículo que ya está guardado en el cerdito histórico.");
+        return;
+    }
+
+    // Cargar datos actuales en la ventana
+    document.getElementById('sgEditItemId').value = itemId;
+    document.getElementById('sgEditGroupKey').value = item.groupKey;
+    document.getElementById('sgEditOldCost').value = item.cost;
+    
+    document.getElementById('sgEditItemName').value = item.name;
+    document.getElementById('sgEditItemCost').value = item.cost;
+    document.getElementById('sgEditItemSale').value = item.sale;
+    
+    document.getElementById('sgEditModal').style.display = 'flex';
+}
+
+async function sgGuardarEdicion() {
+    const itemId = document.getElementById('sgEditItemId').value;
+    const groupKey = document.getElementById('sgEditGroupKey').value;
+    const oldCost = parseFloat(document.getElementById('sgEditOldCost').value);
+    
+    const newName = document.getElementById('sgEditItemName').value.trim();
+    const newCost = parseFloat(document.getElementById('sgEditItemCost').value) || 0;
+    const newSale = parseFloat(document.getElementById('sgEditItemSale').value) || 0;
+    
+    if(!newName) { alert("El nombre del producto no puede estar vacío"); return; }
+
+    const updates = {};
+    updates[`sungaze_data/items/${itemId}/name`] = newName;
+    updates[`sungaze_data/items/${itemId}/cost`] = newCost;
+    updates[`sungaze_data/items/${itemId}/sale`] = newSale;
+
+    // Si corrigió el costo, la matemática de lo Invertido se auto-corrige
+    if(newCost !== oldCost) {
+        const diff = newCost - oldCost;
+        let currentInv = sgGroupData[groupKey].invertido || 0;
+        let finalInv = currentInv + diff;
+        if(finalInv < 0) finalInv = 0;
+        updates[`sungaze_data/grupos/${groupKey}/invertido`] = finalInv;
+    }
+
+    const btn = document.querySelector('#sgEditModal .sg-btn-main');
+    btn.disabled = true;
+    btn.innerText = "Guardando cambios... ⏳";
+
+    await rtdb.ref().update(updates);
+
+    btn.disabled = false;
+    btn.innerText = "GUARDAR CAMBIOS";
+    document.getElementById('sgEditModal').style.display = 'none';
 }
 </script>
 </body>
