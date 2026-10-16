@@ -19,30 +19,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
   <style>
-/* Corrección general para evitar desbordamientos laterales en celulares */
-html, body {
-  max-width: 100vw;
-  overflow-x: hidden !important;
-  margin: 0;
-  padding: 0;
-}
-
-header, nav, main {
-  width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  padding-left: 12px !important;
-  padding-right: 12px !important;
-}
-
-.tab-content {
-  width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-  margin: 0 auto !important;
-}
     :root {
       --bg-cream: #fff0f3;
       --soft-red: #e65c65;
@@ -281,20 +257,20 @@ header, nav, main {
       padding: 0 20px 50px;
     }
 
-   .tab-content {
-  display: none; /* Ocultas por defecto */
-  background: var(--card-white);
-  border-radius: 30px;
-  padding: 35px;
-  border: 3px solid white;
-  box-shadow: 0 20px 40px var(--shadow-pink);
-  backdrop-filter: blur(10px);
-  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+    .tab-content {
+      display: none;
+      background: var(--card-white);
+      border-radius: 30px;
+      padding: 35px;
+      border: 3px solid white;
+      box-shadow: 0 20px 40px var(--shadow-pink);
+      backdrop-filter: blur(10px);
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
 
-.tab-content.active {
-  display: block; /* Solo se muestra la que tenga la clase active */
-}
+    .tab-content.active {
+      display: block;
+    }
 
     @keyframes popIn {
       from { opacity: 0; transform: scale(0.96); }
@@ -1905,54 +1881,29 @@ header, nav, main {
         flex-direction: column;
         gap: 15px;
       }
-      @media (max-width: 768px) {
-  /* Convertir el menú lateral de minijuegos en una barra con scroll horizontal fluido */
-  .minigames-layout {
-    flex-direction: column !important;
-    gap: 12px !important;
-  }
-
-  .minigames-sidebar {
-    width: 100% !important;
-    display: flex !important;
-    flex-direction: row !important;
-    overflow-x: auto !important;
-    white-space: nowrap !important;
-    gap: 10px !important;
-    padding: 10px !important;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .minigames-sidebar-title {
-    display: none !important; /* Ocultar el título repetido en celular para ahorrar espacio */
-  }
-
-  .minigame-nav-item {
-    flex: 0 0 auto !important;
-    width: 140px !important;
-    scroll-snap-align: start;
-    padding: 10px 8px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    text-align: center !important;
-  }
-
-  .minigame-nav-info {
-    align-items: center !important;
-  }
-
-  .minigame-nav-sub {
-    display: block !important; /* Volver a mostrar subtítulo corto adaptado */
-    font-size: 0.65rem !important;
-  }
-
-  /* Ocultar scrollbar fea en celulares pero mantener el deslizamiento */
-  .minigames-sidebar::-webkit-scrollbar {
-    display: none;
-  }
-}
+      .minigames-sidebar {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        padding: 10px;
+      }
+      .minigames-sidebar-title {
+        grid-column: span 2;
+        padding-bottom: 4px;
+      }
+      .minigame-nav-item {
+        padding: 8px 6px;
+      }
+      .minigame-nav-icon {
+        font-size: 1.1rem;
+      }
+      .minigame-nav-name {
+        font-size: 0.78rem;
+      }
+      .minigame-nav-sub {
+        display: none;
+      }
       .memory-grid { 
         grid-template-columns: repeat(4, 1fr); 
         gap: 6px; 
@@ -4013,28 +3964,94 @@ header, nav, main {
       80% { transform: translate(0, 50px) scale(0.8) rotate(720deg); } /* Cae y rebota */
       100% { opacity: 0; transform: translate(0, 100px) scale(0.5) rotate(900deg); } /* Se va perdiendo */
     }
-@media (max-width: 768px) {
-  #time-section div[style*="grid-template-columns"] {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    align-items: center !important;
-  }
-
-  #time-section div[style*="grid-template-columns"] > div {
-    width: 100% !important;
-    max-width: 280px !important;
-  }
+/* =======================================================
+   ESTILOS SECRETOS - INVENTARIO SUNGAZE
+======================================================= */
+#secretLoginOverlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; padding: 20px;
+}
+.secret-login-box {
+  background: #111; border: 2px solid #ff758f; padding: 30px; border-radius: 15px; 
+  text-align: center; color: white; width: 100%; max-width: 350px; position: relative;
+}
+.secret-input {
+  width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #444; 
+  background: #222; color: white; outline: none; font-size: 16px; text-align: center;
+}
+.secret-close {
+  position: absolute; top: 10px; right: 15px; color: #ff4444; font-weight: bold; cursor: pointer; font-size: 20px;
 }
 
-  /* Ajustar márgenes de los apartados en celular */
-  #time-section .basta-roulette-box,
-  #pet-section .basta-container {
-    padding: 12px !important;
-    margin: 0 auto !important;
-    width: 100% !important;
-  }
+#sungazeAppOverlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background-color: #000000; color: #ffffff; z-index: 9998; overflow-y: auto; padding: 20px; padding-bottom: 50px;
+  font-family: Arial, sans-serif;
 }
+.sg-close-app {
+  position: fixed; top: 20px; left: 20px; background: #ff4444; color: white; border: none; 
+  padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; z-index: 10000;
+}
+.sg-header-container { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 30px; margin-top: 40px;}
+.sg-logo-img { width: 100%; max-width: 250px; object-fit: contain; } 
+
+.sg-piggy-bank-container {
+  background: #1a1a1a; border: 2px solid #ffd700; border-radius: 15px; padding: 20px; text-align: center;
+  width: 100%; max-width: 350px; position: relative; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+.sg-piggy-svg { width: 80px; height: 80px; fill: #ff6b81; margin-bottom: 10px; transition: transform 0.2s; }
+.sg-coin {
+  position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 25px; height: 25px;
+  background: #ffd700; border-radius: 50%; border: 2px solid #b8860b; opacity: 0; display: none;
+}
+@keyframes sgDropCoin {
+  0% { top: -40px; opacity: 1; transform: translateX(-50%) scale(1); }
+  50% { top: 10px; opacity: 1; transform: translateX(-50%) scale(1.2); }
+  100% { top: 40px; opacity: 0; transform: translateX(-50%) scale(0.5); }
+}
+
+.sg-btn-main {
+  background-color: #ffffff; color: #000000; border: 2px solid #ffffff; padding: 15px 30px; font-size: 16px; 
+  font-weight: bold; border-radius: 8px; cursor: pointer; display: block; margin: 0 auto 30px; transition: 0.3s;
+}
+.sg-btn-main:hover { background-color: #000; color: #fff; }
+
+.sg-modal {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); 
+  justify-content: center; align-items: center; z-index: 10000;
+}
+.sg-modal-content {
+  background: #111; padding: 20px; border-radius: 10px; border: 1px solid #333; width: 90%; max-width: 400px; 
+  display: flex; flex-direction: column; gap: 15px; max-height: 90vh; overflow-y: auto; color: white;
+}
+.sg-modal-content img { width: 100%; height: auto; border-radius: 8px; object-fit: cover; max-height: 200px;}
+.sg-form-group { display: flex; flex-direction: column; gap: 5px; text-align: left; }
+.sg-form-group input, .sg-form-group select { padding: 10px; background: #222; color: #fff; border: 1px solid #444; border-radius: 5px; }
+
+.sg-inventory-list { display: flex; flex-direction: column; gap: 30px; }
+.sg-category-group { background: #0a0a0a; border: 1px solid #222; border-radius: 10px; padding: 15px; }
+.sg-category-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;}
+.sg-category-title { font-size: 20px; font-weight: bold; margin: 0; color: #4CAF50; }
+.sg-btn-cerdito { background: #ff6b81; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 5px; }
+.sg-btn-cerdito:hover { background: #ff4762; transform: scale(1.05); }
+
+.sg-items-grid { display: flex; flex-direction: column; gap: 15px; }
+.sg-product-card { background: #111; padding: 15px; border-radius: 8px; border: 1px solid #333; display: flex; gap: 15px; align-items: center; position: relative; text-align: left; }
+@media (max-width: 600px) { .sg-product-card { flex-direction: column; text-align: center; } }
+.sg-product-card img { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; }
+.sg-product-info { flex-grow: 1; width: 100%; }
+.sg-product-info p { margin: 5px 0; color: #ccc; }
+.sg-btn-delete { position: absolute; top: 10px; right: 10px; background: transparent; color: #ff4444; border: 2px solid #ff4444; border-radius: 50%; width: 30px; height: 30px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+.sg-btn-delete:hover { background: #ff4444; color: #000; }
+
+.sg-status-badge { font-size: 12px; padding: 4px 8px; border-radius: 4px; margin-left: 10px; vertical-align: middle; font-weight: bold; }
+.sg-status-disponible { background: #0275d8; color: #fff; }
+.sg-status-pendiente { background: #f0ad4e; color: #000; }
+.sg-status-vendido { background: #5cb85c; color: #fff; }
+
+.sg-product-actions { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+.sg-product-actions button { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; color: #fff; font-weight: bold; transition: 0.2s; }
+.sg-group-totals { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #333; display: flex; justify-content: space-between; font-size: 16px; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -4049,6 +4066,72 @@ header, nav, main {
           allow="autoplay" 
           style="display:none;">
   </iframe>
+
+<!-- LOGIN SECRETO -->
+<div id="secretLoginOverlay">
+  <div class="secret-login-box">
+    <div class="secret-close" onclick="cerrarLoginSecreto()">X</div>
+    <h3 style="margin-bottom: 15px; color: #ff758f;">Acceso Sungaze 🕶️</h3>
+    <input type="text" id="sgUser" class="secret-input" placeholder="Usuario">
+    <input type="password" id="sgPass" class="secret-input" placeholder="Contraseña">
+    <button class="sg-btn-main" style="margin-bottom: 0; padding: 10px 20px; width: 100%;" onclick="verificarLoginSecreto()">INGRESAR</button>
+  </div>
+</div>
+
+<!-- APLICACIÓN SUNGAZE (INVENTARIO) -->
+<div id="sungazeAppOverlay">
+  <button class="sg-close-app" onclick="cerrarSungazeApp()">Cerrar Inventario</button>
+
+  <div class="sg-header-container">
+      <!-- TU LOGO SIN RECUADRO Y MÁS GRANDE -->
+      <img src="https://lh3.googleusercontent.com/d/1YiOSvyvOtWvkMG6yNClnsHARmeE6cCG5" alt="Sungaze Logo" class="sg-logo-img" referrerpolicy="no-referrer">
+
+      <div class="sg-piggy-bank-container">
+          <div class="sg-coin" id="sgAnimCoin"></div>
+          <svg class="sg-piggy-svg" viewBox="0 0 24 24" id="sgPiggyIcon">
+              <path d="M19.33 10.22c.33-.55.5-1.18.5-1.84 0-2.31-2.12-4.18-4.73-4.18-1.52 0-2.88.6-3.76 1.54-.42-.1-.86-.16-1.31-.16-3.75 0-6.81 2.58-7.38 6.06L1.5 12.5c-.34.08-.5.47-.31.76l1.23 1.83c.15.22.42.32.68.25l1.64-.46c.55 2.11 2.22 3.86 4.39 4.69l-.79 1.69c-.16.34.01.76.36.9h1.99c.38 0 .7-.25.82-.6l1.11-3.08c.45.06.91.09 1.38.09s.93-.03 1.38-.09l1.11 3.08c.12.35.44.6.82.6h1.99c.35-.14.52-.56.36-.9l-.79-1.69c2.4-.92 4.18-2.91 4.58-5.32h1.06c.28 0 .5-.22.5-.5v-2.5c0-.28-.22-.5-.5-.5h-1.39zM10.03 7.82c0-.41.34-.75.75-.75h2.5c.41 0 .75.34.75.75s-.34.75-.75.75h-2.5c-.41 0-.75-.34-.75-.75zm-4.5 4.68c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/>
+          </svg>
+          <div style="font-size: 18px; font-weight: bold;">Ganancias hasta ahora: <span style="color: #5cb85c;">Q<span id="txtAlcancilla">0.00</span></span></div>
+          <div style="font-size: 14px; color: #aaa; margin-top: 5px;">META: Q10,000.00</div>
+      </div>
+  </div>
+
+  <button class="sg-btn-main" onclick="document.getElementById('sgFileInput').click()">AÑADIR OBJETO</button>
+  <input type="file" id="sgFileInput" accept="image/*" style="display:none;" onchange="sgPreviewImage(event)">
+
+  <div id="sgInventoryContainer" class="sg-inventory-list"></div>
+
+  <div class="sg-modal" id="sgAddModal">
+      <div class="sg-modal-content">
+          <img id="sgModalPreview" src="" alt="Previsualización">
+          
+          <div class="sg-form-group">
+              <label>Nombre del Producto:</label>
+              <input type="text" id="sgItemName" placeholder="Ej. Lentes Aviador Negros">
+          </div>
+          <div class="sg-form-group">
+              <label>Fecha:</label>
+              <input type="date" id="sgItemDate">
+          </div>
+          <div class="sg-form-group">
+              <label>Categoría:</label>
+              <select id="sgItemCategorySelect" onchange="sgCheckNewCategory()"></select>
+              <input type="text" id="sgItemCategoryNew" placeholder="Nueva Categoría..." style="display:none; margin-top:5px;">
+          </div>
+          <div class="sg-form-group">
+              <label>Costo:</label>
+              <input type="number" id="sgItemCost" placeholder="0.00" min="0">
+          </div>
+          <div class="sg-form-group">
+              <label>Venta:</label>
+              <input type="number" id="sgItemSale" placeholder="0.00" min="0">
+          </div>
+
+          <button class="sg-btn-main" style="margin-bottom: 0;" onclick="sgAddItem()">AÑADIR AL INVENTARIO</button>
+          <button onclick="sgCloseModal()" style="background: none; border: none; color: #888; cursor: pointer; padding: 10px;">Cancelar</button>
+      </div>
+  </div>
+</div>
 
   <!-- CARTEL OBLIGATORIO DE ENTRADA -->
   <div class="welcome-overlay" id="welcomeOverlay">
@@ -4068,7 +4151,7 @@ header, nav, main {
     <div class="hero-card">
       <div class="hero-img"></div>
       <div class="hero-overlay">
-        <h1>Nuestra Historia de Amor ❤️</h1>
+        <h1>Nuestra Historia de Amor <span onclick="abrirLoginSecreto()" style="cursor: default; user-select: none;">❤️</span></h1>
         <p>Un espacio hecho exclusivamente para nosotros dos corazon ❤️</p>
       </div>
     </div>
@@ -7132,32 +7215,12 @@ function restartCoopMatch() {
       }, 4000);
     }
 
-   function openTab(tabId, evt) {
-  // 1. Ocultar todas las pestañas de contenido forzosamente
-  const allTabs = document.querySelectorAll('.tab-content');
-  allTabs.forEach(tab => {
-    tab.classList.remove('active');
-    tab.style.display = 'none'; // Forzar ocultamiento en CSS inline
-  });
-
-  // 2. Quitar la clase active de todos los botones del menú superior
-  const allBtns = document.querySelectorAll('.tab-btn');
-  allBtns.forEach(btn => {
-    btn.classList.remove('active');
-  });
-
-  // 3. Mostrar únicamente la pestaña seleccionada
-  const targetTab = document.getElementById(tabId);
-  if (targetTab) {
-    targetTab.classList.add('active');
-    targetTab.style.display = 'block'; // Forzar visualización
-  }
-
-  // 4. Activar el botón que se presionó (si se pasó el evento)
-  if (evt && evt.currentTarget) {
-    evt.currentTarget.classList.add('active');
-  }
-}
+    function openTab(tabId, evt) {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      if(evt) evt.currentTarget.classList.add('active');
+    }
 
     let pendingFiles = [];
     let selectedAuthorProfile = "";
@@ -12395,8 +12458,238 @@ window.addEventListener('DOMContentLoaded', () => {
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
 
-          }
+      showToast(`¡Acción guardada! ${myPetUser} ${actionText} ✨`);
+    }
+/* =======================================================
+   LÓGICA SECRETA - SUNGAZE INVENTARIO
+======================================================= */
+function abrirLoginSecreto() { document.getElementById('secretLoginOverlay').style.display = 'flex'; }
+function cerrarLoginSecreto() { 
+  document.getElementById('secretLoginOverlay').style.display = 'none'; 
+  document.getElementById('sgUser').value = '';
+  document.getElementById('sgPass').value = '';
+}
+function cerrarSungazeApp() { document.getElementById('sungazeAppOverlay').style.display = 'none'; }
+
+function verificarLoginSecreto() {
+  const u = document.getElementById('sgUser').value;
+  const p = document.getElementById('sgPass').value;
+  if(u === 'Criss' && p === 'Criss2002') {
+    document.getElementById('secretLoginOverlay').style.display = 'none';
+    document.getElementById('sungazeAppOverlay').style.display = 'block';
+    document.getElementById('sgUser').value = ''; document.getElementById('sgPass').value = '';
+    // Inicializar fecha
+    if(!document.getElementById('sgItemDate').value) document.getElementById('sgItemDate').valueAsDate = new Date();
+  } else {
+    alert('Acceso Denegado ❌');
+  }
+}
+
+let sgCurrentImageBase64 = "";
+let sgCategoriasGuardadas = ["Gorras", "Lentes", "Billeteras"]; 
+let sgGlobalGananciasAlcancilla = 0; 
+let sgGroupData = {};
+
+sgActualizarSelectCategorias();
+
+function sgActualizarSelectCategorias() {
+    const select = document.getElementById('sgItemCategorySelect');
+    select.innerHTML = '<option value="">-- Seleccionar --</option>';
+    sgCategoriasGuardadas.forEach(cat => { select.innerHTML += `<option value="${cat}">${cat}</option>`; });
+    select.innerHTML += `<option value="NUEVA">+ Crear Nueva Categoría</option>`;
+}
+
+function sgCheckNewCategory() {
+    const select = document.getElementById('sgItemCategorySelect');
+    const inputNew = document.getElementById('sgItemCategoryNew');
+    if(select.value === "NUEVA") {
+        inputNew.style.display = "block"; inputNew.focus();
+    } else {
+        inputNew.style.display = "none";
+    }
+}
+
+function sgPreviewImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            sgCurrentImageBase64 = e.target.result;
+            document.getElementById('sgModalPreview').src = sgCurrentImageBase64;
+            document.getElementById('sgAddModal').style.display = "flex";
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+function sgCloseModal() {
+    document.getElementById('sgAddModal').style.display = "none";
+    document.getElementById('sgFileInput').value = ""; 
+}
+
+function sgFormatearFecha(fechaStr) {
+    const partes = fechaStr.split('-');
+    const dateObj = new Date(partes[0], partes[1] - 1, partes[2]);
+    const meses = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
+    return `${dateObj.getDate()} ${meses[dateObj.getMonth()]}`;
+}
+
+function sgAddItem() {
+    const name = document.getElementById('sgItemName').value.trim() || "Producto sin nombre";
+    const dateStr = document.getElementById('sgItemDate').value;
+    let category = document.getElementById('sgItemCategorySelect').value;
+    const newCategory = document.getElementById('sgItemCategoryNew').value.trim();
+    const cost = parseFloat(document.getElementById('sgItemCost').value) || 0;
+    const sale = parseFloat(document.getElementById('sgItemSale').value) || 0;
+
+    if (category === "NUEVA" && newCategory !== "") {
+        category = newCategory.toUpperCase();
+        if(!sgCategoriasGuardadas.includes(category)) {
+            sgCategoriasGuardadas.push(category);
+            sgActualizarSelectCategorias();
+        }
+    }
+    if (!category || category === "NUEVA") { alert("Selecciona o escribe una categoría."); return; }
+
+    const fechaFormateada = sgFormatearFecha(dateStr);
+    const groupKey = `${category} - ${fechaFormateada}`;
+
+    if (!sgGroupData[groupKey]) {
+        sgGroupData[groupKey] = { invertido: 0, ganancias: 0 };
+        sgCrearGrupoDOM(groupKey);
+    }
+
+    sgGroupData[groupKey].invertido += cost;
+    const uniqueId = Date.now().toString();
+
+    sgCrearObjetoDOM(groupKey, uniqueId, name, sgCurrentImageBase64, cost, sale);
+    sgActualizarTotalesGrupo(groupKey);
+    
+    sgCloseModal();
+    
+    document.getElementById('sgItemName').value = "";
+    document.getElementById('sgItemCost').value = "";
+    document.getElementById('sgItemSale').value = "";
+    document.getElementById('sgItemCategorySelect').value = "";
+    document.getElementById('sgItemCategoryNew').style.display = "none";
+}
+
+function sgCrearGrupoDOM(groupKey) {
+    const container = document.getElementById('sgInventoryContainer');
+    const groupDiv = document.createElement('div');
+    const safeId = groupKey.replace(/\s+/g, '_');
+    groupDiv.id = `group_${safeId}`;
+    groupDiv.className = "sg-category-group";
+    
+    groupDiv.innerHTML = `
+        <div class="sg-category-header">
+            <h3 class="sg-category-title">${groupKey}</h3>
+            <button class="sg-btn-cerdito" onclick="sgEnviarAlCerdito('${groupKey}')">🐷 AÑADIR AL CERDITO</button>
+        </div>
+        <div class="sg-items-grid" id="items_${safeId}"></div>
+        <div class="sg-group-totals">
+            <span style="color: #f0ad4e;">Total Invertido: Q<span id="inv_${safeId}">0.00</span></span>
+            <span style="color: #5cb85c;">Ganancias del Grupo: Q<span id="gan_${safeId}">0.00</span></span>
+        </div>
+    `;
+    container.insertBefore(groupDiv, container.firstChild);
+}
+
+function sgCrearObjetoDOM(groupKey, itemId, name, imgSrc, cost, sale) {
+    const safeId = groupKey.replace(/\s+/g, '_');
+    const itemsContainer = document.getElementById(`items_${safeId}`);
+    
+    const card = document.createElement('div');
+    card.className = "sg-product-card";
+    card.id = `card_${itemId}`;
+    card.setAttribute('data-estado', 'DISPONIBLE');
+    
+    card.innerHTML = `
+        <button class="sg-btn-delete" title="Quitar este artículo" onclick="sgEliminarObjeto('${itemId}', ${cost}, '${groupKey}')">X</button>
+        <img src="${imgSrc}" alt="Producto">
+        <div class="sg-product-info">
+            <h4 style="margin: 0 0 10px 0; font-size: 18px;">
+                ${name} <span class="sg-status-badge sg-status-disponible" id="badge_${itemId}">DISPONIBLE</span>
+            </h4>
+            <p><strong>Costo:</strong> Q${cost.toFixed(2)}</p>
+            <p><strong>Venta:</strong> Q${sale.toFixed(2)}</p>
+            <p style="color:#5cb85c; font-size:14px; margin-top:5px;">Ganancia Esperada: Q${(sale-cost).toFixed(2)}</p>
+            
+            <div class="sg-product-actions" id="actions_${itemId}">
+                <button style="background: #f0ad4e; color: #000;" onclick="sgCambiarEstado('${itemId}', 'PENDIENTE')">Pendiente</button>
+                <button style="background: #0275d8;" onclick="sgCambiarEstado('${itemId}', 'DISPONIBLE')">Devolución</button>
+                <button style="background: #5cb85c;" onclick="sgProcesarVenta('${itemId}', ${cost}, ${sale}, '${groupKey}')">VENDIDO</button>
+            </div>
+        </div>
+    `;
+    itemsContainer.appendChild(card);
+}
+
+function sgCambiarEstado(itemId, nuevoEstado) {
+    const badge = document.getElementById(`badge_${itemId}`);
+    badge.innerText = nuevoEstado;
+    badge.className = `sg-status-badge sg-status-${nuevoEstado.toLowerCase()}`;
+}
+
+function sgProcesarVenta(itemId, cost, sale, groupKey) {
+    const card = document.getElementById(`card_${itemId}`);
+    const gananciaUnitaria = sale - cost;
+    sgGroupData[groupKey].invertido -= cost;
+    sgGroupData[groupKey].ganancias += gananciaUnitaria;
+    sgActualizarTotalesGrupo(groupKey);
+
+    sgCambiarEstado(itemId, 'VENDIDO');
+    card.setAttribute('data-estado', 'VENDIDO');
+    document.getElementById(`actions_${itemId}`).style.display = "none";
+}
+
+function sgEnviarAlCerdito(groupKey) {
+    const gananciasDelGrupo = sgGroupData[groupKey].ganancias;
+    if (gananciasDelGrupo > 0) {
+        sgGlobalGananciasAlcancilla += gananciasDelGrupo;
+        document.getElementById('txtAlcancilla').innerText = sgGlobalGananciasAlcancilla.toFixed(2);
+        
+        sgGroupData[groupKey].ganancias = 0;
+        sgActualizarTotalesGrupo(groupKey);
+        sgAnimarMoneda();
+    } else {
+        alert("No hay ganancias nuevas en este grupo para enviar al cerdito.");
+    }
+}
+
+function sgEliminarObjeto(itemId, cost, groupKey) {
+    const card = document.getElementById(`card_${itemId}`);
+    const estadoActual = card.getAttribute('data-estado');
+
+    if (estadoActual !== 'VENDIDO') {
+        sgGroupData[groupKey].invertido -= cost;
+        sgActualizarTotalesGrupo(groupKey);
+    }
+    card.remove();
+}
+
+function sgActualizarTotalesGrupo(groupKey) {
+    const safeId = groupKey.replace(/\s+/g, '_');
+    const invElement = document.getElementById(`inv_${safeId}`);
+    const ganElement = document.getElementById(`gan_${safeId}`);
+    
+    if (invElement && ganElement) {
+        const invertidoFinal = sgGroupData[groupKey].invertido < 0 ? 0 : sgGroupData[groupKey].invertido;
+        invElement.innerText = invertidoFinal.toFixed(2);
+        ganElement.innerText = sgGroupData[groupKey].ganancias.toFixed(2);
+    }
+}
+
+function sgAnimarMoneda() {
+    const coin = document.getElementById('sgAnimCoin');
+    const icon = document.getElementById('sgPiggyIcon');
+    coin.style.display = "block";
+    coin.style.animation = "none"; 
+    setTimeout(() => { coin.style.animation = "sgDropCoin 0.6s forwards ease-in"; }, 10);
+    setTimeout(() => { icon.style.transform = "scale(1.1) translateY(-5px)"; }, 300);
+    setTimeout(() => { icon.style.transform = "scale(1) translateY(0)"; }, 500);
+    setTimeout(() => { coin.style.display = "none"; }, 700);
+}
 </script>
 </body>
 </html>
-
