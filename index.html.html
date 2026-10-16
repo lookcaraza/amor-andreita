@@ -12550,39 +12550,82 @@ function sgActualizarTotalesGrupo(groupKey) {
 
 function sgRenderizarHistorial() {
     const container = document.getElementById('sgHistorialList');
+    if (!container) return;
     container.innerHTML = '';
-    
-    let porFecha = {};
-    for (let key in sgHistorial) {
-        let h = sgHistorial[key];
-        if (!porFecha[h.dateSaved]) porFecha[h.dateSaved] = [];
-        porFecha[h.dateSaved].push(h);
+
+    const porFecha = {};
+    for (const key in sgHistorial) {
+        const h = sgHistorial[key] || {};
+        const fecha = h.dateSaved || (h.timestamp ? new Date(h.timestamp).toLocaleDateString('es-GT') : 'Fecha desconocida');
+        if (!porFecha[fecha]) porFecha[fecha] = [];
+        porFecha[fecha].push({ ...h, _historyId: key });
     }
 
-    let fechas = Object.keys(porFecha).sort((a,b) => new Date(b.split('/').reverse().join('-')) - new Date(a.split('/').reverse().join('-')));
+    const fechas = Object.keys(porFecha).sort((a, b) => {
+        const parse = v => { const parts = v.split('/'); return parts.length === 3 ? new Date(+parts[2], +parts[1]-1, +parts[0]).getTime() : 0; };
+        return parse(b) - parse(a);
+    });
 
     fechas.forEach(fecha => {
-        let divFecha = document.createElement('div');
-        divFecha.innerHTML = `<h4 style="color:#ff758f; border-bottom:1px solid #444; padding-bottom:5px; margin-bottom:10px;">📅 ${fecha}</h4>`;
-        
-        porFecha[fecha].forEach(item => {
-            divFecha.innerHTML += `
-                <div style="background:#222; padding:10px; border-radius:8px; margin-bottom:10px; border-left:4px solid #ffd700;">
-                    <div style="font-weight:bold; font-size:16px;">${item.name}</div>
-                    <div style="font-size:12px; color:#aaa; margin-bottom:5px;">Categoría: ${item.category}</div>
-                    <div style="display:flex; justify-content:space-between; font-size:14px; margin-top: 8px;">
-                        <span>Costo: <span style="color:#f0ad4e;">Q${item.cost.toFixed(2)}</span></span>
-                        <span>Venta: <span style="color:#5cb85c;">Q${item.sale.toFixed(2)}</span></span>
-                        <span><b>Ganancia: <span style="color:#ffd700;">Q${item.profit.toFixed(2)}</span></b></span>
-                    </div>
-                </div>
-            `;
+        const divFecha = document.createElement('div');
+        const heading = document.createElement('h4');
+        heading.style.cssText = 'color:#ff758f;border-bottom:1px solid #444;padding-bottom:5px;margin-bottom:10px;';
+        heading.textContent = '📅 ' + fecha;
+        divFecha.appendChild(heading);
+
+        porFecha[fecha].sort((a,b) => (Number(b.timestamp)||0) - (Number(a.timestamp)||0)).forEach(item => {
+            const row = document.createElement('div');
+            row.style.cssText = 'background:#222;padding:10px;border-radius:8px;margin-bottom:10px;border-left:4px solid #5cb85c;';
+            const top = document.createElement('div');
+            top.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px;';
+            const name = document.createElement('div');
+            name.style.cssText = 'font-weight:bold;font-size:16px;overflow-wrap:anywhere;';
+            name.textContent = item.name || 'Artículo vendido';
+            const controls = document.createElement('div');
+            controls.style.cssText = 'display:flex;align-items:center;gap:8px;flex-shrink:0;';
+            const check = document.createElement('span');
+            check.textContent = '✓';
+            check.title = 'Venta guardada en la alcancilla';
+            check.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;background:#5cb85c;color:#fff;border-radius:50%;width:24px;height:24px;font-weight:bold;';
+            const del = document.createElement('button');
+            del.type = 'button'; del.textContent = '×'; del.title = 'Eliminar este ahorro';
+            del.style.cssText = 'background:#d9534f;color:white;border:0;border-radius:6px;width:28px;height:28px;font-size:21px;line-height:20px;cursor:pointer;';
+            del.onclick = () => sgEliminarAhorro(item._historyId);
+            controls.append(check, del);
+            top.append(name, controls);
+            const category = document.createElement('div');
+            category.style.cssText = 'font-size:12px;color:#aaa;margin:5px 0;';
+            category.textContent = 'Categoría: ' + (item.category || 'Sin categoría');
+            const time = document.createElement('div');
+            time.style.cssText = 'font-size:12px;color:#aaa;margin-bottom:5px;';
+            time.textContent = 'Vendido: ' + (item.timeSold || (item.timestamp ? new Date(item.timestamp).toLocaleTimeString('es-GT',{hour:'2-digit',minute:'2-digit'}) : 'Hora no registrada'));
+            const amounts = document.createElement('div');
+            amounts.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;font-size:14px;margin-top:8px;';
+            const cost = Number(item.cost)||0, sale = Number(item.sale)||0, profit = Number.isFinite(Number(item.profit)) ? Number(item.profit) : sale-cost;
+            amounts.innerHTML = `<span>Costo: <b style="color:#f0ad4e">Q${cost.toFixed(2)}</b></span><span>Venta: <b style="color:#5cb85c">Q${sale.toFixed(2)}</b></span><span>Ganancia: <b style="color:#ffd700">Q${profit.toFixed(2)}</b></span>`;
+            row.append(top, category, time, amounts);
+            divFecha.appendChild(row);
         });
         container.appendChild(divFecha);
     });
 
-    if (fechas.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#888;">El cerdito aún está vacío 🥺</p>';
+    if (fechas.length === 0) container.innerHTML = '<p style="text-align:center;color:#888;">El cerdito aún está vacío 🥺</p>';
+}
+
+async function sgEliminarAhorro(historyId) {
+    const item = sgHistorial[historyId];
+    if (!item) return;
+    const profit = Number.isFinite(Number(item.profit)) ? Number(item.profit) : (Number(item.sale)||0) - (Number(item.cost)||0);
+    if (!confirm(`¿Quieres eliminar este ahorro de "${item.name || 'Artículo vendido'}"? Se restarán Q${profit.toFixed(2)} de la alcancilla. Esta acción no se puede deshacer.`)) return;
+    try {
+        const nuevaAlcancia = Math.max(0, (Number(sgGlobalGananciasAlcancilla)||0) - profit);
+        const updates = {};
+        updates[`sungaze_data/historial/${historyId}`] = null;
+        updates['sungaze_data/alcancia'] = nuevaAlcancia;
+        await rtdb.ref().update(updates);
+    } catch (error) {
+        console.error('Error eliminando ahorro Sungaze:', error);
+        alert('No se pudo eliminar el ahorro: ' + (error.message || error));
     }
 }
 
@@ -13065,13 +13108,23 @@ function sgCrearObjetoDOM(groupKey, id, name, imgUrl, cost, sale, estado, ahorra
         stateBtn.style.background = status === 'VENDIDO' ? '#0275d8' : '#5cb85c';
         stateBtn.textContent = status === 'VENDIDO' ? 'Marcar disponible' : 'Marcar vendido';
         stateBtn.onclick = () => sgCambiarEstado(id, status === 'VENDIDO' ? 'DISPONIBLE' : 'VENDIDO');
-        const editBtn = document.createElement('button');
-        editBtn.style.background = '#e0a800'; editBtn.style.color = '#111';
-        editBtn.textContent = 'Editar'; editBtn.onclick = () => sgAbrirEdicion(id);
+        if (status === 'VENDIDO') {
+            const saveBtn = document.createElement('button');
+            saveBtn.style.background = '#ff6b81';
+            saveBtn.style.color = '#fff';
+            saveBtn.textContent = '🐷 Añadir a alcancilla';
+            saveBtn.onclick = () => sgAhorrarArticulo(id);
+            actions.append(stateBtn, saveBtn);
+        } else {
+            const editBtn = document.createElement('button');
+            editBtn.style.background = '#e0a800'; editBtn.style.color = '#111';
+            editBtn.textContent = 'Editar'; editBtn.onclick = () => sgAbrirEdicion(id);
+            actions.append(stateBtn, editBtn);
+        }
         const deleteBtn = document.createElement('button');
         deleteBtn.style.background = '#d9534f'; deleteBtn.textContent = 'Eliminar';
         deleteBtn.onclick = () => sgEliminarItem(id);
-        actions.append(stateBtn, editBtn, deleteBtn);
+        actions.appendChild(deleteBtn);
     }
     info.appendChild(actions);
     card.append(img, info);
@@ -13082,9 +13135,52 @@ async function sgCambiarEstado(itemId, nuevoEstado) {
     const item = sgItems[itemId];
     if (!item || item.ahorrado) return;
     try {
-        await rtdb.ref(`sungaze_data/items/${itemId}/estado`).set(nuevoEstado);
+        const updates = {};
+        updates[`sungaze_data/items/${itemId}/estado`] = nuevoEstado;
+        updates[`sungaze_data/items/${itemId}/soldAt`] = nuevoEstado === 'VENDIDO' ? Date.now() : null;
+        await rtdb.ref().update(updates);
         if (item.groupKey) sgActualizarTotalesGrupo(item.groupKey);
     } catch (error) { console.error(error); alert('No se pudo actualizar el artículo: ' + error.message); }
+}
+
+async function sgAhorrarArticulo(itemId) {
+    const item = sgItems[itemId];
+    if (!item || item.estado !== 'VENDIDO' || item.ahorrado) {
+        alert('Primero marca el artículo como VENDIDO.');
+        return;
+    }
+    const cost = Number(item.cost) || 0;
+    const sale = Number(item.sale) || 0;
+    const profit = sale - cost;
+    if (profit < 0 && !confirm(`Este artículo deja una pérdida de Q${Math.abs(profit).toFixed(2)}. ¿Deseas registrarlo igualmente?`)) return;
+    if (!confirm(`¿Añadir "${item.name}" a la alcancilla?
+Costo: Q${cost.toFixed(2)}
+Venta: Q${sale.toFixed(2)}
+Ganancia: Q${profit.toFixed(2)}
+
+El artículo se quitará del inventario y solo se sumará la ganancia.`)) return;
+    try {
+        const now = Number(item.soldAt) || Date.now();
+        const soldDate = new Date(now);
+        const dateSaved = `${String(soldDate.getDate()).padStart(2,'0')}/${String(soldDate.getMonth()+1).padStart(2,'0')}/${soldDate.getFullYear()}`;
+        const timeSold = soldDate.toLocaleTimeString('es-GT', {hour:'2-digit', minute:'2-digit'});
+        const histRef = rtdb.ref('sungaze_data/historial').push();
+        const group = sgGroupData[item.groupKey] || { invertido: 0 };
+        const updates = {};
+        updates[`sungaze_data/items/${itemId}`] = null;
+        updates[`sungaze_data/grupos/${item.groupKey}/invertido`] = Math.max(0, (Number(group.invertido)||0) - cost);
+        updates[`sungaze_data/historial/${histRef.key}`] = {
+            name: item.name || 'Artículo vendido', category: item.groupKey || 'Sin categoría',
+            cost, sale, profit, dateSaved, timeSold, timestamp: now, soldAt: now, confirmed: true
+        };
+        updates['sungaze_data/alcancia'] = (Number(sgGlobalGananciasAlcancilla)||0) + profit;
+        await rtdb.ref().update(updates);
+        sgAnimarMoneda();
+        alert(`¡Venta guardada! Se añadió Q${profit.toFixed(2)} de ganancia a la alcancilla. 🐷`);
+    } catch (error) {
+        console.error('Error al añadir artículo a la alcancilla:', error);
+        alert('No se pudo guardar la venta: ' + (error.message || error));
+    }
 }
 
 async function sgEliminarItem(itemId) {
