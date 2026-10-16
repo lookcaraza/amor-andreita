@@ -4408,7 +4408,7 @@
 
 
 <!-- CONTENEDOR DE LA BAÑERA (Oculto por defecto) -->
-          <div id="animPropBath" style="display: none; position: absolute; left: 0; right: 0; margin: 0 auto; bottom: 15px; width: min(430px, 92%); height: 185px; z-index: 25;">
+          <div id="animPropBath" style="display: none; position: absolute; left: 50%; right: auto; margin: 0; bottom: 15px; width: min(430px, 92%); height: 185px; transform: translateX(-50%); z-index: 25;">
             <!-- Interior de la bañera -->
             <div class="tonita-bath-inside"></div>
             <!-- Agua -->
@@ -4779,7 +4779,14 @@
 
                     <!-- Paleta completa con Grosores, Borrador y Bote de Pintura -->
                     <div class="pinturillo-palette" id="drawingToolsBar">
-                      <!-- Colores -->
+                     <!-- Colores -->
+                     <!-- BOTÓN ARCOÍRIS TIPO PHOTOSHOP -->
+<div style="position: relative; display: inline-block; width: 28px; height: 28px; border-radius: 50%; margin-right: 4px;">
+  <div class="color-swatch-btn" id="rainbowColorBtn" style="background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red); width: 100%; height: 100%; border: 2px solid white; display: flex; align-items: center; justify-content: center; overflow: hidden; position: absolute;" title="Color Personalizado">
+    <input type="color" id="customColorPicker" value="#000000" style="opacity: 0; width: 250%; height: 250%; cursor: pointer; position: absolute; top: -50%; left: -50%;" oninput="applyCustomPinturilloColor(this.value)">
+  </div>
+</div>
+                   <!-- BOTÓN NEGRO ORIGINAL -->
                       <div class="color-swatch-btn selected" style="background: #000000;" onclick="setPinturilloColor('#000000', this)"></div>
                       <div class="color-swatch-btn" style="background: #e63946;" onclick="setPinturilloColor('#e63946', this)"></div>
                       <div class="color-swatch-btn" style="background: #ff758f;" onclick="setPinturilloColor('#ff758f', this)"></div>
@@ -8810,6 +8817,20 @@ function restartCoopMatch() {
       document.querySelectorAll('.brush-size-btn').forEach(btn => btn.classList.remove('active'));
       if (el) el.classList.add('active');
     }
+function applyCustomPinturilloColor(hexCode) {
+    currentColor = hexCode;
+    if (currentTool === 'eraser') {
+        setPinturilloTool('pencil');
+    }
+    document.querySelectorAll('.color-swatch-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        btn.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)"; 
+    });
+
+    const rainbowBtn = document.getElementById('rainbowColorBtn');
+    rainbowBtn.classList.add('selected');
+    rainbowBtn.style.boxShadow = `0 0 0 3px ${hexCode}`;
+}
 
     function setPinturilloTool(toolName) {
       currentTool = toolName;
@@ -12286,279 +12307,7 @@ window.addEventListener('DOMContentLoaded', () => {
       setInterval(updateTimer, 1000);
     }
 
-  /* ==========================================================================
-       LÓGICA EN TIEMPO REAL: NUESTRA MASCOTA PUG CON METABOLISMO Y ANIMACIONES
-       ========================================================================== */
-    let myPetUser = "";
-    let currentPetStats = { hunger: 100, clean: 100, mood: 100, lastUpdate: Date.now() };
-    let isPetAnimating = false; // Bloquea clics mientras hace una animación
-
-    // Efectos de Sonido
-    const sndEat = new Audio('https://www.myinstants.com/media/sounds/minecraft-eating-sound-effect.mp3');
-    const sndBark = new Audio('https://www.myinstants.com/media/sounds/dog-bark-1.mp3');
-    const sndSplash = new Audio('https://www.myinstants.com/media/sounds/splash-water.mp3');
-    const sndBoing = new Audio('https://www.myinstants.com/media/sounds/boing_1.mp3');
-    const sndRumble = new Audio('https://www.myinstants.com/media/sounds/stomach-growling.mp3');
-
-  function initPetSystem() {
-      const savedUser = localStorage.getItem('basta_saved_user') || localStorage.getItem('pinturillo_saved_user');
-      if (savedUser && (savedUser === 'Criss' || savedUser === 'Andreita')) {
-        choosePetUser(savedUser);
-      }
-
-      rtdb.ref('pet_tonita').on('value', (snap) => {
-        const data = snap.val();
-        if (data) {
-          currentPetStats = data;
-          applyTimeDecay(); 
-        } else {
-          updatePetVisuals(); 
-        }
-      });
-
-      // Se ejecuta cada 10 segundos para ver cómo baja suavemente de 1% en 1%
-      setInterval(() => {
-        applyTimeDecay();
-      }, 10000); 
-
-      db.collection('pet_history').orderBy('timestamp', 'desc').limit(15).onSnapshot((snapshot) => {
-        const feed = document.getElementById('petHistoryFeed');
-        feed.innerHTML = '';
-        if (snapshot.empty) {
-          feed.innerHTML = `<div style="color: #666; text-align: center;">Aún no hay acciones registradas. ¡Cuida a Toñita! 💕</div>`;
-          return;
-        }
-        snapshot.forEach((doc) => {
-          const item = doc.data();
-          const row = document.createElement('div');
-          row.style.padding = '6px 10px';
-          row.style.background = '#fff0f3';
-          row.style.borderRadius = '10px';
-          row.style.border = '1px solid #ffccd5';
-          row.style.display = 'flex';
-          row.style.justifyContent = 'space-between';
-          row.style.alignItems = 'center';
-          const authorBadge = item.author === 'Criss' ? '👑 Criss' : '🌸 Andreita';
-          row.innerHTML = `<span><b>${authorBadge}</b> ${item.actionText}</span> <span style="font-size: 0.75rem; color: #777;">${item.timeStr || ''}</span>`;
-          feed.appendChild(row);
-        });
-      });
-    }
-
-    function applyTimeDecay() {
-      const now = Date.now();
-      // Tiempo pasado en minutos (incluso con decimales)
-      const diffMinutes = (now - (currentPetStats.lastUpdate || now)) / 60000;
-      
-      // Hambre: 15% en 10 min -> 1.5% por minuto
-      // Higiene: 30% en 20 min -> 1.5% por minuto
-      // Felicidad: 10% en 10 min -> 1.0% por minuto
-      
-      if (diffMinutes >= 0.1) { // Actualiza en pedacitos pequeños
-        const dropsHunger = diffMinutes * 1.5;
-        const dropsClean = diffMinutes * 1.5;
-        const dropsMood = diffMinutes * 1.0;
-
-        currentPetStats.hunger = Math.max(0, currentPetStats.hunger - dropsHunger);
-        currentPetStats.clean = Math.max(0, currentPetStats.clean - dropsClean);
-        currentPetStats.mood = Math.max(0, currentPetStats.mood - dropsMood);
-        currentPetStats.lastUpdate = now;
-        
-        rtdb.ref('pet_tonita').update(currentPetStats);
-        updatePetVisuals();
-      }
-    }
-
-    function updatePetVisuals() {
-      // Usamos Math.round para que siempre veas números enteros (ej. 98%, 97%)
-      document.getElementById('petHungerBadge').textContent = `🍗 Hambre: ${Math.round(currentPetStats.hunger)}%`;
-      document.getElementById('petCleanBadge').textContent = `✨ Higiene: ${Math.round(currentPetStats.clean)}%`;
-      document.getElementById('petMoodBadge').textContent = `🥰 Felicidad: ${Math.round(currentPetStats.mood)}%`;
-
-      const pug = document.getElementById('realPugAvatar');
-      const mouth = document.getElementById('petMouth');
-      const bubble = document.getElementById('petThoughtBubble');
-      const dirt = document.getElementById('petDirtOverlay');
-      const deadOverlay = document.getElementById('petDeadOverlay');
-
-      if (!isPetAnimating) {
-        pug.style.animation = 'pugIdleLive 3s infinite ease-in-out';
-      }
-      
-      mouth.style.borderBottom = '3px solid #e3d0b9';
-      mouth.style.borderTop = 'none';
-      mouth.style.borderRadius = '0 0 10px 10px';
-      bubble.style.display = 'none';
-      dirt.style.display = 'none';
-      deadOverlay.style.display = 'none';
-
-      // 1. Muerte si las 3 llegan a cero redondeado
-      if (Math.round(currentPetStats.hunger) === 0 && Math.round(currentPetStats.clean) === 0 && Math.round(currentPetStats.mood) === 0) {
-        deadOverlay.style.display = 'flex';
-        pug.style.animation = 'none'; 
-        return; 
-      }
-
-      if (currentPetStats.hunger <= 25) {
-        bubble.style.display = 'block';
-        bubble.textContent = '🦴';
-        mouth.style.borderBottom = 'none';
-        mouth.style.borderTop = '3px solid #e3d0b9';
-        mouth.style.borderRadius = '10px 10px 0 0';
-        if(!window.rumblePlayed) {
-          sndRumble.play().catch(e=>{});
-          window.rumblePlayed = true;
-        }
-      } else {
-        window.rumblePlayed = false; 
-      }
-
-      if (currentPetStats.clean <= 25) {
-        dirt.style.display = 'block';
-      }
-
-      if (currentPetStats.mood <= 25) {
-        if (currentPetStats.hunger > 25) {
-          bubble.style.display = 'block';
-          bubble.textContent = '⚽';
-        }
-        if (!isPetAnimating) pug.style.animation = 'pugBored 3s infinite ease-in-out';
-      }
-    }
-
-    function choosePetUser(name) {
-      if (name !== 'Criss' && name !== 'Andreita') return;
-      myPetUser = name;
-      localStorage.setItem('basta_saved_user', name);
-      document.getElementById('petUserCriss').classList.remove('selected');
-      document.getElementById('petUserAndreita').classList.remove('selected');
-      if (name === 'Criss') {
-        document.getElementById('petUserCriss').classList.add('selected');
-      } else if (name === 'Andreita') {
-        document.getElementById('petUserAndreita').classList.add('selected');
-      }
-    }
-
-    function triggerBark() {
-  const bark = document.getElementById('petBarkVisual');
-
-  // Mostrar el "WOOF" visual
-  bark.style.display = 'block';
-  bark.style.animation = 'none';
-  void bark.offsetWidth;
-  bark.style.animation = 'showBark 0.8s ease forwards';
-
-  // Reiniciar el audio para que siempre empiece desde el principio
-  sndBark.pause();
-  sndBark.currentTime = 0;
-
-  // Reproducir solo un ladrido corto
-  sndBark.play().catch(e => {});
-
-  // Cortar el audio rápidamente para evitar varios ladridos
-  setTimeout(() => {
-    sndBark.pause();
-    sndBark.currentTime = 0;
-  }, 500);
-
-  // Ocultar el WOOF
-  setTimeout(() => {
-    bark.style.display = 'none';
-  }, 800);
-}
-
-  async function interactPet(actionType) {
-      if (!myPetUser || (myPetUser !== 'Criss' && myPetUser !== 'Andreita')) {
-        showToast("Por favor selecciona primero si eres Criss o Andreita 💕");
-        return;
-      }
-      
-      if (isPetAnimating) return; 
-      isPetAnimating = true;
-
-      let actionText = "";
-      const pug = document.getElementById('realPugAvatar');
-      pug.style.animation = 'none';
-      void pug.offsetWidth;
-
-      if (actionType === 'feed') {
-        actionText = "le dio un rico pollo a Toñita 🍗🐶";
-        currentPetStats.hunger = Math.min(100, currentPetStats.hunger + 15); // +15% de hambre
-        document.getElementById('petStatusText').textContent = "🐾 ¡Ñam ñam! A Toñita le encantó su pollito.";
-        
-        const prop = document.getElementById('animPropFeed');
-        prop.style.display = 'block';
-        prop.style.animation = 'feedAnimDirect 2.5s ease forwards';
-        
-        setTimeout(() => sndEat.play().catch(e=>{}), 400); 
-        setTimeout(() => { triggerBark(); }, 1800);
-
-        setTimeout(() => {
-          prop.style.display = 'none';
-          isPetAnimating = false;
-          updatePetVisuals();
-        }, 2500);
-
-      } else if (actionType === 'bath') {
-        actionText = "bañó y dejó reluciente a Toñita 🛁✨";
-        currentPetStats.clean = 100; // El baño SÍ sube al 100% directamente
-        document.getElementById('petStatusText').textContent = "🐾 ¡Splash! Toñita disfruta su baño calientito.";
-        
-        const prop = document.getElementById('animPropBath');
-        prop.style.display = 'block';
-        prop.style.animation = 'bathAnimLeft 3.5s ease forwards';
-        pug.style.animation = 'pugBathDrop 3.5s ease forwards'; 
-        
-        setTimeout(() => sndSplash.play().catch(e=>{}), 500);
-        setTimeout(() => { triggerBark(); }, 2900);
-
-        setTimeout(() => {
-          prop.style.display = 'none';
-          isPetAnimating = false;
-          updatePetVisuals();
-        }, 3500);
-
-      } else if (actionType === 'play') {
-        actionText = "jugó fútbol con Toñita ⚽🥰";
-        currentPetStats.mood = Math.min(100, currentPetStats.mood + 15); // +15% de felicidad
-        document.getElementById('petStatusText').textContent = "🐾 ¡Toñita cabeceó la pelota de regreso!";
-        
-        const prop = document.getElementById('animPropPlay');
-        prop.style.display = 'block';
-        prop.style.animation = 'playSoccerFront 2.5s ease forwards';
-        
-        setTimeout(() => sndBoing.play().catch(e=>{}), 400); 
-        setTimeout(() => {
-          pug.style.animation = 'pugActionJump 0.6s ease'; 
-          sndBoing.play().catch(e=>{}); 
-        }, 1000);
-
-        setTimeout(() => { triggerBark(); }, 1800);
-
-        setTimeout(() => {
-          prop.style.display = 'none';
-          isPetAnimating = false;
-          updatePetVisuals();
-        }, 2500);
-      }
-
-      currentPetStats.lastUpdate = Date.now();
-      updatePetVisuals(); 
-
-      await rtdb.ref('pet_tonita').update(currentPetStats);
-
-      const now = new Date();
-      const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-      await db.collection('pet_history').add({
-        author: myPetUser,
-        actionText: actionText,
-        timeStr: timeStr,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      });
-
-      showToast(`¡Acción guardada! ${myPetUser} ${actionText} ✨`);
-    }
-/* =======================================================
+ /* =======================================================
    LÓGICA SECRETA - SUNGAZE INVENTARIO (ACTUALIZADA)
 ======================================================= */
 let isSungazeSynced = false;
@@ -12854,6 +12603,242 @@ async function sgGuardarEdicion() {
     btn.disabled = false;
     btn.innerText = "GUARDAR CAMBIOS";
     document.getElementById('sgEditModal').style.display = 'none';
+}
+/* =======================================================
+   SELECTOR DE COLOR AVANZADO PINTURILLO (TIPO PHOTOSHOP)
+======================================================= */
+function applyCustomPinturilloColor(hexCode) {
+    // Cambiar la variable global de color que ya usas
+    currentColor = hexCode;
+    
+    // Si estaba usando borrador, regresarlo al lápiz
+    if (currentTool === 'eraser') {
+        setPinturilloTool('pencil');
+    }
+
+    // Quitar la selección visual de los otros colores
+    document.querySelectorAll('.color-swatch-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        btn.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)"; // Regresar sombra normal
+    });
+
+    // Añadir la selección visual al botón de arcoíris con el color exacto que eligió
+    const rainbowBtn = document.getElementById('rainbowColorBtn');
+    rainbowBtn.classList.add('selected');
+    rainbowBtn.style.boxShadow = `0 0 0 3px ${hexCode}`;
+}
+
+
+/* =======================================================
+   TOÑITA ONLINE EN TIEMPO REAL (MULTI-JUGADOR FIREBASE)
+======================================================= */
+let myPetUser = "";
+let petStats = { hunger: 100, hygiene: 100, happiness: 100 };
+// Evita que la animación local se ejecute dos veces cuando Firebase devuelve nuestra propia acción.
+let lastLocalPetAnimationTimestamp = 0;
+
+function choosePetUser(name) {
+    if (name !== 'Criss' && name !== 'Andreita') return;
+    myPetUser = name;
+    document.getElementById('petUserCriss').classList.remove('selected');
+    document.getElementById('petUserAndreita').classList.remove('selected');
+    if (name === 'Criss') document.getElementById('petUserCriss').classList.add('selected');
+    else document.getElementById('petUserAndreita').classList.add('selected');
+}
+
+function initPetSystem() {
+    // Escuchar el estado de Toñita en Vivo
+    rtdb.ref('tonita_pet/stats').on('value', (snap) => {
+        const data = snap.val();
+        if (data) {
+            petStats = data;
+            document.getElementById('petHungerBadge').textContent = `🍗 Hambre: ${petStats.hunger}%`;
+            document.getElementById('petCleanBadge').textContent = `✨ Higiene: ${petStats.hygiene}%`;
+            document.getElementById('petMoodBadge').textContent = `🥰 Felicidad: ${petStats.happiness}%`;
+            
+            if(petStats.hunger <= 0 || petStats.hygiene <= 0 || petStats.happiness <= 0) {
+                document.getElementById('petDeadOverlay').style.display = 'flex';
+            } else {
+                document.getElementById('petDeadOverlay').style.display = 'none';
+            }
+
+            if(petStats.hygiene <= 30) {
+                document.getElementById('petDirtOverlay').style.display = 'block';
+            } else {
+                document.getElementById('petDirtOverlay').style.display = 'none';
+            }
+        } else {
+            rtdb.ref('tonita_pet/stats').set({ hunger: 100, hygiene: 100, happiness: 100 });
+        }
+    });
+
+    // Escuchar historial de interacciones en vivo
+    rtdb.ref('tonita_pet/history').limitToLast(15).on('value', (snap) => {
+        const historyFeed = document.getElementById('petHistoryFeed');
+        if(!historyFeed) return;
+        historyFeed.innerHTML = '';
+        
+        const items = [];
+        snap.forEach(child => { items.push(child.val()); });
+        
+        items.reverse().forEach(item => {
+            let icon = "🐾";
+            if(item.action === 'feed') icon = "🍗";
+            if(item.action === 'bath') icon = "🛁";
+            if(item.action === 'play') icon = "⚽";
+            if(item.action === 'revive') icon = "❤️‍🩹";
+            
+            const timeStr = new Date(item.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            let colorNombre = (item.user === "Criss") ? "#0d47a1" : "#880e4f";
+
+            historyFeed.innerHTML += `
+                <div style="padding: 8px 10px; border-bottom: 1px dashed #ffb3c1; display:flex; justify-content:space-between; align-items:center;">
+                    <span><b>${icon} <span style="color:${colorNombre};">${item.user}</span></b> ${item.text}</span>
+                    <span style="color:#aaa; font-size:11px; margin-left:10px;">${timeStr}</span>
+                </div>`;
+        });
+    });
+
+    // Escuchar animaciones en vivo para que ambos las vean al mismo tiempo.
+    // La acción que inició este navegador ya se anima localmente, así que se ignora su eco.
+    rtdb.ref('tonita_pet/lastAnimation').on('value', (snap) => {
+        const data = snap.val();
+        if (!data || !data.timestamp || Date.now() - data.timestamp >= 5000) return;
+        if (data.timestamp === lastLocalPetAnimationTimestamp) {
+            lastLocalPetAnimationTimestamp = 0;
+            return;
+        }
+        ejecutarAnimacionTonita(data.action);
+    }, (error) => {
+        console.error('No se pudo escuchar la animación de Toñita:', error);
+    });
+}
+
+async function interactPet(action) {
+    if (!myPetUser) {
+        showToast("¡Selecciona si eres Criss o Andreita para cuidar a Toñita! 🐶💕");
+        return;
+    }
+
+    if (!['feed', 'bath', 'play'].includes(action)) return;
+
+    // Si Toñita está sin energía, la revivimos; también registramos la acción.
+    if (Number(petStats.hunger) <= 0 || Number(petStats.hygiene) <= 0 || Number(petStats.happiness) <= 0) {
+        const revivedStats = { hunger: 20, hygiene: 20, happiness: 20 };
+        const timestamp = Date.now();
+        petStats = revivedStats;
+        try {
+            await Promise.all([
+                rtdb.ref('tonita_pet/stats').set(revivedStats),
+                rtdb.ref('tonita_pet/history').push().set({
+                    user: myPetUser, action: 'revive', text: 'le dio RCP a Toñita con mucho amor ❤️‍🩹', timestamp
+                })
+            ]);
+            showToast("¡Reviviste a Toñita mi amor! 😭❤️‍🩹");
+        } catch (error) {
+            console.error('Error al revivir a Toñita:', error);
+            showToast("Toñita revivió en pantalla, pero Firebase no pudo guardar los cambios. Revisa la conexión o los permisos.");
+        }
+        return;
+    }
+
+    const newStats = {
+        hunger: Number(petStats.hunger ?? 100),
+        hygiene: Number(petStats.hygiene ?? 100),
+        happiness: Number(petStats.happiness ?? 100)
+    };
+    let actionText = '';
+
+    if (action === 'feed') {
+        // Aunque ya esté al 100%, la acción visual y el historial deben funcionar.
+        newStats.hunger = Math.min(100, newStats.hunger + 15);
+        newStats.hygiene = Math.max(0, newStats.hygiene - 5);
+        actionText = 'le dio un pollito rico a Toñita 🍗';
+    } else if (action === 'bath') {
+        newStats.hygiene = Math.min(100, newStats.hygiene + 30);
+        actionText = 'bañó a Toñita y quedó oliendo rico ✨';
+    } else if (action === 'play') {
+        newStats.happiness = Math.min(100, newStats.happiness + 20);
+        newStats.hunger = Math.max(0, newStats.hunger - 10);
+        newStats.hygiene = Math.max(0, newStats.hygiene - 10);
+        actionText = 'jugó a la pelota con Toñita ⚽';
+    }
+
+    const timestamp = Date.now();
+    petStats = newStats;
+    lastLocalPetAnimationTimestamp = timestamp;
+
+    // Ejecutar la animación inmediatamente, sin depender de que Firebase responda.
+    ejecutarAnimacionTonita(action);
+
+    // Guardar estadísticas e historial. Si Firebase falla, mostramos el error en vez de fingir que se guardó.
+    try {
+        const historyRef = rtdb.ref('tonita_pet/history').push();
+        await Promise.all([
+            rtdb.ref('tonita_pet/stats').set(newStats),
+            historyRef.set({
+                user: myPetUser,
+                action: action,
+                text: actionText,
+                timestamp: timestamp
+            }),
+            rtdb.ref('tonita_pet/lastAnimation').set({
+                action: action,
+                timestamp: timestamp
+            })
+        ]);
+        showToast(`¡Acción guardada! ${actionText} 💕`);
+    } catch (error) {
+        console.error('No se pudo guardar la acción de Toñita en Firebase:', error);
+        showToast("La animación se mostró, pero no se pudo guardar el historial. Revisa la conexión y las reglas de Firebase.");
+    }
+}
+// 4. Ejecutar la animación visual
+function ejecutarAnimacionTonita(action) {
+    const textStatus = document.getElementById('petStatusText');
+    const pug = document.getElementById('realPugAvatar');
+    
+    // Reiniciar animación del pug por si estaba pegada
+    pug.style.animation = 'none';
+    pug.offsetHeight; // Forzar lectura para reiniciar
+    
+    if(action === 'feed') {
+        textStatus.textContent = "🍗 ¡Toñita está comiendo rico!";
+        const feedProp = document.getElementById('animPropFeed');
+        feedProp.style.display = 'block';
+        feedProp.style.animation = 'feedAnimDirect 2s forwards ease-in-out';
+        pug.style.animation = 'pugActionJump 2.5s forwards ease-in-out';
+        setTimeout(() => { 
+            feedProp.style.display = 'none'; 
+            pug.style.animation = 'pugIdleLive 3s infinite ease-in-out';
+        }, 2000);
+    } 
+    else if(action === 'bath') {
+        textStatus.textContent = "🛁 ¡Toñita se está dando un bañito!";
+        const bathProp = document.getElementById('animPropBath');
+        bathProp.style.display = 'block';
+        bathProp.style.animation = 'tonitaBathEnter 4s forwards ease-in-out';
+        pug.style.animation = 'tonitaPugBath 4s forwards ease-in-out';
+        setTimeout(() => { 
+            bathProp.style.display = 'none'; 
+            pug.style.animation = 'pugIdleLive 3s infinite ease-in-out';
+        }, 4000);
+    } 
+    else if(action === 'play') {
+        textStatus.textContent = "⚽ ¡Toñita atrapó la pelota!";
+        const playProp = document.getElementById('animPropPlay');
+        playProp.style.display = 'block';
+        playProp.style.animation = 'playSoccerFront 2.5s forwards ease-out';
+        pug.style.animation = 'pugActionJump 2.5s forwards ease-in-out';
+        
+        setTimeout(() => { document.getElementById('petBarkVisual').style.display = 'block'; }, 1000);
+        setTimeout(() => { document.getElementById('petBarkVisual').style.display = 'none'; }, 2500);
+
+        setTimeout(() => { 
+            playProp.style.display = 'none'; 
+            pug.style.animation = 'pugIdleLive 3s infinite ease-in-out';
+        }, 2500);
+    }
 }
 </script>
 </body>
