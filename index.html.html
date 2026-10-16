@@ -12889,6 +12889,245 @@ function ejecutarAnimacionTonita(action) {
         }, 2500);
     }
 }
+
+/* =======================================================
+   REPARACIÓN DEL INVENTARIO SUNGAZE
+   Restituye previsualización de imágenes, alta de artículos,
+   renderizado, estados y guardado en el cerdito.
+======================================================= */
+function sgActualizarSelectCategorias() {
+    const select = document.getElementById('sgItemCategorySelect');
+    if (!select) return;
+    const actual = select.value;
+    select.innerHTML = '';
+    const categorias = [...new Set((sgCategoriasGuardadas || []).filter(Boolean))];
+    categorias.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        select.appendChild(opt);
+    });
+    const nueva = document.createElement('option');
+    nueva.value = '__nueva__';
+    nueva.textContent = '+ Crear nueva categoría';
+    select.appendChild(nueva);
+    if (actual && [...select.options].some(o => o.value === actual)) select.value = actual;
+}
+
+function sgCheckNewCategory() {
+    const select = document.getElementById('sgItemCategorySelect');
+    const input = document.getElementById('sgItemCategoryNew');
+    if (!select || !input) return;
+    const mostrar = select.value === '__nueva__';
+    input.style.display = mostrar ? 'block' : 'none';
+    if (mostrar) input.focus();
+    else input.value = '';
+}
+
+function sgPreviewImage(event) {
+    const file = event && event.target && event.target.files ? event.target.files[0] : null;
+    if (!file) return;
+    if (!file.type || !file.type.startsWith('image/')) {
+        alert('Selecciona un archivo de imagen válido.');
+        event.target.value = '';
+        return;
+    }
+    sgFileToUpload = file;
+    const preview = document.getElementById('sgModalPreview');
+    const modal = document.getElementById('sgAddModal');
+    if (!preview || !modal) return;
+    if (preview.dataset.objectUrl) URL.revokeObjectURL(preview.dataset.objectUrl);
+    const objectUrl = URL.createObjectURL(file);
+    preview.dataset.objectUrl = objectUrl;
+    preview.src = objectUrl;
+    preview.style.display = 'block';
+    modal.style.display = 'flex';
+    const dateInput = document.getElementById('sgItemDate');
+    if (dateInput && !dateInput.value) dateInput.valueAsDate = new Date();
+    const nameInput = document.getElementById('sgItemName');
+    if (nameInput) nameInput.focus();
+}
+
+function sgCloseModal() {
+    const modal = document.getElementById('sgAddModal');
+    if (modal) modal.style.display = 'none';
+    const input = document.getElementById('sgFileInput');
+    if (input) input.value = '';
+    const preview = document.getElementById('sgModalPreview');
+    if (preview && preview.dataset.objectUrl) {
+        URL.revokeObjectURL(preview.dataset.objectUrl);
+        delete preview.dataset.objectUrl;
+    }
+    sgFileToUpload = null;
+}
+
+async function sgAddItem() {
+    const btn = document.querySelector('#sgAddModal .sg-btn-main');
+    if (btn && btn.disabled) return;
+    const name = (document.getElementById('sgItemName').value || '').trim();
+    const dateRaw = document.getElementById('sgItemDate').value;
+    const select = document.getElementById('sgItemCategorySelect');
+    const nueva = (document.getElementById('sgItemCategoryNew').value || '').trim();
+    const category = select && select.value === '__nueva__' ? nueva : (select ? select.value : 'General');
+    const cost = Number.parseFloat(document.getElementById('sgItemCost').value);
+    const sale = Number.parseFloat(document.getElementById('sgItemSale').value);
+    if (!sgFileToUpload) { alert('Primero selecciona la imagen del artículo.'); return; }
+    if (!name) { alert('Escribe el nombre del producto.'); document.getElementById('sgItemName').focus(); return; }
+    if (!category) { alert('Selecciona o escribe una categoría.'); return; }
+    if (!Number.isFinite(cost) || cost < 0 || !Number.isFinite(sale) || sale < 0) { alert('Ingresa un costo y precio de venta válidos.'); return; }
+    if (!dateRaw) { alert('Selecciona la fecha del artículo.'); return; }
+    if (/[.#$\[\]\/]/.test(category)) { alert('La categoría no puede contener estos caracteres: . # $ [ ] /'); return; }
+
+    const originalText = btn ? btn.textContent : '';
+    if (btn) { btn.disabled = true; btn.textContent = 'SUBIENDO IMAGEN... ⏳'; }
+    try {
+        if (typeof firebase === 'undefined' || !firebase.storage || !rtdb) throw new Error('Firebase no está inicializado. Recarga la página e inténtalo de nuevo.');
+        const file = sgFileToUpload;
+        const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const uniqueName = `sungaze/${Date.now()}_${cleanName}`;
+        const storageRef = firebase.storage().ref().child(uniqueName);
+        const uploadTask = storageRef.put(file);
+        await new Promise((resolve, reject) => {
+            uploadTask.on('state_changed', snapshot => {
+                if (btn && snapshot.totalBytes) {
+                    const pct = Math.round(snapshot.bytesTransferred / snapshot.totalBytes * 100);
+                    btn.textContent = `SUBIENDO IMAGEN ${pct}%...`;
+                }
+            }, reject, resolve);
+        });
+        const imgUrl = await uploadTask.snapshot.ref.getDownloadURL();
+        if (btn) btn.textContent = 'GUARDANDO ARTÍCULO...';
+
+        const dateParts = dateRaw.split('-');
+        const dateSaved = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+        const itemRef = rtdb.ref('sungaze_data/items').push();
+        const itemId = itemRef.key;
+        const updates = {};
+        const currentGroup = sgGroupData[category] || { invertido: 0 };
+        updates[`sungaze_data/items/${itemId}`] = {
+            name, imgUrl, cost, sale, groupKey: category, dateSaved,
+            estado: 'DISPONIBLE', ahorrado: false, createdAt: Date.now()
+        };
+        updates[`sungaze_data/grupos/${category}`] = {
+            ...currentGroup,
+            invertido: (Number(currentGroup.invertido) || 0) + cost
+        };
+        const categoriasActualizadas = [...new Set([...(sgCategoriasGuardadas || []), category])];
+        updates['sungaze_data/categorias'] = categoriasActualizadas;
+        await rtdb.ref().update(updates);
+
+        sgCloseModal();
+        ['sgItemName','sgItemCost','sgItemSale','sgItemCategoryNew'].forEach(id => {
+            const el = document.getElementById(id); if (el) el.value = '';
+        });
+        const fileInput = document.getElementById('sgFileInput');
+        if (fileInput) fileInput.value = '';
+        alert('¡Artículo agregado correctamente al inventario!');
+    } catch (error) {
+        console.error('Error al agregar artículo Sungaze:', error);
+        alert('No se pudo guardar el artículo. Revisa tu conexión y los permisos de Firebase Storage/Database. Detalle: ' + (error && error.message ? error.message : 'error desconocido'));
+    } finally {
+        if (btn) { btn.disabled = false; btn.textContent = originalText || 'AÑADIR AL INVENTARIO'; }
+    }
+}
+
+function sgCrearObjetoDOM(groupKey, id, name, imgUrl, cost, sale, estado, ahorrado) {
+    const safeId = groupKey.replace(/\s+/g, '_');
+    const container = document.getElementById(`items_${safeId}`);
+    if (!container) return;
+    const existing = document.getElementById(`sg_item_${id}`);
+    if (existing) existing.remove();
+    const card = document.createElement('div');
+    card.className = 'sg-product-card';
+    card.id = `sg_item_${id}`;
+    const status = estado || 'DISPONIBLE';
+    const badgeClass = status === 'VENDIDO' ? 'sg-status-vendido' : status === 'PENDIENTE' ? 'sg-status-pendiente' : 'sg-status-disponible';
+    const img = document.createElement('img');
+    img.src = imgUrl || 'https://via.placeholder.com/150x150/222222/5cb85c?text=Sin+foto';
+    img.alt = name || 'Artículo';
+    img.loading = 'lazy';
+    img.onerror = () => { img.onerror = null; img.src = 'https://via.placeholder.com/150x150/222222/5cb85c?text=Sin+foto'; };
+    const info = document.createElement('div');
+    info.className = 'sg-product-info';
+    const title = document.createElement('h4');
+    title.style.cssText = 'color:#fff;font-size:18px;margin:0 35px 8px 0;';
+    title.textContent = name || 'Artículo sin nombre';
+    const details = document.createElement('p');
+    details.textContent = `Costo: Q${(Number(cost)||0).toFixed(2)} · Venta: Q${(Number(sale)||0).toFixed(2)} · Ganancia: Q${((Number(sale)||0)-(Number(cost)||0)).toFixed(2)}`;
+    const badge = document.createElement('span');
+    badge.className = `sg-status-badge ${badgeClass}`;
+    badge.textContent = ahorrado ? 'AHORRADO' : status;
+    info.append(title, details, badge);
+    const actions = document.createElement('div');
+    actions.className = 'sg-product-actions';
+    if (!ahorrado) {
+        const stateBtn = document.createElement('button');
+        stateBtn.style.background = status === 'VENDIDO' ? '#0275d8' : '#5cb85c';
+        stateBtn.textContent = status === 'VENDIDO' ? 'Marcar disponible' : 'Marcar vendido';
+        stateBtn.onclick = () => sgCambiarEstado(id, status === 'VENDIDO' ? 'DISPONIBLE' : 'VENDIDO');
+        const editBtn = document.createElement('button');
+        editBtn.style.background = '#e0a800'; editBtn.style.color = '#111';
+        editBtn.textContent = 'Editar'; editBtn.onclick = () => sgAbrirEdicion(id);
+        const deleteBtn = document.createElement('button');
+        deleteBtn.style.background = '#d9534f'; deleteBtn.textContent = 'Eliminar';
+        deleteBtn.onclick = () => sgEliminarItem(id);
+        actions.append(stateBtn, editBtn, deleteBtn);
+    }
+    info.appendChild(actions);
+    card.append(img, info);
+    container.appendChild(card);
+}
+
+async function sgCambiarEstado(itemId, nuevoEstado) {
+    const item = sgItems[itemId];
+    if (!item || item.ahorrado) return;
+    try {
+        await rtdb.ref(`sungaze_data/items/${itemId}/estado`).set(nuevoEstado);
+        if (item.groupKey) sgActualizarTotalesGrupo(item.groupKey);
+    } catch (error) { console.error(error); alert('No se pudo actualizar el artículo: ' + error.message); }
+}
+
+async function sgEliminarItem(itemId) {
+    const item = sgItems[itemId];
+    if (!item) return;
+    if (item.ahorrado) { alert('Este artículo ya está en el historial del cerdito y no se puede eliminar.'); return; }
+    if (!confirm(`¿Seguro que deseas eliminar "${item.name}" del inventario?`)) return;
+    try {
+        const updates = {};
+        updates[`sungaze_data/items/${itemId}`] = null;
+        const group = sgGroupData[item.groupKey] || { invertido: 0 };
+        updates[`sungaze_data/grupos/${item.groupKey}/invertido`] = Math.max(0, (Number(group.invertido)||0) - (Number(item.cost)||0));
+        await rtdb.ref().update(updates);
+    } catch (error) { console.error(error); alert('No se pudo eliminar el artículo: ' + error.message); }
+}
+
+async function sgAhorrarGrupo(groupKey) {
+    const group = sgGroupData[groupKey];
+    if (!group) return;
+    const vendibles = Object.entries(sgItems).filter(([, item]) => item.groupKey === groupKey && item.estado === 'VENDIDO' && !item.ahorrado);
+    if (!vendibles.length) { alert('No hay artículos vendidos pendientes de guardar en el cerdito.'); return; }
+    const updates = {};
+    let gananciaTotal = 0;
+    const now = new Date();
+    const dateSaved = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
+    vendibles.forEach(([id, item]) => {
+        const profit = (Number(item.sale)||0) - (Number(item.cost)||0);
+        gananciaTotal += profit;
+        updates[`sungaze_data/items/${id}/ahorrado`] = true;
+        const histRef = rtdb.ref('sungaze_data/historial').push();
+        updates[`sungaze_data/historial/${histRef.key}`] = {
+            name: item.name, category: groupKey, cost: Number(item.cost)||0,
+            sale: Number(item.sale)||0, profit, dateSaved, timestamp: Date.now()
+        };
+    });
+    updates['sungaze_data/alcancia'] = (Number(sgGlobalGananciasAlcancilla)||0) + gananciaTotal;
+    try {
+        await rtdb.ref().update(updates);
+        sgAnimarMoneda();
+        alert(`¡Se guardaron Q${gananciaTotal.toFixed(2)} en el cerdito! 🐷`);
+    } catch (error) { console.error(error); alert('No se pudo guardar en el cerdito: ' + error.message); }
+}
+
 </script>
 </body>
 </html>
