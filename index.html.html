@@ -4083,7 +4083,6 @@
   <button class="sg-close-app" onclick="cerrarSungazeApp()">Cerrar Inventario</button>
 
   <div class="sg-header-container">
-      <!-- TU LOGO SIN RECUADRO Y MÁS GRANDE -->
       <img src="https://lh3.googleusercontent.com/d/1YiOSvyvOtWvkMG6yNClnsHARmeE6cCG5" alt="Sungaze Logo" class="sg-logo-img" referrerpolicy="no-referrer">
 
       <div class="sg-piggy-bank-container">
@@ -4093,6 +4092,8 @@
           </svg>
           <div style="font-size: 18px; font-weight: bold;">Ganancias hasta ahora: <span style="color: #5cb85c;">Q<span id="txtAlcancilla">0.00</span></span></div>
           <div style="font-size: 14px; color: #aaa; margin-top: 5px;">META: Q10,000.00</div>
+          
+          <button style="background: #ff6b81; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; transition: 0.2s;" onclick="document.getElementById('sgHistorialModal').style.display='flex'">Ver Historial de Ventas 🐷</button>
       </div>
   </div>
 
@@ -4104,7 +4105,6 @@
   <div class="sg-modal" id="sgAddModal">
       <div class="sg-modal-content">
           <img id="sgModalPreview" src="" alt="Previsualización">
-          
           <div class="sg-form-group">
               <label>Nombre del Producto:</label>
               <input type="text" id="sgItemName" placeholder="Ej. Lentes Aviador Negros">
@@ -4119,16 +4119,26 @@
               <input type="text" id="sgItemCategoryNew" placeholder="Nueva Categoría..." style="display:none; margin-top:5px;">
           </div>
           <div class="sg-form-group">
-              <label>Costo:</label>
+              <label>Costo (Inversión original):</label>
               <input type="number" id="sgItemCost" placeholder="0.00" min="0">
           </div>
           <div class="sg-form-group">
-              <label>Venta:</label>
+              <label>Venta (Precio final):</label>
               <input type="number" id="sgItemSale" placeholder="0.00" min="0">
           </div>
-
           <button class="sg-btn-main" style="margin-bottom: 0;" onclick="sgAddItem()">AÑADIR AL INVENTARIO</button>
           <button onclick="sgCloseModal()" style="background: none; border: none; color: #888; cursor: pointer; padding: 10px;">Cancelar</button>
+      </div>
+  </div>
+
+  <!-- MODAL DEL HISTORIAL DEL CERDITO -->
+  <div class="sg-modal" id="sgHistorialModal">
+      <div class="sg-modal-content" style="max-width: 500px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h3 style="margin:0; color:#ff758f;">🐷 Historial de Ahorros</h3>
+              <button onclick="document.getElementById('sgHistorialModal').style.display='none'" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">X</button>
+          </div>
+          <div id="sgHistorialList" style="display:flex; flex-direction:column; gap:15px; margin-top:15px;"></div>
       </div>
   </div>
 </div>
@@ -12461,7 +12471,7 @@ window.addEventListener('DOMContentLoaded', () => {
       showToast(`¡Acción guardada! ${myPetUser} ${actionText} ✨`);
     }
 /* =======================================================
-   LÓGICA SECRETA - SUNGAZE INVENTARIO (CON FIREBASE REAL-TIME Y STORAGE)
+   LÓGICA SECRETA - SUNGAZE INVENTARIO (ACTUALIZADA)
 ======================================================= */
 let isSungazeSynced = false;
 
@@ -12482,7 +12492,6 @@ function verificarLoginSecreto() {
     document.getElementById('sgUser').value = ''; document.getElementById('sgPass').value = '';
     if(!document.getElementById('sgItemDate').value) document.getElementById('sgItemDate').valueAsDate = new Date();
     
-    // Iniciar sincronización en tiempo real con Firebase al logearse
     if (!isSungazeSynced) {
         initSungazeFirebase();
         isSungazeSynced = true;
@@ -12496,26 +12505,24 @@ let sgCategoriasGuardadas = ["Gorras", "Lentes", "Billeteras"];
 let sgGlobalGananciasAlcancilla = 0; 
 let sgGroupData = {};
 let sgItems = {};
+let sgHistorial = {};
 let sgFileToUpload = null; 
 
 function initSungazeFirebase() {
-    // Escuchar toda la base de datos de Sungaze en tiempo real
     rtdb.ref('sungaze_data').on('value', (snap) => {
         const data = snap.val() || {};
-        
-        // Sincronizar Alcancía
         sgGlobalGananciasAlcancilla = data.alcancia || 0;
         document.getElementById('txtAlcancilla').innerText = sgGlobalGananciasAlcancilla.toFixed(2);
         
-        // Sincronizar Categorías
         if (data.categorias) sgCategoriasGuardadas = data.categorias;
         sgActualizarSelectCategorias();
 
-        // Sincronizar Grupos e Items
         sgGroupData = data.grupos || {};
         sgItems = data.items || {};
+        sgHistorial = data.historial || {};
 
         sgRenderizarTodo();
+        sgRenderizarHistorial();
     });
 }
 
@@ -12523,22 +12530,24 @@ function sgRenderizarTodo() {
     const container = document.getElementById('sgInventoryContainer');
     container.innerHTML = '';
     
-    // Crear las cabeceras de grupos primero
     for (let key in sgGroupData) {
         sgCrearGrupoDOM(key);
     }
 
-    // Renderizar los items ordenados por ID descendente (los más recientes primero)
     const itemIds = Object.keys(sgItems).sort((a, b) => b - a);
     itemIds.forEach(id => {
         const item = sgItems[id];
-        // Si el grupo no existe en pantalla, lo creamos
         const safeId = item.groupKey.replace(/\s+/g, '_');
-        if (!document.getElementById(`items_${safeId}`)) {
+        if (!document.getElementById(`group_${safeId}`)) {
             sgCrearGrupoDOM(item.groupKey);
         }
-        sgCrearObjetoDOM(item.groupKey, id, item.name, item.imgUrl, item.cost, item.sale, item.estado);
+        sgCrearObjetoDOM(item.groupKey, id, item.name, item.imgUrl, item.cost, item.sale, item.estado, item.ahorrado);
     });
+    
+    // Actualizar todos los totales locales
+    for (let key in sgGroupData) {
+        sgActualizarTotalesGrupo(key);
+    }
 }
 
 function sgActualizarSelectCategorias() {
@@ -12609,7 +12618,6 @@ async function sgAddItem() {
 
     let finalImageUrl = "";
     try {
-        // Se usa tu sistema oficial de subida de imágenes de la página para máxima calidad
         const result = await uploadMediaUniversal(sgFileToUpload);
         finalImageUrl = result.data.secure_url;
     } catch (error) {
@@ -12623,14 +12631,12 @@ async function sgAddItem() {
     const groupKey = `${category} - ${fechaFormateada}`;
     const updates = {};
     
-    // Lógica Matemática de Grupos en Firebase
     if (!sgGroupData[groupKey]) {
-        sgGroupData[groupKey] = { invertido: 0, ganancias: 0 };
+        sgGroupData[groupKey] = { invertido: 0 };
     }
     sgGroupData[groupKey].invertido += cost;
     updates[`sungaze_data/grupos/${groupKey}`] = sgGroupData[groupKey];
 
-    // Subir el nuevo Item
     const uniqueId = Date.now().toString();
     updates[`sungaze_data/items/${uniqueId}`] = {
         name: name,
@@ -12638,10 +12644,10 @@ async function sgAddItem() {
         cost: cost,
         sale: sale,
         estado: 'DISPONIBLE',
+        ahorrado: false,
         groupKey: groupKey
     };
 
-    // Subir a Firebase (La página se actualizará sola por el Listener en todos tus dispositivos)
     await rtdb.ref().update(updates);
     
     btn.disabled = false;
@@ -12657,10 +12663,7 @@ async function sgAddItem() {
 
 function sgCrearGrupoDOM(groupKey) {
     const safeId = groupKey.replace(/\s+/g, '_');
-    if (document.getElementById(`group_${safeId}`)) {
-        sgActualizarTotalesGrupo(groupKey);
-        return;
-    }
+    if (document.getElementById(`group_${safeId}`)) return;
 
     const container = document.getElementById('sgInventoryContainer');
     const groupDiv = document.createElement('div');
@@ -12670,45 +12673,62 @@ function sgCrearGrupoDOM(groupKey) {
     groupDiv.innerHTML = `
         <div class="sg-category-header">
             <h3 class="sg-category-title">${groupKey}</h3>
-            <button class="sg-btn-cerdito" onclick="sgEnviarAlCerdito('${groupKey}')">🐷 AÑADIR AL CERDITO</button>
+            <button class="sg-btn-cerdito" onclick="sgAhorrarGrupo('${groupKey}')">🐷 AÑADIR TODO AL CERDITO</button>
         </div>
         <div class="sg-items-grid" id="items_${safeId}"></div>
         <div class="sg-group-totals">
             <span style="color: #f0ad4e;">Total Invertido: Q<span id="inv_${safeId}">0.00</span></span>
-            <span style="color: #5cb85c;">Ganancias del Grupo: Q<span id="gan_${safeId}">0.00</span></span>
+            <span style="color: #5cb85c;">Ventas Pendientes de Ahorrar: Q<span id="gan_${safeId}">0.00</span></span>
         </div>
     `;
     container.insertBefore(groupDiv, container.firstChild);
-    sgActualizarTotalesGrupo(groupKey);
 }
 
-function sgCrearObjetoDOM(groupKey, itemId, name, imgSrc, cost, sale, estado) {
+function sgCrearObjetoDOM(groupKey, itemId, name, imgSrc, cost, sale, estado, ahorrado) {
     const safeId = groupKey.replace(/\s+/g, '_');
     const itemsContainer = document.getElementById(`items_${safeId}`);
     if (!itemsContainer) return;
 
     const card = document.createElement('div');
     card.className = "sg-product-card";
-    card.id = `card_${itemId}`;
     
-    const displayActions = estado === 'VENDIDO' ? 'none' : 'flex';
+    let isVendido = (estado === 'VENDIDO');
+    let isAhorrado = (ahorrado === true);
+    
+    let badgeColor = isVendido ? '#e63946' : (estado === 'PENDIENTE' ? '#f0ad4e' : '#0275d8');
+    let textColor = estado === 'PENDIENTE' ? '#000' : '#fff';
+    let statusBadge = `<span style="background:${badgeColor}; color:${textColor}; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-left: 10px; vertical-align: middle;">${estado}</span>`;
+    if(isAhorrado) statusBadge += `<span style="background:#ffd700; color:#000; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-left: 5px; vertical-align: middle;">🐷 AHORRADO</span>`;
+
+    let addCerditoIndividual = (isVendido && !isAhorrado) 
+        ? `<button style="background:#ff6b81; color:white; border:none; border-radius:5px; padding:5px 10px; font-weight:bold; cursor:pointer;" title="Añadir solo esta ganancia al cerdito" onclick="sgAhorrarIndividual('${itemId}', '${groupKey}')">🐷 Añadir al cerdito</button>` 
+        : '';
+
+    let actionButtons = '';
+    if (!isAhorrado) {
+        if (isVendido) {
+            actionButtons = `<button style="background: #0275d8; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px;" onclick="sgCambiarEstado('${itemId}', 'DISPONIBLE')">Devolución a Disponible</button>`;
+        } else {
+            actionButtons = `
+                <div class="sg-product-actions">
+                    <button style="background: #f0ad4e; color: #000;" onclick="sgCambiarEstado('${itemId}', 'PENDIENTE')">Pendiente</button>
+                    <button style="background: #e63946;" onclick="sgCambiarEstado('${itemId}', 'VENDIDO')">VENDIDO</button>
+                </div>`;
+        }
+    }
 
     card.innerHTML = `
-        <button class="sg-btn-delete" title="Quitar este artículo" onclick="sgEliminarObjeto('${itemId}', ${cost}, '${groupKey}', '${estado}')">X</button>
+        <div style="position:absolute; top:10px; right:10px; display:flex; gap:8px;">
+            ${addCerditoIndividual}
+            <button class="sg-btn-delete" title="Quitar este artículo" onclick="sgEliminarObjeto('${itemId}', ${cost}, '${groupKey}')">X</button>
+        </div>
         <img src="${imgSrc}" alt="Producto" loading="lazy">
         <div class="sg-product-info">
-            <h4 style="margin: 0 0 10px 0; font-size: 18px;">
-                ${name} <span class="sg-status-badge sg-status-${estado.toLowerCase()}">${estado}</span>
-            </h4>
+            <h4 style="margin: 0 0 10px 0; font-size: 18px;">${name} ${statusBadge}</h4>
             <p><strong>Costo:</strong> Q${cost.toFixed(2)}</p>
             <p><strong>Venta:</strong> Q${sale.toFixed(2)}</p>
             <p style="color:#5cb85c; font-size:14px; margin-top:5px;">Ganancia Esperada: Q${(sale-cost).toFixed(2)}</p>
-            
-            <div class="sg-product-actions" style="display: ${displayActions};">
-                <button style="background: #f0ad4e; color: #000;" onclick="sgCambiarEstado('${itemId}', 'PENDIENTE')">Pendiente</button>
-                <button style="background: #0275d8;" onclick="sgCambiarEstado('${itemId}', 'DISPONIBLE')">Devolución</button>
-                <button style="background: #5cb85c;" onclick="sgProcesarVenta('${itemId}', ${cost}, ${sale}, '${groupKey}')">VENDIDO</button>
-            </div>
+            ${actionButtons}
         </div>
     `;
     itemsContainer.insertBefore(card, itemsContainer.firstChild);
@@ -12718,42 +12738,83 @@ function sgCambiarEstado(itemId, nuevoEstado) {
     rtdb.ref(`sungaze_data/items/${itemId}/estado`).set(nuevoEstado);
 }
 
-function sgProcesarVenta(itemId, cost, sale, groupKey) {
-    const gananciaUnitaria = sale - cost;
-    const newInv = (sgGroupData[groupKey].invertido || 0) - cost;
-    const newGan = (sgGroupData[groupKey].ganancias || 0) + gananciaUnitaria;
-
+async function sgAhorrarIndividual(itemId, groupKey) {
+    const item = sgItems[itemId];
+    if(!item) return;
+    
+    const profit = item.sale - item.cost;
+    const todayDate = sgFormatearFecha(new Date().toISOString().split('T')[0]);
+    
     const updates = {};
-    updates[`sungaze_data/items/${itemId}/estado`] = 'VENDIDO';
-    updates[`sungaze_data/grupos/${groupKey}/invertido`] = newInv < 0 ? 0 : newInv;
-    updates[`sungaze_data/grupos/${groupKey}/ganancias`] = newGan;
+    updates[`sungaze_data/alcancia`] = sgGlobalGananciasAlcancilla + profit;
+    updates[`sungaze_data/items/${itemId}/ahorrado`] = true;
+    
+    const histId = Date.now().toString();
+    updates[`sungaze_data/historial/${histId}`] = {
+        name: item.name,
+        category: item.groupKey.split(' - ')[0],
+        cost: item.cost,
+        sale: item.sale,
+        profit: profit,
+        dateSaved: todayDate
+    };
 
-    rtdb.ref().update(updates);
+    await rtdb.ref().update(updates);
+    sgAnimarMoneda();
 }
 
-function sgEnviarAlCerdito(groupKey) {
-    const gananciasDelGrupo = sgGroupData[groupKey].ganancias || 0;
-    if (gananciasDelGrupo > 0) {
-        const updates = {};
-        updates[`sungaze_data/alcancia`] = sgGlobalGananciasAlcancilla + gananciasDelGrupo;
-        updates[`sungaze_data/grupos/${groupKey}/ganancias`] = 0;
+async function sgAhorrarGrupo(groupKey) {
+    const updates = {};
+    let totalProfit = 0;
+    let costToDeduct = 0;
+    let count = 0;
+    const todayDate = sgFormatearFecha(new Date().toISOString().split('T')[0]);
 
-        rtdb.ref().update(updates).then(() => {
-            sgAnimarMoneda();
-        });
+    for (let id in sgItems) {
+        let item = sgItems[id];
+        if (item.groupKey === groupKey && item.estado === 'VENDIDO' && !item.ahorrado) {
+            let profit = item.sale - item.cost;
+            totalProfit += profit;
+            costToDeduct += item.cost;
+            count++;
+
+            const histId = Date.now().toString() + "_" + count;
+            updates[`sungaze_data/historial/${histId}`] = {
+                name: item.name,
+                category: item.groupKey.split(' - ')[0],
+                cost: item.cost,
+                sale: item.sale,
+                profit: profit,
+                dateSaved: todayDate
+            };
+            
+            // Borrar el item vendido al ahorrar el grupo completo
+            updates[`sungaze_data/items/${id}`] = null;
+        }
+    }
+
+    if (count > 0) {
+        updates[`sungaze_data/alcancia`] = sgGlobalGananciasAlcancilla + totalProfit;
+        
+        // Al borrar los items, hay que restar su inversión del grupo para que quede cuadrado
+        let currentInv = sgGroupData[groupKey].invertido || 0;
+        let newInv = currentInv - costToDeduct;
+        updates[`sungaze_data/grupos/${groupKey}/invertido`] = newInv < 0 ? 0 : newInv;
+
+        await rtdb.ref().update(updates);
+        sgAnimarMoneda();
     } else {
-        alert("No hay ganancias nuevas en este grupo para enviar al cerdito.");
+        alert("No hay artículos VENDIDOS listos para ahorrar en este grupo.");
     }
 }
 
-function sgEliminarObjeto(itemId, cost, groupKey, estadoActual) {
+function sgEliminarObjeto(itemId, cost, groupKey) {
     if (confirm("¿Estás seguro que quieres eliminar este producto de Sungaze?")) {
         const updates = {};
-        if (estadoActual !== 'VENDIDO') {
-            const newInv = (sgGroupData[groupKey].invertido || 0) - cost;
-            updates[`sungaze_data/grupos/${groupKey}/invertido`] = newInv < 0 ? 0 : newInv;
-        }
-        updates[`sungaze_data/items/${itemId}`] = null; // Lo borra de la BD
+        // Solo resta de inversión si aún forma parte del inventario (esté o no ahorrado o vendido)
+        const newInv = (sgGroupData[groupKey].invertido || 0) - cost;
+        updates[`sungaze_data/grupos/${groupKey}/invertido`] = newInv < 0 ? 0 : newInv;
+        updates[`sungaze_data/items/${itemId}`] = null;
 
         rtdb.ref().update(updates);
     }
@@ -12767,7 +12828,52 @@ function sgActualizarTotalesGrupo(groupKey) {
     if (invElement && ganElement && sgGroupData[groupKey]) {
         const invertidoFinal = sgGroupData[groupKey].invertido < 0 ? 0 : sgGroupData[groupKey].invertido;
         invElement.innerText = invertidoFinal.toFixed(2);
-        ganElement.innerText = sgGroupData[groupKey].ganancias.toFixed(2);
+        
+        let localGananciasPendientes = 0;
+        for(let id in sgItems) {
+            if(sgItems[id].groupKey === groupKey && sgItems[id].estado === 'VENDIDO' && !sgItems[id].ahorrado) {
+                localGananciasPendientes += (sgItems[id].sale - sgItems[id].cost);
+            }
+        }
+        ganElement.innerText = localGananciasPendientes.toFixed(2);
+    }
+}
+
+function sgRenderizarHistorial() {
+    const container = document.getElementById('sgHistorialList');
+    container.innerHTML = '';
+    
+    let porFecha = {};
+    for (let key in sgHistorial) {
+        let h = sgHistorial[key];
+        if (!porFecha[h.dateSaved]) porFecha[h.dateSaved] = [];
+        porFecha[h.dateSaved].push(h);
+    }
+
+    let fechas = Object.keys(porFecha).sort((a,b) => new Date(b.split('/').reverse().join('-')) - new Date(a.split('/').reverse().join('-')));
+
+    fechas.forEach(fecha => {
+        let divFecha = document.createElement('div');
+        divFecha.innerHTML = `<h4 style="color:#ff758f; border-bottom:1px solid #444; padding-bottom:5px; margin-bottom:10px;">📅 ${fecha}</h4>`;
+        
+        porFecha[fecha].forEach(item => {
+            divFecha.innerHTML += `
+                <div style="background:#222; padding:10px; border-radius:8px; margin-bottom:10px; border-left:4px solid #ffd700;">
+                    <div style="font-weight:bold; font-size:16px;">${item.name}</div>
+                    <div style="font-size:12px; color:#aaa; margin-bottom:5px;">Categoría: ${item.category}</div>
+                    <div style="display:flex; justify-content:space-between; font-size:14px; margin-top: 8px;">
+                        <span>Costo: <span style="color:#f0ad4e;">Q${item.cost.toFixed(2)}</span></span>
+                        <span>Venta: <span style="color:#5cb85c;">Q${item.sale.toFixed(2)}</span></span>
+                        <span><b>Ganancia: <span style="color:#ffd700;">Q${item.profit.toFixed(2)}</span></b></span>
+                    </div>
+                </div>
+            `;
+        });
+        container.appendChild(divFecha);
+    });
+
+    if (fechas.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#888;">El cerdito aún está vacío 🥺</p>';
     }
 }
 
