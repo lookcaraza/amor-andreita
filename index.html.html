@@ -12461,8 +12461,10 @@ window.addEventListener('DOMContentLoaded', () => {
       showToast(`¡Acción guardada! ${myPetUser} ${actionText} ✨`);
     }
 /* =======================================================
-   LÓGICA SECRETA - SUNGAZE INVENTARIO
+   LÓGICA SECRETA - SUNGAZE INVENTARIO (CON FIREBASE REAL-TIME Y STORAGE)
 ======================================================= */
+let isSungazeSynced = false;
+
 function abrirLoginSecreto() { document.getElementById('secretLoginOverlay').style.display = 'flex'; }
 function cerrarLoginSecreto() { 
   document.getElementById('secretLoginOverlay').style.display = 'none'; 
@@ -12478,22 +12480,70 @@ function verificarLoginSecreto() {
     document.getElementById('secretLoginOverlay').style.display = 'none';
     document.getElementById('sungazeAppOverlay').style.display = 'block';
     document.getElementById('sgUser').value = ''; document.getElementById('sgPass').value = '';
-    // Inicializar fecha
     if(!document.getElementById('sgItemDate').value) document.getElementById('sgItemDate').valueAsDate = new Date();
+    
+    // Iniciar sincronización en tiempo real con Firebase al logearse
+    if (!isSungazeSynced) {
+        initSungazeFirebase();
+        isSungazeSynced = true;
+    }
   } else {
     alert('Acceso Denegado ❌');
   }
 }
 
-let sgCurrentImageBase64 = "";
 let sgCategoriasGuardadas = ["Gorras", "Lentes", "Billeteras"]; 
 let sgGlobalGananciasAlcancilla = 0; 
 let sgGroupData = {};
+let sgItems = {};
+let sgFileToUpload = null; 
 
-sgActualizarSelectCategorias();
+function initSungazeFirebase() {
+    // Escuchar toda la base de datos de Sungaze en tiempo real
+    rtdb.ref('sungaze_data').on('value', (snap) => {
+        const data = snap.val() || {};
+        
+        // Sincronizar Alcancía
+        sgGlobalGananciasAlcancilla = data.alcancia || 0;
+        document.getElementById('txtAlcancilla').innerText = sgGlobalGananciasAlcancilla.toFixed(2);
+        
+        // Sincronizar Categorías
+        if (data.categorias) sgCategoriasGuardadas = data.categorias;
+        sgActualizarSelectCategorias();
+
+        // Sincronizar Grupos e Items
+        sgGroupData = data.grupos || {};
+        sgItems = data.items || {};
+
+        sgRenderizarTodo();
+    });
+}
+
+function sgRenderizarTodo() {
+    const container = document.getElementById('sgInventoryContainer');
+    container.innerHTML = '';
+    
+    // Crear las cabeceras de grupos primero
+    for (let key in sgGroupData) {
+        sgCrearGrupoDOM(key);
+    }
+
+    // Renderizar los items ordenados por ID descendente (los más recientes primero)
+    const itemIds = Object.keys(sgItems).sort((a, b) => b - a);
+    itemIds.forEach(id => {
+        const item = sgItems[id];
+        // Si el grupo no existe en pantalla, lo creamos
+        const safeId = item.groupKey.replace(/\s+/g, '_');
+        if (!document.getElementById(`items_${safeId}`)) {
+            sgCrearGrupoDOM(item.groupKey);
+        }
+        sgCrearObjetoDOM(item.groupKey, id, item.name, item.imgUrl, item.cost, item.sale, item.estado);
+    });
+}
 
 function sgActualizarSelectCategorias() {
     const select = document.getElementById('sgItemCategorySelect');
+    if(!select) return;
     select.innerHTML = '<option value="">-- Seleccionar --</option>';
     sgCategoriasGuardadas.forEach(cat => { select.innerHTML += `<option value="${cat}">${cat}</option>`; });
     select.innerHTML += `<option value="NUEVA">+ Crear Nueva Categoría</option>`;
@@ -12512,10 +12562,10 @@ function sgCheckNewCategory() {
 function sgPreviewImage(event) {
     const file = event.target.files[0];
     if (file) {
+        sgFileToUpload = file;
         const reader = new FileReader();
         reader.onload = function(e) {
-            sgCurrentImageBase64 = e.target.result;
-            document.getElementById('sgModalPreview').src = sgCurrentImageBase64;
+            document.getElementById('sgModalPreview').src = e.target.result;
             document.getElementById('sgAddModal').style.display = "flex";
         }
         reader.readAsDataURL(file);
@@ -12525,6 +12575,7 @@ function sgPreviewImage(event) {
 function sgCloseModal() {
     document.getElementById('sgAddModal').style.display = "none";
     document.getElementById('sgFileInput').value = ""; 
+    sgFileToUpload = null;
 }
 
 function sgFormatearFecha(fechaStr) {
@@ -12534,7 +12585,7 @@ function sgFormatearFecha(fechaStr) {
     return `${dateObj.getDate()} ${meses[dateObj.getMonth()]}`;
 }
 
-function sgAddItem() {
+async function sgAddItem() {
     const name = document.getElementById('sgItemName').value.trim() || "Producto sin nombre";
     const dateStr = document.getElementById('sgItemDate').value;
     let category = document.getElementById('sgItemCategorySelect').value;
@@ -12546,25 +12597,55 @@ function sgAddItem() {
         category = newCategory.toUpperCase();
         if(!sgCategoriasGuardadas.includes(category)) {
             sgCategoriasGuardadas.push(category);
-            sgActualizarSelectCategorias();
+            rtdb.ref('sungaze_data/categorias').set(sgCategoriasGuardadas);
         }
     }
     if (!category || category === "NUEVA") { alert("Selecciona o escribe una categoría."); return; }
+    if (!sgFileToUpload) { alert("Sube una imagen mi amor."); return; }
+
+    const btn = document.querySelector('#sgAddModal .sg-btn-main');
+    btn.disabled = true;
+    btn.innerText = "Subiendo imagen... ⏳";
+
+    let finalImageUrl = "";
+    try {
+        // Se usa tu sistema oficial de subida de imágenes de la página para máxima calidad
+        const result = await uploadMediaUniversal(sgFileToUpload);
+        finalImageUrl = result.data.secure_url;
+    } catch (error) {
+        alert("Error al subir la imagen. Intenta de nuevo.");
+        btn.disabled = false;
+        btn.innerText = "AÑADIR AL INVENTARIO";
+        return;
+    }
 
     const fechaFormateada = sgFormatearFecha(dateStr);
     const groupKey = `${category} - ${fechaFormateada}`;
-
+    const updates = {};
+    
+    // Lógica Matemática de Grupos en Firebase
     if (!sgGroupData[groupKey]) {
         sgGroupData[groupKey] = { invertido: 0, ganancias: 0 };
-        sgCrearGrupoDOM(groupKey);
     }
-
     sgGroupData[groupKey].invertido += cost;
-    const uniqueId = Date.now().toString();
+    updates[`sungaze_data/grupos/${groupKey}`] = sgGroupData[groupKey];
 
-    sgCrearObjetoDOM(groupKey, uniqueId, name, sgCurrentImageBase64, cost, sale);
-    sgActualizarTotalesGrupo(groupKey);
+    // Subir el nuevo Item
+    const uniqueId = Date.now().toString();
+    updates[`sungaze_data/items/${uniqueId}`] = {
+        name: name,
+        imgUrl: finalImageUrl,
+        cost: cost,
+        sale: sale,
+        estado: 'DISPONIBLE',
+        groupKey: groupKey
+    };
+
+    // Subir a Firebase (La página se actualizará sola por el Listener en todos tus dispositivos)
+    await rtdb.ref().update(updates);
     
+    btn.disabled = false;
+    btn.innerText = "AÑADIR AL INVENTARIO";
     sgCloseModal();
     
     document.getElementById('sgItemName').value = "";
@@ -12575,9 +12656,14 @@ function sgAddItem() {
 }
 
 function sgCrearGrupoDOM(groupKey) {
+    const safeId = groupKey.replace(/\s+/g, '_');
+    if (document.getElementById(`group_${safeId}`)) {
+        sgActualizarTotalesGrupo(groupKey);
+        return;
+    }
+
     const container = document.getElementById('sgInventoryContainer');
     const groupDiv = document.createElement('div');
-    const safeId = groupKey.replace(/\s+/g, '_');
     groupDiv.id = `group_${safeId}`;
     groupDiv.className = "sg-category-group";
     
@@ -12593,79 +12679,84 @@ function sgCrearGrupoDOM(groupKey) {
         </div>
     `;
     container.insertBefore(groupDiv, container.firstChild);
+    sgActualizarTotalesGrupo(groupKey);
 }
 
-function sgCrearObjetoDOM(groupKey, itemId, name, imgSrc, cost, sale) {
+function sgCrearObjetoDOM(groupKey, itemId, name, imgSrc, cost, sale, estado) {
     const safeId = groupKey.replace(/\s+/g, '_');
     const itemsContainer = document.getElementById(`items_${safeId}`);
-    
+    if (!itemsContainer) return;
+
     const card = document.createElement('div');
     card.className = "sg-product-card";
     card.id = `card_${itemId}`;
-    card.setAttribute('data-estado', 'DISPONIBLE');
     
+    const displayActions = estado === 'VENDIDO' ? 'none' : 'flex';
+
     card.innerHTML = `
-        <button class="sg-btn-delete" title="Quitar este artículo" onclick="sgEliminarObjeto('${itemId}', ${cost}, '${groupKey}')">X</button>
-        <img src="${imgSrc}" alt="Producto">
+        <button class="sg-btn-delete" title="Quitar este artículo" onclick="sgEliminarObjeto('${itemId}', ${cost}, '${groupKey}', '${estado}')">X</button>
+        <img src="${imgSrc}" alt="Producto" loading="lazy">
         <div class="sg-product-info">
             <h4 style="margin: 0 0 10px 0; font-size: 18px;">
-                ${name} <span class="sg-status-badge sg-status-disponible" id="badge_${itemId}">DISPONIBLE</span>
+                ${name} <span class="sg-status-badge sg-status-${estado.toLowerCase()}">${estado}</span>
             </h4>
             <p><strong>Costo:</strong> Q${cost.toFixed(2)}</p>
             <p><strong>Venta:</strong> Q${sale.toFixed(2)}</p>
             <p style="color:#5cb85c; font-size:14px; margin-top:5px;">Ganancia Esperada: Q${(sale-cost).toFixed(2)}</p>
             
-            <div class="sg-product-actions" id="actions_${itemId}">
+            <div class="sg-product-actions" style="display: ${displayActions};">
                 <button style="background: #f0ad4e; color: #000;" onclick="sgCambiarEstado('${itemId}', 'PENDIENTE')">Pendiente</button>
                 <button style="background: #0275d8;" onclick="sgCambiarEstado('${itemId}', 'DISPONIBLE')">Devolución</button>
                 <button style="background: #5cb85c;" onclick="sgProcesarVenta('${itemId}', ${cost}, ${sale}, '${groupKey}')">VENDIDO</button>
             </div>
         </div>
     `;
-    itemsContainer.appendChild(card);
+    itemsContainer.insertBefore(card, itemsContainer.firstChild);
 }
 
 function sgCambiarEstado(itemId, nuevoEstado) {
-    const badge = document.getElementById(`badge_${itemId}`);
-    badge.innerText = nuevoEstado;
-    badge.className = `sg-status-badge sg-status-${nuevoEstado.toLowerCase()}`;
+    rtdb.ref(`sungaze_data/items/${itemId}/estado`).set(nuevoEstado);
 }
 
 function sgProcesarVenta(itemId, cost, sale, groupKey) {
-    const card = document.getElementById(`card_${itemId}`);
     const gananciaUnitaria = sale - cost;
-    sgGroupData[groupKey].invertido -= cost;
-    sgGroupData[groupKey].ganancias += gananciaUnitaria;
-    sgActualizarTotalesGrupo(groupKey);
+    const newInv = (sgGroupData[groupKey].invertido || 0) - cost;
+    const newGan = (sgGroupData[groupKey].ganancias || 0) + gananciaUnitaria;
 
-    sgCambiarEstado(itemId, 'VENDIDO');
-    card.setAttribute('data-estado', 'VENDIDO');
-    document.getElementById(`actions_${itemId}`).style.display = "none";
+    const updates = {};
+    updates[`sungaze_data/items/${itemId}/estado`] = 'VENDIDO';
+    updates[`sungaze_data/grupos/${groupKey}/invertido`] = newInv < 0 ? 0 : newInv;
+    updates[`sungaze_data/grupos/${groupKey}/ganancias`] = newGan;
+
+    rtdb.ref().update(updates);
 }
 
 function sgEnviarAlCerdito(groupKey) {
-    const gananciasDelGrupo = sgGroupData[groupKey].ganancias;
+    const gananciasDelGrupo = sgGroupData[groupKey].ganancias || 0;
     if (gananciasDelGrupo > 0) {
-        sgGlobalGananciasAlcancilla += gananciasDelGrupo;
-        document.getElementById('txtAlcancilla').innerText = sgGlobalGananciasAlcancilla.toFixed(2);
-        
-        sgGroupData[groupKey].ganancias = 0;
-        sgActualizarTotalesGrupo(groupKey);
-        sgAnimarMoneda();
+        const updates = {};
+        updates[`sungaze_data/alcancia`] = sgGlobalGananciasAlcancilla + gananciasDelGrupo;
+        updates[`sungaze_data/grupos/${groupKey}/ganancias`] = 0;
+
+        rtdb.ref().update(updates).then(() => {
+            sgAnimarMoneda();
+        });
     } else {
         alert("No hay ganancias nuevas en este grupo para enviar al cerdito.");
     }
 }
 
-function sgEliminarObjeto(itemId, cost, groupKey) {
-    const card = document.getElementById(`card_${itemId}`);
-    const estadoActual = card.getAttribute('data-estado');
+function sgEliminarObjeto(itemId, cost, groupKey, estadoActual) {
+    if (confirm("¿Estás seguro que quieres eliminar este producto de Sungaze?")) {
+        const updates = {};
+        if (estadoActual !== 'VENDIDO') {
+            const newInv = (sgGroupData[groupKey].invertido || 0) - cost;
+            updates[`sungaze_data/grupos/${groupKey}/invertido`] = newInv < 0 ? 0 : newInv;
+        }
+        updates[`sungaze_data/items/${itemId}`] = null; // Lo borra de la BD
 
-    if (estadoActual !== 'VENDIDO') {
-        sgGroupData[groupKey].invertido -= cost;
-        sgActualizarTotalesGrupo(groupKey);
+        rtdb.ref().update(updates);
     }
-    card.remove();
 }
 
 function sgActualizarTotalesGrupo(groupKey) {
@@ -12673,7 +12764,7 @@ function sgActualizarTotalesGrupo(groupKey) {
     const invElement = document.getElementById(`inv_${safeId}`);
     const ganElement = document.getElementById(`gan_${safeId}`);
     
-    if (invElement && ganElement) {
+    if (invElement && ganElement && sgGroupData[groupKey]) {
         const invertidoFinal = sgGroupData[groupKey].invertido < 0 ? 0 : sgGroupData[groupKey].invertido;
         invElement.innerText = invertidoFinal.toFixed(2);
         ganElement.innerText = sgGroupData[groupKey].ganancias.toFixed(2);
