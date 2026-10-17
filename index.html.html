@@ -13223,6 +13223,306 @@ async function sgAhorrarGrupo(groupKey) {
         alert(`¡Se guardaron Q${gananciaTotal.toFixed(2)} en el cerdito! 🐷`);
     } catch (error) { console.error(error); alert('No se pudo guardar en el cerdito: ' + error.message); }
 }
+// ==========================================================================
+// LÓGICA DE SUNGAZE (CONECTADO A FIREBASE PARA NO PERDER DATOS)
+// ==========================================================================
+
+let sgInventoryData = {}; 
+let sgPendingImage = "";
+
+// Escuchar los datos en tiempo real desde Firebase (Colección "sungaze")
+function initSungazeFirebase() {
+  db.collection("sungaze").onSnapshot((snapshot) => {
+    sgInventoryData = {};
+    snapshot.forEach((doc) => {
+      const item = doc.data();
+      item.id = doc.id; // Guardamos el ID real de Firebase
+      
+      const cat = item.category || "Sin Categoría";
+      if (!sgInventoryData[cat]) {
+        sgInventoryData[cat] = [];
+      }
+      sgInventoryData[cat].push(item);
+    });
+    
+    // Si el overlay está abierto, actualizamos la vista
+    if (document.getElementById('sungazeAppOverlay').style.display === 'block') {
+      sgRenderFolders();
+      sgUpdateTotals();
+    }
+  });
+}
+
+// Inicializar la escucha cuando cargue la página
+window.addEventListener('DOMContentLoaded', () => {
+  initSungazeFirebase();
+});
+
+function abrirLoginSecreto() {
+  document.getElementById('secretLoginOverlay').style.display = 'flex';
+}
+
+function cerrarLoginSecreto() {
+  document.getElementById('secretLoginOverlay').style.display = 'none';
+}
+
+function verificarLoginSecreto() {
+  const user = document.getElementById('sgUser').value;
+  const pass = document.getElementById('sgPass').value;
+  
+  if (user === "Criss" && pass === "Criss2002") {
+    cerrarLoginSecreto();
+    document.getElementById('sungazeAppOverlay').style.display = 'block';
+    sgRenderFolders();
+    sgUpdateTotals();
+  } else {
+    showToast("Acceso denegado 🕶️❌");
+  }
+}
+
+function cerrarSungazeApp() {
+  document.getElementById('sungazeAppOverlay').style.display = 'none';
+}
+
+function sgPreviewImage(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    sgPendingImage = e.target.result;
+    document.getElementById('sgModalPreview').src = sgPendingImage;
+    
+    document.getElementById('sgItemName').value = "";
+    document.getElementById('sgItemDate').valueAsDate = new Date();
+    document.getElementById('sgItemCost').value = "";
+    document.getElementById('sgItemSale').value = "";
+    
+    sgLoadCategories();
+    document.getElementById('sgAddModal').style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+}
+
+function sgCloseModal() {
+  document.getElementById('sgAddModal').style.display = 'none';
+  document.getElementById('sgFileInput').value = "";
+  sgPendingImage = "";
+}
+
+function sgLoadCategories() {
+  const select = document.getElementById('sgItemCategorySelect');
+  select.innerHTML = '<option value="">Selecciona una categoría...</option>';
+  
+  Object.keys(sgInventoryData).forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    select.appendChild(opt);
+  });
+  
+  const newOpt = document.createElement('option');
+  newOpt.value = "NEW";
+  newOpt.textContent = "+ Crear Nueva Categoría";
+  select.appendChild(newOpt);
+}
+
+function sgCheckNewCategory() {
+  const select = document.getElementById('sgItemCategorySelect');
+  const inputNew = document.getElementById('sgItemCategoryNew');
+  if (select.value === "NEW") {
+    inputNew.style.display = 'block';
+  } else {
+    inputNew.style.display = 'none';
+  }
+}
+
+async function sgAddItem() {
+  const name = document.getElementById('sgItemName').value.trim();
+  const date = document.getElementById('sgItemDate').value;
+  let category = document.getElementById('sgItemCategorySelect').value;
+  const cost = parseFloat(document.getElementById('sgItemCost').value) || 0;
+  const sale = parseFloat(document.getElementById('sgItemSale').value) || 0;
+
+  if (category === "NEW") {
+    category = document.getElementById('sgItemCategoryNew').value.trim();
+  }
+
+  if (!name || !category || !sgPendingImage) {
+    showToast("Faltan datos o la imagen 🕶️");
+    return;
+  }
+
+  const btn = document.querySelector('#sgAddModal .sg-btn-main');
+  btn.disabled = true;
+  btn.textContent = "Guardando...";
+
+  try {
+    // Aquí puedes adaptar la subida a Cloudinary si así lo hacías antes,
+    // por ahora guardamos la imagen en Base64 en Firestore
+    await db.collection("sungaze").add({
+      name: name,
+      category: category,
+      date: date,
+      cost: cost,
+      sale: sale,
+      image: sgPendingImage,
+      status: "disponible",
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    sgCloseModal();
+    showToast("¡Artículo añadido a Sungaze! ✨");
+  } catch (error) {
+    console.error("Error guardando artículo:", error);
+    showToast("Error al guardar el artículo 🥺");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "AÑADIR AL INVENTARIO";
+  }
+}
+
+function sgRenderFolders() {
+  const container = document.getElementById('sgInventoryContainer');
+  container.innerHTML = "";
+
+  Object.keys(sgInventoryData).forEach(cat => {
+    const items = sgInventoryData[cat];
+    if (items.length === 0) return;
+
+    const folder = document.createElement('div');
+    folder.className = 'sg-folder-card';
+    folder.onclick = () => sgAbrirGrupo(cat);
+
+    const coverImg = items[items.length - 1].image || items[items.length - 1].mediaUrl; 
+    folder.innerHTML = `
+      <img src="${coverImg}" class="sg-folder-cover">
+      <div class="sg-folder-info">
+        <p class="sg-folder-title">${cat}</p>
+        <p class="sg-folder-stats">${items.length} artículos</p>
+      </div>
+    `;
+    container.appendChild(folder);
+  });
+}
+
+function sgAbrirGrupo(category) {
+  const container = document.getElementById('sgGroupDetailContent');
+  container.innerHTML = `
+    <div class="sg-category-header">
+      <h3 class="sg-category-title">${category}</h3>
+    </div>
+    <div class="sg-items-grid" id="sgCategoryItemsGrid"></div>
+  `;
+
+  const grid = document.getElementById('sgCategoryItemsGrid');
+  const items = sgInventoryData[category] || [];
+
+  items.forEach((item) => {
+    const card = document.createElement('div');
+    card.className = 'sg-product-card';
+    const imgSrc = item.image || item.mediaUrl;
+    card.innerHTML = `
+      <img src="${imgSrc}">
+      <div class="sg-product-info">
+        <button class="sg-btn-delete" onclick="sgEliminarItem('${item.id}', event)">X</button>
+        <h4 style="margin:0 0 5px 0; color:#fff;">${item.name}</h4>
+        <p>Costo: Q${item.cost.toFixed(2)} | Venta: Q${item.sale.toFixed(2)}</p>
+        <p style="font-size:12px; color:#888;">Fecha: ${item.date}</p>
+        <div class="sg-product-actions">
+          <button style="background:#0275d8;" onclick="sgEditarItem('${category}', '${item.id}', event)">Editar</button>
+          <button style="background:${item.status === 'vendido' ? '#5cb85c' : '#f0ad4e'};" onclick="sgToggleStatus('${item.id}', '${item.status}', event)">
+            ${item.status === 'vendido' ? '✔ Vendido' : 'Marcar Vendido'}
+          </button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  document.getElementById('sgGroupDetailOverlay').style.display = 'block';
+}
+
+function sgCerrarGrupo() {
+  document.getElementById('sgGroupDetailOverlay').style.display = 'none';
+}
+
+function sgEliminarItem(firebaseId, event) {
+  event.stopPropagation();
+  if (confirm("¿Seguro que quieres eliminar este artículo?")) {
+    db.collection("sungaze").doc(firebaseId).delete().then(() => {
+      showToast("Artículo eliminado 🗑️");
+      // La interfaz se actualiza sola gracias al onSnapshot
+      sgCerrarGrupo(); 
+    }).catch(error => {
+      showToast("Error al eliminar 🥺");
+    });
+  }
+}
+
+function sgEditarItem(category, firebaseId, event) {
+  event.stopPropagation();
+  const item = sgInventoryData[category].find(i => i.id === firebaseId);
+  if(!item) return;
+  
+  document.getElementById('sgEditGroupKey').value = category;
+  document.getElementById('sgEditItemId').value = firebaseId;
+  document.getElementById('sgEditItemName').value = item.name;
+  document.getElementById('sgEditItemCost').value = item.cost;
+  document.getElementById('sgEditItemSale').value = item.sale;
+  
+  document.getElementById('sgEditModal').style.display = 'flex';
+}
+
+async function sgGuardarEdicion() {
+  const firebaseId = document.getElementById('sgEditItemId').value;
+  const category = document.getElementById('sgEditGroupKey').value;
+  
+  const newName = document.getElementById('sgEditItemName').value.trim();
+  const newCost = parseFloat(document.getElementById('sgEditItemCost').value) || 0;
+  const newSale = parseFloat(document.getElementById('sgEditItemSale').value) || 0;
+  
+  try {
+    await db.collection("sungaze").doc(firebaseId).update({
+      name: newName,
+      cost: newCost,
+      sale: newSale
+    });
+    document.getElementById('sgEditModal').style.display = 'none';
+    sgAbrirGrupo(category); // Re-abrir para ver los cambios
+    showToast("Artículo actualizado ✏️");
+  } catch(e) {
+    showToast("Error actualizando 🥺");
+  }
+}
+
+function sgToggleStatus(firebaseId, currentStatus, event) {
+  event.stopPropagation();
+  const newStatus = (currentStatus === 'vendido') ? 'disponible' : 'vendido';
+  
+  db.collection("sungaze").doc(firebaseId).update({
+    status: newStatus
+  }).catch(e => {
+    showToast("Error al cambiar estado 🥺");
+  });
+}
+
+function sgUpdateTotals() {
+  let totalGanancias = 0;
+  
+  Object.keys(sgInventoryData).forEach(cat => {
+    sgInventoryData[cat].forEach(item => {
+      if (item.status === 'vendido') {
+        totalGanancias += (item.sale - item.cost);
+      }
+    });
+  });
+  
+  const spanTotal = document.getElementById('txtAlcancilla');
+  if (spanTotal) {
+    spanTotal.textContent = totalGanancias.toFixed(2);
+  }
+}
 
 </script>
 </body>
