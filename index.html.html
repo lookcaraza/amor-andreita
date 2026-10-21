@@ -13635,15 +13635,39 @@ function setupAdivinaTurn(room) {
 }
 
 function searchImage() {
-  const query = document.getElementById('adivinaSearchInput').value;
+  const query = document.getElementById('adivinaSearchInput').value.trim();
+  if (!query) {
+    showToast("Escribe algo para buscar 🥺");
+    return;
+  }
+  
   const resultsDiv = document.getElementById('adivinaImageResults');
-  // Usamos Unsplash como proveedor temporal de imágenes
-  resultsDiv.innerHTML = `<img src="https://source.unsplash.com/200x200/?${query}" onclick="selectAdivinaImg(this.src)" style="cursor:pointer; border-radius:10px; width:100%; height:120px; object-fit:cover; border: 2px solid transparent;">`;
+  
+  // Codificamos el texto para evitar errores con los espacios (ej: "zoey 101" -> "zoey%20101")
+  const safeQuery = encodeURIComponent(query);
+  
+  // Usamos una API gratuita que devuelve la imagen basada en tu texto
+  const imageUrl = `https://image.pollinations.ai/prompt/${safeQuery}?width=300&height=300&nologo=true`;
+  
+  resultsDiv.innerHTML = `<img src="${imageUrl}" onclick="selectAdivinaImg(this.src, this)" style="cursor:pointer; border-radius:10px; width:100%; height:120px; object-fit:cover; border: 2px solid transparent; transition: all 0.2s;">`;
+  
+  showToast("Buscando imagen... ⏳");
 }
 
 let selectedAdivinaImg = "";
-function selectAdivinaImg(src) {
+function selectAdivinaImg(src, imgElement) {
   selectedAdivinaImg = src;
+  
+  // Efecto visual para saber que ya la seleccionaste
+  const allImgs = document.getElementById('adivinaImageResults').querySelectorAll('img');
+  allImgs.forEach(img => {
+    img.style.borderColor = 'transparent';
+    img.style.transform = 'scale(1)';
+  });
+  
+  imgElement.style.borderColor = 'var(--title-burgundy)';
+  imgElement.style.transform = 'scale(1.05)';
+  
   showToast("Imagen seleccionada ✨");
 }
 
