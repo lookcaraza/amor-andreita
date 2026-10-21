@@ -12,7 +12,6 @@
   <!-- SDK de la API Widget de SoundCloud para control de audio -->
   <script src="https://w.soundcloud.com/player/api.js"></script>
 
-
   <!-- SDKs Compatibles de Firebase (App, Firestore, Storage, Database) NATIVO GRATUITO -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -4734,8 +4733,8 @@
 <div class="minigame-nav-item" id="nav-game-17" onclick="selectMinigameFromSidebar(17)">
   <span class="minigame-nav-icon">📸</span>
   <div class="minigame-nav-info">
-    <span class="minigame-nav-name">Rompezabezas Juntos</span>
-    <span class="minigame-nav-sub">Minijuego 17: Cámara y turnos</span>
+    <span class="minigame-nav-name">Rompecabezas Juntos</span>
+    <span class="minigame-nav-sub">Minijuego 17 Puzzle Cam</span>
   </div>
   <span class="new-badge-pill" id="badge-game-17">NEW</span>
 </div>
@@ -5972,47 +5971,70 @@
   </div>
 </div>
 
+<!-- MINIJUEGO 17: ROMPECABEZAS JUNTOS -->
+<div id="game-stage-17" style="display: none; width: 100%;">
+  <div class="basta-container" style="text-align: center; position: relative;">
+    <h3 class="custom-game-title" style="font-size: 1.4rem; margin-bottom: 5px;">📸 Rompecabezas Juntos</h3>
 
-<!-- MINIJUEGO 17: ROMPEZABEZAS JUNTOS -->
-<div id="game-stage-17" style="display:none;width:100%;">
- <div class="basta-container" id="rompe17Root" style="text-align:center;position:relative;">
-  <button onclick="closeRompe17()" aria-label="Cerrar minijuego" title="Cerrar" style="position:absolute;right:8px;top:8px;z-index:20;border:0;border-radius:50%;width:42px;height:42px;background:#e63946;color:white;font-size:1.5rem;font-weight:900;">✕</button>
-  <h3 class="custom-game-title" style="font-size:1.4rem;padding:0 35px;">📸 Rompezabezas Juntos</h3>
-  <p style="font-weight:700;color:#555;margin-bottom:15px;">Criss y Andreita juegan por turnos. Cada turno, la persona activa arma un rompecabezas de 15 piezas usando su cámara.</p>
-  <div id="rompe17Login">
-   <p style="font-weight:800;margin:12px;">¿Quién eres?</p>
-   <div class="profile-selector" style="max-width:360px;margin:0 auto 15px;">
-    <div class="profile-card" id="rompe17Criss" onclick="chooseRompe17('Criss')">👑 Criss</div>
-    <div class="profile-card" id="rompe17Andreita" onclick="chooseRompe17('Andreita')">🌸 Andreita</div>
-   </div>
-   <button class="modal-btn" onclick="joinRompe17()">Entrar a la sala 💗</button>
+    <!-- Login -->
+    <div id="puzzleLoginBox">
+      <p style="font-weight: 700; color: #555; margin-bottom: 15px;">Selecciona tu nombre para conectarte con tu amor:</p>
+      <div class="profile-selector" style="max-width: 320px; margin: 0 auto 15px auto;">
+        <div class="profile-card" id="puzzleUserCriss" onclick="choosePuzzleUser('Criss')">👑 Soy Criss</div>
+        <div class="profile-card" id="puzzleUserAndreita" onclick="choosePuzzleUser('Andreita')">🌸 Soy Andreita</div>
+      </div>
+      <button class="modal-btn" onclick="connectPuzzleOnline()" style="max-width: 250px; margin: 0 auto;">Entrar a la Sala 🚀</button>
+    </div>
+
+    <!-- Sala de Espera -->
+    <div id="puzzleWaitingBox" style="display: none; padding: 20px 10px;">
+      <div style="font-size: 3rem; margin-bottom: 8px; animation: heartPulse 1.2s infinite alternate;">🧩💕</div>
+      <h4 style="color: var(--title-burgundy); font-weight: 800;">Sala de Espera</h4>
+      <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+        <span class="presence-badge ready" id="puzzleReadyCriss">👑 Criss: No listo ⏳</span>
+        <span class="presence-badge ready" id="puzzleReadyAndreita">🌸 Andreita: No lista ⏳</span>
+      </div>
+      <button class="modal-btn" id="puzzleReadyBtn" onclick="togglePuzzleReady()" style="max-width: 280px; margin: 0 auto;">✨ ¡Estoy Listo! ✨</button>
+    </div>
+
+    <!-- Instrucciones -->
+    <div id="puzzleInstructionsBox" style="display: none; padding: 20px 10px;">
+      <h4 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.3rem;">Instrucciones ⚠️</h4>
+      <p style="font-weight: 800; color: #e63946; margin: 15px 0; font-size: 1.1rem; border: 2px dashed #e63946; padding: 15px; border-radius: 10px;">
+        Pon la cámara frente a ti en algo rígido para que funcione correctamente.
+      </p>
+      <button class="modal-btn" onclick="acceptPuzzleInstructions()" style="max-width: 250px; margin: 0 auto;">Aceptar 👍</button>
+    </div>
+
+    <!-- Arena de Juego (Pantalla Completa Activable) -->
+    <div id="puzzlePlayArena" style="display: none; padding: 15px;">
+      <button class="modal-btn" style="background: #2a9d8f; margin-bottom: 15px;" onclick="togglePuzzleFullscreen()">⛶ Poner Pantalla Completa</button>
+      
+      <div id="puzzleFullscreenArea" style="position: relative; background: #fff0f3; padding: 20px; border-radius: 15px; display: flex; flex-direction: column; align-items: center; border: 3px solid var(--rose-pink);">
+        
+        <!-- Botón X para salir del minijuego -->
+        <button onclick="exitPuzzleGame()" style="position: absolute; top: 10px; right: 10px; background: #e63946; color: white; border: 2px solid white; border-radius: 50%; width: 45px; height: 45px; font-weight: 900; font-size: 1.3rem; cursor: pointer; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">✕</button>
+        
+        <h4 id="puzzleTurnIndicator" style="color: var(--title-burgundy); font-weight: 900; margin-bottom: 10px; font-size: 1.2rem; background: white; padding: 5px 15px; border-radius: 20px; border: 2px solid var(--rose-pink);">Turno de...</h4>
+        
+        <!-- Cámara para iOS/Android -->
+        <video id="puzzleVideo" autoplay muted playsinline webkit-playsinline style="display: none; width: 100%; max-width: 600px; border-radius: 10px; border: 4px solid var(--title-burgundy); transform: scaleX(-1);"></video>
+        
+        <!-- Cuadrícula 15 piezas (5x3) -->
+        <div id="puzzleGrid" style="display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(3, 1fr); gap: 2px; width: 100%; max-width: 600px; aspect-ratio: 5/3; background: #222; border: 4px solid var(--rose-pink); border-radius: 10px; overflow: hidden; position: relative; touch-action: manipulation;"></div>
+        
+        <button id="puzzleSnapBtn" class="modal-btn" style="margin-top: 15px; background: var(--title-burgundy); max-width: 300px; display: none;" onclick="takePuzzleSnapshot()">📸 Tomar Foto y Desordenar</button>
+      </div>
+    </div>
+
+    <!-- Resumen -->
+    <div id="puzzleSummaryBox" style="display: none; padding: 20px;">
+      <div style="font-size: 3rem; margin-bottom: 8px;">🎉</div>
+      <h3 style="color: var(--title-burgundy); font-weight: 800;">¡Rompecabezas Armado!</h3>
+      <p style="font-weight: 700; color: #555; margin-bottom: 15px;">¡Bien hecho mi amor!</p>
+      <button class="modal-btn" onclick="nextPuzzleTurn()" style="max-width: 250px; margin: 0 auto; background: #2a9d8f;">Siguiente Turno 🔄</button>
+    </div>
   </div>
-  <div id="rompe17Waiting" style="display:none;padding:12px;">
-   <h4 style="color:var(--title-burgundy);">Sala de espera 💕</h4>
-   <p id="rompe17Presence" style="margin:12px 0;font-weight:800;">Esperando a Criss y Andreita…</p>
-   <button class="modal-btn" id="rompe17Ready" onclick="readyRompe17()">Aceptar y preparar cámara</button>
-  </div>
-  <div id="rompe17Instructions" style="display:none;padding:12px;">
-   <p style="font-weight:800;margin-bottom:12px;">📱 Pon la cámara frente a ti, apoyada en algo rígido y estable. Permite el acceso a la cámara cuando el navegador lo solicite. La imagen se divide en 15 piezas; toca dos piezas para intercambiarlas.</p>
-   <button class="modal-btn" onclick="startRompe17Camera()">Aceptar y activar cámara 📷</button>
-  </div>
-  <div id="rompe17Play" style="display:none;">
-   <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0;">
-    <span class="presence-badge" id="rompe17Turn">Turno: —</span>
-    <span class="presence-badge" id="rompe17Status">Conectando…</span>
-   </div>
-   <video id="rompe17Video" autoplay playsinline muted style="display:none;width:100%;max-width:420px;max-height:45vh;object-fit:cover;border-radius:16px;border:3px solid var(--rose-pink);"></video>
-   <canvas id="rompe17Capture" style="display:none;"></canvas>
-   <div id="rompe17CameraActions" style="margin:10px 0;">
-    <button class="modal-btn" onclick="captureRompe17()">Tomar foto y crear rompecabezas 📸</button>
-   </div>
-   <p id="rompe17Hint" style="font-weight:800;margin:8px 0;">Esperando el turno…</p>
-   <div id="rompe17Puzzle" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;max-width:480px;margin:10px auto;"></div>
-   <button class="modal-btn" id="rompe17Finish" onclick="finishRompe17()" style="display:none;">¡Terminé el rompecabezas! 💖</button>
-   <p id="rompe17Feedback" style="font-weight:800;margin-top:10px;"></p>
-  </div>
-  <p style="font-size:.8rem;color:#777;margin-top:12px;padding:0 25px;">La pantalla completa depende del navegador. En iPhone/iPad, Safari no permite ocultar permanentemente todas las barras del navegador desde una página web.</p>
- </div>
 </div>
 
           <!-- RECOMPENSA FINAL -->
@@ -8423,7 +8445,7 @@ function restartCoopMatch() {
       else if (stageNum === 14) initNumDuelSystem();
       else if (stageNum === 15) initAdivinaSystem();
       else if (stageNum === 16) initAjedrezSystem();
-       else if (stageNum === 17) initRompe17();
+      else if (stageNum === 17) initPuzzleCamSystem();
     }
 
     /* MINIJUEGO 2 */
@@ -12799,11 +12821,9 @@ function sgCrearGrupoDOM(groupKey) {
         groupDiv.style.display = "none"; // Oculto por defecto
         
         groupDiv.innerHTML = `
-            <div class="sg-category-header" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <h3 class="sg-category-title" style="flex:1;min-width:120px;">${groupKey}</h3>
-                <button type="button" data-group="${encodeURIComponent(groupKey)}" onclick="sgAgregarEnGrupo(decodeURIComponent(this.dataset.group))" title="Agregar artículo a este álbum" style="border:0;border-radius:50%;width:40px;height:40px;background:#16803c;color:white;font-size:28px;font-weight:900;cursor:pointer;">+</button>
+            <div class="sg-category-header">
+                <h3 class="sg-category-title">${groupKey}</h3>
                 <button class="sg-btn-cerdito" onclick="sgAhorrarGrupo('${groupKey}')">🐷 AÑADIR TODO AL CERDITO</button>
-                <button type="button" data-group="${encodeURIComponent(groupKey)}" onclick="sgEliminarGrupo(decodeURIComponent(this.dataset.group))" title="Eliminar álbum completo" style="border:0;border-radius:50%;width:40px;height:40px;background:#b00020;color:white;font-size:24px;font-weight:900;cursor:pointer;">×</button>
             </div>
             <div class="sg-items-grid" id="items_${safeId}"></div>
             <div class="sg-group-totals">
@@ -12822,10 +12842,7 @@ function sgCrearGrupoDOM(groupKey) {
         folderCard.className = "sg-folder-card";
         folderCard.onclick = () => sgAbrirGrupo(safeId); // Abre el grupo al hacer clic
         
-        folderCard.style.position = 'relative';
         folderCard.innerHTML = `
-            <button type="button" title="Agregar artículo a ${groupKey}" aria-label="Agregar artículo a ${groupKey}" data-group="${encodeURIComponent(groupKey)}" onclick="event.stopPropagation(); sgAgregarEnGrupo(decodeURIComponent(this.dataset.group))" style="position:absolute;top:8px;right:48px;z-index:5;width:36px;height:36px;border:0;border-radius:50%;background:#16803c;color:white;font-size:25px;font-weight:900;cursor:pointer;box-shadow:0 2px 8px #0005;">+</button>
-            <button type="button" title="Eliminar álbum completo ${groupKey}" aria-label="Eliminar álbum completo ${groupKey}" data-group="${encodeURIComponent(groupKey)}" onclick="event.stopPropagation(); sgEliminarGrupo(decodeURIComponent(this.dataset.group))" style="position:absolute;top:8px;right:8px;z-index:5;width:36px;height:36px;border:0;border-radius:50%;background:#b00020;color:white;font-size:22px;font-weight:900;cursor:pointer;box-shadow:0 2px 8px #0005;">×</button>
             <img src="https://via.placeholder.com/150x150/222222/5cb85c?text=Vacio" class="sg-folder-cover" id="folder_img_${safeId}" loading="lazy">
             <div class="sg-folder-info">
                 <h4 class="sg-folder-title">${groupKey}</h4>
@@ -13377,46 +13394,6 @@ function sgCheckNewCategory() {
     else input.value = '';
 }
 
-function sgAgregarEnGrupo(groupKey) {
-    const select = document.getElementById('sgItemCategorySelect');
-    const input = document.getElementById('sgItemCategoryNew');
-    if (!select) { sgToast('No se encontró el selector de categorías.'); return; }
-    sgActualizarSelectCategorias();
-    const option = Array.from(select.options).find(o => o.value === groupKey);
-    if (option) {
-        select.value = groupKey;
-        if (input) { input.value = ''; input.style.display = 'none'; }
-    } else {
-        // Si el grupo ya existe pero el selector no lo tenía, lo añadimos a la lista visible.
-        const opt = document.createElement('option'); opt.value = groupKey; opt.textContent = groupKey;
-        select.insertBefore(opt, select.querySelector('option[value="__nueva__"]'));
-        select.value = groupKey;
-        if (input) { input.value = ''; input.style.display = 'none'; }
-    }
-    const fileInput = document.getElementById('sgFileInput');
-    if (fileInput) fileInput.click();
-}
-
-async function sgEliminarGrupo(groupKey) {
-    const items = Object.entries(sgItems || {}).filter(([id, item]) => item && item.groupKey === groupKey);
-    const msg = `¿Eliminar el álbum completo "${groupKey}" y sus ${items.length} artículo(s)? Esta acción no se puede deshacer.`;
-    if (!(await sgConfirm(msg))) return;
-    try {
-        const updates = {};
-        updates[`sungaze_data/grupos/${groupKey}`] = null;
-        for (const [id] of items) updates[`sungaze_data/items/${id}`] = null;
-        const remainingCategories = (sgCategoriasGuardadas || []).filter(cat => cat !== groupKey);
-        updates['sungaze_data/categorias'] = remainingCategories;
-        await rtdb.ref().update(updates);
-        const overlay = document.getElementById('sgGroupDetailOverlay');
-        if (overlay) overlay.style.display = 'none';
-        sgToast(`Álbum "${groupKey}" eliminado correctamente.`);
-    } catch (error) {
-        console.error('Error eliminando álbum Sungaze:', error);
-        sgToast('No se pudo eliminar el álbum: ' + (error.message || error));
-    }
-}
-
 function sgPreviewImage(event) {
     const file = event && event.target && event.target.files ? event.target.files[0] : null;
     if (!file) return;
@@ -13461,7 +13438,7 @@ async function sgAddItem() {
     const dateRaw = document.getElementById('sgItemDate').value;
     const select = document.getElementById('sgItemCategorySelect');
     const nueva = (document.getElementById('sgItemCategoryNew').value || '').trim();
-    const category = String(select && select.value === '__nueva__' ? nueva : (select ? select.value : 'General')).trim();
+    const category = select && select.value === '__nueva__' ? nueva : (select ? select.value : 'General');
     const cost = Number.parseFloat(document.getElementById('sgItemCost').value);
     const sale = Number.parseFloat(document.getElementById('sgItemSale').value);
     if (!sgFileToUpload) { sgToast('Primero selecciona la imagen del artículo.'); return; }
@@ -14350,177 +14327,251 @@ function restartAjedrezGame() {
   document.getElementById('ajedrezSummarySection').style.display = 'none';
   document.getElementById('ajedrezWaitingBox').style.display = 'block';
 }
+/* ==========================================================================
+   MINIJUEGO 17: ROMPECABEZAS JUNTOS (15 PIEZAS) 
+   ========================================================================== */
+let myPuzzleUser = "";
+let amIPuzzleReady = false;
+let puzzleStream = null;
+let puzzlePieces = [];
+let firstSelectedPiece = null;
 
-
-/* === INICIO: ROMPEZABEZAS JUNTOS - FIX DE EVENTOS === */
-
-/* MINIJUEGO 17: ROMPEZABEZAS JUNTOS (RTDB, turnos compartidos) */
-let rompe17User = null, rompe17ReadyState = false, rompe17Stream = null;
-let rompe17RoomRef = null, rompe17RoomListener = null, rompe17RoomState = null;
-let rompe17Tiles = [], rompe17Selected = null, rompe17MyPuzzle = false;
-function initRompe17() {
-  document.getElementById('rompe17Login').style.display = 'block';
-  document.getElementById('rompe17Waiting').style.display = 'none';
-  document.getElementById('rompe17Instructions').style.display = 'none';
-  document.getElementById('rompe17Play').style.display = 'none';
-  if (rompe17User && !rompe17RoomListener) joinRompe17();
-}
-function chooseRompe17(name) {
-  rompe17User = name;
-  document.getElementById('rompe17Criss').classList.toggle('selected', name === 'Criss');
-  document.getElementById('rompe17Andreita').classList.toggle('selected', name === 'Andreita');
-}
-function joinRompe17() {
-  if (!rompe17User) { alert('Primero selecciona Criss o Andreita.'); return; }
-  if (typeof rtdb === 'undefined') { alert('No se pudo conectar con la sala en línea.'); return; }
-  document.getElementById('rompe17Login').style.display = 'none';
-  document.getElementById('rompe17Waiting').style.display = 'block';
-  rompe17RoomRef = rtdb.ref('rompezabezas_juntos_v1');
-  if (rompe17RoomListener) rompe17RoomRef.off('value', rompe17RoomListener);
-  rompe17RoomListener = snap => {
-    rompe17RoomState = snap.val() || {players:{}, ready:{}, turn:'Andreita', status:'waiting', round:0};
-    const p = rompe17RoomState.players || {};
-    document.getElementById('rompe17Presence').innerHTML =
-      (p.Criss ? '🟢' : '⚪')+' Criss '+(p.Criss?'está en sala':'no ha entrado')+'<br>'+
-      (p.Andreita ? '🟢' : '⚪')+' Andreita '+(p.Andreita?'está en sala':'no ha entrado');
-    if (p.Criss && p.Andreita && rompe17RoomState.status === 'waiting') {
-      document.getElementById('rompe17Presence').innerHTML += '<br>¡Ya están los dos! Pulsen Aceptar.';
-    }
-    if (rompe17RoomState.status === 'waiting') {
-      document.getElementById('rompe17Waiting').style.display = 'block';
-      document.getElementById('rompe17Instructions').style.display = 'none';
-      document.getElementById('rompe17Play').style.display = 'none';
-      document.getElementById('rompe17Ready').disabled = !!(rompe17RoomState.ready && rompe17RoomState.ready[rompe17User]);
-      document.getElementById('rompe17Ready').textContent = document.getElementById('rompe17Ready').disabled ? 'Aceptado ✓' : 'Aceptar y preparar cámara';
-    }
-    if (rompe17RoomState.status === 'instructions' || rompe17RoomState.status === 'playing') {
-      document.getElementById('rompe17Waiting').style.display = 'none';
-      document.getElementById('rompe17Instructions').style.display = 'block';
-      document.getElementById('rompe17Play').style.display = 'block';
-      document.getElementById('rompe17Instructions').style.display = rompe17ReadyState ? 'none' : 'block';
-      document.getElementById('rompe17Turn').textContent = 'Turno: '+(rompe17RoomState.turn || 'Andreita');
-      document.getElementById('rompe17Status').textContent = p.Criss && p.Andreita ? 'Ambos conectados' : 'Esperando al otro jugador';
-      const mine = rompe17RoomState.turn === rompe17User && rompe17RoomState.status === 'playing';
-      document.getElementById('rompe17CameraActions').style.display = mine ? 'block' : 'none';
-      document.getElementById('rompe17Hint').textContent = mine ? '¡Es tu turno! Toma una foto y arma las 15 piezas.' : 'Turno de '+(rompe17RoomState.turn || 'Andreita')+'. Espera a que termine.';
-    }
-  };
-  rompe17RoomRef.child('players/'+rompe17User).set(true);
-  rompe17RoomRef.on('value', rompe17RoomListener);
-}
-async function readyRompe17() {
-  if (!rompe17User || !rompe17RoomRef) return;
-  rompe17ReadyState = true;
-  await rompe17RoomRef.child('ready/'+rompe17User).set(true);
-  const snap = await rompe17RoomRef.once('value'), state = snap.val() || {};
-  if (state.players && state.players.Criss && state.players.Andreita &&
-      state.ready && state.ready.Criss && state.ready.Andreita) {
-    await rompe17RoomRef.update({status:'instructions', turn:'Andreita', round:0});
-  } else {
-    document.getElementById('rompe17Presence').textContent = '¡Aceptado! Esperando que la otra persona acepte…';
-    document.getElementById('rompe17Ready').textContent = 'Aceptado ✓';
-    document.getElementById('rompe17Ready').disabled = true;
+function initPuzzleCamSystem() {
+  const savedUser = localStorage.getItem('pinturillo_saved_user') || localStorage.getItem('basta_saved_user');
+  if (savedUser && (savedUser === 'Criss' || savedUser === 'Andreita')) {
+    choosePuzzleUser(savedUser);
   }
 }
-async function startRompe17Camera() {
-  try {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      alert('La cámara requiere HTTPS y un navegador compatible. Abre la página desde su dirección segura (https://).'); return;
-    }
-    if (rompe17Stream) rompe17Stream.getTracks().forEach(t=>t.stop());
-    rompe17Stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
-    const v = document.getElementById('rompe17Video');
-    v.srcObject = rompe17Stream; v.style.display = 'block'; await v.play();
-    rompe17ReadyState = true;
-    document.getElementById('rompe17Instructions').style.display = 'none';
-    document.getElementById('rompe17Play').style.display = 'block';
-    const root = document.getElementById('rompe17Root');
-    try { if (root.requestFullscreen) await root.requestFullscreen(); else if (root.webkitRequestFullscreen) root.webkitRequestFullscreen(); } catch(e) {}
-    if (rompe17RoomRef && rompe17RoomState && rompe17RoomState.status === 'instructions') {
-      await rompe17RoomRef.update({status:'playing'});
-    }
-  } catch(e) { alert('No se pudo abrir la cámara. Revisa los permisos del navegador y vuelve a intentarlo.'); }
+
+function choosePuzzleUser(name) {
+  myPuzzleUser = name;
+  document.getElementById('puzzleUserCriss').classList.remove('selected');
+  document.getElementById('puzzleUserAndreita').classList.remove('selected');
+  document.getElementById(`puzzleUser${name}`).classList.add('selected');
 }
-function captureRompe17() {
-  if (!rompe17RoomState || rompe17RoomState.turn !== rompe17User) { alert('Espera tu turno.'); return; }
-  const v = document.getElementById('rompe17Video'), c = document.getElementById('rompe17Capture');
-  if (!v.videoWidth || !v.videoHeight) { alert('La cámara todavía está iniciando. Inténtalo otra vez.'); return; }
-  c.width=300; c.height=300;
-  const ctx=c.getContext('2d'), side=Math.min(v.videoWidth,v.videoHeight);
-  ctx.save(); ctx.translate(300,0); ctx.scale(-1,1);
-  ctx.drawImage(v,(v.videoWidth-side)/2,(v.videoHeight-side)/2,side,side,0,0,300,300); ctx.restore();
-  const img = new Image();
-  img.onload=()=>{
-    rompe17Tiles=Array.from({length:15},(_,i)=>i);
-    for(let i=rompe17Tiles.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[rompe17Tiles[i],rompe17Tiles[j]]=[rompe17Tiles[j],rompe17Tiles[i]];}
-    if(rompe17Tiles.every((v,i)=>v===i)) [rompe17Tiles[0],rompe17Tiles[1]]=[rompe17Tiles[1],rompe17Tiles[0]];
-    rompe17Selected=null; rompe17MyPuzzle=true; renderRompe17Puzzle(img);
-    document.getElementById('rompe17CameraActions').style.display='none';
-    document.getElementById('rompe17Finish').style.display='inline-block';
-    document.getElementById('rompe17Hint').textContent='Toca una pieza y luego otra para intercambiarlas. La última fila tiene 3 piezas.';
-    document.getElementById('rompe17Video').style.display='none';
-  };
-  img.src=c.toDataURL('image/jpeg',.88);
+
+function connectPuzzleOnline() {
+  if (!myPuzzleUser) return showToast("Selecciona tu nombre 💕");
+  document.getElementById('puzzleLoginBox').style.display = 'none';
+  document.getElementById('puzzleWaitingBox').style.display = 'block';
+
+  rtdb.ref(`puzzle_ready/${myPuzzleUser}`).set(false);
+  listenPuzzleState();
 }
-function renderRompe17Puzzle(img) {
-  const grid=document.getElementById('rompe17Puzzle'); grid.innerHTML='';
-  rompe17Tiles.forEach((tile,pos)=>{
-    const b=document.createElement('button'); b.type='button'; b.style.cssText='aspect-ratio:1;border:2px solid white;border-radius:5px;overflow:hidden;padding:0;background-image:url('+img.src+');background-size:300% 500%;background-position:'+((tile%3)*50)+'% '+(Math.floor(tile/3)*25)+'%;min-width:0;';
-    if (rompe17Selected===pos) b.style.outline='4px solid #800020';
-    b.setAttribute('aria-label','Pieza '+(pos+1));
-    b.onclick=()=>{
-      if(!rompe17MyPuzzle || rompe17RoomState.turn!==rompe17User)return;
-      if(rompe17Selected===null){rompe17Selected=pos;}
-      else { [rompe17Tiles[rompe17Selected],rompe17Tiles[pos]]=[rompe17Tiles[pos],rompe17Tiles[rompe17Selected]]; rompe17Selected=null; }
-      renderRompe17Puzzle(img);
-      document.getElementById('rompe17Finish').style.display=rompe17Tiles.every((t,i)=>t===i)?'inline-block':'none';
-    };
-    grid.appendChild(b);
+
+function togglePuzzleReady() {
+  amIPuzzleReady = !amIPuzzleReady;
+  const btn = document.getElementById('puzzleReadyBtn');
+  btn.textContent = amIPuzzleReady ? "✅ ¡Listo! (Esperando)" : "✨ ¡Estoy Listo! ✨";
+  btn.style.background = amIPuzzleReady ? "#800020" : "#2a9d8f";
+  rtdb.ref(`puzzle_ready/${myPuzzleUser}`).set(amIPuzzleReady);
+}
+
+function listenPuzzleState() {
+  rtdb.ref('puzzle_ready').on('value', (snap) => {
+    const data = snap.val() || {};
+    const cReady = data.Criss === true;
+    const aReady = data.Andreita === true;
+    document.getElementById('puzzleReadyCriss').textContent = `👑 Criss: ${cReady ? 'Listo ✅' : 'No listo ⏳'}`;
+    document.getElementById('puzzleReadyAndreita').textContent = `🌸 Andreita: ${aReady ? 'Lista ✅' : 'No lista ⏳'}`;
+
+    if (cReady && aReady) {
+      rtdb.ref('puzzle_room').once('value').then(roomSnap => {
+        if (!roomSnap.val() || roomSnap.val().status === 'idle') {
+          // El primer turno SIEMPRE es de Andreita
+          if (myPuzzleUser === 'Andreita') { 
+            rtdb.ref('puzzle_room').set({ status: 'instructions', turn: 'Andreita' });
+          }
+        }
+      });
+    }
+  });
+
+  rtdb.ref('puzzle_room').on('value', (snap) => {
+    const data = snap.val();
+    if (!data || data.status === 'idle') return;
+
+    if (data.status === 'instructions') {
+      document.getElementById('puzzleWaitingBox').style.display = 'none';
+      document.getElementById('puzzleSummaryBox').style.display = 'none';
+      document.getElementById('puzzleInstructionsBox').style.display = 'block';
+    } else if (data.status === 'playing') {
+      document.getElementById('puzzleInstructionsBox').style.display = 'none';
+      document.getElementById('puzzleSummaryBox').style.display = 'none';
+      document.getElementById('puzzlePlayArena').style.display = 'block';
+      document.getElementById('puzzleTurnIndicator').textContent = `Turno de: ${data.turn} ${data.turn === 'Andreita' ? '🌸' : '👑'}`;
+      
+      if (data.turn === myPuzzleUser) {
+        startPuzzleCamera();
+      } else {
+        stopPuzzleCamera();
+        document.getElementById('puzzleGrid').innerHTML = `<p style="color:var(--title-burgundy); font-weight:800; margin:auto; grid-column:1/-1; text-align:center; padding:40px;">⏳ Esperando a que ${data.turn} arme su rompecabezas...</p>`;
+        document.getElementById('puzzleGrid').style.background = "#fff0f3";
+        document.getElementById('puzzleSnapBtn').style.display = 'none';
+      }
+    } else if (data.status === 'finished_turn') {
+      stopPuzzleCamera();
+      document.getElementById('puzzlePlayArena').style.display = 'none';
+      document.getElementById('puzzleSummaryBox').style.display = 'block';
+    }
   });
 }
-async function finishRompe17() {
-  if (!rompe17Tiles.every((t,i)=>t===i)) { alert('Todavía faltan piezas por acomodar.'); return; }
-  if (!rompe17RoomRef || !rompe17RoomState || rompe17RoomState.turn!==rompe17User) return;
-  rompe17MyPuzzle=false;
-  const next=rompe17User==='Andreita'?'Criss':'Andreita';
-  await rompe17RoomRef.update({turn:next,round:(rompe17RoomState.round||0)+1,status:'playing'});
-  document.getElementById('rompe17Feedback').textContent='¡Muy bien! Ahora le toca a '+next+' 💗';
-  document.getElementById('rompe17Puzzle').innerHTML='';
-  document.getElementById('rompe17Finish').style.display='none';
-  document.getElementById('rompe17Video').style.display='block';
+
+function acceptPuzzleInstructions() {
+  rtdb.ref('puzzle_room/status').set('playing');
 }
-function closeRompe17() {
-  if(rompe17Stream){rompe17Stream.getTracks().forEach(t=>t.stop());rompe17Stream=null;}
-  if(rompe17RoomRef && rompe17User) {
-    rompe17RoomRef.child('players/'+rompe17User).remove();
-    rompe17RoomRef.child('ready/'+rompe17User).set(false);
-    rompe17RoomRef.update({status:'waiting', ready:{Criss:false,Andreita:false}});
-    if(rompe17RoomListener) rompe17RoomRef.off('value',rompe17RoomListener);
+
+async function startPuzzleCamera() {
+  const video = document.getElementById('puzzleVideo');
+  document.getElementById('puzzleGrid').innerHTML = '';
+  document.getElementById('puzzleGrid').style.background = "#222";
+  document.getElementById('puzzleSnapBtn').style.display = 'block';
+  video.style.display = 'block';
+  
+  try {
+    puzzleStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+    video.srcObject = puzzleStream;
+  } catch (err) {
+    showToast("Error al acceder a la cámara. Revisa los permisos mi amor.");
   }
-  rompe17RoomListener=null; rompe17ReadyState=false; rompe17MyPuzzle=false;
-  try { if(document.fullscreenElement) document.exitFullscreen(); } catch(e){}
-  document.getElementById('rompe17Play').style.display='none';
-  document.getElementById('rompe17Instructions').style.display='none';
-  document.getElementById('rompe17Waiting').style.display='none';
-  document.getElementById('rompe17Login').style.display='block';
-  document.getElementById('rompe17Ready').disabled=false;
-  document.getElementById('rompe17Ready').textContent='Aceptar y preparar cámara';
-  document.getElementById('rompe17Feedback').textContent='';
-  rompe17User=null;
 }
 
-// Exponer explícitamente los controladores del minijuego para los onclick del HTML.
-window.initRompe17 = initRompe17;
-window.chooseRompe17 = chooseRompe17;
-window.joinRompe17 = joinRompe17;
-window.readyRompe17 = readyRompe17;
-window.startRompe17Camera = startRompe17Camera;
-window.captureRompe17 = captureRompe17;
-window.finishRompe17 = finishRompe17;
-window.closeRompe17 = closeRompe17;
+function stopPuzzleCamera() {
+  if (puzzleStream) {
+    puzzleStream.getTracks().forEach(track => track.stop());
+    puzzleStream = null;
+  }
+  document.getElementById('puzzleVideo').style.display = 'none';
+}
 
+function takePuzzleSnapshot() {
+  const video = document.getElementById('puzzleVideo');
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth || 640;
+  canvas.height = video.videoHeight || 480;
+  const ctx = canvas.getContext('2d');
+  
+  // Reflejar la imagen para que sea como un espejo (natural)
+  ctx.translate(canvas.width, 0);
+  ctx.scale(-1, 1);
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  
+  stopPuzzleCamera();
+  document.getElementById('puzzleSnapBtn').style.display = 'none';
+  createPuzzlePieces(canvas.toDataURL('image/jpeg'));
+}
 
-/* === FIN: ROMPEZABEZAS JUNTOS === */
+function createPuzzlePieces(imgSrc) {
+  const grid = document.getElementById('puzzleGrid');
+  grid.innerHTML = '';
+  puzzlePieces = [];
+  
+  const cols = 5;
+  const rows = 3; 
+  const total = cols * rows; // 15 partes
+  
+  const img = new Image();
+  img.onload = () => {
+    for (let i = 0; i < total; i++) {
+      puzzlePieces.push({
+        id: i,
+        x: (i % cols) * (100 / (cols - 1)),
+        y: Math.floor(i / cols) * (100 / (rows - 1))
+      });
+    }
+    
+    // Desordenar
+    puzzlePieces.sort(() => Math.random() - 0.5);
+    renderPuzzleGrid(imgSrc);
+  };
+  img.src = imgSrc;
+}
+
+function renderPuzzleGrid(imgSrc) {
+  const grid = document.getElementById('puzzleGrid');
+  grid.innerHTML = '';
+  
+  puzzlePieces.forEach((p, index) => {
+    const pieceDiv = document.createElement('div');
+    pieceDiv.style.width = '100%';
+    pieceDiv.style.height = '100%';
+    pieceDiv.style.backgroundImage = `url(${imgSrc})`;
+    pieceDiv.style.backgroundSize = '500% 300%'; // Porque son 5 columnas y 3 filas
+    pieceDiv.style.backgroundPosition = `${p.x}% ${p.y}%`;
+    pieceDiv.style.cursor = 'pointer';
+    pieceDiv.style.border = '1px solid rgba(255,255,255,0.2)';
+    
+    pieceDiv.onclick = () => handlePieceSwap(index, pieceDiv, imgSrc);
+    grid.appendChild(pieceDiv);
+  });
+}
+
+function handlePieceSwap(clickedIndex, pieceDiv, imgSrc) {
+  if (!firstSelectedPiece) {
+    firstSelectedPiece = { index: clickedIndex, div: pieceDiv };
+    pieceDiv.style.border = '3px solid var(--soft-red)';
+    pieceDiv.style.transform = 'scale(0.95)';
+  } else {
+    // Intercambiar posiciones en el array
+    const temp = puzzlePieces[firstSelectedPiece.index];
+    puzzlePieces[firstSelectedPiece.index] = puzzlePieces[clickedIndex];
+    puzzlePieces[clickedIndex] = temp;
+    
+    firstSelectedPiece = null;
+    renderPuzzleGrid(imgSrc);
+    checkPuzzleWin();
+  }
+}
+
+function checkPuzzleWin() {
+  const isWin = puzzlePieces.every((p, idx) => p.id === idx);
+  if (isWin) {
+    showToast("¡Rompecabezas completado! 🎉");
+    setTimeout(() => {
+      rtdb.ref('puzzle_room/status').set('finished_turn');
+    }, 1200);
+  }
+}
+
+function nextPuzzleTurn() {
+  rtdb.ref('puzzle_room').once('value').then(snap => {
+    const data = snap.val();
+    const nextUser = data.turn === 'Andreita' ? 'Criss' : 'Andreita'; // Sistema Rotativo
+    rtdb.ref('puzzle_room').update({ status: 'instructions', turn: nextUser });
+  });
+}
+
+function togglePuzzleFullscreen() {
+  const el = document.getElementById('puzzleFullscreenArea');
+  if (!document.fullscreenElement) {
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  }
+}
+
+function exitPuzzleGame() {
+  // 1. Salir de pantalla completa si está activa
+  if (document.fullscreenElement) {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }
+  // 2. Detener la cámara y apagar procesos
+  stopPuzzleCamera();
+  amIPuzzleReady = false;
+  firstSelectedPiece = null;
+  document.getElementById('puzzleReadyBtn').textContent = "✨ ¡Estoy Listo! ✨";
+  document.getElementById('puzzleReadyBtn').style.background = "#2a9d8f";
+  
+  // 3. Reiniciar Base de Datos y UI
+  rtdb.ref('puzzle_ready/Criss').set(false);
+  rtdb.ref('puzzle_ready/Andreita').set(false);
+  rtdb.ref('puzzle_room/status').set('idle');
+  
+  document.getElementById('puzzlePlayArena').style.display = 'none';
+  document.getElementById('puzzleInstructionsBox').style.display = 'none';
+  document.getElementById('puzzleSummaryBox').style.display = 'none';
+  document.getElementById('puzzleWaitingBox').style.display = 'block';
+}
 </script>
 </body>
 </html>
