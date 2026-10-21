@@ -13634,7 +13634,7 @@ function setupAdivinaTurn(room) {
   }
 }
 
-function searchImage() {
+async function searchImage() {
   const query = document.getElementById('adivinaSearchInput').value.trim();
   if (!query) {
     showToast("Escribe algo para buscar 🥺");
@@ -13642,23 +13642,46 @@ function searchImage() {
   }
   
   const resultsDiv = document.getElementById('adivinaImageResults');
+  resultsDiv.innerHTML = '<p style="grid-column: 1/-1; font-weight: 700; color: #555;">Buscando fotos reales... ⏳</p>';
   
-  // Codificamos el texto para evitar errores con los espacios (ej: "zoey 101" -> "zoey%20101")
-  const safeQuery = encodeURIComponent(query);
-  
-  // Usamos una API gratuita que devuelve la imagen basada en tu texto
-  const imageUrl = `https://image.pollinations.ai/prompt/${safeQuery}?width=300&height=300&nologo=true`;
-  
-  resultsDiv.innerHTML = `<img src="${imageUrl}" onclick="selectAdivinaImg(this.src, this)" style="cursor:pointer; border-radius:10px; width:100%; height:120px; object-fit:cover; border: 2px solid transparent; transition: all 0.2s;">`;
-  
-  showToast("Buscando imagen... ⏳");
+  try {
+    // Buscamos en Wikipedia en español para obtener pósters y fotos reales sin bloqueos
+    const url = `https://es.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages&piprop=original&generator=search&gsrsearch=${encodeURIComponent(query)}&gsrlimit=8&origin=*`;
+    
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    resultsDiv.innerHTML = '';
+    let found = false;
+    
+    if (data.query && data.query.pages) {
+      Object.values(data.query.pages).forEach(page => {
+        // Solo mostramos resultados que tengan una imagen válida asociada
+        if (page.original && page.original.source) {
+          found = true;
+          resultsDiv.innerHTML += `
+            <img src="${page.original.source}" 
+                 onclick="selectAdivinaImg(this.src, this)" 
+                 style="cursor:pointer; border-radius:10px; width:100%; height:110px; object-fit:cover; border: 3px solid transparent; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: all 0.2s;">`;
+        }
+      });
+    }
+    
+    if (!found) {
+      resultsDiv.innerHTML = '<p style="grid-column: 1/-1; color: #e63946; font-weight: 700;">No encontré una foto exacta. Prueba buscar el nombre oficial (ej: "Son como niños película") 🥺</p>';
+    } else {
+      showToast("¡Imágenes encontradas! ✨");
+    }
+  } catch (error) {
+    resultsDiv.innerHTML = '<p style="grid-column: 1/-1; color: #e63946;">Error al buscar en internet. Revisa tu conexión 🥺</p>';
+  }
 }
 
+// Mantén tu función selectAdivinaImg tal cual te la pasé en la corrección anterior:
 let selectedAdivinaImg = "";
 function selectAdivinaImg(src, imgElement) {
   selectedAdivinaImg = src;
   
-  // Efecto visual para saber que ya la seleccionaste
   const allImgs = document.getElementById('adivinaImageResults').querySelectorAll('img');
   allImgs.forEach(img => {
     img.style.borderColor = 'transparent';
