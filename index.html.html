@@ -4657,6 +4657,15 @@
   </div>
   <span class="new-badge-pill" id="badge-game-14">NEW</span>
 </div>
+
+<div class="minigame-nav-item" id="nav-game-15" onclick="selectMinigameFromSidebar(15)">
+  <span class="minigame-nav-icon">💭</span>
+  <div class="minigame-nav-info">
+    <span class="minigame-nav-name">Adivina qué Pienso</span>
+    <span class="minigame-nav-sub">Conexión Mental 1v1</span>
+  </div>
+  <span class="new-badge-pill" id="badge-game-15">NEW</span>
+</div>
           </div>
         </aside>
 
@@ -5752,6 +5761,63 @@
         <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.4rem;" id="numDuelSummaryTitle">¡COMBINACIÓN ADIVINADA!</h3>
         <p style="font-weight: 700; color: #555; margin: 10px 0;" id="numDuelSummaryMsg"></p>
         <button class="modal-btn" onclick="restartNumDuelOnline()" style="max-width: 260px; margin: 15px auto 0 auto;">🔄 Jugar Otra Partida</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="game-stage-15" style="display: none; width: 100%;">
+  <div class="adivina-container" style="background: #ffffff; border: 3px solid var(--rose-pink); border-radius: 25px; padding: 20px; text-align: center;">
+    <h3 class="custom-game-title" style="font-size: 1.4rem;">💭 Adivina Qué Estoy Pensando</h3>
+    
+    <!-- Login -->
+    <div id="adivinaLoginBox">
+      <div class="profile-selector">
+        <div class="profile-card" id="adivinaUserCriss" onclick="chooseAdivinaUser('Criss')">👑 Soy Criss</div>
+        <div class="profile-card" id="adivinaUserAndreita" onclick="chooseAdivinaUser('Andreita')">🌸 Soy Andreita</div>
+      </div>
+      <button class="modal-btn" onclick="connectAdivina()">Entrar a la Sala 🚀</button>
+    </div>
+
+    <!-- Sala de Espera -->
+    <div id="adivinaWaitingBox" style="display: none;">
+      <h4 style="color: var(--title-burgundy); font-weight: 800;">Sala de Espera</h4>
+      <div id="adivinaWaitStatus" style="margin: 15px 0;"></div>
+      <button class="modal-btn" id="adivinaReadyBtn" onclick="toggleAdivinaReady()">✨ ¡Estoy Listo! ✨</button>
+    </div>
+
+    <!-- Ruleta -->
+    <div id="adivinaRouletteBox" style="display: none;">
+      <h4 style="color: var(--title-burgundy);">Sorteando Categoría...</h4>
+      <div id="rouletteDisplay" style="font-size: 2rem; font-weight: 800; color: var(--soft-red); margin: 20px 0;">🎮</div>
+    </div>
+
+    <!-- Arena de Juego -->
+    <div id="adivinaPlayArena" style="display: none;">
+      <div class="pinturillo-header">
+        <div class="guesswho-turn-badge" id="adivinaTurnBadge">Turno de:</div>
+        <div class="pinturillo-timer-badge" id="adivinaTimer">⏳ 05:00</div>
+      </div>
+      <h4 id="adivinaCategoryTitle" style="color: var(--title-burgundy); margin: 10px 0;">Categoría</h4>
+
+      <!-- Vista del que elige -->
+      <div id="adivinaChooserUI" style="display: none;">
+        <input type="text" id="adivinaSearchInput" placeholder="🔍 Buscar imagen..." class="composer-text-input">
+        <button class="modal-btn" onclick="searchImage()">Buscar</button>
+        <div id="adivinaImageResults" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;"></div>
+        
+        <input type="text" id="adivinaWordInput" placeholder="Escribe lo que debe adivinar..." class="composer-text-input" style="margin-top: 15px;">
+        <button class="modal-btn" onclick="submitAdivinaTurn()">Enviar a mi amor</button>
+      </div>
+
+      <!-- Vista del que adivina -->
+      <div id="adivinaGuesserUI" style="display: none;">
+        <div id="adivinaWaitingChoice" style="font-weight: 700; color: #555;">Esperando a que escoja lo que tienes que adivinar...</div>
+        <div id="adivinaGuessingActive" style="display: none;">
+          <img id="adivinaTargetImage" style="max-width: 100%; border-radius: 15px; margin-bottom: 15px;">
+          <input type="text" id="adivinaGuessInput" placeholder="¿Qué es?" class="composer-text-input">
+          <button class="modal-btn" onclick="checkAdivinaGuess()">¡Adivinar!</button>
+        </div>
       </div>
     </div>
   </div>
@@ -8070,7 +8136,7 @@ function restartCoopMatch() {
         badge.style.display = 'none';
       }
 
-       for (let i = 1; i <= 14; i++) {
+       for (let i = 1; i <= 15; i++) {
         const navItem = document.getElementById(`nav-game-${i}`);
         if (navItem) {
           if (i === stageNum) {
@@ -8137,7 +8203,7 @@ function restartCoopMatch() {
     }
 
     function goToStage(stageNum) {
-      for(let i=1; i<=14; i++) {
+      for(let i=1; i<=15; i++) {
   document.getElementById(`game-stage-${i}`).style.display = 'none';
   const navItem = document.getElementById(`nav-game-${i}`);
   if(navItem) {
@@ -8163,6 +8229,7 @@ function restartCoopMatch() {
       else if (stageNum === 12) initLaberintoSystem();
       else if (stageNum === 13) initWordleSystem();
       else if (stageNum === 14) initNumDuelSystem();
+      else if (stageNum === 15) initAdivinaSystem();
     }
 
     /* MINIJUEGO 2 */
@@ -13421,6 +13488,206 @@ async function sgAhorrarGrupo(groupKey) {
         sgAnimarMoneda();
         sgToast(`¡Se guardaron Q${gananciaTotal.toFixed(2)} en el cerdito! 🐷`);
     } catch (error) { console.error(error); sgToast('No se pudo guardar en el cerdito: ' + error.message); }
+}
+
+/* ==========================================================================
+   MINIJUEGO 15: ADIVINA QUÉ ESTOY PENSANDO
+   ========================================================================== */
+let myAdivinaUser = "";
+let adivinaReady = false;
+let adivinaCategories = ["Videojuegos", "Peliculas", "Series", "Cantante", "Pais", "Marcas", "Personajes", "Peliculas de Disney", "Princesas", "Series de Disney", "Personas de Disney", "Series de Nickeloodeon"];
+let availableCategories = [...adivinaCategories];
+let adivinaTimerInterval;
+
+function initAdivinaSystem() {
+  const savedUser = localStorage.getItem('basta_saved_user') || localStorage.getItem('pinturillo_saved_user');
+  if (savedUser && (savedUser === 'Criss' || savedUser === 'Andreita')) {
+    chooseAdivinaUser(savedUser);
+  }
+}
+
+function chooseAdivinaUser(name) {
+  if (name !== 'Criss' && name !== 'Andreita') return;
+  myAdivinaUser = name;
+  document.getElementById('adivinaUserCriss').classList.remove('selected');
+  document.getElementById('adivinaUserAndreita').classList.remove('selected');
+  if (name === 'Criss') {
+    document.getElementById('adivinaUserCriss').classList.add('selected');
+  } else if (name === 'Andreita') {
+    document.getElementById('adivinaUserAndreita').classList.add('selected');
+  }
+}
+
+function connectAdivina() {
+  if (!myAdivinaUser) {
+    showToast("Por favor selecciona si eres Criss o Andreita 💕");
+    return;
+  }
+  
+  document.getElementById('adivinaLoginBox').style.display = 'none';
+  document.getElementById('adivinaWaitingBox').style.display = 'block';
+  
+  adivinaReady = false;
+  document.getElementById('adivinaReadyBtn').textContent = "✨ ¡Estoy Listo! ✨";
+  document.getElementById('adivinaReadyBtn').style.background = "#2a9d8f";
+  rtdb.ref(`adivina_ready/${myAdivinaUser}`).set(false);
+  
+  listenAdivinaRoom();
+}
+
+function toggleAdivinaReady() {
+  adivinaReady = !adivinaReady;
+  const btn = document.getElementById('adivinaReadyBtn');
+  if (adivinaReady) {
+    btn.textContent = "✅ ¡Listo! (Esperando a tu amorcito...)";
+    btn.style.background = "#800020";
+  } else {
+    btn.textContent = "✨ ¡Estoy Listo! ✨";
+    btn.style.background = "#2a9d8f";
+  }
+  rtdb.ref(`adivina_ready/${myAdivinaUser}`).set(adivinaReady);
+}
+
+function listenAdivinaRoom() {
+  rtdb.ref('adivina_ready').on('value', (snap) => {
+    const data = snap.val() || {};
+    const crissReady = data.Criss ? "¡Listo! ✅" : "No listo ⏳";
+    const andreitaReady = data.Andreita ? "¡Lista! ✅" : "No lista ⏳";
+    
+    document.getElementById('adivinaWaitStatus').innerHTML = `
+      <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+        <span class="presence-badge ${data.Criss ? 'ready-ok' : 'ready'}">👑 Criss: ${crissReady}</span>
+        <span class="presence-badge ${data.Andreita ? 'ready-ok' : 'ready'}">🌸 Andreita: ${andreitaReady}</span>
+      </div>
+    `;
+
+    if (data.Criss && data.Andreita && myAdivinaUser === 'Criss') {
+      startAdivinaRoulette();
+    }
+  });
+
+  rtdb.ref('adivina_room').on('value', (snap) => {
+    const room = snap.val();
+    if (!room) return;
+
+    if (room.status === 'roulette') {
+      document.getElementById('adivinaWaitingBox').style.display = 'none';
+      document.getElementById('adivinaRouletteBox').style.display = 'block';
+      animateAdivinaRoulette(room.category);
+    } else if (room.status === 'playing') {
+      setupAdivinaTurn(room);
+    }
+  });
+}
+
+function startAdivinaRoulette() {
+  if (availableCategories.length === 0) availableCategories = [...adivinaCategories];
+  const catIndex = Math.floor(Math.random() * availableCategories.length);
+  const selectedCat = availableCategories[catIndex];
+  availableCategories.splice(catIndex, 1);
+
+  rtdb.ref('adivina_room').set({
+    status: 'roulette',
+    category: selectedCat,
+    turn: Math.random() > 0.5 ? 'Criss' : 'Andreita',
+    image: null,
+    word: null,
+    endTime: 0
+  });
+}
+
+function animateAdivinaRoulette(finalCategory) {
+  let ticks = 0;
+  const interval = setInterval(() => {
+    document.getElementById('rouletteDisplay').textContent = adivinaCategories[Math.floor(Math.random() * adivinaCategories.length)];
+    ticks++;
+    if (ticks > 20) {
+      clearInterval(interval);
+      document.getElementById('rouletteDisplay').textContent = finalCategory;
+      setTimeout(() => {
+        if (myAdivinaUser === 'Criss') rtdb.ref('adivina_room').update({ status: 'playing' });
+      }, 2000);
+    }
+  }, 100);
+}
+
+function setupAdivinaTurn(room) {
+  document.getElementById('adivinaRouletteBox').style.display = 'none';
+  document.getElementById('adivinaPlayArena').style.display = 'block';
+  document.getElementById('adivinaCategoryTitle').textContent = `Categoría: ${room.category}`;
+  document.getElementById('adivinaTurnBadge').textContent = `Turno de: ${room.turn}`;
+
+  const isMyTurn = room.turn === myAdivinaUser;
+  document.getElementById('adivinaChooserUI').style.display = isMyTurn ? 'block' : 'none';
+  document.getElementById('adivinaGuesserUI').style.display = isMyTurn ? 'none' : 'block';
+
+  if (!isMyTurn) {
+    if (room.image && room.word) {
+      document.getElementById('adivinaWaitingChoice').style.display = 'none';
+      document.getElementById('adivinaGuessingActive').style.display = 'block';
+      document.getElementById('adivinaTargetImage').src = room.image;
+      startAdivinaTimer(room.endTime);
+    } else {
+      document.getElementById('adivinaWaitingChoice').style.display = 'block';
+      document.getElementById('adivinaGuessingActive').style.display = 'none';
+    }
+  }
+}
+
+function searchImage() {
+  const query = document.getElementById('adivinaSearchInput').value;
+  const resultsDiv = document.getElementById('adivinaImageResults');
+  // Usamos Unsplash como proveedor temporal de imágenes
+  resultsDiv.innerHTML = `<img src="https://source.unsplash.com/200x200/?${query}" onclick="selectAdivinaImg(this.src)" style="cursor:pointer; border-radius:10px; width:100%; height:120px; object-fit:cover; border: 2px solid transparent;">`;
+}
+
+let selectedAdivinaImg = "";
+function selectAdivinaImg(src) {
+  selectedAdivinaImg = src;
+  showToast("Imagen seleccionada ✨");
+}
+
+function submitAdivinaTurn() {
+  const word = document.getElementById('adivinaWordInput').value.trim();
+  if (!word || !selectedAdivinaImg) {
+    showToast("Selecciona una imagen y escribe la palabra 🥺");
+    return;
+  }
+  rtdb.ref('adivina_room').update({
+    image: selectedAdivinaImg,
+    word: word.toLowerCase(),
+    endTime: Date.now() + (5 * 60 * 1000)
+  });
+}
+
+function checkAdivinaGuess() {
+  const guess = document.getElementById('adivinaGuessInput').value.trim().toLowerCase();
+  rtdb.ref('adivina_room').once('value').then(snap => {
+    if (guess === snap.val().word) {
+      showToast("¡Correcto mi amor! ❤️");
+      setTimeout(() => {
+        if (myAdivinaUser === 'Criss') startAdivinaRoulette();
+      }, 2000);
+    } else {
+      showToast("Esa no es, sigue intentando 🥺");
+    }
+  });
+}
+
+function startAdivinaTimer(endTime) {
+  clearInterval(adivinaTimerInterval);
+  adivinaTimerInterval = setInterval(() => {
+    const remain = Math.floor((endTime - Date.now()) / 1000);
+    if (remain <= 0) {
+      clearInterval(adivinaTimerInterval);
+      showToast("¡Tiempo agotado! ⌛");
+      setTimeout(() => {
+        if (myAdivinaUser === 'Criss') startAdivinaRoulette();
+      }, 2000);
+    } else {
+      document.getElementById('adivinaTimer').textContent = `⏳ 0${Math.floor(remain/60)}:${String(remain%60).padStart(2,'0')}`;
+    }
+  }, 1000);
 }
 
 </script>
