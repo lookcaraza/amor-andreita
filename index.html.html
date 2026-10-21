@@ -10,163 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&family=Fredoka+One&family=Pacifico&display=swap" rel="stylesheet">
   
   <!-- SDK de la API Widget de SoundCloud para control de audio -->
-  <script src="https://w.soundcloud.com/player/api.js">
-/* MINIJUEGO 17: ROMPEZABEZAS JUNTOS (RTDB, turnos compartidos) */
-let rompe17User = null, rompe17ReadyState = false, rompe17Stream = null;
-let rompe17RoomRef = null, rompe17RoomListener = null, rompe17RoomState = null;
-let rompe17Tiles = [], rompe17Selected = null, rompe17MyPuzzle = false;
-function initRompe17() {
-  document.getElementById('rompe17Login').style.display = 'block';
-  document.getElementById('rompe17Waiting').style.display = 'none';
-  document.getElementById('rompe17Instructions').style.display = 'none';
-  document.getElementById('rompe17Play').style.display = 'none';
-  if (rompe17User && !rompe17RoomListener) joinRompe17();
-}
-function chooseRompe17(name) {
-  rompe17User = name;
-  document.getElementById('rompe17Criss').classList.toggle('selected', name === 'Criss');
-  document.getElementById('rompe17Andreita').classList.toggle('selected', name === 'Andreita');
-}
-function joinRompe17() {
-  if (!rompe17User) { alert('Primero selecciona Criss o Andreita.'); return; }
-  if (typeof rtdb === 'undefined') { alert('No se pudo conectar con la sala en línea.'); return; }
-  document.getElementById('rompe17Login').style.display = 'none';
-  document.getElementById('rompe17Waiting').style.display = 'block';
-  rompe17RoomRef = rtdb.ref('rompezabezas_juntos_v1');
-  if (rompe17RoomListener) rompe17RoomRef.off('value', rompe17RoomListener);
-  rompe17RoomListener = snap => {
-    rompe17RoomState = snap.val() || {players:{}, ready:{}, turn:'Andreita', status:'waiting', round:0};
-    const p = rompe17RoomState.players || {};
-    document.getElementById('rompe17Presence').innerHTML =
-      (p.Criss ? '🟢' : '⚪')+' Criss '+(p.Criss?'está en sala':'no ha entrado')+'<br>'+
-      (p.Andreita ? '🟢' : '⚪')+' Andreita '+(p.Andreita?'está en sala':'no ha entrado');
-    if (p.Criss && p.Andreita && rompe17RoomState.status === 'waiting') {
-      document.getElementById('rompe17Presence').innerHTML += '<br>¡Ya están los dos! Pulsen Aceptar.';
-    }
-    if (rompe17RoomState.status === 'waiting') {
-      document.getElementById('rompe17Waiting').style.display = 'block';
-      document.getElementById('rompe17Instructions').style.display = 'none';
-      document.getElementById('rompe17Play').style.display = 'none';
-      document.getElementById('rompe17Ready').disabled = !!(rompe17RoomState.ready && rompe17RoomState.ready[rompe17User]);
-      document.getElementById('rompe17Ready').textContent = document.getElementById('rompe17Ready').disabled ? 'Aceptado ✓' : 'Aceptar y preparar cámara';
-    }
-    if (rompe17RoomState.status === 'instructions' || rompe17RoomState.status === 'playing') {
-      document.getElementById('rompe17Waiting').style.display = 'none';
-      document.getElementById('rompe17Instructions').style.display = 'block';
-      document.getElementById('rompe17Play').style.display = 'block';
-      document.getElementById('rompe17Instructions').style.display = rompe17ReadyState ? 'none' : 'block';
-      document.getElementById('rompe17Turn').textContent = 'Turno: '+(rompe17RoomState.turn || 'Andreita');
-      document.getElementById('rompe17Status').textContent = p.Criss && p.Andreita ? 'Ambos conectados' : 'Esperando al otro jugador';
-      const mine = rompe17RoomState.turn === rompe17User && rompe17RoomState.status === 'playing';
-      document.getElementById('rompe17CameraActions').style.display = mine ? 'block' : 'none';
-      document.getElementById('rompe17Hint').textContent = mine ? '¡Es tu turno! Toma una foto y arma las 15 piezas.' : 'Turno de '+(rompe17RoomState.turn || 'Andreita')+'. Espera a que termine.';
-    }
-  };
-  rompe17RoomRef.child('players/'+rompe17User).set(true);
-  rompe17RoomRef.on('value', rompe17RoomListener);
-}
-async function readyRompe17() {
-  if (!rompe17User || !rompe17RoomRef) return;
-  rompe17ReadyState = true;
-  await rompe17RoomRef.child('ready/'+rompe17User).set(true);
-  const snap = await rompe17RoomRef.once('value'), state = snap.val() || {};
-  if (state.players && state.players.Criss && state.players.Andreita &&
-      state.ready && state.ready.Criss && state.ready.Andreita) {
-    await rompe17RoomRef.update({status:'instructions', turn:'Andreita', round:0});
-  } else {
-    document.getElementById('rompe17Presence').textContent = '¡Aceptado! Esperando que la otra persona acepte…';
-    document.getElementById('rompe17Ready').textContent = 'Aceptado ✓';
-    document.getElementById('rompe17Ready').disabled = true;
-  }
-}
-async function startRompe17Camera() {
-  try {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      alert('La cámara requiere HTTPS y un navegador compatible. Abre la página desde su dirección segura (https://).'); return;
-    }
-    if (rompe17Stream) rompe17Stream.getTracks().forEach(t=>t.stop());
-    rompe17Stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
-    const v = document.getElementById('rompe17Video');
-    v.srcObject = rompe17Stream; v.style.display = 'block'; await v.play();
-    rompe17ReadyState = true;
-    document.getElementById('rompe17Instructions').style.display = 'none';
-    document.getElementById('rompe17Play').style.display = 'block';
-    const root = document.getElementById('rompe17Root');
-    try { if (root.requestFullscreen) await root.requestFullscreen(); else if (root.webkitRequestFullscreen) root.webkitRequestFullscreen(); } catch(e) {}
-    if (rompe17RoomRef && rompe17RoomState && rompe17RoomState.status === 'instructions') {
-      await rompe17RoomRef.update({status:'playing'});
-    }
-  } catch(e) { alert('No se pudo abrir la cámara. Revisa los permisos del navegador y vuelve a intentarlo.'); }
-}
-function captureRompe17() {
-  if (!rompe17RoomState || rompe17RoomState.turn !== rompe17User) { alert('Espera tu turno.'); return; }
-  const v = document.getElementById('rompe17Video'), c = document.getElementById('rompe17Capture');
-  if (!v.videoWidth || !v.videoHeight) { alert('La cámara todavía está iniciando. Inténtalo otra vez.'); return; }
-  c.width=300; c.height=300;
-  const ctx=c.getContext('2d'), side=Math.min(v.videoWidth,v.videoHeight);
-  ctx.save(); ctx.translate(300,0); ctx.scale(-1,1);
-  ctx.drawImage(v,(v.videoWidth-side)/2,(v.videoHeight-side)/2,side,side,0,0,300,300); ctx.restore();
-  const img = new Image();
-  img.onload=()=>{
-    rompe17Tiles=Array.from({length:15},(_,i)=>i);
-    for(let i=rompe17Tiles.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[rompe17Tiles[i],rompe17Tiles[j]]=[rompe17Tiles[j],rompe17Tiles[i]];}
-    if(rompe17Tiles.every((v,i)=>v===i)) [rompe17Tiles[0],rompe17Tiles[1]]=[rompe17Tiles[1],rompe17Tiles[0]];
-    rompe17Selected=null; rompe17MyPuzzle=true; renderRompe17Puzzle(img);
-    document.getElementById('rompe17CameraActions').style.display='none';
-    document.getElementById('rompe17Finish').style.display='inline-block';
-    document.getElementById('rompe17Hint').textContent='Toca una pieza y luego otra para intercambiarlas. La última fila tiene 3 piezas.';
-    document.getElementById('rompe17Video').style.display='none';
-  };
-  img.src=c.toDataURL('image/jpeg',.88);
-}
-function renderRompe17Puzzle(img) {
-  const grid=document.getElementById('rompe17Puzzle'); grid.innerHTML='';
-  rompe17Tiles.forEach((tile,pos)=>{
-    const b=document.createElement('button'); b.type='button'; b.style.cssText='aspect-ratio:1;border:2px solid white;border-radius:5px;overflow:hidden;padding:0;background-image:url('+img.src+');background-size:300% 500%;background-position:'+((tile%3)*50)+'% '+(Math.floor(tile/3)*25)+'%;min-width:0;';
-    if (rompe17Selected===pos) b.style.outline='4px solid #800020';
-    b.setAttribute('aria-label','Pieza '+(pos+1));
-    b.onclick=()=>{
-      if(!rompe17MyPuzzle || rompe17RoomState.turn!==rompe17User)return;
-      if(rompe17Selected===null){rompe17Selected=pos;}
-      else { [rompe17Tiles[rompe17Selected],rompe17Tiles[pos]]=[rompe17Tiles[pos],rompe17Tiles[rompe17Selected]]; rompe17Selected=null; }
-      renderRompe17Puzzle(img);
-      document.getElementById('rompe17Finish').style.display=rompe17Tiles.every((t,i)=>t===i)?'inline-block':'none';
-    };
-    grid.appendChild(b);
-  });
-}
-async function finishRompe17() {
-  if (!rompe17Tiles.every((t,i)=>t===i)) { alert('Todavía faltan piezas por acomodar.'); return; }
-  if (!rompe17RoomRef || !rompe17RoomState || rompe17RoomState.turn!==rompe17User) return;
-  rompe17MyPuzzle=false;
-  const next=rompe17User==='Andreita'?'Criss':'Andreita';
-  await rompe17RoomRef.update({turn:next,round:(rompe17RoomState.round||0)+1,status:'playing'});
-  document.getElementById('rompe17Feedback').textContent='¡Muy bien! Ahora le toca a '+next+' 💗';
-  document.getElementById('rompe17Puzzle').innerHTML='';
-  document.getElementById('rompe17Finish').style.display='none';
-  document.getElementById('rompe17Video').style.display='block';
-}
-function closeRompe17() {
-  if(rompe17Stream){rompe17Stream.getTracks().forEach(t=>t.stop());rompe17Stream=null;}
-  if(rompe17RoomRef && rompe17User) {
-    rompe17RoomRef.child('players/'+rompe17User).remove();
-    rompe17RoomRef.child('ready/'+rompe17User).set(false);
-    rompe17RoomRef.update({status:'waiting', ready:{Criss:false,Andreita:false}});
-    if(rompe17RoomListener) rompe17RoomRef.off('value',rompe17RoomListener);
-  }
-  rompe17RoomListener=null; rompe17ReadyState=false; rompe17MyPuzzle=false;
-  try { if(document.fullscreenElement) document.exitFullscreen(); } catch(e){}
-  document.getElementById('rompe17Play').style.display='none';
-  document.getElementById('rompe17Instructions').style.display='none';
-  document.getElementById('rompe17Waiting').style.display='none';
-  document.getElementById('rompe17Login').style.display='block';
-  document.getElementById('rompe17Ready').disabled=false;
-  document.getElementById('rompe17Ready').textContent='Aceptar y preparar cámara';
-  document.getElementById('rompe17Feedback').textContent='';
-  rompe17User=null;
-}
+  <script src="https://w.soundcloud.com/player/api.js"></script>
 
-</script>
 
   <!-- SDKs Compatibles de Firebase (App, Firestore, Storage, Database) NATIVO GRATUITO -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -12954,9 +12799,11 @@ function sgCrearGrupoDOM(groupKey) {
         groupDiv.style.display = "none"; // Oculto por defecto
         
         groupDiv.innerHTML = `
-            <div class="sg-category-header">
-                <h3 class="sg-category-title">${groupKey}</h3>
+            <div class="sg-category-header" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <h3 class="sg-category-title" style="flex:1;min-width:120px;">${groupKey}</h3>
+                <button type="button" data-group="${encodeURIComponent(groupKey)}" onclick="sgAgregarEnGrupo(decodeURIComponent(this.dataset.group))" title="Agregar artículo a este álbum" style="border:0;border-radius:50%;width:40px;height:40px;background:#16803c;color:white;font-size:28px;font-weight:900;cursor:pointer;">+</button>
                 <button class="sg-btn-cerdito" onclick="sgAhorrarGrupo('${groupKey}')">🐷 AÑADIR TODO AL CERDITO</button>
+                <button type="button" data-group="${encodeURIComponent(groupKey)}" onclick="sgEliminarGrupo(decodeURIComponent(this.dataset.group))" title="Eliminar álbum completo" style="border:0;border-radius:50%;width:40px;height:40px;background:#b00020;color:white;font-size:24px;font-weight:900;cursor:pointer;">×</button>
             </div>
             <div class="sg-items-grid" id="items_${safeId}"></div>
             <div class="sg-group-totals">
@@ -12975,7 +12822,10 @@ function sgCrearGrupoDOM(groupKey) {
         folderCard.className = "sg-folder-card";
         folderCard.onclick = () => sgAbrirGrupo(safeId); // Abre el grupo al hacer clic
         
+        folderCard.style.position = 'relative';
         folderCard.innerHTML = `
+            <button type="button" title="Agregar artículo a ${groupKey}" aria-label="Agregar artículo a ${groupKey}" data-group="${encodeURIComponent(groupKey)}" onclick="event.stopPropagation(); sgAgregarEnGrupo(decodeURIComponent(this.dataset.group))" style="position:absolute;top:8px;right:48px;z-index:5;width:36px;height:36px;border:0;border-radius:50%;background:#16803c;color:white;font-size:25px;font-weight:900;cursor:pointer;box-shadow:0 2px 8px #0005;">+</button>
+            <button type="button" title="Eliminar álbum completo ${groupKey}" aria-label="Eliminar álbum completo ${groupKey}" data-group="${encodeURIComponent(groupKey)}" onclick="event.stopPropagation(); sgEliminarGrupo(decodeURIComponent(this.dataset.group))" style="position:absolute;top:8px;right:8px;z-index:5;width:36px;height:36px;border:0;border-radius:50%;background:#b00020;color:white;font-size:22px;font-weight:900;cursor:pointer;box-shadow:0 2px 8px #0005;">×</button>
             <img src="https://via.placeholder.com/150x150/222222/5cb85c?text=Vacio" class="sg-folder-cover" id="folder_img_${safeId}" loading="lazy">
             <div class="sg-folder-info">
                 <h4 class="sg-folder-title">${groupKey}</h4>
@@ -13527,6 +13377,46 @@ function sgCheckNewCategory() {
     else input.value = '';
 }
 
+function sgAgregarEnGrupo(groupKey) {
+    const select = document.getElementById('sgItemCategorySelect');
+    const input = document.getElementById('sgItemCategoryNew');
+    if (!select) { sgToast('No se encontró el selector de categorías.'); return; }
+    sgActualizarSelectCategorias();
+    const option = Array.from(select.options).find(o => o.value === groupKey);
+    if (option) {
+        select.value = groupKey;
+        if (input) { input.value = ''; input.style.display = 'none'; }
+    } else {
+        // Si el grupo ya existe pero el selector no lo tenía, lo añadimos a la lista visible.
+        const opt = document.createElement('option'); opt.value = groupKey; opt.textContent = groupKey;
+        select.insertBefore(opt, select.querySelector('option[value="__nueva__"]'));
+        select.value = groupKey;
+        if (input) { input.value = ''; input.style.display = 'none'; }
+    }
+    const fileInput = document.getElementById('sgFileInput');
+    if (fileInput) fileInput.click();
+}
+
+async function sgEliminarGrupo(groupKey) {
+    const items = Object.entries(sgItems || {}).filter(([id, item]) => item && item.groupKey === groupKey);
+    const msg = `¿Eliminar el álbum completo "${groupKey}" y sus ${items.length} artículo(s)? Esta acción no se puede deshacer.`;
+    if (!(await sgConfirm(msg))) return;
+    try {
+        const updates = {};
+        updates[`sungaze_data/grupos/${groupKey}`] = null;
+        for (const [id] of items) updates[`sungaze_data/items/${id}`] = null;
+        const remainingCategories = (sgCategoriasGuardadas || []).filter(cat => cat !== groupKey);
+        updates['sungaze_data/categorias'] = remainingCategories;
+        await rtdb.ref().update(updates);
+        const overlay = document.getElementById('sgGroupDetailOverlay');
+        if (overlay) overlay.style.display = 'none';
+        sgToast(`Álbum "${groupKey}" eliminado correctamente.`);
+    } catch (error) {
+        console.error('Error eliminando álbum Sungaze:', error);
+        sgToast('No se pudo eliminar el álbum: ' + (error.message || error));
+    }
+}
+
 function sgPreviewImage(event) {
     const file = event && event.target && event.target.files ? event.target.files[0] : null;
     if (!file) return;
@@ -13571,7 +13461,7 @@ async function sgAddItem() {
     const dateRaw = document.getElementById('sgItemDate').value;
     const select = document.getElementById('sgItemCategorySelect');
     const nueva = (document.getElementById('sgItemCategoryNew').value || '').trim();
-    const category = select && select.value === '__nueva__' ? nueva : (select ? select.value : 'General');
+    const category = String(select && select.value === '__nueva__' ? nueva : (select ? select.value : 'General')).trim();
     const cost = Number.parseFloat(document.getElementById('sgItemCost').value);
     const sale = Number.parseFloat(document.getElementById('sgItemSale').value);
     if (!sgFileToUpload) { sgToast('Primero selecciona la imagen del artículo.'); return; }
@@ -14460,6 +14350,177 @@ function restartAjedrezGame() {
   document.getElementById('ajedrezSummarySection').style.display = 'none';
   document.getElementById('ajedrezWaitingBox').style.display = 'block';
 }
+
+
+/* === INICIO: ROMPEZABEZAS JUNTOS - FIX DE EVENTOS === */
+
+/* MINIJUEGO 17: ROMPEZABEZAS JUNTOS (RTDB, turnos compartidos) */
+let rompe17User = null, rompe17ReadyState = false, rompe17Stream = null;
+let rompe17RoomRef = null, rompe17RoomListener = null, rompe17RoomState = null;
+let rompe17Tiles = [], rompe17Selected = null, rompe17MyPuzzle = false;
+function initRompe17() {
+  document.getElementById('rompe17Login').style.display = 'block';
+  document.getElementById('rompe17Waiting').style.display = 'none';
+  document.getElementById('rompe17Instructions').style.display = 'none';
+  document.getElementById('rompe17Play').style.display = 'none';
+  if (rompe17User && !rompe17RoomListener) joinRompe17();
+}
+function chooseRompe17(name) {
+  rompe17User = name;
+  document.getElementById('rompe17Criss').classList.toggle('selected', name === 'Criss');
+  document.getElementById('rompe17Andreita').classList.toggle('selected', name === 'Andreita');
+}
+function joinRompe17() {
+  if (!rompe17User) { alert('Primero selecciona Criss o Andreita.'); return; }
+  if (typeof rtdb === 'undefined') { alert('No se pudo conectar con la sala en línea.'); return; }
+  document.getElementById('rompe17Login').style.display = 'none';
+  document.getElementById('rompe17Waiting').style.display = 'block';
+  rompe17RoomRef = rtdb.ref('rompezabezas_juntos_v1');
+  if (rompe17RoomListener) rompe17RoomRef.off('value', rompe17RoomListener);
+  rompe17RoomListener = snap => {
+    rompe17RoomState = snap.val() || {players:{}, ready:{}, turn:'Andreita', status:'waiting', round:0};
+    const p = rompe17RoomState.players || {};
+    document.getElementById('rompe17Presence').innerHTML =
+      (p.Criss ? '🟢' : '⚪')+' Criss '+(p.Criss?'está en sala':'no ha entrado')+'<br>'+
+      (p.Andreita ? '🟢' : '⚪')+' Andreita '+(p.Andreita?'está en sala':'no ha entrado');
+    if (p.Criss && p.Andreita && rompe17RoomState.status === 'waiting') {
+      document.getElementById('rompe17Presence').innerHTML += '<br>¡Ya están los dos! Pulsen Aceptar.';
+    }
+    if (rompe17RoomState.status === 'waiting') {
+      document.getElementById('rompe17Waiting').style.display = 'block';
+      document.getElementById('rompe17Instructions').style.display = 'none';
+      document.getElementById('rompe17Play').style.display = 'none';
+      document.getElementById('rompe17Ready').disabled = !!(rompe17RoomState.ready && rompe17RoomState.ready[rompe17User]);
+      document.getElementById('rompe17Ready').textContent = document.getElementById('rompe17Ready').disabled ? 'Aceptado ✓' : 'Aceptar y preparar cámara';
+    }
+    if (rompe17RoomState.status === 'instructions' || rompe17RoomState.status === 'playing') {
+      document.getElementById('rompe17Waiting').style.display = 'none';
+      document.getElementById('rompe17Instructions').style.display = 'block';
+      document.getElementById('rompe17Play').style.display = 'block';
+      document.getElementById('rompe17Instructions').style.display = rompe17ReadyState ? 'none' : 'block';
+      document.getElementById('rompe17Turn').textContent = 'Turno: '+(rompe17RoomState.turn || 'Andreita');
+      document.getElementById('rompe17Status').textContent = p.Criss && p.Andreita ? 'Ambos conectados' : 'Esperando al otro jugador';
+      const mine = rompe17RoomState.turn === rompe17User && rompe17RoomState.status === 'playing';
+      document.getElementById('rompe17CameraActions').style.display = mine ? 'block' : 'none';
+      document.getElementById('rompe17Hint').textContent = mine ? '¡Es tu turno! Toma una foto y arma las 15 piezas.' : 'Turno de '+(rompe17RoomState.turn || 'Andreita')+'. Espera a que termine.';
+    }
+  };
+  rompe17RoomRef.child('players/'+rompe17User).set(true);
+  rompe17RoomRef.on('value', rompe17RoomListener);
+}
+async function readyRompe17() {
+  if (!rompe17User || !rompe17RoomRef) return;
+  rompe17ReadyState = true;
+  await rompe17RoomRef.child('ready/'+rompe17User).set(true);
+  const snap = await rompe17RoomRef.once('value'), state = snap.val() || {};
+  if (state.players && state.players.Criss && state.players.Andreita &&
+      state.ready && state.ready.Criss && state.ready.Andreita) {
+    await rompe17RoomRef.update({status:'instructions', turn:'Andreita', round:0});
+  } else {
+    document.getElementById('rompe17Presence').textContent = '¡Aceptado! Esperando que la otra persona acepte…';
+    document.getElementById('rompe17Ready').textContent = 'Aceptado ✓';
+    document.getElementById('rompe17Ready').disabled = true;
+  }
+}
+async function startRompe17Camera() {
+  try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert('La cámara requiere HTTPS y un navegador compatible. Abre la página desde su dirección segura (https://).'); return;
+    }
+    if (rompe17Stream) rompe17Stream.getTracks().forEach(t=>t.stop());
+    rompe17Stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
+    const v = document.getElementById('rompe17Video');
+    v.srcObject = rompe17Stream; v.style.display = 'block'; await v.play();
+    rompe17ReadyState = true;
+    document.getElementById('rompe17Instructions').style.display = 'none';
+    document.getElementById('rompe17Play').style.display = 'block';
+    const root = document.getElementById('rompe17Root');
+    try { if (root.requestFullscreen) await root.requestFullscreen(); else if (root.webkitRequestFullscreen) root.webkitRequestFullscreen(); } catch(e) {}
+    if (rompe17RoomRef && rompe17RoomState && rompe17RoomState.status === 'instructions') {
+      await rompe17RoomRef.update({status:'playing'});
+    }
+  } catch(e) { alert('No se pudo abrir la cámara. Revisa los permisos del navegador y vuelve a intentarlo.'); }
+}
+function captureRompe17() {
+  if (!rompe17RoomState || rompe17RoomState.turn !== rompe17User) { alert('Espera tu turno.'); return; }
+  const v = document.getElementById('rompe17Video'), c = document.getElementById('rompe17Capture');
+  if (!v.videoWidth || !v.videoHeight) { alert('La cámara todavía está iniciando. Inténtalo otra vez.'); return; }
+  c.width=300; c.height=300;
+  const ctx=c.getContext('2d'), side=Math.min(v.videoWidth,v.videoHeight);
+  ctx.save(); ctx.translate(300,0); ctx.scale(-1,1);
+  ctx.drawImage(v,(v.videoWidth-side)/2,(v.videoHeight-side)/2,side,side,0,0,300,300); ctx.restore();
+  const img = new Image();
+  img.onload=()=>{
+    rompe17Tiles=Array.from({length:15},(_,i)=>i);
+    for(let i=rompe17Tiles.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[rompe17Tiles[i],rompe17Tiles[j]]=[rompe17Tiles[j],rompe17Tiles[i]];}
+    if(rompe17Tiles.every((v,i)=>v===i)) [rompe17Tiles[0],rompe17Tiles[1]]=[rompe17Tiles[1],rompe17Tiles[0]];
+    rompe17Selected=null; rompe17MyPuzzle=true; renderRompe17Puzzle(img);
+    document.getElementById('rompe17CameraActions').style.display='none';
+    document.getElementById('rompe17Finish').style.display='inline-block';
+    document.getElementById('rompe17Hint').textContent='Toca una pieza y luego otra para intercambiarlas. La última fila tiene 3 piezas.';
+    document.getElementById('rompe17Video').style.display='none';
+  };
+  img.src=c.toDataURL('image/jpeg',.88);
+}
+function renderRompe17Puzzle(img) {
+  const grid=document.getElementById('rompe17Puzzle'); grid.innerHTML='';
+  rompe17Tiles.forEach((tile,pos)=>{
+    const b=document.createElement('button'); b.type='button'; b.style.cssText='aspect-ratio:1;border:2px solid white;border-radius:5px;overflow:hidden;padding:0;background-image:url('+img.src+');background-size:300% 500%;background-position:'+((tile%3)*50)+'% '+(Math.floor(tile/3)*25)+'%;min-width:0;';
+    if (rompe17Selected===pos) b.style.outline='4px solid #800020';
+    b.setAttribute('aria-label','Pieza '+(pos+1));
+    b.onclick=()=>{
+      if(!rompe17MyPuzzle || rompe17RoomState.turn!==rompe17User)return;
+      if(rompe17Selected===null){rompe17Selected=pos;}
+      else { [rompe17Tiles[rompe17Selected],rompe17Tiles[pos]]=[rompe17Tiles[pos],rompe17Tiles[rompe17Selected]]; rompe17Selected=null; }
+      renderRompe17Puzzle(img);
+      document.getElementById('rompe17Finish').style.display=rompe17Tiles.every((t,i)=>t===i)?'inline-block':'none';
+    };
+    grid.appendChild(b);
+  });
+}
+async function finishRompe17() {
+  if (!rompe17Tiles.every((t,i)=>t===i)) { alert('Todavía faltan piezas por acomodar.'); return; }
+  if (!rompe17RoomRef || !rompe17RoomState || rompe17RoomState.turn!==rompe17User) return;
+  rompe17MyPuzzle=false;
+  const next=rompe17User==='Andreita'?'Criss':'Andreita';
+  await rompe17RoomRef.update({turn:next,round:(rompe17RoomState.round||0)+1,status:'playing'});
+  document.getElementById('rompe17Feedback').textContent='¡Muy bien! Ahora le toca a '+next+' 💗';
+  document.getElementById('rompe17Puzzle').innerHTML='';
+  document.getElementById('rompe17Finish').style.display='none';
+  document.getElementById('rompe17Video').style.display='block';
+}
+function closeRompe17() {
+  if(rompe17Stream){rompe17Stream.getTracks().forEach(t=>t.stop());rompe17Stream=null;}
+  if(rompe17RoomRef && rompe17User) {
+    rompe17RoomRef.child('players/'+rompe17User).remove();
+    rompe17RoomRef.child('ready/'+rompe17User).set(false);
+    rompe17RoomRef.update({status:'waiting', ready:{Criss:false,Andreita:false}});
+    if(rompe17RoomListener) rompe17RoomRef.off('value',rompe17RoomListener);
+  }
+  rompe17RoomListener=null; rompe17ReadyState=false; rompe17MyPuzzle=false;
+  try { if(document.fullscreenElement) document.exitFullscreen(); } catch(e){}
+  document.getElementById('rompe17Play').style.display='none';
+  document.getElementById('rompe17Instructions').style.display='none';
+  document.getElementById('rompe17Waiting').style.display='none';
+  document.getElementById('rompe17Login').style.display='block';
+  document.getElementById('rompe17Ready').disabled=false;
+  document.getElementById('rompe17Ready').textContent='Aceptar y preparar cámara';
+  document.getElementById('rompe17Feedback').textContent='';
+  rompe17User=null;
+}
+
+// Exponer explícitamente los controladores del minijuego para los onclick del HTML.
+window.initRompe17 = initRompe17;
+window.chooseRompe17 = chooseRompe17;
+window.joinRompe17 = joinRompe17;
+window.readyRompe17 = readyRompe17;
+window.startRompe17Camera = startRompe17Camera;
+window.captureRompe17 = captureRompe17;
+window.finishRompe17 = finishRompe17;
+window.closeRompe17 = closeRompe17;
+
+
+/* === FIN: ROMPEZABEZAS JUNTOS === */
 </script>
 </body>
 </html>
