@@ -5800,11 +5800,14 @@
       </div>
       <h4 id="adivinaCategoryTitle" style="color: var(--title-burgundy); margin: 10px 0;">Categoría</h4>
 
-      <!-- VISTA DEL QUE ELIGE LA PALABRA -->
+      <!-- VISTA DEL QUE ELIGE LA IMAGEN Y LA PALABRA -->
       <div id="adivinaChooserUI" style="display: none;">
-        <p style="color: #555; font-weight: 700; margin-bottom: 10px;">¡Es tu turno de poner la prueba!</p>
-        <input type="text" id="adivinaWordInput" placeholder="Palabra que debe adivinar (Ej: Zoey 101)..." class="composer-text-input" style="margin-bottom: 10px;">
-        <input type="text" id="adivinaClueInput" placeholder="Escribe una pista (Ej: Serie en una escuela en la playa)..." class="composer-text-input" style="margin-bottom: 15px;">
+        <p style="color: #555; font-weight: 700; margin-bottom: 10px;">¡Busca una imagen en Wikipedia como pista!</p>
+        <input type="text" id="adivinaSearchInput" placeholder="🔍 Buscar imagen (Ej: Freddy Benson)..." class="composer-text-input">
+        <button class="modal-btn" onclick="searchAdivinaImage()" style="margin-top: 8px;">Buscar Imagen</button>
+        <div id="adivinaImageResults" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; margin-bottom: 15px;"></div>
+        
+        <input type="text" id="adivinaWordInput" placeholder="¿Qué debe adivinar? (Ej: iCarly)" class="composer-text-input" style="margin-bottom: 10px;">
         <button class="modal-btn" id="btnEnviarAmor" onclick="submitAdivinaTurn()">Enviar pista a mi amor 💕</button>
       </div>
 
@@ -5813,7 +5816,7 @@
         <div style="font-size: 3rem; margin-bottom: 10px;">💌✨</div>
         <h4 style="color: var(--title-burgundy);">¡Pista enviada!</h4>
         <p style="color: #666; font-weight: 700; margin-top: 5px;">Tu amor debe adivinar: <b style="color: var(--soft-red); text-transform: uppercase;" id="adivinaSentWord"></b></p>
-        <p style="color: #666; font-weight: 700;">Tu pista: <b id="adivinaSentClue"></b></p>
+        <img id="adivinaSentImage" style="max-width: 180px; border-radius: 15px; border: 3px solid var(--rose-pink); margin-top: 10px; object-fit: contain;">
         <p style="color: #555; margin-top: 10px;">Esperando respuesta...</p>
       </div>
 
@@ -5821,13 +5824,13 @@
       <div id="adivinaGuesserUI" style="display: none;">
         <div id="adivinaWaitingChoice" style="font-weight: 700; color: #555; padding: 20px;">
           <div style="font-size: 2.5rem; margin-bottom: 10px; animation: heartPulse 1.2s infinite alternate;">💭⏳</div>
-          Esperando a que tu amor elija la palabra y la pista...
+          Esperando a que tu amor elija la pista visual...
         </div>
         
         <div id="adivinaGuessingActive" style="display: none;">
           <div style="background: #fff0f3; border: 2px dashed var(--soft-red); padding: 15px; border-radius: 15px; margin-bottom: 15px;">
-            <h4 style="color: var(--title-burgundy); font-size: 0.9rem; margin-bottom: 5px;">Pista de tu amor:</h4>
-            <p style="font-weight: 800; font-size: 1.1rem; color: #111;" id="adivinaDisplayClue"></p>
+            <h4 style="color: var(--title-burgundy); font-size: 0.9rem; margin-bottom: 10px;">Pista visual de tu amor:</h4>
+            <img id="adivinaTargetImage" style="max-width: 100%; max-height: 250px; border-radius: 15px; object-fit: contain;">
           </div>
           <input type="text" id="adivinaGuessInput" placeholder="¿Qué crees que es?" class="composer-text-input" style="margin-bottom: 10px;">
           <button class="modal-btn" onclick="checkAdivinaGuess()">¡Adivinar! 🎯</button>
@@ -13578,7 +13581,6 @@ function listenAdivinaRoom() {
     if (data.Criss && data.Andreita && myAdivinaUser === 'Criss') {
       rtdb.ref('adivina_room').once('value').then(roomSnap => {
          const room = roomSnap.val();
-         // Si la sala está vacía o sin juego activo, arranca.
          if (!room || room.status === 'idle' || !room.status) {
              startAdivinaRoulette(null);
          }
@@ -13591,13 +13593,11 @@ function listenAdivinaRoom() {
     if (!room) return;
 
     if (room.status === 'roulette') {
-      // Nos aseguramos que la sala de espera y la arena de juego desaparezcan
       document.getElementById('adivinaWaitingBox').style.display = 'none';
       document.getElementById('adivinaPlayArena').style.display = 'none';
       document.getElementById('adivinaRouletteBox').style.display = 'block';
       animateAdivinaRoulette(room.category);
     } else if (room.status === 'playing') {
-      // Entramos al juego y ocultamos la ruleta
       document.getElementById('adivinaWaitingBox').style.display = 'none';
       document.getElementById('adivinaRouletteBox').style.display = 'none';
       document.getElementById('adivinaPlayArena').style.display = 'block';
@@ -13618,7 +13618,8 @@ function startAdivinaRoulette(nextTurnUser) {
     status: 'roulette',
     category: selectedCat,
     turn: turn,
-    clue: null,
+    turnCount: 0, 
+    image: null,
     word: null,
     endTime: 0
   });
@@ -13639,8 +13640,10 @@ function animateAdivinaRoulette(finalCategory) {
   }, 100);
 }
 
+let selectedAdivinaImg = "";
+
 function setupAdivinaTurn(room) {
-  document.getElementById('adivinaCategoryTitle').textContent = `Categoría: ${room.category}`;
+  document.getElementById('adivinaCategoryTitle').textContent = `Categoría: ${room.category} (Ronda ${room.turnCount + 1}/2)`;
   document.getElementById('adivinaTurnBadge').textContent = `Turno de poner pista: ${room.turn}`;
 
   const isMyTurnToChoose = room.turn === myAdivinaUser;
@@ -13648,17 +13651,19 @@ function setupAdivinaTurn(room) {
   if (isMyTurnToChoose) {
     document.getElementById('adivinaGuesserUI').style.display = 'none';
     
-    if (room.clue && room.word) {
+    if (room.image && room.word) {
       document.getElementById('adivinaChooserUI').style.display = 'none';
       document.getElementById('adivinaChooserWaiting').style.display = 'block';
       document.getElementById('adivinaSentWord').textContent = room.word;
-      document.getElementById('adivinaSentClue').textContent = room.clue;
-      startAdivinaTimer(room.endTime);
+      document.getElementById('adivinaSentImage').src = room.image;
+      startAdivinaTimer(room.endTime, room);
     } else {
       document.getElementById('adivinaChooserUI').style.display = 'block';
       document.getElementById('adivinaChooserWaiting').style.display = 'none';
+      document.getElementById('adivinaSearchInput').value = "";
+      document.getElementById('adivinaImageResults').innerHTML = "";
       document.getElementById('adivinaWordInput').value = "";
-      document.getElementById('adivinaClueInput').value = "";
+      selectedAdivinaImg = "";
       const btn = document.getElementById('btnEnviarAmor');
       if(btn) {
           btn.disabled = false;
@@ -13672,12 +13677,12 @@ function setupAdivinaTurn(room) {
     document.getElementById('adivinaChooserWaiting').style.display = 'none';
     document.getElementById('adivinaGuesserUI').style.display = 'block';
 
-    if (room.clue && room.word) {
+    if (room.image && room.word) {
       document.getElementById('adivinaWaitingChoice').style.display = 'none';
       document.getElementById('adivinaGuessingActive').style.display = 'block';
-      document.getElementById('adivinaDisplayClue').textContent = room.clue;
+      document.getElementById('adivinaTargetImage').src = room.image;
       document.getElementById('adivinaGuessInput').value = ""; 
-      startAdivinaTimer(room.endTime);
+      startAdivinaTimer(room.endTime, room);
     } else {
       document.getElementById('adivinaWaitingChoice').style.display = 'block';
       document.getElementById('adivinaGuessingActive').style.display = 'none';
@@ -13687,12 +13692,63 @@ function setupAdivinaTurn(room) {
   }
 }
 
+async function searchAdivinaImage() {
+  const query = document.getElementById('adivinaSearchInput').value.trim();
+  if (!query) {
+    showToast("Escribe algo para buscar 🥺");
+    return;
+  }
+  
+  const resultsDiv = document.getElementById('adivinaImageResults');
+  resultsDiv.innerHTML = '<p style="grid-column: 1/-1; font-weight: 700; color: #555;">Buscando fotos reales... ⏳</p>';
+  
+  try {
+    const url = `https://es.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages&piprop=original&generator=search&gsrsearch=${encodeURIComponent(query)}&gsrlimit=8&origin=*`;
+    
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    resultsDiv.innerHTML = '';
+    let found = false;
+    
+    if (data.query && data.query.pages) {
+      Object.values(data.query.pages).forEach(page => {
+        if (page.original && page.original.source) {
+          found = true;
+          resultsDiv.innerHTML += `
+            <img src="${page.original.source}" 
+                 onclick="selectAdivinaImg(this.src, this)" 
+                 style="cursor:pointer; border-radius:10px; width:100%; height:110px; object-fit:cover; border: 3px solid transparent; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: all 0.2s;">`;
+        }
+      });
+    }
+    
+    if (!found) {
+      resultsDiv.innerHTML = '<p style="grid-column: 1/-1; color: #e63946; font-weight: 700;">No encontré una foto exacta. Prueba buscar nombres oficiales completos 🥺</p>';
+    } else {
+      showToast("¡Imágenes encontradas! ✨");
+    }
+  } catch (error) {
+    resultsDiv.innerHTML = '<p style="grid-column: 1/-1; color: #e63946;">Error de red al buscar imágenes 🥺</p>';
+  }
+}
+
+function selectAdivinaImg(src, imgElement) {
+  selectedAdivinaImg = src;
+  const allImgs = document.getElementById('adivinaImageResults').querySelectorAll('img');
+  allImgs.forEach(img => {
+    img.style.borderColor = 'transparent';
+    img.style.transform = 'scale(1)';
+  });
+  imgElement.style.borderColor = 'var(--title-burgundy)';
+  imgElement.style.transform = 'scale(1.05)';
+  showToast("Imagen seleccionada ✨");
+}
+
 function submitAdivinaTurn() {
   const word = document.getElementById('adivinaWordInput').value.trim();
-  const clue = document.getElementById('adivinaClueInput').value.trim();
-  
-  if (!word || !clue) {
-    showToast("Escribe la palabra secreta y una pista mi amor 🥺");
+  if (!word || !selectedAdivinaImg) {
+    showToast("Selecciona una imagen y escribe la palabra a adivinar 🥺");
     return;
   }
   
@@ -13703,7 +13759,7 @@ function submitAdivinaTurn() {
   }
 
   rtdb.ref('adivina_room').update({
-    clue: clue,
+    image: selectedAdivinaImg,
     word: word.toLowerCase(),
     endTime: Date.now() + (5 * 60 * 1000)
   });
@@ -13718,12 +13774,30 @@ function checkAdivinaGuess() {
   rtdb.ref('adivina_room').once('value').then(snap => {
     const room = snap.val();
     if (guess === room.word) {
-      showToast("¡Correcto mi amor! ❤️ Cambio de turno...");
       
-      setTimeout(() => {
-        // Al que adivina le toca elegir la siguiente palabra
-        startAdivinaRoulette(myAdivinaUser);
-      }, 2500);
+      if (room.turnCount === 0) {
+        showToast("¡Correcto mi amor! ❤️ Ahora es tu turno de poner pista en esta categoría.");
+        const nextUser = room.turn === 'Criss' ? 'Andreita' : 'Criss';
+        setTimeout(() => {
+          if (myAdivinaUser === 'Criss') {
+            rtdb.ref('adivina_room').update({
+              turn: nextUser,
+              turnCount: 1,
+              image: null,
+              word: null,
+              endTime: 0
+            });
+          }
+        }, 2500);
+      } else {
+        showToast("¡Correcto mi amor! ❤️ Categoría completada, girando ruleta para la siguiente...");
+        setTimeout(() => {
+          if (myAdivinaUser === 'Criss') {
+            const nextUser = room.turn === 'Criss' ? 'Andreita' : 'Criss';
+            startAdivinaRoulette(nextUser);
+          }
+        }, 2500);
+      }
       
     } else {
       showToast("Esa no es mi vida, ¡sigue intentando! 🥺");
@@ -13731,21 +13805,31 @@ function checkAdivinaGuess() {
   });
 }
 
-function startAdivinaTimer(endTime) {
+function startAdivinaTimer(endTime, room) {
   clearInterval(adivinaTimerInterval);
   adivinaTimerInterval = setInterval(() => {
     const remain = Math.floor((endTime - Date.now()) / 1000);
     if (remain <= 0) {
       clearInterval(adivinaTimerInterval);
       showToast("¡Tiempo agotado! ⌛ Cambio de turno...");
+      
       setTimeout(() => {
-        rtdb.ref('adivina_room').once('value').then(snap => {
-           const room = snap.val();
-           // Si se acaba el tiempo, el turno pasa al otro jugador automáticamente
-           const nextUser = room.turn === 'Criss' ? 'Andreita' : 'Criss';
-           if (myAdivinaUser === 'Criss') startAdivinaRoulette(nextUser);
-        });
+        if (myAdivinaUser === 'Criss') {
+          const nextUser = room.turn === 'Criss' ? 'Andreita' : 'Criss';
+          if (room.turnCount === 0) {
+            rtdb.ref('adivina_room').update({
+              turn: nextUser,
+              turnCount: 1,
+              image: null,
+              word: null,
+              endTime: 0
+            });
+          } else {
+            startAdivinaRoulette(nextUser);
+          }
+        }
       }, 2000);
+
     } else {
       document.getElementById('adivinaTimer').textContent = `⏳ 0${Math.floor(remain/60)}:${String(remain%60).padStart(2,'0')}`;
     }
