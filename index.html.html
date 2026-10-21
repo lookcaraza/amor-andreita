@@ -5990,7 +5990,7 @@
       <button class="modal-btn" onclick="connectPuzzleOnline()" style="max-width: 250px; margin: 0 auto;">Entrar a la Sala 🚀</button>
     </div>
 
-    <!-- Sala de Espera -->
+   <!-- Sala de Espera -->
     <div id="puzzleWaitingBox" style="display: none; padding: 20px 10px;">
       <div style="font-size: 3rem; margin-bottom: 8px; animation: heartPulse 1.2s infinite alternate;">🧩💕</div>
       <h4 style="color: var(--title-burgundy); font-weight: 800;">Sala de Espera</h4>
@@ -5999,6 +5999,9 @@
         <span class="presence-badge ready" id="puzzleReadyAndreita">🌸 Andreita: No lista ⏳</span>
       </div>
       <button class="modal-btn" id="puzzleReadyBtn" onclick="togglePuzzleReady()" style="max-width: 280px; margin: 0 auto;">✨ ¡Estoy Listo! ✨</button>
+      
+      <!-- NUEVO BOTÓN DE INICIO FORZADO -->
+      <button class="modal-btn" id="forceStartPuzzleBtn" onclick="forceStartPuzzle()" style="display: none; max-width: 280px; margin: 10px auto; background: #e63946;">🚀 INICIAR AHORA</button>
     </div>
 
     <!-- Instrucciones -->
@@ -14392,20 +14395,17 @@ function listenPuzzleState() {
     const data = snap.val() || {};
     const cReady = data.Criss === true;
     const aReady = data.Andreita === true;
+    
     document.getElementById('puzzleReadyCriss').textContent = `👑 Criss: ${cReady ? 'Listo ✅' : 'No listo ⏳'}`;
     document.getElementById('puzzleReadyAndreita').textContent = `🌸 Andreita: ${aReady ? 'Lista ✅' : 'No lista ⏳'}`;
 
-    // Si ambos están listos, arranca la partida
+    // Mostrar el botón de INICIAR AHORA solo cuando ambos estén listos
     if (cReady && aReady) {
-      rtdb.ref('puzzle_room').once('value').then(roomSnap => {
-        if (!roomSnap.val() || roomSnap.val().status === 'idle') {
-          // SOLUCIÓN: Criss siempre es el anfitrión que envía la orden para evitar que se atasque
-          if (myPuzzleUser === 'Criss') { 
-            rtdb.ref('puzzle_accepted').set({ Criss: false, Andreita: false }); // Resetea las aceptaciones
-            rtdb.ref('puzzle_room').set({ status: 'instructions', turn: 'Andreita' }); // Turno inicial
-          }
-        }
-      });
+      document.getElementById('puzzleReadyBtn').style.display = 'none';
+      document.getElementById('forceStartPuzzleBtn').style.display = 'block';
+    } else {
+      document.getElementById('puzzleReadyBtn').style.display = 'block';
+      document.getElementById('forceStartPuzzleBtn').style.display = 'none';
     }
   });
 
@@ -14488,6 +14488,12 @@ function listenPuzzleState() {
       }
     }
   });
+}
+
+// FUNCIONALIDAD DEL BOTÓN INICIAR AHORA
+function forceStartPuzzle() {
+  rtdb.ref('puzzle_accepted').set({ Criss: false, Andreita: false }); 
+  rtdb.ref('puzzle_room').set({ status: 'instructions', turn: 'Andreita' }); 
 }
 
 function acceptPuzzleInstructions() {
