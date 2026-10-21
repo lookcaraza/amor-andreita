@@ -4157,19 +4157,20 @@
     z-index: 10002; box-shadow: 0 4px 10px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
 }
 /* ==========================================================================
-   ESTILOS MINIJUEGO 16: AJEDREZ ONLINE (CORREGIDO Y RESPONSIVO)
+   ESTILOS MINIJUEGO 16: AJEDREZ ONLINE (SIMÉTRICO Y GRANDE)
    ========================================================================== */
 .ajedrez-board-container {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   width: 100%;
-  max-width: 380px;
-  aspect-ratio: 1 / 1; /* Mantiene el tablero perfectamente simétrico y cuadrado */
+  max-width: 440px; /* Tamaño grande y cómodo como lo tenías */
+  aspect-ratio: 1 / 1; /* Garantiza que el tablero sea 100% cuadrado y simétrico */
   margin: 0 auto;
   border: 4px solid var(--rose-pink);
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(230,92,101,0.2);
+  box-shadow: 0 10px 30px rgba(230,92,101,0.25);
+  background: white;
 }
 
 .ajedrez-square {
@@ -4178,7 +4179,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: clamp(1.5rem, 6vw, 2.5rem); /* Se adapta proporcionalmente al tamaño de la pantalla */
+  font-size: 2.3rem; /* Tamaño de pieza grande y legible */
   cursor: pointer;
   position: relative;
   user-select: none;
@@ -4201,15 +4202,13 @@
 .piece-black { color: #111111; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
 .piece-pink { color: #ff4d6d; text-shadow: 0 2px 4px rgba(230,92,101,0.4); }
 
-/* CONTENEDOR DE PANTALLA COMPLETA NATIVO Y MODO PAISAJE FORZADO */
+/* PANTALLA COMPLETA */
 .ajedrez-fullscreen-wrapper {
   background: white;
   width: 100%;
   position: relative;
-  transition: all 0.3s ease;
 }
 
-/* Al activarse la pantalla completa, ocupa el 100% real de la ventana y centra el juego */
 .ajedrez-fullscreen-wrapper:fullscreen,
 .ajedrez-fullscreen-wrapper:-webkit-full-screen {
   width: 100vw !important;
@@ -4219,7 +4218,7 @@
   justify-content: center !important;
   align-items: center !important;
   background: #fff8f9 !important;
-  padding: 10px !important;
+  padding: 15px !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
   position: fixed !important;
@@ -4228,27 +4227,20 @@
   z-index: 99999 !important;
 }
 
-/* Hacemos el tablero más grande dentro del modo pantalla completa */
 .ajedrez-fullscreen-wrapper:fullscreen .ajedrez-board-container,
 .ajedrez-fullscreen-wrapper:-webkit-full-screen .ajedrez-board-container {
-  max-width: min(75vh, 85vw) !important;
+  max-width: min(80vh, 85vw) !important;
 }
 
 .exit-fullscreen-btn {
   display: none;
   position: absolute;
-  top: 15px; 
-  right: 15px;
-  background: #e63946; 
-  color: white;
-  border: none; 
-  border-radius: 50%;
-  width: 48px; 
-  height: 48px;
-  font-size: 1.5rem; 
-  font-weight: bold;
-  z-index: 100000; 
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  top: 15px; right: 15px;
+  background: #e63946; color: white;
+  border: none; border-radius: 50%;
+  width: 48px; height: 48px;
+  font-size: 1.5rem; font-weight: bold;
+  z-index: 100000; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   cursor: pointer;
 }
 
