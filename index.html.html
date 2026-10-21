@@ -4157,17 +4157,17 @@
     z-index: 10002; box-shadow: 0 4px 10px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
 }
 /* ==========================================================================
-   ESTILOS MINIJUEGO 16: AJEDREZ ONLINE (SIMÉTRICO Y GRANDE)
+   ESTILOS MINIJUEGO 16: AJEDREZ ONLINE (SIMÉTRICO Y LIMPIO)
    ========================================================================== */
 .ajedrez-board-container {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   width: 100%;
-  max-width: 440px; /* Tamaño grande y cómodo como lo tenías */
-  aspect-ratio: 1 / 1; /* Garantiza que el tablero sea 100% cuadrado y simétrico */
+  max-width: 420px;
+  aspect-ratio: 1 / 1;
   margin: 0 auto;
   border: 4px solid var(--rose-pink);
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(230,92,101,0.25);
   background: white;
@@ -4179,7 +4179,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2.3rem; /* Tamaño de pieza grande y legible */
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
   cursor: pointer;
   position: relative;
   user-select: none;
@@ -4202,53 +4202,18 @@
 .piece-black { color: #111111; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
 .piece-pink { color: #ff4d6d; text-shadow: 0 2px 4px rgba(230,92,101,0.4); }
 
-/* PANTALLA COMPLETA */
+/* CONTENEDOR FLUIDO SIN PANTALLAS ROTAS */
 .ajedrez-fullscreen-wrapper {
   background: white;
   width: 100%;
   position: relative;
-}
-
-.ajedrez-fullscreen-wrapper:fullscreen,
-.ajedrez-fullscreen-wrapper:-webkit-full-screen {
-  width: 100vw !important;
-  height: 100vh !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
-  background: #fff8f9 !important;
-  padding: 15px !important;
-  box-sizing: border-box !important;
-  overflow: hidden !important;
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  z-index: 99999 !important;
-}
-
-.ajedrez-fullscreen-wrapper:fullscreen .ajedrez-board-container,
-.ajedrez-fullscreen-wrapper:-webkit-full-screen .ajedrez-board-container {
-  max-width: min(80vh, 85vw) !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .exit-fullscreen-btn {
   display: none;
-  position: absolute;
-  top: 15px; right: 15px;
-  background: #e63946; color: white;
-  border: none; border-radius: 50%;
-  width: 48px; height: 48px;
-  font-size: 1.5rem; font-weight: bold;
-  z-index: 100000; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  cursor: pointer;
-}
-
-.ajedrez-fullscreen-wrapper:fullscreen .exit-fullscreen-btn,
-.ajedrez-fullscreen-wrapper:-webkit-full-screen .exit-fullscreen-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 </style>
 </head>
@@ -5980,7 +5945,6 @@
         
         <div class="pinturillo-header" style="margin-bottom: 10px; width: 100%; max-width: 400px; display: flex; justify-content: space-between; margin: 0 auto 10px auto;">
           <div class="guesswho-turn-badge" id="ajedrezTurnDisplay">Turno: Esperando...</div>
-          <button class="tool-btn" onclick="enterAjedrezFullscreen()" style="background: var(--title-burgundy); color: white;">⛶ Pantalla Completa</button>
         </div>
 
         <div id="ajedrezAlertMsg" style="color: #e63946; font-weight: 900; font-size: 1.1rem; height: 25px; margin-bottom: 5px;"></div>
