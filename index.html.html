@@ -14387,7 +14387,7 @@ function togglePuzzleReady() {
 }
 
 function listenPuzzleState() {
-  // Sincronización de listos
+  // 1. Sincronización de Listos
   rtdb.ref('puzzle_ready').on('value', (snap) => {
     const data = snap.val() || {};
     const cReady = data.Criss === true;
@@ -14395,18 +14395,35 @@ function listenPuzzleState() {
     document.getElementById('puzzleReadyCriss').textContent = `👑 Criss: ${cReady ? 'Listo ✅' : 'No listo ⏳'}`;
     document.getElementById('puzzleReadyAndreita').textContent = `🌸 Andreita: ${aReady ? 'Lista ✅' : 'No lista ⏳'}`;
 
+    // Si ambos están listos, arranca la partida
     if (cReady && aReady) {
       rtdb.ref('puzzle_room').once('value').then(roomSnap => {
         if (!roomSnap.val() || roomSnap.val().status === 'idle') {
-          if (myPuzzleUser === 'Andreita') { 
-            rtdb.ref('puzzle_room').set({ status: 'instructions', turn: 'Andreita' });
+          // SOLUCIÓN: Criss siempre es el anfitrión que envía la orden para evitar que se atasque
+          if (myPuzzleUser === 'Criss') { 
+            rtdb.ref('puzzle_accepted').set({ Criss: false, Andreita: false }); // Resetea las aceptaciones
+            rtdb.ref('puzzle_room').set({ status: 'instructions', turn: 'Andreita' }); // Turno inicial
           }
         }
       });
     }
   });
 
-  // Escuchar estado del juego
+  // 2. Escuchar cuando AMBOS aceptan las instrucciones
+  rtdb.ref('puzzle_accepted').on('value', (snap) => {
+    const data = snap.val() || {};
+    if (data.Criss && data.Andreita) {
+      rtdb.ref('puzzle_room').once('value').then(roomSnap => {
+        if (roomSnap.val() && roomSnap.val().status === 'instructions') {
+          if (myPuzzleUser === 'Criss') {
+            rtdb.ref('puzzle_room/status').set('taking_photo'); // Enciende la cámara para los dos
+          }
+        }
+      });
+    }
+  });
+
+  // 3. Escuchar el estado general del juego
   rtdb.ref('puzzle_room').on('value', (snap) => {
     const data = snap.val();
     if (!data || data.status === 'idle') return;
@@ -14417,6 +14434,14 @@ function listenPuzzleState() {
       document.getElementById('puzzleWaitingBox').style.display = 'none';
       document.getElementById('puzzleSummaryBox').style.display = 'none';
       document.getElementById('puzzleInstructionsBox').style.display = 'block';
+      
+      // Restaurar el botón de instrucciones por si juegan otra ronda
+      const btn = document.querySelector('#puzzleInstructionsBox .modal-btn');
+      if(btn) {
+        btn.textContent = "Aceptar 👍";
+        btn.style.background = "#2a9d8f";
+        btn.disabled = false;
+      }
     } 
     else if (data.status === 'taking_photo') {
       document.getElementById('puzzleInstructionsBox').style.display = 'none';
@@ -14436,7 +14461,7 @@ function listenPuzzleState() {
       }
     } 
     else if (data.status === 'playing_puzzle') {
-      stopPuzzleAiCamera(); // Se apaga la cámara para ambos
+      stopPuzzleAiCamera(); 
       document.getElementById('puzzleVideoArea').style.display = 'none';
       document.getElementById('puzzleGridArea').style.display = 'flex';
       
@@ -14466,7 +14491,13 @@ function listenPuzzleState() {
 }
 
 function acceptPuzzleInstructions() {
-  rtdb.ref('puzzle_room/status').set('taking_photo');
+  const btn = document.querySelector('#puzzleInstructionsBox .modal-btn');
+  btn.textContent = "Esperando a tu amor... ⏳";
+  btn.style.background = "#888888";
+  btn.disabled = true;
+  
+  // Registra que este usuario ya aceptó las reglas
+  rtdb.ref(`puzzle_accepted/${myPuzzleUser}`).set(true);
 }
 
 // INICIALIZACIÓN DE LA CÁMARA E INTELIGENCIA ARTIFICIAL
