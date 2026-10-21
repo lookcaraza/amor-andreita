@@ -17,6 +17,10 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <!-- Inteligencia Artificial Gratuita para detectar manos (MediaPipe) -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 
   <style>
     :root {
@@ -5971,10 +5975,10 @@
   </div>
 </div>
 
-<!-- MINIJUEGO 17: ROMPECABEZAS JUNTOS -->
+<!-- MINIJUEGO 17: ROMPECABEZAS JUNTOS MULTIJUGADOR -->
 <div id="game-stage-17" style="display: none; width: 100%;">
   <div class="basta-container" style="text-align: center; position: relative;">
-    <h3 class="custom-game-title" style="font-size: 1.4rem; margin-bottom: 5px;">📸 Rompecabezas Juntos</h3>
+    <h3 class="custom-game-title" style="font-size: 1.4rem; margin-bottom: 5px;">📸 Rompecabezas Juntos 1v1</h3>
 
     <!-- Login -->
     <div id="puzzleLoginBox">
@@ -6001,7 +6005,7 @@
     <div id="puzzleInstructionsBox" style="display: none; padding: 20px 10px;">
       <h4 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.3rem;">Instrucciones ⚠️</h4>
       <p style="font-weight: 800; color: #e63946; margin: 15px 0; font-size: 1.1rem; border: 2px dashed #e63946; padding: 15px; border-radius: 10px;">
-        Pon la cámara frente a ti en algo rígido para que funcione correctamente.
+        Coloca el celular en algo rígido. Para tomar la foto, haz un <b>cuadrado con tus dedos índice y pulgar</b> frente a la cámara.
       </p>
       <button class="modal-btn" onclick="acceptPuzzleInstructions()" style="max-width: 250px; margin: 0 auto;">Aceptar 👍</button>
     </div>
@@ -6012,18 +6016,28 @@
       
       <div id="puzzleFullscreenArea" style="position: relative; background: #fff0f3; padding: 20px; border-radius: 15px; display: flex; flex-direction: column; align-items: center; border: 3px solid var(--rose-pink);">
         
-        <!-- Botón X para salir del minijuego -->
         <button onclick="exitPuzzleGame()" style="position: absolute; top: 10px; right: 10px; background: #e63946; color: white; border: 2px solid white; border-radius: 50%; width: 45px; height: 45px; font-weight: 900; font-size: 1.3rem; cursor: pointer; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">✕</button>
         
         <h4 id="puzzleTurnIndicator" style="color: var(--title-burgundy); font-weight: 900; margin-bottom: 10px; font-size: 1.2rem; background: white; padding: 5px 15px; border-radius: 20px; border: 2px solid var(--rose-pink);">Turno de...</h4>
         
-        <!-- Cámara para iOS/Android -->
-        <video id="puzzleVideo" autoplay muted playsinline webkit-playsinline style="display: none; width: 100%; max-width: 600px; border-radius: 10px; border: 4px solid var(--title-burgundy); transform: scaleX(-1);"></video>
-        
-        <!-- Cuadrícula 15 piezas (5x3) -->
-        <div id="puzzleGrid" style="display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(3, 1fr); gap: 2px; width: 100%; max-width: 600px; aspect-ratio: 5/3; background: #222; border: 4px solid var(--rose-pink); border-radius: 10px; overflow: hidden; position: relative; touch-action: manipulation;"></div>
-        
-        <button id="puzzleSnapBtn" class="modal-btn" style="margin-top: 15px; background: var(--title-burgundy); max-width: 300px; display: none;" onclick="takePuzzleSnapshot()">📸 Tomar Foto y Desordenar</button>
+        <!-- ZONA 1: CÁMARA (Solo para el que toma la foto) -->
+        <div id="puzzleVideoArea" style="display: none; flex-direction: column; align-items: center; width: 100%;">
+          <div style="position: relative; width: 100%; max-width: 500px; border-radius: 10px; overflow: hidden; border: 4px solid var(--title-burgundy);">
+            <video id="puzzleVideo" autoplay muted playsinline webkit-playsinline style="width: 100%; display: block; transform: scaleX(-1);"></video>
+            <!-- Marco Azul Guía -->
+            <div id="puzzleBlueFrame" style="position: absolute; top: 15%; left: 15%; right: 15%; bottom: 15%; border: 4px dashed #3a86ff; border-radius: 10px; box-shadow: 0 0 15px rgba(58,134,255,0.5); pointer-events: none;"></div>
+            <!-- Indicador IA -->
+            <div id="puzzleAiStatus" style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 5px 15px; border-radius: 20px; font-weight: 800; font-size: 0.8rem;">🤖 Buscando manos...</div>
+          </div>
+          <button id="puzzleSnapBtn" class="modal-btn" style="margin-top: 15px; background: var(--title-burgundy); max-width: 300px;" onclick="takePuzzleSnapshot()">📸 Tomar Manualmente</button>
+        </div>
+
+        <!-- ZONA 2: TABLERO ROMPECABEZAS (Sincronizado) -->
+        <div id="puzzleGridArea" style="display: none; width: 100%; flex-direction: column; align-items: center;">
+          <div id="puzzleSpectatorMsg" style="color: var(--title-burgundy); font-weight: 800; margin-bottom: 10px;">¡Observando a tu amor! 💕</div>
+          <div id="puzzleGrid" style="display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(3, 1fr); gap: 2px; width: 100%; max-width: 600px; aspect-ratio: 5/3; background: #222; border: 4px solid var(--rose-pink); border-radius: 10px; overflow: hidden; position: relative; touch-action: manipulation;"></div>
+        </div>
+
       </div>
     </div>
 
@@ -6031,8 +6045,8 @@
     <div id="puzzleSummaryBox" style="display: none; padding: 20px;">
       <div style="font-size: 3rem; margin-bottom: 8px;">🎉</div>
       <h3 style="color: var(--title-burgundy); font-weight: 800;">¡Rompecabezas Armado!</h3>
-      <p style="font-weight: 700; color: #555; margin-bottom: 15px;">¡Bien hecho mi amor!</p>
-      <button class="modal-btn" onclick="nextPuzzleTurn()" style="max-width: 250px; margin: 0 auto; background: #2a9d8f;">Siguiente Turno 🔄</button>
+      <p style="font-weight: 700; color: #555; margin-bottom: 15px;">¡Qué hermosa foto mi amor!</p>
+      <button id="puzzleNextTurnBtn" class="modal-btn" onclick="nextPuzzleTurn()" style="max-width: 250px; margin: 0 auto; background: #2a9d8f;">Siguiente Turno 🔄</button>
     </div>
   </div>
 </div>
@@ -14328,13 +14342,18 @@ function restartAjedrezGame() {
   document.getElementById('ajedrezWaitingBox').style.display = 'block';
 }
 /* ==========================================================================
-   MINIJUEGO 17: ROMPECABEZAS JUNTOS (15 PIEZAS) 
+   MINIJUEGO 17: ROMPECABEZAS JUNTOS MULTIJUGADOR + IA DE MANOS
    ========================================================================== */
 let myPuzzleUser = "";
 let amIPuzzleReady = false;
-let puzzleStream = null;
-let puzzlePieces = [];
+let puzzleCamera = null;
+let puzzleHandsAi = null;
+let isPuzzleAiActive = false;
+let framesHeldHandSquare = 0;
+let localPuzzlePieces = [];
+let localCurrentImage = "";
 let firstSelectedPiece = null;
+let puzzleCurrentRole = "spectator"; // "player" o "spectator"
 
 function initPuzzleCamSystem() {
   const savedUser = localStorage.getItem('pinturillo_saved_user') || localStorage.getItem('basta_saved_user');
@@ -14368,6 +14387,7 @@ function togglePuzzleReady() {
 }
 
 function listenPuzzleState() {
+  // Sincronización de listos
   rtdb.ref('puzzle_ready').on('value', (snap) => {
     const data = snap.val() || {};
     const cReady = data.Criss === true;
@@ -14378,7 +14398,6 @@ function listenPuzzleState() {
     if (cReady && aReady) {
       rtdb.ref('puzzle_room').once('value').then(roomSnap => {
         if (!roomSnap.val() || roomSnap.val().status === 'idle') {
-          // El primer turno SIEMPRE es de Andreita
           if (myPuzzleUser === 'Andreita') { 
             rtdb.ref('puzzle_room').set({ status: 'instructions', turn: 'Andreita' });
           }
@@ -14387,144 +14406,256 @@ function listenPuzzleState() {
     }
   });
 
+  // Escuchar estado del juego
   rtdb.ref('puzzle_room').on('value', (snap) => {
     const data = snap.val();
     if (!data || data.status === 'idle') return;
+
+    puzzleCurrentRole = (data.turn === myPuzzleUser) ? "player" : "spectator";
 
     if (data.status === 'instructions') {
       document.getElementById('puzzleWaitingBox').style.display = 'none';
       document.getElementById('puzzleSummaryBox').style.display = 'none';
       document.getElementById('puzzleInstructionsBox').style.display = 'block';
-    } else if (data.status === 'playing') {
+    } 
+    else if (data.status === 'taking_photo') {
       document.getElementById('puzzleInstructionsBox').style.display = 'none';
       document.getElementById('puzzleSummaryBox').style.display = 'none';
       document.getElementById('puzzlePlayArena').style.display = 'block';
       document.getElementById('puzzleTurnIndicator').textContent = `Turno de: ${data.turn} ${data.turn === 'Andreita' ? '🌸' : '👑'}`;
       
-      if (data.turn === myPuzzleUser) {
-        startPuzzleCamera();
+      if (puzzleCurrentRole === "player") {
+        startPuzzleAiCamera();
       } else {
-        stopPuzzleCamera();
-        document.getElementById('puzzleGrid').innerHTML = `<p style="color:var(--title-burgundy); font-weight:800; margin:auto; grid-column:1/-1; text-align:center; padding:40px;">⏳ Esperando a que ${data.turn} arme su rompecabezas...</p>`;
-        document.getElementById('puzzleGrid').style.background = "#fff0f3";
-        document.getElementById('puzzleSnapBtn').style.display = 'none';
+        stopPuzzleAiCamera();
+        document.getElementById('puzzleVideoArea').style.display = 'none';
+        document.getElementById('puzzleGridArea').style.display = 'flex';
+        document.getElementById('puzzleGrid').innerHTML = `<p style="color:var(--title-burgundy); font-weight:800; margin:auto; grid-column:1/-1; text-align:center; padding:40px;">⏳ Esperando a que ${data.turn} encienda la cámara y pose para la foto...</p>`;
+        document.getElementById('puzzleSpectatorMsg').style.display = 'block';
+        document.getElementById('puzzleSpectatorMsg').textContent = `¡Sonríe mi amor, ${data.turn} se está tomando la foto! 💕`;
       }
-    } else if (data.status === 'finished_turn') {
-      stopPuzzleCamera();
+    } 
+    else if (data.status === 'playing_puzzle') {
+      stopPuzzleAiCamera(); // Se apaga la cámara para ambos
+      document.getElementById('puzzleVideoArea').style.display = 'none';
+      document.getElementById('puzzleGridArea').style.display = 'flex';
+      
+      localPuzzlePieces = data.pieces || [];
+      localCurrentImage = data.currentImage || "";
+      
+      if (puzzleCurrentRole === "player") {
+        document.getElementById('puzzleSpectatorMsg').style.display = 'none';
+      } else {
+        document.getElementById('puzzleSpectatorMsg').style.display = 'block';
+        document.getElementById('puzzleSpectatorMsg').textContent = `👀 Observando a ${data.turn} armar el rompecabezas...`;
+      }
+
+      renderPuzzleGridSync();
+    } 
+    else if (data.status === 'finished_turn') {
       document.getElementById('puzzlePlayArena').style.display = 'none';
       document.getElementById('puzzleSummaryBox').style.display = 'block';
+      
+      if (puzzleCurrentRole === "player") {
+        document.getElementById('puzzleNextTurnBtn').style.display = 'block';
+      } else {
+        document.getElementById('puzzleNextTurnBtn').style.display = 'none';
+      }
     }
   });
 }
 
 function acceptPuzzleInstructions() {
-  rtdb.ref('puzzle_room/status').set('playing');
+  rtdb.ref('puzzle_room/status').set('taking_photo');
 }
 
-async function startPuzzleCamera() {
-  const video = document.getElementById('puzzleVideo');
-  document.getElementById('puzzleGrid').innerHTML = '';
-  document.getElementById('puzzleGrid').style.background = "#222";
-  document.getElementById('puzzleSnapBtn').style.display = 'block';
-  video.style.display = 'block';
+// INICIALIZACIÓN DE LA CÁMARA E INTELIGENCIA ARTIFICIAL
+async function startPuzzleAiCamera() {
+  document.getElementById('puzzleVideoArea').style.display = 'flex';
+  document.getElementById('puzzleGridArea').style.display = 'none';
+  const videoElement = document.getElementById('puzzleVideo');
+  const aiStatus = document.getElementById('puzzleAiStatus');
   
+  isPuzzleAiActive = true;
+  framesHeldHandSquare = 0;
+
   try {
-    puzzleStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
-    video.srcObject = puzzleStream;
+    if (!puzzleHandsAi) {
+      aiStatus.textContent = "🤖 Cargando IA...";
+      puzzleHandsAi = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
+      puzzleHandsAi.setOptions({
+        maxNumHands: 2,
+        modelComplexity: 1,
+        minDetectionConfidence: 0.6,
+        minTrackingConfidence: 0.6
+      });
+      puzzleHandsAi.onResults(onHandsDetected);
+    }
+
+    puzzleCamera = new Camera(videoElement, {
+      onFrame: async () => {
+        if (isPuzzleAiActive && puzzleHandsAi) {
+          await puzzleHandsAi.send({image: videoElement});
+        }
+      },
+      width: 640,
+      height: 480
+    });
+    
+    puzzleCamera.start();
+    aiStatus.textContent = "🤖 IA Lista: Forma un marco con tus manos 👐";
+    
   } catch (err) {
-    showToast("Error al acceder a la cámara. Revisa los permisos mi amor.");
+    aiStatus.textContent = "⚠️ Usa el botón manual";
+    console.error(err);
   }
 }
 
-function stopPuzzleCamera() {
-  if (puzzleStream) {
-    puzzleStream.getTracks().forEach(track => track.stop());
-    puzzleStream = null;
+// DETECCIÓN DEL GESTO DEL CUADRO
+function onHandsDetected(results) {
+  if (!isPuzzleAiActive) return;
+  const frame = document.getElementById('puzzleBlueFrame');
+  const aiStatus = document.getElementById('puzzleAiStatus');
+
+  if (results.multiHandLandmarks && results.multiHandLandmarks.length === 2) {
+    const hand1 = results.multiHandLandmarks[0];
+    const hand2 = results.multiHandLandmarks[1];
+
+    // Detectar si ambos índices (punto 8) están arriba y pulgares (punto 4) apuntan al centro
+    // Es una aproximación sencilla para el gesto de "marco de foto"
+    const h1IndexUp = hand1[8].y < hand1[5].y;
+    const h2IndexUp = hand2[8].y < hand2[5].y;
+    const thumbsApart = Math.abs(hand1[4].x - hand2[4].x) > 0.15;
+
+    if (h1IndexUp && h2IndexUp && thumbsApart) {
+      frame.style.borderColor = "#38b000"; // Se pone verde
+      frame.style.boxShadow = "0 0 25px rgba(56,176,0,0.8)";
+      aiStatus.textContent = "📸 ¡FOTO EN 1 SEGUNDO!";
+      
+      framesHeldHandSquare++;
+      if (framesHeldHandSquare > 20) { // Si lo sostiene por ~1 segundo
+        isPuzzleAiActive = false;
+        takePuzzleSnapshot();
+      }
+    } else {
+      resetFrameVisuals(frame, aiStatus);
+    }
+  } else {
+    resetFrameVisuals(frame, aiStatus);
   }
-  document.getElementById('puzzleVideo').style.display = 'none';
 }
 
+function resetFrameVisuals(frame, aiStatus) {
+  framesHeldHandSquare = 0;
+  frame.style.borderColor = "#3a86ff";
+  frame.style.boxShadow = "0 0 15px rgba(58,134,255,0.5)";
+  aiStatus.textContent = "🤖 Forma un cuadrado con tus dedos";
+}
+
+function stopPuzzleAiCamera() {
+  isPuzzleAiActive = false;
+  if (puzzleCamera) {
+    puzzleCamera.stop();
+  }
+}
+
+// CAPTURA Y CREACIÓN DE PIEZAS
 function takePuzzleSnapshot() {
   const video = document.getElementById('puzzleVideo');
   const canvas = document.createElement('canvas');
-  canvas.width = video.videoWidth || 640;
-  canvas.height = video.videoHeight || 480;
+  // Usar baja resolución para que Firebase sincronice rapidísimo (RTDB no soporta imágenes muy pesadas)
+  canvas.width = 400; 
+  canvas.height = 240;
   const ctx = canvas.getContext('2d');
   
-  // Reflejar la imagen para que sea como un espejo (natural)
   ctx.translate(canvas.width, 0);
   ctx.scale(-1, 1);
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
   
-  stopPuzzleCamera();
-  document.getElementById('puzzleSnapBtn').style.display = 'none';
-  createPuzzlePieces(canvas.toDataURL('image/jpeg'));
+  stopPuzzleAiCamera();
+  const base64Img = canvas.toDataURL('image/jpeg', 0.6); // Comprimido
+  
+  generatePuzzleArrayAndSync(base64Img);
 }
 
-function createPuzzlePieces(imgSrc) {
-  const grid = document.getElementById('puzzleGrid');
-  grid.innerHTML = '';
-  puzzlePieces = [];
-  
+function generatePuzzleArrayAndSync(imgSrc) {
   const cols = 5;
   const rows = 3; 
-  const total = cols * rows; // 15 partes
+  const total = 15;
+  let pieces = [];
   
-  const img = new Image();
-  img.onload = () => {
-    for (let i = 0; i < total; i++) {
-      puzzlePieces.push({
-        id: i,
-        x: (i % cols) * (100 / (cols - 1)),
-        y: Math.floor(i / cols) * (100 / (rows - 1))
-      });
-    }
-    
-    // Desordenar
-    puzzlePieces.sort(() => Math.random() - 0.5);
-    renderPuzzleGrid(imgSrc);
-  };
-  img.src = imgSrc;
+  for (let i = 0; i < total; i++) {
+    pieces.push({
+      id: i,
+      x: (i % cols) * (100 / (cols - 1)),
+      y: Math.floor(i / cols) * (100 / (rows - 1))
+    });
+  }
+  
+  // Desordenar las piezas
+  pieces.sort(() => Math.random() - 0.5);
+  
+  // Enviar a Firebase la foto y las piezas
+  rtdb.ref('puzzle_room').update({
+    status: 'playing_puzzle',
+    currentImage: imgSrc,
+    pieces: pieces
+  });
 }
 
-function renderPuzzleGrid(imgSrc) {
+// RENDERIZADO DEL TABLERO (Sincronizado para ambos)
+function renderPuzzleGridSync() {
   const grid = document.getElementById('puzzleGrid');
   grid.innerHTML = '';
   
-  puzzlePieces.forEach((p, index) => {
+  localPuzzlePieces.forEach((p, index) => {
     const pieceDiv = document.createElement('div');
     pieceDiv.style.width = '100%';
     pieceDiv.style.height = '100%';
-    pieceDiv.style.backgroundImage = `url(${imgSrc})`;
-    pieceDiv.style.backgroundSize = '500% 300%'; // Porque son 5 columnas y 3 filas
+    pieceDiv.style.backgroundImage = `url(${localCurrentImage})`;
+    pieceDiv.style.backgroundSize = '500% 300%'; 
     pieceDiv.style.backgroundPosition = `${p.x}% ${p.y}%`;
-    pieceDiv.style.cursor = 'pointer';
     pieceDiv.style.border = '1px solid rgba(255,255,255,0.2)';
     
-    pieceDiv.onclick = () => handlePieceSwap(index, pieceDiv, imgSrc);
+    // Solo el jugador activo puede hacer clic
+    if (puzzleCurrentRole === "player") {
+      pieceDiv.style.cursor = 'pointer';
+      pieceDiv.onclick = () => handlePieceSwapSync(index, pieceDiv);
+    } else {
+      pieceDiv.style.cursor = 'default';
+    }
+    
+    // Mantener la visualización de la pieza seleccionada (borde rojo)
+    if (firstSelectedPiece && firstSelectedPiece.index === index) {
+      pieceDiv.style.border = '3px solid var(--soft-red)';
+      pieceDiv.style.transform = 'scale(0.95)';
+    }
+
     grid.appendChild(pieceDiv);
   });
 }
 
-function handlePieceSwap(clickedIndex, pieceDiv, imgSrc) {
+function handlePieceSwapSync(clickedIndex, pieceDiv) {
   if (!firstSelectedPiece) {
-    firstSelectedPiece = { index: clickedIndex, div: pieceDiv };
-    pieceDiv.style.border = '3px solid var(--soft-red)';
-    pieceDiv.style.transform = 'scale(0.95)';
+    firstSelectedPiece = { index: clickedIndex };
+    renderPuzzleGridSync(); // Re-renderizar para marcar el borde
   } else {
-    // Intercambiar posiciones en el array
-    const temp = puzzlePieces[firstSelectedPiece.index];
-    puzzlePieces[firstSelectedPiece.index] = puzzlePieces[clickedIndex];
-    puzzlePieces[clickedIndex] = temp;
+    // Intercambiar piezas localmente
+    const temp = localPuzzlePieces[firstSelectedPiece.index];
+    localPuzzlePieces[firstSelectedPiece.index] = localPuzzlePieces[clickedIndex];
+    localPuzzlePieces[clickedIndex] = temp;
     
     firstSelectedPiece = null;
-    renderPuzzleGrid(imgSrc);
-    checkPuzzleWin();
+    
+    // Sincronizar movimiento en la base de datos (El espectador lo verá al instante)
+    rtdb.ref('puzzle_room').update({ pieces: localPuzzlePieces }).then(() => {
+      checkPuzzleWinSync();
+    });
   }
 }
 
-function checkPuzzleWin() {
-  const isWin = puzzlePieces.every((p, idx) => p.id === idx);
+function checkPuzzleWinSync() {
+  const isWin = localPuzzlePieces.every((p, idx) => p.id === idx);
   if (isWin) {
     showToast("¡Rompecabezas completado! 🎉");
     setTimeout(() => {
@@ -14536,8 +14667,8 @@ function checkPuzzleWin() {
 function nextPuzzleTurn() {
   rtdb.ref('puzzle_room').once('value').then(snap => {
     const data = snap.val();
-    const nextUser = data.turn === 'Andreita' ? 'Criss' : 'Andreita'; // Sistema Rotativo
-    rtdb.ref('puzzle_room').update({ status: 'instructions', turn: nextUser });
+    const nextUser = data.turn === 'Andreita' ? 'Criss' : 'Andreita'; // Turno rotativo
+    rtdb.ref('puzzle_room').update({ status: 'taking_photo', turn: nextUser, currentImage: "", pieces: [] });
   });
 }
 
@@ -14546,23 +14677,21 @@ function togglePuzzleFullscreen() {
   if (!document.fullscreenElement) {
     if (el.requestFullscreen) el.requestFullscreen();
     else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
   }
 }
 
 function exitPuzzleGame() {
-  // 1. Salir de pantalla completa si está activa
   if (document.fullscreenElement) {
     if (document.exitFullscreen) document.exitFullscreen();
-    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
   }
-  // 2. Detener la cámara y apagar procesos
-  stopPuzzleCamera();
+  stopPuzzleAiCamera();
   amIPuzzleReady = false;
   firstSelectedPiece = null;
   document.getElementById('puzzleReadyBtn').textContent = "✨ ¡Estoy Listo! ✨";
   document.getElementById('puzzleReadyBtn').style.background = "#2a9d8f";
   
-  // 3. Reiniciar Base de Datos y UI
   rtdb.ref('puzzle_ready/Criss').set(false);
   rtdb.ref('puzzle_ready/Andreita').set(false);
   rtdb.ref('puzzle_room/status').set('idle');
