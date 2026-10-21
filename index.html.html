@@ -4156,6 +4156,73 @@
     width: 45px; height: 45px; border-radius: 50%; font-size: 20px; font-weight: bold; cursor: pointer;
     z-index: 10002; box-shadow: 0 4px 10px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
 }
+/* ==========================================================================
+   ESTILOS MINIJUEGO 16: AJEDREZ ONLINE
+   ========================================================================== */
+.ajedrez-board-container {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  border: 4px solid var(--rose-pink);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(230,92,101,0.2);
+}
+
+.ajedrez-square {
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.2rem;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.ajedrez-square.light { background-color: #fff0f3; }
+.ajedrez-square.dark { background-color: #ffb3c1; }
+
+.ajedrez-square.selected { background-color: #ffe066 !important; }
+.ajedrez-square.valid-move::after {
+  content: "";
+  position: absolute;
+  width: 25%;
+  height: 25%;
+  background-color: rgba(42, 157, 143, 0.7);
+  border-radius: 50%;
+}
+.ajedrez-square.in-check { background-color: #e63946 !important; animation: heartPulse 1s infinite alternate; }
+
+.piece-black { color: #111111; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+.piece-pink { color: #ff4d6d; text-shadow: 0 2px 4px rgba(230,92,101,0.4); }
+
+/* PANTALLA COMPLETA CELULAR */
+.ajedrez-fullscreen-wrapper {
+  background: white;
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+
+.ajedrez-fullscreen-wrapper:-webkit-full-screen { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff8f9; padding: 20px; overflow: hidden; }
+.ajedrez-fullscreen-wrapper:fullscreen { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff8f9; padding: 20px; overflow: hidden; }
+
+.exit-fullscreen-btn {
+  display: none;
+  position: absolute;
+  top: 15px; right: 15px;
+  background: #e63946; color: white;
+  border: none; border-radius: 50%;
+  width: 45px; height: 45px;
+  font-size: 1.5rem; font-weight: bold;
+  z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.ajedrez-fullscreen-wrapper:fullscreen .exit-fullscreen-btn { display: block; }
+.ajedrez-fullscreen-wrapper:-webkit-full-screen .exit-fullscreen-btn { display: block; }
 </style>
 </head>
 <body>
@@ -4666,6 +4733,16 @@
   </div>
   <span class="new-badge-pill" id="badge-game-15">NEW</span>
 </div>
+
+<div class="minigame-nav-item" id="nav-game-16" onclick="selectMinigameFromSidebar(16)">
+  <span class="minigame-nav-icon">♟️</span>
+  <div class="minigame-nav-info">
+    <span class="minigame-nav-name">Ajedrez de Amor</span>
+    <span class="minigame-nav-sub">Criss vs Andreita 1v1</span>
+  </div>
+  <span class="new-badge-pill" id="badge-game-16">NEW</span>
+</div>
+
           </div>
         </aside>
 
@@ -5837,6 +5914,65 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- MINIJUEGO 16: AJEDREZ ONLINE -->
+<div id="game-stage-16" style="display: none; width: 100%;">
+  <div class="basta-container" style="text-align: center;">
+    <h3 class="custom-game-title" style="font-size: 1.4rem; margin-bottom: 5px;">♟️ Ajedrez de Amor</h3>
+    
+    <!-- Login -->
+    <div id="ajedrezLoginBox">
+      <p style="font-weight: 700; color: #555; margin-bottom: 15px;">Selecciona tu color (Criss juega Negras, Andreita Rosadas):</p>
+      <div class="profile-selector" style="max-width: 320px; margin: 0 auto 15px auto;">
+        <div class="profile-card" id="ajedrezUserCriss" onclick="chooseAjedrezUser('Criss')">👑 Criss (Negras)</div>
+        <div class="profile-card" id="ajedrezUserAndreita" onclick="chooseAjedrezUser('Andreita')">🌸 Andreita (Rosas)</div>
+      </div>
+      <button class="modal-btn" onclick="connectAjedrez()">Entrar al Tablero 🚀</button>
+    </div>
+
+    <!-- Sala de Espera -->
+    <div id="ajedrezWaitingBox" style="display: none; padding: 20px 10px;">
+      <div style="font-size: 3rem; margin-bottom: 8px;">♔💕♚</div>
+      <h4 style="color: var(--title-burgundy); font-weight: 800;">Sala de Partida</h4>
+      <div id="ajedrezWaitStatus" style="margin: 15px 0;"></div>
+      <button class="modal-btn" id="ajedrezReadyBtn" onclick="toggleAjedrezReady()">✨ ¡Listo para jugar! ✨</button>
+    </div>
+
+    <!-- Arena de Juego -->
+    <div id="ajedrezPlayArena" style="display: none;">
+      <!-- Marcador Externo -->
+      <div style="display: flex; justify-content: space-around; background: #fff0f3; padding: 10px; border-radius: 15px; border: 2px solid var(--rose-pink); margin-bottom: 15px; font-weight: 800;">
+        <div style="color: #111;">👑 Victorias Criss: <span id="ajedrezScoreCriss">0</span></div>
+        <div style="color: #ff4d6d;">🌸 Victorias Andreita: <span id="ajedrezScoreAndreita">0</span></div>
+      </div>
+
+      <div class="ajedrez-fullscreen-wrapper" id="ajedrezFullscreenBox">
+        <button class="exit-fullscreen-btn" onclick="exitAjedrezFullscreen()">✕</button>
+        
+        <div class="pinturillo-header" style="margin-bottom: 10px; width: 100%; max-width: 400px; display: flex; justify-content: space-between; margin: 0 auto 10px auto;">
+          <div class="guesswho-turn-badge" id="ajedrezTurnDisplay">Turno: Esperando...</div>
+          <button class="tool-btn" onclick="enterAjedrezFullscreen()" style="background: var(--title-burgundy); color: white;">⛶ Pantalla Completa</button>
+        </div>
+
+        <div id="ajedrezAlertMsg" style="color: #e63946; font-weight: 900; font-size: 1.1rem; height: 25px; margin-bottom: 5px;"></div>
+
+        <!-- El Tablero -->
+        <div class="ajedrez-board-container" id="ajedrezBoardUI"></div>
+      </div>
+    </div>
+
+    <!-- Modal de Fin de Partida -->
+    <div id="ajedrezSummarySection" style="display: none; margin-top: 20px;">
+      <div class="cute-records-container">
+        <div style="font-size: 3rem; margin-bottom: 8px;">🏆</div>
+        <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.4rem;" id="ajedrezWinnerText">¡JAQUE MATE!</h3>
+        <p style="font-weight: 700; color: #555; margin: 10px 0;">Has perdido esta partida amor...</p>
+        <button class="modal-btn" onclick="restartAjedrezGame()" style="max-width: 260px; margin: 15px auto 0 auto;">🔄 Pedir Revancha</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -8153,7 +8289,7 @@ function restartCoopMatch() {
         badge.style.display = 'none';
       }
 
-       for (let i = 1; i <= 15; i++) {
+       for (let i = 1; i <= 16; i++) {
         const navItem = document.getElementById(`nav-game-${i}`);
         if (navItem) {
           if (i === stageNum) {
@@ -8220,7 +8356,7 @@ function restartCoopMatch() {
     }
 
     function goToStage(stageNum) {
-      for(let i=1; i<=15; i++) {
+      for(let i=1; i<=16; i++) {
   document.getElementById(`game-stage-${i}`).style.display = 'none';
   const navItem = document.getElementById(`nav-game-${i}`);
   if(navItem) {
@@ -8247,6 +8383,7 @@ function restartCoopMatch() {
       else if (stageNum === 13) initWordleSystem();
       else if (stageNum === 14) initNumDuelSystem();
       else if (stageNum === 15) initAdivinaSystem();
+      else if (stageNum === 16) initAjedrezSystem();
     }
 
     /* MINIJUEGO 2 */
@@ -13834,6 +13971,331 @@ function startAdivinaTimer(endTime, room) {
       document.getElementById('adivinaTimer').textContent = `⏳ 0${Math.floor(remain/60)}:${String(remain%60).padStart(2,'0')}`;
     }
   }, 1000);
+}
+
+/* ==========================================================================
+   MINIJUEGO 16: AJEDREZ ONLINE (LÓGICA OFICIAL Y FULLSCREEN)
+   ========================================================================== */
+let myAjedrezUser = "";
+let ajedrezReady = false;
+let ajedrezBoard = [];
+let selectedAjedrezSquare = null;
+let validMovesForSelected = [];
+let localAjedrezTurn = "Andreita"; // Andreita (Rosas) mueve primero (equivale a Blancas)
+
+const PIECES = {
+  p: '♟', r: '♜', n: '♞', b: '♝', q: '♛', k: '♚'
+};
+
+function initAjedrezSystem() {
+  const savedUser = localStorage.getItem('basta_saved_user') || localStorage.getItem('pinturillo_saved_user');
+  if (savedUser && (savedUser === 'Criss' || savedUser === 'Andreita')) chooseAjedrezUser(savedUser);
+  listenAjedrezScores();
+}
+
+function chooseAjedrezUser(name) {
+  if (name !== 'Criss' && name !== 'Andreita') return;
+  myAjedrezUser = name;
+  document.getElementById('ajedrezUserCriss').classList.remove('selected');
+  document.getElementById('ajedrezUserAndreita').classList.remove('selected');
+  document.getElementById(`ajedrezUser${name}`).classList.add('selected');
+}
+
+function connectAjedrez() {
+  if (!myAjedrezUser) { showToast("Selecciona tu perfil 💕"); return; }
+  document.getElementById('ajedrezLoginBox').style.display = 'none';
+  document.getElementById('ajedrezWaitingBox').style.display = 'block';
+  rtdb.ref(`ajedrez_ready/${myAjedrezUser}`).set(false);
+  listenAjedrezRoom();
+}
+
+function toggleAjedrezReady() {
+  ajedrezReady = !ajedrezReady;
+  const btn = document.getElementById('ajedrezReadyBtn');
+  btn.textContent = ajedrezReady ? "✅ ¡Listo!" : "✨ ¡Listo para jugar! ✨";
+  btn.style.background = ajedrezReady ? "#800020" : "#2a9d8f";
+  rtdb.ref(`ajedrez_ready/${myAjedrezUser}`).set(ajedrezReady);
+}
+
+function listenAjedrezScores() {
+  rtdb.ref('ajedrez_scores').on('value', snap => {
+    const s = snap.val() || { Criss: 0, Andreita: 0 };
+    document.getElementById('ajedrezScoreCriss').textContent = s.Criss || 0;
+    document.getElementById('ajedrezScoreAndreita').textContent = s.Andreita || 0;
+  });
+}
+
+function listenAjedrezRoom() {
+  rtdb.ref('ajedrez_ready').on('value', (snap) => {
+    const data = snap.val() || {};
+    document.getElementById('ajedrezWaitStatus').innerHTML = `
+      <span class="presence-badge ${data.Criss ? 'ready-ok' : 'ready'}">👑 Criss: ${data.Criss?'Listo':'Esperando'}</span>
+      <span class="presence-badge ${data.Andreita ? 'ready-ok' : 'ready'}">🌸 Andreita: ${data.Andreita?'Lista':'Esperando'}</span>
+    `;
+    if (data.Criss && data.Andreita && myAjedrezUser === 'Criss') {
+      rtdb.ref('ajedrez_room').once('value').then(roomSnap => {
+         if (!roomSnap.val() || roomSnap.val().status === 'idle') startAjedrezMatch();
+      });
+    }
+  });
+
+  rtdb.ref('ajedrez_room').on('value', (snap) => {
+    const room = snap.val();
+    if (!room) return;
+    if (room.status === 'playing') {
+      document.getElementById('ajedrezWaitingBox').style.display = 'none';
+      document.getElementById('ajedrezSummarySection').style.display = 'none';
+      document.getElementById('ajedrezPlayArena').style.display = 'block';
+      
+      ajedrezBoard = room.board ? JSON.parse(room.board) : [];
+      localAjedrezTurn = room.turn;
+      updateAjedrezUI(room);
+    } else if (room.status === 'checkmate') {
+      document.getElementById('ajedrezPlayArena').style.display = 'none';
+      document.getElementById('ajedrezSummarySection').style.display = 'block';
+      document.getElementById('ajedrezWinnerText').textContent = `🏆 ¡JAQUE MATE! Ganó ${room.winner} 🎉`;
+    }
+  });
+}
+
+function startAjedrezMatch() {
+  const initBoard = [
+    [{t:'r',c:'Criss'}, {t:'n',c:'Criss'}, {t:'b',c:'Criss'}, {t:'q',c:'Criss'}, {t:'k',c:'Criss'}, {t:'b',c:'Criss'}, {t:'n',c:'Criss'}, {t:'r',c:'Criss'}],
+    [{t:'p',c:'Criss'}, {t:'p',c:'Criss'}, {t:'p',c:'Criss'}, {t:'p',c:'Criss'}, {t:'p',c:'Criss'}, {t:'p',c:'Criss'}, {t:'p',c:'Criss'}, {t:'p',c:'Criss'}],
+    [null,null,null,null,null,null,null,null], [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null], [null,null,null,null,null,null,null,null],
+    [{t:'p',c:'Andreita'}, {t:'p',c:'Andreita'}, {t:'p',c:'Andreita'}, {t:'p',c:'Andreita'}, {t:'p',c:'Andreita'}, {t:'p',c:'Andreita'}, {t:'p',c:'Andreita'}, {t:'p',c:'Andreita'}],
+    [{t:'r',c:'Andreita'}, {t:'n',c:'Andreita'}, {t:'b',c:'Andreita'}, {t:'q',c:'Andreita'}, {t:'k',c:'Andreita'}, {t:'b',c:'Andreita'}, {t:'n',c:'Andreita'}, {t:'r',c:'Andreita'}]
+  ];
+  rtdb.ref('ajedrez_room').set({ status: 'playing', turn: 'Andreita', board: JSON.stringify(initBoard), inCheck: false });
+}
+
+function updateAjedrezUI(room) {
+  const container = document.getElementById('ajedrezBoardUI');
+  container.innerHTML = '';
+  
+  const isMyTurn = (localAjedrezTurn === myAjedrezUser);
+  const badge = document.getElementById('ajedrezTurnDisplay');
+  badge.textContent = isMyTurn ? "✨ ¡Tu turno!" : `⏳ Turno de ${localAjedrezTurn}`;
+  badge.className = isMyTurn ? "guesswho-turn-badge my-turn" : "guesswho-turn-badge";
+
+  const alertBox = document.getElementById('ajedrezAlertMsg');
+  if (room.inCheck && room.turn === myAjedrezUser) {
+    alertBox.textContent = "¡Oh no amor estás en jaque! Protégete o mueve tus piezas.";
+  } else {
+    alertBox.textContent = "";
+  }
+
+  // Voltear tablero si es Criss
+  const isBlack = myAjedrezUser === 'Criss';
+  
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      let visualR = isBlack ? 7 - r : r;
+      let visualC = isBlack ? 7 - c : c;
+      
+      const sq = document.createElement('div');
+      sq.className = `ajedrez-square ${(visualR + visualC) % 2 === 0 ? 'light' : 'dark'}`;
+      sq.onclick = () => handleAjedrezClick(visualR, visualC);
+
+      const piece = ajedrezBoard[visualR][visualC];
+      if (piece) {
+        sq.innerHTML = `<span class="${piece.c === 'Criss' ? 'piece-black' : 'piece-pink'}">${PIECES[piece.t]}</span>`;
+        // Pintar de rojo si es el Rey en jaque
+        if (room.inCheck && piece.t === 'k' && piece.c === room.turn) sq.classList.add('in-check');
+      }
+
+      if (selectedAjedrezSquare && selectedAjedrezSquare.r === visualR && selectedAjedrezSquare.c === visualC) {
+        sq.classList.add('selected');
+      }
+      if (validMovesForSelected.some(m => m.r === visualR && m.c === visualC)) {
+        sq.classList.add('valid-move');
+      }
+
+      container.appendChild(sq);
+    }
+  }
+}
+
+function handleAjedrezClick(r, c) {
+  if (localAjedrezTurn !== myAjedrezUser) return; // No es tu turno
+
+  // Si clickeamos un movimiento válido de la pieza ya seleccionada
+  const isValidMove = validMovesForSelected.find(m => m.r === r && m.c === c);
+  if (isValidMove && selectedAjedrezSquare) {
+    executeAjedrezMove(selectedAjedrezSquare, {r, c});
+    return;
+  }
+
+  // Seleccionar una pieza propia
+  const piece = ajedrezBoard[r][c];
+  if (piece && piece.c === myAjedrezUser) {
+    selectedAjedrezSquare = {r, c};
+    validMovesForSelected = getLegalMoves(ajedrezBoard, r, c);
+  } else {
+    selectedAjedrezSquare = null;
+    validMovesForSelected = [];
+  }
+  
+  rtdb.ref('ajedrez_room').once('value').then(snap => updateAjedrezUI(snap.val()));
+}
+
+function executeAjedrezMove(from, to) {
+  const piece = ajedrezBoard[from.r][from.c];
+  
+  // Promoción básica a Reina si el peón llega al final
+  if (piece.t === 'p' && (to.r === 0 || to.r === 7)) piece.t = 'q';
+
+  ajedrezBoard[to.r][to.c] = piece;
+  ajedrezBoard[from.r][from.c] = null;
+  
+  const nextTurn = myAjedrezUser === 'Criss' ? 'Andreita' : 'Criss';
+  const isEnemyInCheck = isKingInCheck(ajedrezBoard, nextTurn);
+  
+  // Revisar Jaque Mate
+  let mate = false;
+  if (isEnemyInCheck) {
+    mate = checkMateCheck(ajedrezBoard, nextTurn);
+  }
+
+  selectedAjedrezSquare = null;
+  validMovesForSelected = [];
+
+  if (mate) {
+    rtdb.ref('ajedrez_scores').transaction(scores => {
+      if (!scores) scores = {Criss:0, Andreita:0};
+      scores[myAjedrezUser]++;
+      return scores;
+    });
+    rtdb.ref('ajedrez_room').update({ status: 'checkmate', winner: myAjedrezUser, board: JSON.stringify(ajedrezBoard) });
+  } else {
+    rtdb.ref('ajedrez_room').update({ board: JSON.stringify(ajedrezBoard), turn: nextTurn, inCheck: isEnemyInCheck });
+  }
+}
+
+// MOTOR BÁSICO DE REGLAS DE AJEDREZ
+function getLegalMoves(board, r, c) {
+  const pseudo = getPseudoMoves(board, r, c);
+  const color = board[r][c].c;
+  return pseudo.filter(m => {
+    // Simular
+    const tempPiece = board[m.r][m.c];
+    board[m.r][m.c] = board[r][c];
+    board[r][c] = null;
+    const inCheck = isKingInCheck(board, color);
+    // Revertir
+    board[r][c] = board[m.r][m.c];
+    board[m.r][m.c] = tempPiece;
+    return !inCheck;
+  });
+}
+
+function getPseudoMoves(board, r, c) {
+  const p = board[r][c];
+  const moves = [];
+  const dirs = {
+    r: [[0,1],[0,-1],[1,0],[-1,0]],
+    b: [[1,1],[1,-1],[-1,1],[-1,-1]],
+    q: [[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]],
+    k: [[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]],
+    n: [[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]]
+  };
+
+  const addLineMoves = (directions, maxSteps) => {
+    directions.forEach(d => {
+      for (let i=1; i<=maxSteps; i++) {
+        let nr = r + d[0]*i, nc = c + d[1]*i;
+        if (nr<0 || nr>7 || nc<0 || nc>7) break;
+        if (board[nr][nc]) {
+          if (board[nr][nc].c !== p.c) moves.push({r:nr, c:nc});
+          break;
+        }
+        moves.push({r:nr, c:nc});
+      }
+    });
+  };
+
+  if (p.t === 'r' || p.t === 'b' || p.t === 'q') addLineMoves(dirs[p.t], 7);
+  if (p.t === 'k' || p.t === 'n') addLineMoves(dirs[p.t], 1);
+  if (p.t === 'p') {
+    let dir = p.c === 'Criss' ? 1 : -1; // Negras (Criss) bajan (+1), Rosas suben (-1)
+    if (r+dir >= 0 && r+dir <= 7 && !board[r+dir][c]) {
+      moves.push({r:r+dir, c});
+      // Doble paso inicial
+      if ((p.c === 'Criss' && r === 1) || (p.c === 'Andreita' && r === 6)) {
+        if (!board[r+dir*2][c]) moves.push({r:r+dir*2, c});
+      }
+    }
+    // Captura diagonal
+    if (r+dir >= 0 && r+dir <= 7) {
+      if (c-1 >= 0 && board[r+dir][c-1] && board[r+dir][c-1].c !== p.c) moves.push({r:r+dir, c:c-1});
+      if (c+1 <= 7 && board[r+dir][c+1] && board[r+dir][c+1].c !== p.c) moves.push({r:r+dir, c:c+1});
+    }
+  }
+  return moves;
+}
+
+function isKingInCheck(board, color) {
+  let kr = -1, kc = -1;
+  for (let r=0; r<8; r++) {
+    for (let c=0; c<8; c++) {
+      if (board[r][c] && board[r][c].t === 'k' && board[r][c].c === color) { kr=r; kc=c; break; }
+    }
+  }
+  if (kr === -1) return false;
+
+  for (let r=0; r<8; r++) {
+    for (let c=0; c<8; c++) {
+      let p = board[r][c];
+      if (p && p.c !== color) {
+        let oppMoves = getPseudoMoves(board, r, c);
+        if (oppMoves.some(m => m.r === kr && m.c === kc)) return true;
+      }
+    }
+  }
+  return false;
+}
+
+function checkMateCheck(board, color) {
+  for (let r=0; r<8; r++) {
+    for (let c=0; c<8; c++) {
+      if (board[r][c] && board[r][c].c === color) {
+        let legal = getLegalMoves(board, r, c);
+        if (legal.length > 0) return false;
+      }
+    }
+  }
+  return true;
+}
+
+function restartAjedrezGame() {
+  rtdb.ref('ajedrez_ready/Criss').set(false);
+  rtdb.ref('ajedrez_ready/Andreita').set(false);
+  rtdb.ref('ajedrez_room/status').set('idle');
+  document.getElementById('ajedrezReadyBtn').textContent = "✨ ¡Listo para jugar! ✨";
+  document.getElementById('ajedrezReadyBtn').style.background = "#2a9d8f";
+  document.getElementById('ajedrezSummarySection').style.display = 'none';
+  document.getElementById('ajedrezWaitingBox').style.display = 'block';
+}
+
+// LOGICA PANTALLA COMPLETA 
+function enterAjedrezFullscreen() {
+  const elem = document.getElementById("ajedrezFullscreenBox");
+  if (elem.requestFullscreen) { elem.requestFullscreen(); }
+  else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
+  
+  if (screen.orientation && screen.orientation.lock) {
+    screen.orientation.lock('landscape').catch(()=>{}); // Intenta forzar horizontal en celulares compatibles
+  }
+}
+
+function exitAjedrezFullscreen() {
+  if (document.exitFullscreen) { document.exitFullscreen(); }
+  else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
+  
+  if (screen.orientation && screen.orientation.unlock) {
+    screen.orientation.unlock();
+  }
 }
 
 </script>
