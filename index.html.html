@@ -4157,17 +4157,18 @@
     z-index: 10002; box-shadow: 0 4px 10px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
 }
 /* ==========================================================================
-   ESTILOS MINIJUEGO 16: AJEDREZ ONLINE (SIMÉTRICO Y LIMPIO)
+   ESTILOS MINIJUEGO 16: AJEDREZ ONLINE (SIMETRÍA Y TAMAÑO PERFECTO)
    ========================================================================== */
 .ajedrez-board-container {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  width: 100%;
-  max-width: 420px;
-  aspect-ratio: 1 / 1;
+  grid-template-rows: repeat(8, 1fr);
+  width: 1000px;
+  max-width: 380px;
+  height: 380px; /* Forzamos altura idéntica al ancho para evitar recortes */
   margin: 0 auto;
   border: 4px solid var(--rose-pink);
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(230,92,101,0.25);
   background: white;
@@ -4179,10 +4180,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-size: 2rem;
   cursor: pointer;
   position: relative;
   user-select: none;
+  -webkit-user-select: none;
 }
 
 .ajedrez-square.light { background-color: #fff0f3; }
@@ -4199,21 +4201,14 @@
 }
 .ajedrez-square.in-check { background-color: #e63946 !important; animation: heartPulse 1s infinite alternate; }
 
-.piece-black { color: #111111; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-.piece-pink { color: #ff4d6d; text-shadow: 0 2px 4px rgba(230,92,101,0.4); }
-
-/* CONTENEDOR FLUIDO SIN PANTALLAS ROTAS */
-.ajedrez-fullscreen-wrapper {
-  background: white;
-  width: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* CLASES DE COLOR ESTRICTAS PARA IOS Y PC */
+.piece-criss { 
+  color: #111111 !important; 
+  text-shadow: 0 1px 2px rgba(255,255,255,0.5); 
 }
-
-.exit-fullscreen-btn {
-  display: none;
+.piece-andreita { 
+  color: #ff1e42 !important; 
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2); 
 }
 </style>
 </head>
@@ -13965,14 +13960,14 @@ function startAdivinaTimer(endTime, room) {
 }
 
 /* ==========================================================================
-   MINIJUEGO 16: AJEDREZ ONLINE (LÓGICA OFICIAL Y FULLSCREEN)
+   MINIJUEGO 16: AJEDREZ ONLINE (CORREGIDO PARA IOS, PC Y TURNOS)
    ========================================================================== */
 let myAjedrezUser = "";
 let ajedrezReady = false;
 let ajedrezBoard = [];
 let selectedAjedrezSquare = null;
 let validMovesForSelected = [];
-let localAjedrezTurn = "Andreita"; // Andreita (Rosas) mueve primero (equivale a Blancas)
+let localAjedrezTurn = "Andreita"; 
 
 const PIECES = {
   p: '♟', r: '♜', n: '♞', b: '♝', q: '♛', k: '♚'
@@ -14072,34 +14067,29 @@ function updateAjedrezUI(room) {
 
   const alertBox = document.getElementById('ajedrezAlertMsg');
   if (room.inCheck && room.turn === myAjedrezUser) {
-    alertBox.textContent = "¡Oh no amor estás en jaque! Protégete o mueve tus piezas.";
+    alertBox.textContent = "¡Oh no amor estás en jaque! Protégete.";
   } else {
     alertBox.textContent = "";
   }
 
-  // Voltear tablero si es Criss
-  const isBlack = myAjedrezUser === 'Criss';
-  
+  // Renderizado normal directo (sin inversiones tramposas que confundían a iOS)
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 8; c++) {
-      let visualR = isBlack ? 7 - r : r;
-      let visualC = isBlack ? 7 - c : c;
-      
       const sq = document.createElement('div');
-      sq.className = `ajedrez-square ${(visualR + visualC) % 2 === 0 ? 'light' : 'dark'}`;
-      sq.onclick = () => handleAjedrezClick(visualR, visualC);
+      sq.className = `ajedrez-square ${(r + c) % 2 === 0 ? 'light' : 'dark'}`;
+      sq.onclick = () => handleAjedrezClick(r, c);
 
-      const piece = ajedrezBoard[visualR][visualC];
+      const piece = ajedrezBoard[r][c];
       if (piece) {
-        sq.innerHTML = `<span class="${piece.c === 'Criss' ? 'piece-black' : 'piece-pink'}">${PIECES[piece.t]}</span>`;
-        // Pintar de rojo si es el Rey en jaque
+        const cssColorClass = piece.c === 'Criss' ? 'piece-criss' : 'piece-andreita';
+        sq.innerHTML = `<span class="${cssColorClass}">${PIECES[piece.t]}</span>`;
         if (room.inCheck && piece.t === 'k' && piece.c === room.turn) sq.classList.add('in-check');
       }
 
-      if (selectedAjedrezSquare && selectedAjedrezSquare.r === visualR && selectedAjedrezSquare.c === visualC) {
+      if (selectedAjedrezSquare && selectedAjedrezSquare.r === r && selectedAjedrezSquare.c === r === c || (selectedAjedrezSquare && selectedAjedrezSquare.r === r && selectedAjedrezSquare.c === c)) {
         sq.classList.add('selected');
       }
-      if (validMovesForSelected.some(m => m.r === visualR && m.c === visualC)) {
+      if (validMovesForSelected.some(m => m.r === r && m.c === c)) {
         sq.classList.add('valid-move');
       }
 
@@ -14109,16 +14099,17 @@ function updateAjedrezUI(room) {
 }
 
 function handleAjedrezClick(r, c) {
-  if (localAjedrezTurn !== myAjedrezUser) return; // No es tu turno
+  if (localAjedrezTurn !== myAjedrezUser) {
+    showToast("¡Es el turno de tu amorcito! ⏳");
+    return;
+  }
 
-  // Si clickeamos un movimiento válido de la pieza ya seleccionada
   const isValidMove = validMovesForSelected.find(m => m.r === r && m.c === c);
   if (isValidMove && selectedAjedrezSquare) {
     executeAjedrezMove(selectedAjedrezSquare, {r, c});
     return;
   }
 
-  // Seleccionar una pieza propia
   const piece = ajedrezBoard[r][c];
   if (piece && piece.c === myAjedrezUser) {
     selectedAjedrezSquare = {r, c};
@@ -14133,8 +14124,6 @@ function handleAjedrezClick(r, c) {
 
 function executeAjedrezMove(from, to) {
   const piece = ajedrezBoard[from.r][from.c];
-  
-  // Promoción básica a Reina si el peón llega al final
   if (piece.t === 'p' && (to.r === 0 || to.r === 7)) piece.t = 'q';
 
   ajedrezBoard[to.r][to.c] = piece;
@@ -14143,7 +14132,6 @@ function executeAjedrezMove(from, to) {
   const nextTurn = myAjedrezUser === 'Criss' ? 'Andreita' : 'Criss';
   const isEnemyInCheck = isKingInCheck(ajedrezBoard, nextTurn);
   
-  // Revisar Jaque Mate
   let mate = false;
   if (isEnemyInCheck) {
     mate = checkMateCheck(ajedrezBoard, nextTurn);
@@ -14164,17 +14152,14 @@ function executeAjedrezMove(from, to) {
   }
 }
 
-// MOTOR BÁSICO DE REGLAS DE AJEDREZ
 function getLegalMoves(board, r, c) {
   const pseudo = getPseudoMoves(board, r, c);
   const color = board[r][c].c;
   return pseudo.filter(m => {
-    // Simular
     const tempPiece = board[m.r][m.c];
     board[m.r][m.c] = board[r][c];
     board[r][c] = null;
     const inCheck = isKingInCheck(board, color);
-    // Revertir
     board[r][c] = board[m.r][m.c];
     board[m.r][m.c] = tempPiece;
     return !inCheck;
@@ -14209,15 +14194,13 @@ function getPseudoMoves(board, r, c) {
   if (p.t === 'r' || p.t === 'b' || p.t === 'q') addLineMoves(dirs[p.t], 7);
   if (p.t === 'k' || p.t === 'n') addLineMoves(dirs[p.t], 1);
   if (p.t === 'p') {
-    let dir = p.c === 'Criss' ? 1 : -1; // Negras (Criss) bajan (+1), Rosas suben (-1)
+    let dir = p.c === 'Criss' ? 1 : -1; 
     if (r+dir >= 0 && r+dir <= 7 && !board[r+dir][c]) {
       moves.push({r:r+dir, c});
-      // Doble paso inicial
       if ((p.c === 'Criss' && r === 1) || (p.c === 'Andreita' && r === 6)) {
         if (!board[r+dir*2][c]) moves.push({r:r+dir*2, c});
       }
     }
-    // Captura diagonal
     if (r+dir >= 0 && r+dir <= 7) {
       if (c-1 >= 0 && board[r+dir][c-1] && board[r+dir][c-1].c !== p.c) moves.push({r:r+dir, c:c-1});
       if (c+1 <= 7 && board[r+dir][c+1] && board[r+dir][c+1].c !== p.c) moves.push({r:r+dir, c:c+1});
@@ -14268,41 +14251,6 @@ function restartAjedrezGame() {
   document.getElementById('ajedrezSummarySection').style.display = 'none';
   document.getElementById('ajedrezWaitingBox').style.display = 'block';
 }
-
-// LOGICA PANTALLA COMPLETA MEJORADA Y COMPATIBLE CON MÓVILES
-function enterAjedrezFullscreen() {
-  const elem = document.getElementById("ajedrezFullscreenBox");
-  
-  if (elem.requestFullscreen) {
-    elem.requestFullscreen().catch(err => console.log(err));
-  } else if (elem.webkitRequestFullscreen) {
-    elem.webkitRequestFullscreen();
-  } else if (elem.msRequestFullscreen) {
-    elem.msRequestFullscreen();
-  }
-  
-  // Intento de forzar rotación horizontal en dispositivos Android compatibles
-  if (screen.orientation && typeof screen.orientation.lock === 'function') {
-    screen.orientation.lock('landscape').catch(() => {
-      // Si el navegador móvil lo deniega, el diseño responsivo se ajustará de todas formas
-    });
-  }
-}
-
-function exitAjedrezFullscreen() {
-  if (document.exitFullscreen) {
-    document.exitFullscreen().catch(err => console.log(err));
-  } else if (document.webkitExitFullscreen) {
-    document.webkitExitFullscreen();
-  } else if (document.msExitFullscreen) {
-    document.msExitFullscreen();
-  }
-  
-  if (screen.orientation && typeof screen.orientation.unlock === 'function') {
-    screen.orientation.unlock();
-  }
-}
-
 </script>
 </body>
 </html>
