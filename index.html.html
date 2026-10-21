@@ -10,7 +10,163 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&family=Fredoka+One&family=Pacifico&display=swap" rel="stylesheet">
   
   <!-- SDK de la API Widget de SoundCloud para control de audio -->
-  <script src="https://w.soundcloud.com/player/api.js"></script>
+  <script src="https://w.soundcloud.com/player/api.js">
+/* MINIJUEGO 17: ROMPEZABEZAS JUNTOS (RTDB, turnos compartidos) */
+let rompe17User = null, rompe17ReadyState = false, rompe17Stream = null;
+let rompe17RoomRef = null, rompe17RoomListener = null, rompe17RoomState = null;
+let rompe17Tiles = [], rompe17Selected = null, rompe17MyPuzzle = false;
+function initRompe17() {
+  document.getElementById('rompe17Login').style.display = 'block';
+  document.getElementById('rompe17Waiting').style.display = 'none';
+  document.getElementById('rompe17Instructions').style.display = 'none';
+  document.getElementById('rompe17Play').style.display = 'none';
+  if (rompe17User && !rompe17RoomListener) joinRompe17();
+}
+function chooseRompe17(name) {
+  rompe17User = name;
+  document.getElementById('rompe17Criss').classList.toggle('selected', name === 'Criss');
+  document.getElementById('rompe17Andreita').classList.toggle('selected', name === 'Andreita');
+}
+function joinRompe17() {
+  if (!rompe17User) { alert('Primero selecciona Criss o Andreita.'); return; }
+  if (typeof rtdb === 'undefined') { alert('No se pudo conectar con la sala en línea.'); return; }
+  document.getElementById('rompe17Login').style.display = 'none';
+  document.getElementById('rompe17Waiting').style.display = 'block';
+  rompe17RoomRef = rtdb.ref('rompezabezas_juntos_v1');
+  if (rompe17RoomListener) rompe17RoomRef.off('value', rompe17RoomListener);
+  rompe17RoomListener = snap => {
+    rompe17RoomState = snap.val() || {players:{}, ready:{}, turn:'Andreita', status:'waiting', round:0};
+    const p = rompe17RoomState.players || {};
+    document.getElementById('rompe17Presence').innerHTML =
+      (p.Criss ? '🟢' : '⚪')+' Criss '+(p.Criss?'está en sala':'no ha entrado')+'<br>'+
+      (p.Andreita ? '🟢' : '⚪')+' Andreita '+(p.Andreita?'está en sala':'no ha entrado');
+    if (p.Criss && p.Andreita && rompe17RoomState.status === 'waiting') {
+      document.getElementById('rompe17Presence').innerHTML += '<br>¡Ya están los dos! Pulsen Aceptar.';
+    }
+    if (rompe17RoomState.status === 'waiting') {
+      document.getElementById('rompe17Waiting').style.display = 'block';
+      document.getElementById('rompe17Instructions').style.display = 'none';
+      document.getElementById('rompe17Play').style.display = 'none';
+      document.getElementById('rompe17Ready').disabled = !!(rompe17RoomState.ready && rompe17RoomState.ready[rompe17User]);
+      document.getElementById('rompe17Ready').textContent = document.getElementById('rompe17Ready').disabled ? 'Aceptado ✓' : 'Aceptar y preparar cámara';
+    }
+    if (rompe17RoomState.status === 'instructions' || rompe17RoomState.status === 'playing') {
+      document.getElementById('rompe17Waiting').style.display = 'none';
+      document.getElementById('rompe17Instructions').style.display = 'block';
+      document.getElementById('rompe17Play').style.display = 'block';
+      document.getElementById('rompe17Instructions').style.display = rompe17ReadyState ? 'none' : 'block';
+      document.getElementById('rompe17Turn').textContent = 'Turno: '+(rompe17RoomState.turn || 'Andreita');
+      document.getElementById('rompe17Status').textContent = p.Criss && p.Andreita ? 'Ambos conectados' : 'Esperando al otro jugador';
+      const mine = rompe17RoomState.turn === rompe17User && rompe17RoomState.status === 'playing';
+      document.getElementById('rompe17CameraActions').style.display = mine ? 'block' : 'none';
+      document.getElementById('rompe17Hint').textContent = mine ? '¡Es tu turno! Toma una foto y arma las 15 piezas.' : 'Turno de '+(rompe17RoomState.turn || 'Andreita')+'. Espera a que termine.';
+    }
+  };
+  rompe17RoomRef.child('players/'+rompe17User).set(true);
+  rompe17RoomRef.on('value', rompe17RoomListener);
+}
+async function readyRompe17() {
+  if (!rompe17User || !rompe17RoomRef) return;
+  rompe17ReadyState = true;
+  await rompe17RoomRef.child('ready/'+rompe17User).set(true);
+  const snap = await rompe17RoomRef.once('value'), state = snap.val() || {};
+  if (state.players && state.players.Criss && state.players.Andreita &&
+      state.ready && state.ready.Criss && state.ready.Andreita) {
+    await rompe17RoomRef.update({status:'instructions', turn:'Andreita', round:0});
+  } else {
+    document.getElementById('rompe17Presence').textContent = '¡Aceptado! Esperando que la otra persona acepte…';
+    document.getElementById('rompe17Ready').textContent = 'Aceptado ✓';
+    document.getElementById('rompe17Ready').disabled = true;
+  }
+}
+async function startRompe17Camera() {
+  try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert('La cámara requiere HTTPS y un navegador compatible. Abre la página desde su dirección segura (https://).'); return;
+    }
+    if (rompe17Stream) rompe17Stream.getTracks().forEach(t=>t.stop());
+    rompe17Stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
+    const v = document.getElementById('rompe17Video');
+    v.srcObject = rompe17Stream; v.style.display = 'block'; await v.play();
+    rompe17ReadyState = true;
+    document.getElementById('rompe17Instructions').style.display = 'none';
+    document.getElementById('rompe17Play').style.display = 'block';
+    const root = document.getElementById('rompe17Root');
+    try { if (root.requestFullscreen) await root.requestFullscreen(); else if (root.webkitRequestFullscreen) root.webkitRequestFullscreen(); } catch(e) {}
+    if (rompe17RoomRef && rompe17RoomState && rompe17RoomState.status === 'instructions') {
+      await rompe17RoomRef.update({status:'playing'});
+    }
+  } catch(e) { alert('No se pudo abrir la cámara. Revisa los permisos del navegador y vuelve a intentarlo.'); }
+}
+function captureRompe17() {
+  if (!rompe17RoomState || rompe17RoomState.turn !== rompe17User) { alert('Espera tu turno.'); return; }
+  const v = document.getElementById('rompe17Video'), c = document.getElementById('rompe17Capture');
+  if (!v.videoWidth || !v.videoHeight) { alert('La cámara todavía está iniciando. Inténtalo otra vez.'); return; }
+  c.width=300; c.height=300;
+  const ctx=c.getContext('2d'), side=Math.min(v.videoWidth,v.videoHeight);
+  ctx.save(); ctx.translate(300,0); ctx.scale(-1,1);
+  ctx.drawImage(v,(v.videoWidth-side)/2,(v.videoHeight-side)/2,side,side,0,0,300,300); ctx.restore();
+  const img = new Image();
+  img.onload=()=>{
+    rompe17Tiles=Array.from({length:15},(_,i)=>i);
+    for(let i=rompe17Tiles.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[rompe17Tiles[i],rompe17Tiles[j]]=[rompe17Tiles[j],rompe17Tiles[i]];}
+    if(rompe17Tiles.every((v,i)=>v===i)) [rompe17Tiles[0],rompe17Tiles[1]]=[rompe17Tiles[1],rompe17Tiles[0]];
+    rompe17Selected=null; rompe17MyPuzzle=true; renderRompe17Puzzle(img);
+    document.getElementById('rompe17CameraActions').style.display='none';
+    document.getElementById('rompe17Finish').style.display='inline-block';
+    document.getElementById('rompe17Hint').textContent='Toca una pieza y luego otra para intercambiarlas. La última fila tiene 3 piezas.';
+    document.getElementById('rompe17Video').style.display='none';
+  };
+  img.src=c.toDataURL('image/jpeg',.88);
+}
+function renderRompe17Puzzle(img) {
+  const grid=document.getElementById('rompe17Puzzle'); grid.innerHTML='';
+  rompe17Tiles.forEach((tile,pos)=>{
+    const b=document.createElement('button'); b.type='button'; b.style.cssText='aspect-ratio:1;border:2px solid white;border-radius:5px;overflow:hidden;padding:0;background-image:url('+img.src+');background-size:300% 500%;background-position:'+((tile%3)*50)+'% '+(Math.floor(tile/3)*25)+'%;min-width:0;';
+    if (rompe17Selected===pos) b.style.outline='4px solid #800020';
+    b.setAttribute('aria-label','Pieza '+(pos+1));
+    b.onclick=()=>{
+      if(!rompe17MyPuzzle || rompe17RoomState.turn!==rompe17User)return;
+      if(rompe17Selected===null){rompe17Selected=pos;}
+      else { [rompe17Tiles[rompe17Selected],rompe17Tiles[pos]]=[rompe17Tiles[pos],rompe17Tiles[rompe17Selected]]; rompe17Selected=null; }
+      renderRompe17Puzzle(img);
+      document.getElementById('rompe17Finish').style.display=rompe17Tiles.every((t,i)=>t===i)?'inline-block':'none';
+    };
+    grid.appendChild(b);
+  });
+}
+async function finishRompe17() {
+  if (!rompe17Tiles.every((t,i)=>t===i)) { alert('Todavía faltan piezas por acomodar.'); return; }
+  if (!rompe17RoomRef || !rompe17RoomState || rompe17RoomState.turn!==rompe17User) return;
+  rompe17MyPuzzle=false;
+  const next=rompe17User==='Andreita'?'Criss':'Andreita';
+  await rompe17RoomRef.update({turn:next,round:(rompe17RoomState.round||0)+1,status:'playing'});
+  document.getElementById('rompe17Feedback').textContent='¡Muy bien! Ahora le toca a '+next+' 💗';
+  document.getElementById('rompe17Puzzle').innerHTML='';
+  document.getElementById('rompe17Finish').style.display='none';
+  document.getElementById('rompe17Video').style.display='block';
+}
+function closeRompe17() {
+  if(rompe17Stream){rompe17Stream.getTracks().forEach(t=>t.stop());rompe17Stream=null;}
+  if(rompe17RoomRef && rompe17User) {
+    rompe17RoomRef.child('players/'+rompe17User).remove();
+    rompe17RoomRef.child('ready/'+rompe17User).set(false);
+    rompe17RoomRef.update({status:'waiting', ready:{Criss:false,Andreita:false}});
+    if(rompe17RoomListener) rompe17RoomRef.off('value',rompe17RoomListener);
+  }
+  rompe17RoomListener=null; rompe17ReadyState=false; rompe17MyPuzzle=false;
+  try { if(document.fullscreenElement) document.exitFullscreen(); } catch(e){}
+  document.getElementById('rompe17Play').style.display='none';
+  document.getElementById('rompe17Instructions').style.display='none';
+  document.getElementById('rompe17Waiting').style.display='none';
+  document.getElementById('rompe17Login').style.display='block';
+  document.getElementById('rompe17Ready').disabled=false;
+  document.getElementById('rompe17Ready').textContent='Aceptar y preparar cámara';
+  document.getElementById('rompe17Feedback').textContent='';
+  rompe17User=null;
+}
+
+</script>
 
   <!-- SDKs Compatibles de Firebase (App, Firestore, Storage, Database) NATIVO GRATUITO -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -4730,6 +4886,15 @@
   <span class="new-badge-pill" id="badge-game-16">NEW</span>
 </div>
 
+<div class="minigame-nav-item" id="nav-game-17" onclick="selectMinigameFromSidebar(17)">
+  <span class="minigame-nav-icon">📸</span>
+  <div class="minigame-nav-info">
+    <span class="minigame-nav-name">Rompezabezas Juntos</span>
+    <span class="minigame-nav-sub">Minijuego 17: Cámara y turnos</span>
+  </div>
+  <span class="new-badge-pill" id="badge-game-17">NEW</span>
+</div>
+
           </div>
         </aside>
 
@@ -5960,6 +6125,49 @@
     </div>
 
   </div>
+</div>
+
+
+<!-- MINIJUEGO 17: ROMPEZABEZAS JUNTOS -->
+<div id="game-stage-17" style="display:none;width:100%;">
+ <div class="basta-container" id="rompe17Root" style="text-align:center;position:relative;">
+  <button onclick="closeRompe17()" aria-label="Cerrar minijuego" title="Cerrar" style="position:absolute;right:8px;top:8px;z-index:20;border:0;border-radius:50%;width:42px;height:42px;background:#e63946;color:white;font-size:1.5rem;font-weight:900;">✕</button>
+  <h3 class="custom-game-title" style="font-size:1.4rem;padding:0 35px;">📸 Rompezabezas Juntos</h3>
+  <p style="font-weight:700;color:#555;margin-bottom:15px;">Criss y Andreita juegan por turnos. Cada turno, la persona activa arma un rompecabezas de 15 piezas usando su cámara.</p>
+  <div id="rompe17Login">
+   <p style="font-weight:800;margin:12px;">¿Quién eres?</p>
+   <div class="profile-selector" style="max-width:360px;margin:0 auto 15px;">
+    <div class="profile-card" id="rompe17Criss" onclick="chooseRompe17('Criss')">👑 Criss</div>
+    <div class="profile-card" id="rompe17Andreita" onclick="chooseRompe17('Andreita')">🌸 Andreita</div>
+   </div>
+   <button class="modal-btn" onclick="joinRompe17()">Entrar a la sala 💗</button>
+  </div>
+  <div id="rompe17Waiting" style="display:none;padding:12px;">
+   <h4 style="color:var(--title-burgundy);">Sala de espera 💕</h4>
+   <p id="rompe17Presence" style="margin:12px 0;font-weight:800;">Esperando a Criss y Andreita…</p>
+   <button class="modal-btn" id="rompe17Ready" onclick="readyRompe17()">Aceptar y preparar cámara</button>
+  </div>
+  <div id="rompe17Instructions" style="display:none;padding:12px;">
+   <p style="font-weight:800;margin-bottom:12px;">📱 Pon la cámara frente a ti, apoyada en algo rígido y estable. Permite el acceso a la cámara cuando el navegador lo solicite. La imagen se divide en 15 piezas; toca dos piezas para intercambiarlas.</p>
+   <button class="modal-btn" onclick="startRompe17Camera()">Aceptar y activar cámara 📷</button>
+  </div>
+  <div id="rompe17Play" style="display:none;">
+   <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0;">
+    <span class="presence-badge" id="rompe17Turn">Turno: —</span>
+    <span class="presence-badge" id="rompe17Status">Conectando…</span>
+   </div>
+   <video id="rompe17Video" autoplay playsinline muted style="display:none;width:100%;max-width:420px;max-height:45vh;object-fit:cover;border-radius:16px;border:3px solid var(--rose-pink);"></video>
+   <canvas id="rompe17Capture" style="display:none;"></canvas>
+   <div id="rompe17CameraActions" style="margin:10px 0;">
+    <button class="modal-btn" onclick="captureRompe17()">Tomar foto y crear rompecabezas 📸</button>
+   </div>
+   <p id="rompe17Hint" style="font-weight:800;margin:8px 0;">Esperando el turno…</p>
+   <div id="rompe17Puzzle" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;max-width:480px;margin:10px auto;"></div>
+   <button class="modal-btn" id="rompe17Finish" onclick="finishRompe17()" style="display:none;">¡Terminé el rompecabezas! 💖</button>
+   <p id="rompe17Feedback" style="font-weight:800;margin-top:10px;"></p>
+  </div>
+  <p style="font-size:.8rem;color:#777;margin-top:12px;padding:0 25px;">La pantalla completa depende del navegador. En iPhone/iPad, Safari no permite ocultar permanentemente todas las barras del navegador desde una página web.</p>
+ </div>
 </div>
 
           <!-- RECOMPENSA FINAL -->
@@ -8275,7 +8483,7 @@ function restartCoopMatch() {
         badge.style.display = 'none';
       }
 
-       for (let i = 1; i <= 16; i++) {
+       for (let i = 1; i <= 17; i++) {
         const navItem = document.getElementById(`nav-game-${i}`);
         if (navItem) {
           if (i === stageNum) {
@@ -8342,7 +8550,7 @@ function restartCoopMatch() {
     }
 
     function goToStage(stageNum) {
-      for(let i=1; i<=16; i++) {
+      for(let i=1; i<=17; i++) {
   document.getElementById(`game-stage-${i}`).style.display = 'none';
   const navItem = document.getElementById(`nav-game-${i}`);
   if(navItem) {
@@ -8370,6 +8578,7 @@ function restartCoopMatch() {
       else if (stageNum === 14) initNumDuelSystem();
       else if (stageNum === 15) initAdivinaSystem();
       else if (stageNum === 16) initAjedrezSystem();
+       else if (stageNum === 17) initRompe17();
     }
 
     /* MINIJUEGO 2 */
