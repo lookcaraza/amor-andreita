@@ -13619,8 +13619,8 @@ function startAdivinaRoulette(nextTurnUser) {
     category: selectedCat,
     turn: turn,
     turnCount: 0, 
-    image: null,
-    word: null,
+    image: "",
+    word: "",
     endTime: 0
   });
 }
@@ -13651,19 +13651,22 @@ function setupAdivinaTurn(room) {
   if (isMyTurnToChoose) {
     document.getElementById('adivinaGuesserUI').style.display = 'none';
     
-    if (room.image && room.word) {
+    // Si la imagen y palabra ya fueron escritas (no están vacías)
+    if (room.image && room.word && room.image !== "" && room.word !== "") {
       document.getElementById('adivinaChooserUI').style.display = 'none';
       document.getElementById('adivinaChooserWaiting').style.display = 'block';
       document.getElementById('adivinaSentWord').textContent = room.word;
       document.getElementById('adivinaSentImage').src = room.image;
       startAdivinaTimer(room.endTime, room);
     } else {
+      // Mostrar la interfaz limpia para crear la pista
       document.getElementById('adivinaChooserUI').style.display = 'block';
       document.getElementById('adivinaChooserWaiting').style.display = 'none';
       document.getElementById('adivinaSearchInput').value = "";
       document.getElementById('adivinaImageResults').innerHTML = "";
       document.getElementById('adivinaWordInput').value = "";
       selectedAdivinaImg = "";
+      
       const btn = document.getElementById('btnEnviarAmor');
       if(btn) {
           btn.disabled = false;
@@ -13677,7 +13680,7 @@ function setupAdivinaTurn(room) {
     document.getElementById('adivinaChooserWaiting').style.display = 'none';
     document.getElementById('adivinaGuesserUI').style.display = 'block';
 
-    if (room.image && room.word) {
+    if (room.image && room.word && room.image !== "" && room.word !== "") {
       document.getElementById('adivinaWaitingChoice').style.display = 'none';
       document.getElementById('adivinaGuessingActive').style.display = 'block';
       document.getElementById('adivinaTargetImage').src = room.image;
@@ -13777,25 +13780,21 @@ function checkAdivinaGuess() {
       
       if (room.turnCount === 0) {
         showToast("¡Correcto mi amor! ❤️ Ahora es tu turno de poner pista en esta categoría.");
-        const nextUser = room.turn === 'Criss' ? 'Andreita' : 'Criss';
         setTimeout(() => {
-          if (myAdivinaUser === 'Criss') {
-            rtdb.ref('adivina_room').update({
-              turn: nextUser,
-              turnCount: 1,
-              image: null,
-              word: null,
-              endTime: 0
-            });
-          }
+          // El que adivinó es el encargado de actualizar la base de datos para tomar el turno
+          rtdb.ref('adivina_room').update({
+            turn: myAdivinaUser, // Toma el turno el que adivinó
+            turnCount: 1,
+            image: "",
+            word: "",
+            endTime: 0
+          });
         }, 2500);
       } else {
         showToast("¡Correcto mi amor! ❤️ Categoría completada, girando ruleta para la siguiente...");
         setTimeout(() => {
-          if (myAdivinaUser === 'Criss') {
-            const nextUser = room.turn === 'Criss' ? 'Andreita' : 'Criss';
-            startAdivinaRoulette(nextUser);
-          }
+          // Gira la ruleta y pasa el turno inicial al otro jugador
+          startAdivinaRoulette(room.turn === 'Criss' ? 'Andreita' : 'Criss');
         }, 2500);
       }
       
@@ -13814,14 +13813,15 @@ function startAdivinaTimer(endTime, room) {
       showToast("¡Tiempo agotado! ⌛ Cambio de turno...");
       
       setTimeout(() => {
-        if (myAdivinaUser === 'Criss') {
+        // Solo el jugador que era dueño del turno actualiza la base de datos para no duplicar acciones
+        if (myAdivinaUser === room.turn) {
           const nextUser = room.turn === 'Criss' ? 'Andreita' : 'Criss';
           if (room.turnCount === 0) {
             rtdb.ref('adivina_room').update({
               turn: nextUser,
               turnCount: 1,
-              image: null,
-              word: null,
+              image: "",
+              word: "",
               endTime: 0
             });
           } else {
