@@ -4570,6 +4570,49 @@ body.fc19-no-scroll{overflow:hidden!important;}
 @media(max-width:530px){#fc19Root{padding:12px 8px;border-radius:13px;}#fc19Root .fc19-brand{gap:6px;}#fc19Root .fc19-brand span{font-size:24px;}#fc19Root .fc19-brand strong{font-size:15px;}#fc19Root .fc19-camera-frame{border-width:2px;max-height:73dvh;}#fc19Root .fc19-clubs{width:35%;left:1%;}#fc19Root .fc19-position-title{left:33%;}#fc19Root .fc19-position-value{left:34%;font-size:clamp(13px,4cqw,20px)}#fc19Root .fc19-card{padding:14px 10px;}#fc19Root .fc19-lobby-players{gap:6px;}#fc19Root .fc19-topbar button{padding:5px;font-size:10px;}}
 @media(max-height:600px) and (orientation:landscape){.fc19-modal-layer #fc19Root{min-height:100%;}.fc19-modal-layer #fc19Root .fc19-camera-frame{max-height:none;width:min(88vw,320px);margin:0 auto;}.fc19-modal-layer #fc19Root .fc19-brand{display:none;}}
 
+
+/* ===== MINIJUEGO 19 · ESCUDOS REALES, ZOOM NATURAL Y TIPOGRAFÍA LEGIBLE ===== */
+#fc19Root .fc19-stage-wrap{width:min(100%,410px);}
+#fc19Root .fc19-camera-frame{aspect-ratio:9 / 16;max-height:none;box-sizing:border-box;container-type:inline-size;}
+#fc19Root .fc19-camera-frame video{object-fit:contain!important;object-position:center!important;transform:scaleX(-1)!important;background:#10182b;}
+#fc19Root .fc19-filter-title{top:2.5%;font-size:clamp(12px,3.6cqw,19px);line-height:1.12;}
+#fc19Root .fc19-position-title{top:9%;left:36%;right:2%;font-size:clamp(9px,2.7cqw,12px);}
+#fc19Root .fc19-position-value{top:12%;left:35%;right:2%;font-size:clamp(14px,4cqw,21px);line-height:1.15;}
+#fc19Root .fc19-clubs{top:22%;bottom:30.5%;left:2%;width:36%;gap:5px;}
+#fc19Root .fc19-club{min-width:0;min-height:0;max-height:none;display:flex;flex-direction:column;gap:2px;padding:3px 3px 4px;border:1.5px solid #e8faff;box-shadow:0 2px 5px #0008;overflow:hidden;}
+#fc19Root .fc19-club small{font-size:clamp(8px,2.5cqw,11px);line-height:1.04;white-space:normal;}
+#fc19Root .fc19-club strong{width:100%;font-size:clamp(9px,2.75cqw,12px);line-height:1.08;display:block;overflow:visible;overflow-wrap:break-word;word-break:normal;white-space:normal;text-overflow:clip;-webkit-line-clamp:unset;text-align:center;}
+#fc19Root .fc19-club-shield{width:clamp(25px,9.5cqw,43px);height:clamp(27px,9.5cqw,44px);margin:0 auto;flex:0 0 auto;clip-path:none!important;background:#ffffffeb!important;border-radius:7px;padding:2px;text-shadow:none;box-shadow:0 1px 3px #0006;filter:none;}
+#fc19Root .fc19-club-shield img{display:block;width:100%;height:100%;object-fit:contain;max-width:100%;max-height:100%;}
+#fc19Root .fc19-metrics{bottom:9.5%;left:1.5%;right:1.5%;gap:2px;}
+#fc19Root .fc19-metrics>div{gap:1px;min-width:0;}
+#fc19Root .fc19-metrics b{font-size:clamp(12px,3.8cqw,21px);line-height:1;}
+#fc19Root .fc19-metrics strong{font-size:clamp(9px,2.85cqw,14px);padding:4px 1px;line-height:1.12;}
+#fc19Root .fc19-metrics small{font-size:clamp(6px,1.95cqw,8.5px);letter-spacing:-.3px;line-height:1.08;white-space:nowrap;}
+#fc19Root .fc19-market{position:absolute;right:3%;bottom:25%;width:57%;border:1.5px solid #c7ffd7;border-radius:12px;padding:6px 4px;background:#16384bd9;box-shadow:0 3px 10px #000a;display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center;pointer-events:none;}
+#fc19Root .fc19-market[hidden]{display:none!important;}
+#fc19Root .fc19-market span{font-size:clamp(9px,2.6cqw,12px);font-weight:900;color:#e7ffe6;}
+#fc19Root .fc19-market strong{font:900 clamp(17px,5.6cqw,26px) Montserrat,Arial,sans-serif;color:#c9ffb4;line-height:1.1;text-shadow:0 2px 4px #000;}
+#fc19Root .fc19-market small{font-size:clamp(7px,1.9cqw,9px);color:#d3e9ed;line-height:1.15;}
+#fc19Root .fc19-tap-cue{bottom:1.6%;font-size:clamp(10px,2.7cqw,13px);line-height:1.2;padding:6px 5px;}
+.fc19-modal-layer #fc19Root .fc19-stage-wrap{width:min(100%,410px);}
+.fc19-modal-layer #fc19Root .fc19-camera-frame{max-height:none;}
+@media(max-width:530px){
+ #fc19Root{padding:9px 6px!important;}
+ #fc19Root .fc19-camera-frame{max-height:none!important;}
+ #fc19Root .fc19-clubs{width:37%;left:1.5%;bottom:30.5%;}
+ #fc19Root .fc19-position-title{left:38%;}
+ #fc19Root .fc19-position-value{left:37%;}
+ #fc19Root .fc19-club-shield{width:clamp(23px,8.8cqw,35px);height:clamp(23px,8.8cqw,35px);}
+ #fc19Root .fc19-club strong{font-size:clamp(8.5px,2.5cqw,11px);}
+ #fc19Root .fc19-market{right:3%;bottom:24.5%;width:55%;padding:4px 2px;}
+ .fc19-modal-layer #fc19Root{max-width:470px;}
+}
+@media (orientation:landscape) and (max-height:600px){
+ .fc19-modal-layer #fc19Root .fc19-stage-wrap{width:min(90vw,290px)!important;}
+ .fc19-modal-layer #fc19Root .fc19-camera-frame{max-height:none!important;}
+}
+
 </style>
 </head>
 <body>
@@ -7604,7 +7647,7 @@ body.fc19-no-scroll{overflow:hidden!important;}
       <div class="fc19-topbar"><strong id="fc19TurnLabel">🎬 Turno de Criss</strong><button type="button" onclick="fc19Fullscreen()" id="fc19FullBtn">⛶ Pantalla completa</button><button type="button" onclick="fc19Leave()">✕</button></div>
       <div id="fc19Watch" class="fc19-watch" hidden><div class="fc19-watch-icon">👀⚽</div><strong id="fc19WatchTitle">Esperando...</strong><p>El filtro se juega por turnos. Puedes ver en directo qué categorías va fijando tu compañero.</p><div id="fc19WatchProgress"></div></div>
       <div id="fc19CameraPanel" class="fc19-camera-panel" hidden>
-        <div class="fc19-cam-request" id="fc19CamRequest"><div style="font-size:53px">📸</div><strong>Activa tu cámara</strong><p>Tu cara aparecerá detrás del filtro, igual que en el video. Solo el jugador en turno necesita encenderla.</p><button type="button" class="fc19-button" onclick="fc19StartCamera()">📷 Activar cámara frontal</button><small>Necesitas HTTPS y permiso de cámara en el navegador.</small></div>
+        <div class="fc19-cam-request" id="fc19CamRequest"><div style="font-size:53px">📸</div><strong>Activa tu cámara</strong><p>Tu cámara aparecerá sin recorte ni aumento artificial. Solo el jugador en turno necesita encenderla.</p><button type="button" class="fc19-button" onclick="fc19StartCamera()">📷 Activar cámara frontal</button><small>Necesitas HTTPS y permiso de cámara en el navegador.</small></div>
         <div class="fc19-stage-wrap" id="fc19StageWrap" hidden>
           <div class="fc19-camera-frame" id="fc19CameraFrame" role="button" tabindex="0" aria-label="Toca para fijar únicamente la categoría actual" onclick="fc19StopOne()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();fc19StopOne()}">
             <video id="fc19Video" autoplay playsinline muted></video>
@@ -7612,10 +7655,10 @@ body.fc19-no-scroll{overflow:hidden!important;}
             <div class="fc19-filter-title">MI CARRERA FUTBOLÍSTICA</div>
             <div class="fc19-position-title">POSICIÓN</div><div class="fc19-position-value" id="fc19Val_position">Girando…</div>
             <div class="fc19-clubs">
-              <div class="fc19-club" data-fc19="cantera"><small>🌱 CANTERA</small><span class="fc19-club-shield" id="fc19Shield_cantera">⚽</span><strong id="fc19Val_cantera">🎲</strong></div>
-              <div class="fc19-club" data-fc19="debut"><small>✨ DEBUT</small><span class="fc19-club-shield" id="fc19Shield_debut">⚽</span><strong id="fc19Val_debut">🎲</strong></div>
-              <div class="fc19-club" data-fc19="prime"><small>🔥 MEJOR ETAPA</small><span class="fc19-club-shield" id="fc19Shield_prime">⚽</span><strong id="fc19Val_prime">🎲</strong></div>
-              <div class="fc19-club" data-fc19="retiro"><small>🏁 RETIRO</small><span class="fc19-club-shield" id="fc19Shield_retiro">⚽</span><strong id="fc19Val_retiro">🎲</strong></div>
+              <div class="fc19-club" data-fc19="cantera"><small>🌱 CANTERA</small><span class="fc19-club-shield" id="fc19Shield_cantera">FC</span><strong id="fc19Val_cantera">🎲</strong></div>
+              <div class="fc19-club" data-fc19="debut"><small>✨ PRIME</small><span class="fc19-club-shield" id="fc19Shield_debut">FC</span><strong id="fc19Val_debut">🎲</strong></div>
+              <div class="fc19-club" data-fc19="prime"><small>🔥 MEJOR ETAPA</small><span class="fc19-club-shield" id="fc19Shield_prime">FC</span><strong id="fc19Val_prime">🎲</strong></div>
+              <div class="fc19-club" data-fc19="retiro"><small>🏁 RETIRO</small><span class="fc19-club-shield" id="fc19Shield_retiro">FC</span><strong id="fc19Val_retiro">🎲</strong></div>
             </div>
             <div class="fc19-metrics">
               <div data-fc19="goles"><b>⚽</b><strong id="fc19Val_goles">—</strong><small>GOLES</small></div>
@@ -7625,6 +7668,7 @@ body.fc19-no-scroll{overflow:hidden!important;}
               <div data-fc19="balones"><b>🥇</b><strong id="fc19Val_balones">—</strong><small>BALONES</small></div>
               <div data-fc19="botas"><b>🥾</b><strong id="fc19Val_botas">—</strong><small>B. ORO</small></div>
             </div>
+            <div id="fc19Market" class="fc19-market" hidden><span>💶 VALOR DE MERCADO</span><strong id="fc19Val_market">—</strong><small>Estimación del juego · 0–300 M€</small></div>
             <div id="fc19TapCue" class="fc19-tap-cue">👆 TOCA PARA DETENER</div>
             <div id="fc19Flash" class="fc19-flash" aria-hidden="true"></div>
           </div>
@@ -16849,11 +16893,111 @@ const fc19Clubs = [
  'Al Ain','Urawa Red Diamonds','Kashima Antlers','Vissel Kobe','Colo-Colo','Universidad de Chile','Peñarol','Nacional',
  'Club Brugge','Anderlecht','Red Bull Salzburg','Sparta Praga','Slavia Praga','Copenhague','Olympiacos','Panathinaikos'
 ];
+
+/* ===== ESCUDOS DE EQUIPOS REALES =====
+   Los más conocidos usan las imágenes oficiales publicadas por la fuente de fútbol.
+   Para otras ligas se utiliza un archivo comunitario de insignias auténticas;
+   si el proveedor falla se muestra el nombre y sus iniciales, sin crear escudos falsos.
+*/
+const fc19CrestIds = {
+ 'Real Madrid':541,'FC Barcelona':529,'Atlético de Madrid':530,'Sevilla':536,'Valencia':532,
+ 'Real Betis':543,'Real Sociedad':548,'Villarreal':533,'Athletic Club':531,
+ 'Manchester United':33,'Manchester City':50,'Liverpool':40,'Arsenal':42,'Chelsea':49,
+ 'Tottenham':47,'Newcastle United':34,'Aston Villa':66,'Nottingham Forest':65,
+ 'Bayern Múnich':157,'Borussia Dortmund':165,'Bayer Leverkusen':168,'RB Leipzig':173,'Eintracht Frankfurt':169,
+ 'Paris Saint-Germain':85,'Olympique de Marsella':81,'Olympique de Lyon':80,'AS Mónaco':91,'Lille':79,
+ 'Juventus':496,'AC Milan':489,'Inter de Milán':505,'Napoli':492,'AS Roma':497,'Lazio':487,
+ 'Atalanta':499,'Fiorentina':502,'Ajax':194,'PSV Eindhoven':197,'Feyenoord':209,
+ 'Benfica':211,'FC Porto':212,'Sporting CP':228,'Celtic':247,
+ 'Flamengo':127,'Palmeiras':121,'Corinthians':131,'Santos':128,'São Paulo':126,
+ 'Fluminense':124,'Botafogo':120,
+ 'Galatasaray':645,'Fenerbahçe':611
+};
+const fc19CountryFiles = {
+ 'Borussia Mönchengladbach':['germany','Borussia Mönchengladbach'],
+ 'AZ Alkmaar':['netherlands','AZ Alkmaar'],
+ 'SC Braga':['portugal','Sporting Braga'],
+ 'Rangers':['scotland','Rangers'],
+ 'Beşiktaş':['turkey','Besiktas'],
+ 'Shakhtar Donetsk':['ukraine','Shakhtar Donetsk'],'Dinamo de Kiev':['ukraine','Dynamo Kyiv'],
+ 'Boca Juniors':['argentina','Boca Juniors'],'River Plate':['argentina','River Plate'],
+ 'Grêmio':['brazil','Gremio'],'Club América':['mexico','America'],
+ 'Chivas':['mexico','Guadalajara'],'Tigres':['mexico','Tigres UANL'],
+ 'Monterrey':['mexico','Monterrey'],'Cruz Azul':['mexico','Cruz Azul'],
+ 'Pumas UNAM':['mexico','Pumas UNAM'],'Toluca':['mexico','Toluca'],'Pachuca':['mexico','Pachuca'],
+ 'Inter Miami':['usa','Inter Miami'],'LA Galaxy':['usa','LA Galaxy'],
+ 'LAFC':['usa','Los Angeles FC'],'Seattle Sounders':['usa','Seattle Sounders'],
+ 'Atlanta United':['usa','Atlanta United'],
+ 'Al Nassr':['saudi arabia','Al Nassr'],'Al Hilal':['saudi arabia','Al Hilal'],
+ 'Al Ittihad':['saudi arabia','Al Ittihad'],'Al Ahli':['saudi arabia','Al Ahli'],
+ 'Al Ain':['united arab emirates','Al Ain'],
+ 'Urawa Red Diamonds':['japan','Urawa Red Diamonds'],
+ 'Kashima Antlers':['japan','Kashima Antlers'],'Vissel Kobe':['japan','Vissel Kobe'],
+ 'Colo-Colo':['chile','Colo-Colo'],'Universidad de Chile':['chile','Universidad de Chile'],
+ 'Peñarol':['uruguay','Penarol'],'Nacional':['uruguay','Nacional'],
+ 'Club Brugge':['belgium','Club Brugge'],'Anderlecht':['belgium','Anderlecht'],
+ 'Red Bull Salzburg':['austria','Red Bull Salzburg'],
+ 'Sparta Praga':['czechia','Sparta Prague'],'Slavia Praga':['czechia','Slavia Prague'],
+ 'Copenhague':['denmark','Copenhagen'],'Olympiacos':['greece','Olympiacos'],
+ 'Panathinaikos':['greece','Panathinaikos']
+};
+function fc19LogoUrl(name){
+ if(typeof name!=='string')return '';
+ if(fc19CrestIds[name])return 'https://media.api-sports.io/football/teams/'+fc19CrestIds[name]+'.png';
+ const info=fc19CountryFiles[name];
+ if(!info)return '';
+ return 'https://raw.githubusercontent.com/JoseArroyave/football-logos/refs/heads/main/logos/'+encodeURIComponent(info[0])+'/'+encodeURIComponent(info[1])+'.svg';
+}
+function fc19UpdateCrest(slotName,teamName){
+ const node=fc19E('fc19Shield_'+slotName);if(!node)return;
+ const name=String(teamName??'');if(node.dataset.team===name)return;
+ node.dataset.team=name;
+ const initials=fc19Initials(name);
+ node.replaceChildren();
+ const url=fc19LogoUrl(name);
+ if(!url){node.textContent=initials;return;}
+ const img=document.createElement('img');img.alt='Escudo de '+name;img.loading='eager';
+ img.onerror=()=>{if(node.dataset.team===name){node.replaceChildren();node.textContent=initials;}};
+ img.src=url;node.appendChild(img);
+}
+const fc19TopClubs = new Set([
+ 'Real Madrid','FC Barcelona','Bayern Múnich','Manchester City','Manchester United','Liverpool',
+ 'Arsenal','Chelsea','Paris Saint-Germain','Juventus','Inter de Milán','AC Milan',
+ 'Borussia Dortmund','Atlético de Madrid','Napoli','Bayer Leverkusen','Flamengo','Palmeiras'
+]);
+const fc19StrongClubs = new Set([
+ 'Sevilla','Valencia','Real Betis','Real Sociedad','Villarreal','Athletic Club','Tottenham',
+ 'Newcastle United','Aston Villa','RB Leipzig','Eintracht Frankfurt','Olympique de Marsella',
+ 'Olympique de Lyon','AS Mónaco','Lille','AS Roma','Lazio','Atalanta','Fiorentina','Ajax',
+ 'PSV Eindhoven','Feyenoord','Benfica','FC Porto','Sporting CP','Boca Juniors','River Plate',
+ 'Corinthians','São Paulo','Santos','Fluminense','Botafogo','Galatasaray','Fenerbahçe'
+]);
+function fc19ClubStrength(name){return fc19TopClubs.has(name)?1:fc19StrongClubs.has(name)?.68:.35;}
+/* Valor ficticio de mercado a partir de rendimiento, palmarés y clubes.
+   Las cantidades altas solo aparecen si la carrera es extraordinaria. Nunca supera 300 M€.
+*/
+function fc19EstimateMarket(p){
+ if(!p||!Object.prototype.hasOwnProperty.call(p,'botas'))return null;
+ const num=(key,max)=>Math.min(max,Math.max(0,Number(p[key])||0));
+ const pos=String(p.position||'');
+ const defence=/Portero|Defensa|Lateral|defensivo/i.test(pos);
+ const goals=num('goles',915),assists=num('asistencias',420);
+ const offensive=(goals/915)*49+(assists/420)*27;
+ const goalsAdjusted=defence ? offensive*.69 : offensive;
+ const titles=num('champions',8)*7+num('mundiales',3)*15+num('balones',8)*10.5+num('botas',8)*6.5;
+ const clubs=(fc19ClubStrength(p.debut||'')*.25+fc19ClubStrength(p.prime||'')*.65+fc19ClubStrength(p.retiro||'')*.10)*18;
+ const total=goalsAdjusted+titles+clubs;
+ return Math.min(300,Math.max(0,Math.round(total*10)/10));
+}
+function fc19MarketLabel(p){
+ const n=fc19EstimateMarket(p);return n===null?'—':n.toLocaleString('es-ES',{maximumFractionDigits:1})+' M€';
+}
+
 const fc19Positions = ['Portero','Defensa central','Lateral derecho','Lateral izquierdo','Mediocentro defensivo','Mediocentro','Interior','Mediapunta','Extremo derecho','Extremo izquierdo','Delantero centro','Segundo delantero'];
 const fc19Slots = [
  {key:'position',name:'Posición',values:fc19Positions},
  {key:'cantera',name:'Cantera',values:fc19Clubs},
- {key:'debut',name:'Debut profesional',values:fc19Clubs},
+ {key:'debut',name:'Prime',values:fc19Clubs},
  {key:'prime',name:'Mejor etapa',values:fc19Clubs},
  {key:'retiro',name:'Retiro',values:fc19Clubs},
  {key:'goles',name:'Goles',gen:()=>fc19Random(0,915)},
@@ -16866,7 +17010,7 @@ const fc19Slots = [
 let fc19Selected = '', fc19User = '', fc19Session = '';
 let fc19State = null, fc19Presence = {}, fc19Online = false;
 let fc19Listeners = false, fc19Busy = false, fc19VideoStream = null, fc19CamReady = false;
-let fc19Spinner = null, fc19Spun = {}, fc19LastShownTurn = '', fc19PhotoData = '';
+let fc19Spinner = null, fc19Spun = {}, fc19LastShownTurn = '', fc19PhotoData = '', fc19SpinTick = 0;
 let fc19Portal = null, fc19Anchor = null, fc19ScrollY = 0;
 const fc19E = id => document.getElementById(id);
 function fc19Random(min,max){
@@ -16988,7 +17132,10 @@ async function fc19StartCamera(){
  try{
   fc19VideoStream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:'user',width:{ideal:720},height:{ideal:1280}}});
   if(!fc19MyTurn()) {fc19StopCamera();return;}
-  const video=fc19E('fc19Video');video.srcObject=fc19VideoStream;await video.play();fc19CamReady=true;
+  const video=fc19E('fc19Video');video.srcObject=fc19VideoStream;
+  const track=fc19VideoStream.getVideoTracks()[0];
+  try{const caps=track.getCapabilities&&track.getCapabilities();if(caps&&caps.zoom&&caps.zoom.min!==undefined)await track.applyConstraints({advanced:[{zoom:caps.zoom.min}]});}catch(_ignored){}
+  await video.play();fc19CamReady=true;
   fc19Alert('📸 ¡Cámara lista! Ahora toca la pantalla para detener cada categoría.');
   fc19CamPaint();fc19StartSpinner();fc19Render();
  }catch(e){
@@ -17001,10 +17148,12 @@ async function fc19StartCamera(){
 function fc19StartSpinner(){
  if(fc19Spinner)return;
  for(const slot of fc19Slots)fc19Spun[slot.key]=fc19Value(slot);
+ fc19SpinTick=0;
  fc19Spinner=setInterval(()=>{
   if(!fc19CamReady||!fc19MyTurn()||!fc19State||fc19State.phase!=='playing')return;
   const picks=(fc19State.picks||{})[fc19User]||{};
-  for(const slot of fc19Slots)if(!Object.prototype.hasOwnProperty.call(picks,slot.key))fc19Spun[slot.key]=fc19Value(slot);
+  fc19SpinTick++;
+  for(const slot of fc19Slots)if(!Object.prototype.hasOwnProperty.call(picks,slot.key) && (!['cantera','debut','prime','retiro'].includes(slot.key)||fc19SpinTick%4===0))fc19Spun[slot.key]=fc19Value(slot);
   fc19Draw();
  },125);
 }
@@ -17014,10 +17163,13 @@ function fc19Draw(){
   const slot=fc19Slots[i],isSet=Object.prototype.hasOwnProperty.call(picks,slot.key);
   const elem=fc19E('fc19Val_'+slot.key);if(!elem)continue;
   const value=isSet?picks[slot.key]:fc19Spun[slot.key];elem.textContent=value===undefined?'🎲':String(value);
-  const shield=fc19E('fc19Shield_'+slot.key);if(shield)shield.textContent=value===undefined?'FC':fc19Initials(value);
+  if(['cantera','debut','prime','retiro'].includes(slot.key))fc19UpdateCrest(slot.key,value);
   const region=fc19E('fc19Root').querySelector('[data-fc19="'+slot.key+'"]')||(slot.key==='position'?elem:null);
   if(region){region.classList.toggle('locked',isSet);region.classList.toggle('active',!isSet&&i===idx&&s.phase==='playing');}
  }
+ const market=fc19MarketLabel(picks);
+ fc19E('fc19Market').hidden=market==='—';
+ fc19E('fc19Val_market').textContent=market;
  const current=fc19Slots[Math.min(idx,fc19Slots.length-1)];
  fc19E('fc19StepText').textContent=s.phase==='review'?'✅ Carrera completada':(idx+1)+' / '+fc19Slots.length+' · '+current.name;
  fc19E('fc19StepCount').textContent=(s.phase==='review'?fc19Slots.length:idx)+' de '+fc19Slots.length+' fijadas';
@@ -17038,6 +17190,7 @@ async function fc19StopOne(){
    s.picks=s.picks||{};s.picks[fc19User]=s.picks[fc19User]||{};
    if(Object.prototype.hasOwnProperty.call(s.picks[fc19User],slot.key))return;
    s.picks[fc19User][slot.key]=candidate;
+   if(slot.key==='botas'){s.picks[fc19User].market=fc19EstimateMarket(s.picks[fc19User]);}
    s.step=step+1;
    if(s.step>=fc19Slots.length)s.phase='review';
    return s;
@@ -17057,7 +17210,8 @@ function fc19SummaryHtml(person){
  const s=fc19State||{},p=((s.picks||{})[person])||{};
  const clean=value=>String(value===undefined?'—':value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  return '<div class="fc19-summary"><strong>'+(person==='Criss'?'👑':'🌸')+' '+person+'</strong>'+
- fc19Slots.map(slot=>'<div>'+clean(slot.name)+': <b>'+clean(p[slot.key])+'</b></div>').join('')+'</div>';
+ fc19Slots.map(slot=>'<div>'+clean(slot.name)+': <b>'+clean(p[slot.key])+'</b></div>').join('')+
+ '<div>Valor de mercado (estimado): <b>'+clean(fc19MarketLabel(p))+'</b></div></div>';
 }
 function fc19Render(){
  const root=fc19E('fc19Root');if(!root)return;
@@ -17101,7 +17255,7 @@ function fc19Render(){
    fc19E('fc19WatchProgress').innerHTML=fc19Slots.map((slot,i)=>{
     const val=completed[slot.key];const safe=val===undefined?'🎲 Girando':String(val).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
     return '<span>'+(i<count?'✅ ':'⏳ ')+slot.name+': <b>'+safe+'</b></span>';
-   }).join('');
+   }).join('') + (completed.botas!==undefined ? '<span>💶 Valor estimado: <b>'+fc19MarketLabel(completed)+'</b></span>' : '');
    fc19E('fc19Watch').querySelector('p').textContent=phase==='review'?s.turn+' terminó sus selecciones y está decidiendo si guarda la foto.':'El filtro se juega por turnos. Puedes ver en directo qué categoría va fijando tu compañero.';
   }
   if(isActor&&fc19CamReady)fc19Draw();
@@ -17114,48 +17268,91 @@ function fc19Rounded(ctx,x,y,w,h,r){
 function fc19TextFit(ctx,str,maxWidth,size,min=13){
  let fontsize=size;do{ctx.font='900 '+fontsize+'px Arial,sans-serif';if(ctx.measureText(str).width<=maxWidth)break;fontsize-=2;}while(fontsize>min);return fontsize;
 }
-function fc19CreateImage(){
+
+/* La foto usa el mismo encuadre sin zoom de la cámara y coloca logos si el
+   proveedor permite acceso CORS a sus imágenes. Nunca fallará por un escudo. */
+const fc19PhotoImageCache=new Map();
+function fc19LoadPhotoLogo(name){
+ const url=fc19LogoUrl(name);if(!url)return Promise.resolve(null);
+ if(fc19PhotoImageCache.has(url))return fc19PhotoImageCache.get(url);
+ const promise=new Promise(resolve=>{
+  const image=new Image();image.crossOrigin='anonymous';
+  let done=false;const finish=val=>{if(!done){done=true;resolve(val);}};
+  const timeout=setTimeout(()=>finish(null),2100);
+  image.onload=()=>{clearTimeout(timeout);finish(image)};
+  image.onerror=()=>{clearTimeout(timeout);finish(null)};
+  image.src=url;
+ });
+ fc19PhotoImageCache.set(url,promise);return promise;
+}
+function fc19WrapText(ctx,text,x,y,maxWidth,fontSize,step,maxRows=2){
+ ctx.font='900 '+fontSize+'px Arial,sans-serif';const words=String(text||'—').split(/\s+/);
+ const lines=[];let line='';
+ for(const word of words){const test=line?line+' '+word:word;
+   if(ctx.measureText(test).width>maxWidth && line){lines.push(line);line=word;}else line=test;
+ }
+ if(line)lines.push(line);
+ if(lines.length>maxRows){const last=lines.slice(maxRows-1).join(' ');lines[maxRows-1]=last;}
+ lines.slice(0,maxRows).forEach((s,i)=>{
+  let size=fontSize;while(size>11){ctx.font='900 '+size+'px Arial,sans-serif';if(ctx.measureText(s).width<=maxWidth)break;size--}
+  ctx.fillText(s,x,y+i*step);
+ });
+}
+async function fc19CreateImage(){
  const canvas=document.createElement('canvas');canvas.width=720;canvas.height=1280;
  const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;
- ctx.fillStyle='#192d48';ctx.fillRect(0,0,w,h);
+ ctx.fillStyle='#0c182b';ctx.fillRect(0,0,w,h);
  const video=fc19E('fc19Video');
  if(video.videoWidth&&video.videoHeight){
-  const cw=video.videoWidth,ch=video.videoHeight,scale=Math.max(w/cw,h/ch),dw=cw*scale,dh=ch*scale;
+  const cw=video.videoWidth,ch=video.videoHeight,scale=Math.min(w/cw,h/ch),dw=cw*scale,dh=ch*scale;
   ctx.save();ctx.translate(w,0);ctx.scale(-1,1);ctx.drawImage(video,(w-dw)/2,(h-dh)/2,dw,dh);ctx.restore();
  }
- const v=ctx.createLinearGradient(0,0,0,h);v.addColorStop(0,'#0d1034cc');v.addColorStop(.28,'#07071600');v.addColorStop(.65,'#07071600');v.addColorStop(1,'#030c27e8');ctx.fillStyle=v;ctx.fillRect(0,0,w,h);
- ctx.textAlign='center';ctx.fillStyle='#ff9def';ctx.shadowColor='#140326';ctx.shadowBlur=9;
- ctx.font='900 41px Arial';ctx.fillText('MI CARRERA FUTBOLÍSTICA',w/2,72);
- ctx.font='bold 22px Arial';ctx.fillStyle='#afffc0';ctx.fillText('POSICIÓN',490,121);
+ const vignette=ctx.createLinearGradient(0,0,0,h);vignette.addColorStop(0,'#080a21dd');vignette.addColorStop(.20,'#06061900');vignette.addColorStop(.65,'#06061900');vignette.addColorStop(1,'#030922dd');ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);
+ ctx.textAlign='center';ctx.fillStyle='#ffcbf8';ctx.shadowColor='#120923';ctx.shadowBlur=8;
+ fc19TextFit(ctx,'MI CARRERA FUTBOLÍSTICA',660,37,20);ctx.fillText('MI CARRERA FUTBOLÍSTICA',w/2,64);
+ ctx.font='900 20px Arial';ctx.fillStyle='#c4ffd1';ctx.fillText('POSICIÓN',505,120);
  const picks=((fc19State.picks||{})[fc19User])||{};
- const pos=String(picks.position||'—');fc19TextFit(ctx,pos,490,40,20);ctx.fillText(pos,489,172);
+ const pos=String(picks.position||'—');let posSize=fc19TextFit(ctx,pos,400,35,15);ctx.font='900 '+posSize+'px Arial';ctx.fillText(pos,505,164);
  ctx.shadowBlur=0;
- const backgrounds=['#ab263f','#e0aa24','#5633b6','#2153ae'];
+ const colors=['#8e354bbf','#ae8022d9','#5541afcc','#2659a7d0'];
+ const clubKeys=['cantera','debut','prime','retiro'];
+ const clubLabels=['CANTERA','PRIME','MEJOR ETAPA','RETIRO'];
+ const logos=await Promise.all(clubKeys.map(key=>fc19LoadPhotoLogo(picks[key])));
  for(let j=0;j<4;j++){
-  const slot=fc19Slots[j+1],y=290+j*177;ctx.fillStyle=backgrounds[j];fc19Rounded(ctx,20,y,235,158,16);ctx.fill();
-  ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='900 23px Arial';ctx.fillText(['🌱 CANTERA','✨ DEBUT','🔥 MEJOR ETAPA','🏁 RETIRO'][j].split(' ').slice(1).join(' '),137,y+38);
-  const text=String(picks[slot.key]||'—');fc19TextFit(ctx,text,215,25,15);
-  const words=text.split(' '),lines=[];let current='';
-  for(const word of words){const candidate=current?current+' '+word:word;
-   if(ctx.measureText(candidate).width>215&&current){lines.push(current);current=word;}else current=candidate;}
-  if(current)lines.push(current);
-  const maxLines=3;lines.slice(0,maxLines).forEach((line,k)=>ctx.fillText(line,137,y+80+k*27));
+  const y=278+j*162;ctx.fillStyle=colors[j];fc19Rounded(ctx,20,y,238,151,15);ctx.fill();
+  ctx.strokeStyle='#f8eaff';ctx.lineWidth=3;ctx.stroke();ctx.fillStyle='#fff';ctx.font='900 17px Arial';ctx.fillText(clubLabels[j],139,y+27);
+  if(logos[j]){
+   const logo=logos[j],scale=Math.min(50/logo.naturalWidth,51/logo.naturalHeight);
+   const iw=logo.naturalWidth*scale,ih=logo.naturalHeight*scale;
+   try{ctx.drawImage(logo,139-iw/2,y+32+(53-ih)/2,iw,ih);}catch(_ignored){}
+  }else{
+   ctx.fillStyle='#ffefb9';ctx.font='900 23px Arial';ctx.fillText(fc19Initials(String(picks[clubKeys[j]]||'FC')),139,y+70);
+  }
+  ctx.fillStyle='#fff';fc19WrapText(ctx,picks[clubKeys[j]],139,y+109,218,18,22,2);
  }
- const metrics=fc19Slots.slice(5),mx=13,mw=112,mg=5;
+ const market=fc19MarketLabel(picks);
+ ctx.fillStyle='#163a4bdf';fc19Rounded(ctx,275,910,420,79,14);ctx.fill();
+ ctx.strokeStyle='#d5ffbd';ctx.lineWidth=2;ctx.stroke();
+ ctx.fillStyle='#efffec';ctx.font='900 19px Arial';ctx.fillText('💶 VALOR DE MERCADO',485,937);
+ ctx.font='900 31px Arial';ctx.fillText(market,485,978);
+ const metrics=fc19Slots.slice(5),mx=12,mw=111,mg=7;
  for(let j=0;j<metrics.length;j++){
-  const slot=metrics[j],x=mx+j*(mw+mg);ctx.fillStyle='#ffffffee';fc19Rounded(ctx,x,1025,mw,104,8);ctx.fill();
-  ctx.textAlign='center';ctx.fillStyle='#201930';ctx.font='900 31px Arial';ctx.fillText(String(picks[slot.key]??'0'),x+mw/2,1072);
-  ctx.font='900 15px Arial';ctx.fillText(['GOLES','ASIST.','CHAMP.','MUND.','BALONES','B. ORO'][j],x+mw/2,1102);
+  const slot=metrics[j],x=mx+j*(mw+mg);ctx.fillStyle='#fffdf4e8';fc19Rounded(ctx,x,1040,mw,105,8);ctx.fill();
+  ctx.textAlign='center';ctx.fillStyle='#17162a';ctx.font='900 32px Arial';ctx.fillText(String(picks[slot.key]??'0'),x+mw/2,1086);
+  ctx.font='900 14px Arial';ctx.fillText(['GOLES','ASIST.','CHAMP.','MUND.','BALONES','B. ORO'][j],x+mw/2,1117);
  }
- ctx.fillStyle='#fff';ctx.font='900 23px Arial';ctx.fillText('⚽ '+fc19User+' · MI HISTORIA FUTBOLÍSTICA',w/2,1202);
+ ctx.fillStyle='#fff';ctx.font='900 22px Arial';ctx.fillText('⚽ '+fc19User+' · CARRERA ALEATORIA',w/2,1218);
  return canvas.toDataURL('image/png');
 }
-function fc19TakePicture(){
- if(!fc19MyTurn()||!fc19State||fc19State.phase!=='review'||!fc19CamReady)return;
+async function fc19TakePicture(){
+ if(!fc19MyTurn()||!fc19State||fc19State.phase!=='review'||!fc19CamReady||fc19Busy)return;
+ fc19Busy=true;
+ const btn=fc19E('fc19PhotoBtn');btn.disabled=true;btn.textContent='📸 Preparando foto…';
  try{
-  fc19PhotoData=fc19CreateImage();fc19E('fc19Preview').src=fc19PhotoData;fc19Render();
+  fc19PhotoData=await fc19CreateImage();fc19E('fc19Preview').src=fc19PhotoData;fc19Render();
   fc19Alert('Foto tomada. Puedes guardarla o continuar sin guardar.');
  }catch(e){console.error(e);fc19Alert('No se pudo crear la foto; vuelve a intentarlo.');}
+ finally{fc19Busy=false;btn.disabled=false;btn.textContent='📸 ¡Tomar foto y guardar!';}
 }
 async function fc19PhotoDecision(save){
  if(fc19Busy||!fc19MyTurn()||fc19State.phase!=='review'||!fc19PhotoData)return;
