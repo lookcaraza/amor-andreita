@@ -4613,6 +4613,54 @@ body.fc19-no-scroll{overflow:hidden!important;}
  .fc19-modal-layer #fc19Root .fc19-camera-frame{max-height:none!important;}
 }
 
+
+/* MINIJUEGO 19: RANKING PERMANENTE TOP 10 (sin transmisión de cámara) */
+#fc19Root .fc19-leaderboard{max-width:680px;margin:17px auto 10px;padding:15px 12px;border-radius:19px;background:linear-gradient(150deg,#27214b,#14172f);border:1px solid #9883ce;box-shadow:0 7px 20px #05071a65;text-align:left;color:#f8f3ff}
+#fc19Root .fc19-rank-heading{display:flex;justify-content:space-between;align-items:center;gap:8px}
+#fc19Root .fc19-rank-heading span{font-size:10px;font-weight:900;letter-spacing:.8px;color:#ecd6ff}
+#fc19Root .fc19-rank-heading h3{font:900 clamp(15px,3.6vw,21px) Montserrat,Arial,sans-serif;color:#ffdef6;margin:3px 0 0;text-align:left}
+#fc19Root .fc19-rank-heading small{font-size:10px;color:#baffdd;white-space:nowrap}
+#fc19Root .fc19-rank-help{color:#d8cfe9;text-align:left;font-size:11px;line-height:1.35;margin:8px 0 12px}
+#fc19Root .fc19-rank-rows{display:grid;gap:7px}
+#fc19Root .fc19-rank-item{background:#ffffff0e;border:1px solid #ffffff2a;border-radius:12px;padding:10px}
+#fc19Root .fc19-rank-line{display:flex;gap:9px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+#fc19Root .fc19-rank-number{min-width:28px;font-size:14px;font-weight:900;color:#fff1a9}
+#fc19Root .fc19-rank-name{flex:1;min-width:75px;font-size:14px;font-weight:900;color:#fff}
+#fc19Root .fc19-rank-value{white-space:nowrap;font:900 14px Montserrat,Arial,sans-serif;color:#baffcb}
+#fc19Root .fc19-rank-more{border:1px solid #d5bfed;border-radius:9px;background:#4c366e;color:#fff;font-weight:900;font-size:11px;padding:7px 9px;cursor:pointer;touch-action:manipulation}
+#fc19Root .fc19-rank-more:focus-visible,#fc19Root .fc19-rank-plus:focus-visible{outline:2px solid #baffcb;outline-offset:2px}
+#fc19Root .fc19-rank-detail{margin-top:10px;padding:10px;border-top:1px dashed #d2bde56b;background:#0c142671;border-radius:9px}
+#fc19Root .fc19-rank-detail[hidden]{display:none!important}
+#fc19Root .fc19-rank-meta{font-size:11px;color:#cbdef1;margin:1px 0 7px}
+#fc19Root .fc19-rank-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+#fc19Root .fc19-rank-grid div{border-radius:7px;background:#ffffff13;padding:7px;min-width:0;overflow-wrap:anywhere}
+#fc19Root .fc19-rank-grid small{display:block;color:#cbbce7;font-size:10px;font-weight:800}
+#fc19Root .fc19-rank-grid strong{font-size:12px;color:#fff;line-height:1.25}
+#fc19Root .fc19-rank-upload{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:10px}
+#fc19Root .fc19-rank-plus{width:38px;height:38px;display:grid;place-items:center;background:#a9e8bb;color:#123221;border:0;border-radius:10px;font:900 27px Arial,sans-serif;cursor:pointer}
+#fc19Root .fc19-rank-plus:disabled{opacity:.45;cursor:not-allowed}
+#fc19Root .fc19-rank-upload-label{font-size:11px;color:#d9f4e9;flex:1}
+#fc19Root .fc19-rank-photo{display:block;width:min(100%,270px);max-height:310px;object-fit:contain;border-radius:10px;margin-top:9px;border:1px solid #dcffe3}
+#fc19Root .fc19-rank-note{font-size:11px;margin:7px 0 0;color:#baf5d5;min-height:16px}
+@media(max-width:530px){#fc19Root .fc19-leaderboard{padding:10px 7px}#fc19Root .fc19-rank-item{padding:8px 6px}#fc19Root .fc19-rank-name,#fc19Root .fc19-rank-value{font-size:12px}#fc19Root .fc19-rank-more{font-size:10px;padding:6px}#fc19Root .fc19-rank-grid{gap:4px}#fc19Root .fc19-rank-grid div{padding:6px 4px}}
+
+
+#fc19Root .fc19-camera-status{margin:4px auto 8px;max-width:520px;padding:8px 11px;border-radius:10px;background:#30254d;color:#fff4c0;font-size:12px;font-weight:800;line-height:1.35;}
+#fc19Root .fc19-camera-status[hidden]{display:none!important;}
+/* MINIJUEGO 19: VISOR DE CAPTURAS CERRABLE EN IPHONE / ANDROID */
+#fc19Root .fc19-rank-close{display:block;margin:11px 0 9px auto;border:1px solid #dccbff;border-radius:10px;background:#46365c;color:#fff;padding:9px 13px;font-weight:900;font-size:12px;cursor:pointer;touch-action:manipulation;}
+#fc19Root .fc19-rank-close.bottom{margin:15px auto 0;}
+#fc19Root .fc19-rank-photo-button{display:block;padding:0;margin:9px auto;background:transparent;border:0;cursor:zoom-in;max-width:100%;}
+#fc19Root .fc19-rank-photo-button .fc19-rank-photo{margin:0 auto;}
+.fc19-photo-viewer[hidden]{display:none!important;}
+.fc19-photo-viewer{position:fixed!important;inset:0!important;width:100vw;height:100vh;height:100dvh;z-index:2147483640!important;background:rgba(0,0,0,.94);display:flex;justify-content:center;align-items:center;overflow:auto;padding:max(env(safe-area-inset-top),12px) 12px max(env(safe-area-inset-bottom),12px);overscroll-behavior:contain;}
+.fc19-photo-viewer-panel{width:min(96vw,600px);max-height:100%;position:relative;display:flex;flex-direction:column;gap:9px;align-items:center;justify-content:center;background:#1a1731;border:1px solid #907ba8;border-radius:15px;padding:44px 12px 14px;color:#fff;}
+.fc19-photo-viewer-panel strong{font-size:14px;}
+.fc19-photo-viewer-panel img{display:block;max-width:100%;max-height:min(70vh,70dvh);height:auto;width:auto;object-fit:contain;border-radius:9px;}
+.fc19-photo-viewer-x{position:absolute;right:9px;top:7px;width:37px;height:37px;background:#e84457;color:#fff;border:2px solid #fff;border-radius:50%;font-size:18px;font-weight:900;cursor:pointer;}
+.fc19-photo-viewer-back{border:0;border-radius:12px;background:#d2b8f7;color:#241235;padding:12px 16px;font-size:14px;font-weight:900;cursor:pointer;width:min(100%,320px);}
+body.fc19-photo-open{overflow:hidden!important;}
+
 </style>
 </head>
 <body>
@@ -7644,12 +7692,13 @@ body.fc19-no-scroll{overflow:hidden!important;}
       <button type="button" class="fc19-button fc19-muted" onclick="fc19Leave()">Salir</button>
     </div>
     <div id="fc19Game" hidden>
-      <div class="fc19-topbar"><strong id="fc19TurnLabel">🎬 Turno de Criss</strong><button type="button" onclick="fc19Fullscreen()" id="fc19FullBtn">⛶ Pantalla completa</button><button type="button" onclick="fc19Leave()">✕</button></div>
+      <div class="fc19-topbar"><strong id="fc19TurnLabel">🎬 Turno de Criss</strong><button type="button" id="fc19RestartBtn" onclick="fc19ResetMatch()" title="Recuperar una partida bloqueada sin borrar el historial">↻ Reiniciar sala</button><button type="button" onclick="fc19Fullscreen()" id="fc19FullBtn">⛶ Pantalla completa</button><button type="button" onclick="fc19Leave()">✕</button></div>
+      <p id="fc19CamStatus" class="fc19-camera-status" hidden role="status" aria-live="polite"></p>
       <div id="fc19Watch" class="fc19-watch" hidden><div class="fc19-watch-icon">👀⚽</div><strong id="fc19WatchTitle">Esperando...</strong><p>El filtro se juega por turnos. Puedes ver en directo qué categorías va fijando tu compañero.</p><div id="fc19WatchProgress"></div></div>
       <div id="fc19CameraPanel" class="fc19-camera-panel" hidden>
         <div class="fc19-cam-request" id="fc19CamRequest"><div style="font-size:53px">📸</div><strong>Activa tu cámara</strong><p>Tu cámara aparecerá sin recorte ni aumento artificial. Solo el jugador en turno necesita encenderla.</p><button type="button" class="fc19-button" onclick="fc19StartCamera()">📷 Activar cámara frontal</button><small>Necesitas HTTPS y permiso de cámara en el navegador.</small></div>
         <div class="fc19-stage-wrap" id="fc19StageWrap" hidden>
-          <div class="fc19-camera-frame" id="fc19CameraFrame" role="button" tabindex="0" aria-label="Toca para fijar únicamente la categoría actual" onclick="fc19StopOne()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();fc19StopOne()}">
+          <div class="fc19-camera-frame" id="fc19CameraFrame" role="button" tabindex="0" aria-label="Toca para fijar únicamente la categoría actual" onclick="fc19HandleCameraTap()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();fc19HandleCameraTap()}">
             <video id="fc19Video" autoplay playsinline muted></video>
             <div class="fc19-vignette"></div>
             <div class="fc19-filter-title">MI CARRERA FUTBOLÍSTICA</div>
@@ -7675,13 +7724,31 @@ body.fc19-no-scroll{overflow:hidden!important;}
           <div class="fc19-stepbar"><strong id="fc19StepText">1/11 · Posición</strong><span id="fc19StepCount">1 de 11</span></div>
           <p id="fc19PlayHint">Toca la imagen para detener solo la categoría marcada. Las demás seguirán girando.</p>
           <button class="fc19-button fc19-photo-btn" id="fc19PhotoBtn" type="button" hidden onclick="fc19TakePicture()">📸 ¡Tomar foto y guardar!</button>
+          </div>
         </div>
+        <button class="fc19-button fc19-muted" id="fc19SkipReviewBtn" type="button" hidden onclick="fc19PhotoDecision(false)">↪ Continuar sin foto y pasar el turno</button>
       </div>
       <div id="fc19Review" class="fc19-review" hidden><h3>📸 ¡Tu carrera está completa!</h3><p>¿Quieres guardar esta foto en tu teléfono? Al elegir se pasará el turno.</p><img id="fc19Preview" alt="Vista previa de mi carrera futbolística"><div class="fc19-review-actions"><button type="button" class="fc19-button" onclick="fc19PhotoDecision(true)">💾 Sí, guardar foto</button><button type="button" class="fc19-button fc19-muted" onclick="fc19PhotoDecision(false)">No, gracias</button></div></div>
     </div>
     <div id="fc19Finished" class="fc19-card fc19-finish" hidden><div class="fc19-medal">🏆🎉</div><h3>¡Carreras completadas!</h3><p>Criss y Andreita crearon sus carreras futbolísticas.</p><div id="fc19FinalCards"></div><button type="button" class="fc19-button" onclick="fc19Replay()">🔄 Otra ronda</button><button type="button" class="fc19-button fc19-muted" onclick="fc19Leave()">Salir</button></div>
+
+    <section class="fc19-leaderboard" id="fc19Leaderboard" aria-label="Top 10 de carreras por valor de mercado">
+      <div class="fc19-rank-heading"><div><span>🏆 CLASIFICACIÓN HISTÓRICA</span><h3>TOP 10 · VALOR DE MERCADO</h3></div><small>De mayor a menor · M€</small></div>
+      <p class="fc19-rank-help">Cada carrera terminada cuenta como una participación. Pulsa «Ver detalles» para consultar los clubes, trofeos, goles y subir la captura de esa carrera con el botón +.</p>
+      <div id="fc19RankRows" class="fc19-rank-rows"><p>⏳ Cargando mejores carreras…</p></div>
+      <p class="fc19-rank-note" id="fc19RankMessage" role="status" aria-live="polite"></p>
+    </section>
     <p id="fc19Message" role="status" aria-live="polite"></p>
   </section>
+</div>
+
+<div id="fc19PhotoViewer" class="fc19-photo-viewer" hidden role="dialog" aria-modal="true" aria-label="Captura de carrera futbolística" onclick="if(event.target===this)fc19CloseRankPhoto()">
+  <div class="fc19-photo-viewer-panel">
+    <button type="button" class="fc19-photo-viewer-x" id="fc19PhotoCloseBtn" onclick="fc19CloseRankPhoto()" aria-label="Cerrar imagen">✕</button>
+    <strong id="fc19PhotoViewerTitle">📸 Captura guardada</strong>
+    <img id="fc19PhotoViewerImage" alt="Foto de la carrera futbolística" />
+    <button type="button" class="fc19-photo-viewer-back" onclick="fc19CloseRankPhoto()">← Volver al Top 10</button>
+  </div>
 </div>
 
           <!-- RECOMPENSA FINAL -->
@@ -16878,6 +16945,7 @@ document.addEventListener('fullscreenchange',()=>{
 const fc19Base = rtdb.ref('footballCareer19');
 const fc19Room = fc19Base.child('room');
 const fc19PresenceRef = fc19Base.child('presence');
+const fc19RecordsRef = fc19Base.child('records');
 const fc19Players = ['Criss','Andreita'];
 const fc19Clubs = [
  'Real Madrid','FC Barcelona','Atlético de Madrid','Sevilla','Valencia','Real Betis','Real Sociedad','Villarreal','Athletic Club',
@@ -17012,6 +17080,9 @@ let fc19State = null, fc19Presence = {}, fc19Online = false;
 let fc19Listeners = false, fc19Busy = false, fc19VideoStream = null, fc19CamReady = false;
 let fc19Spinner = null, fc19Spun = {}, fc19LastShownTurn = '', fc19PhotoData = '', fc19SpinTick = 0;
 let fc19Portal = null, fc19Anchor = null, fc19ScrollY = 0;
+let fc19RanksListening=false;
+const fc19Recorded=new Set(),fc19Recording=new Set(),fc19RankExpanded=new Set();
+let fc19TopRecords=[];
 const fc19E = id => document.getElementById(id);
 function fc19Random(min,max){
  const range=max-min+1;
@@ -17020,7 +17091,7 @@ function fc19Random(min,max){
 }
 function fc19Value(slot){return slot.values?slot.values[fc19Random(0,slot.values.length-1)]:slot.gen();}
 function fc19Initials(team){return String(team).split(/\s+/).filter(w=>!['de','del','do','da','the','y'].includes(w.toLowerCase())).slice(0,2).map(w=>w[0]).join('').toUpperCase().slice(0,3)||'FC';}
-function fc19Alert(message){fc19E('fc19Message').textContent=message||'';}
+function fc19Alert(message){const msg=message||'';const bottom=fc19E('fc19Message'),near=fc19E('fc19CamStatus');if(bottom)bottom.textContent=msg;if(near){near.textContent=msg;near.hidden=!msg;}}
 function fc19Error(error){console.error('[Minijuego 19]',error);fc19Alert('Problema de conexión con Firebase. Revisa Internet y los permisos de Realtime Database.');}
 function fc19Select(name){
  if(fc19User || !fc19Players.includes(name))return;
@@ -17028,6 +17099,7 @@ function fc19Select(name){
  for(const player of fc19Players)fc19E('fc19Pick'+player).classList.toggle('active',player===name);
 }
 function fc19Init(){
+ fc19StartRanking();
  if(!fc19Selected && !fc19User){
   const saved=localStorage.getItem('fc19_user')||localStorage.getItem('penalty18_saved_user')||localStorage.getItem('pinturillo_saved_user');
   if(fc19Players.includes(saved))fc19Select(saved);
@@ -17051,7 +17123,7 @@ async function fc19Connect(){
   await ref.onDisconnect().remove();
   fc19User=who;fc19Session=token;fc19Online=true;
   localStorage.setItem('fc19_user',who);
-  fc19Listen();fc19Render();
+  fc19Listen();fc19Render();fc19DrawRanking();
  }catch(e){fc19Error(e)}finally{fc19Busy=false;btn.disabled=false;btn.textContent='🌐 Entrar a la sala';}
 }
 function fc19Listen(){
@@ -17064,7 +17136,11 @@ function fc19Listen(){
   fc19Presence=snap.val()||{};fc19Render();fc19MaybeStart();
  },fc19Error);
  fc19Room.on('value',snap=>{
-  fc19State=snap.val();fc19Render();fc19MaybeStart();
+  const next=snap.val();
+  if(fc19State && next && next.phase==='lobby' && fc19State.phase!=='lobby'){
+   fc19StopCamera();fc19PhotoData='';fc19Spun={};
+  }
+  fc19State=next;fc19Render();fc19MaybeStart();fc19RegisterCompleted();
  },fc19Error);
 }
 async function fc19Reattach(){
@@ -17076,10 +17152,11 @@ async function fc19Reattach(){
 }
 function fc19Both(){return fc19Players.every(n=>fc19Presence[n]&&fc19Presence[n].session);}
 async function fc19Leave(){
+ fc19CloseRankPhoto();
  const who=fc19User,token=fc19Session;
  fc19StopCamera();fc19StopSpinner();fc19PhotoData='';fc19User='';fc19Session='';
  if(fc19Portal)fc19FullscreenExit();
- fc19Render();fc19Alert('');
+ fc19Render();fc19Alert('');fc19DrawRanking();
  if(!who)return;
  try{
   const ref=fc19PresenceRef.child(who);await ref.onDisconnect().cancel();
@@ -17116,6 +17193,24 @@ function fc19MaybeStart(){
    startedAt:firebase.database.ServerValue.TIMESTAMP};
  },undefined,false).catch(fc19Error);
 }
+/* Recuperación explícita de una sala bloqueada. NO borra el Top 10 ni las capturas. */
+async function fc19ResetMatch(){
+ if(!fc19User||!fc19Online){fc19Alert('Debes estar conectado para reiniciar la sala.');return;}
+ if(!window.confirm('¿Reiniciar únicamente la partida actual? Ambos volverán a la sala de espera y tendrán que pulsar «Estoy listo». Las carreras del Top 10 NO se borrarán.'))return;
+ const me=fc19User, token=fc19Session;
+ if(!fc19Presence[me]||fc19Presence[me].session!==token){
+  fc19Alert('El perfil perdió la conexión. Sal y vuelve a entrar con tu nombre.');return;
+ }
+ try{
+  await fc19Room.transaction(current=>{
+   if(!current||!['playing','review','finished'].includes(current.phase))return;
+   return {phase:'lobby',ready:{},resetAt:firebase.database.ServerValue.TIMESTAMP};
+  },undefined,false);
+  fc19StopCamera();fc19StopSpinner();fc19PhotoData='';fc19Spun={};
+  fc19Alert('✅ Sala recuperada. Los dos deben presionar «Estoy listo» para comenzar de nuevo.');
+  fc19Render();
+ }catch(e){fc19Error(e)}
+}
 function fc19MyTurn(){const s=fc19State;return !!(fc19User&&s&&s.turn===fc19User&&['playing','review'].includes(s.phase));}
 function fc19StopSpinner(){if(fc19Spinner){clearInterval(fc19Spinner);fc19Spinner=null;}}
 function fc19StopCamera(){
@@ -17124,26 +17219,80 @@ function fc19StopCamera(){
  if(video){video.pause();video.srcObject=null;}
  fc19StopSpinner();
 }
+/* CÁMARA LOCAL DEL JUGADOR — sin WebRTC ni transmisión al rival. */
+let fc19CameraRequesting=false;
 async function fc19StartCamera(){
- if(!fc19MyTurn()||fc19State.phase!=='playing')return;
- if(!fc19Both()){fc19Alert('Para activar la cámara deben estar los dos conectados.');return;}
- if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){fc19Alert('Tu navegador no permite cámara aquí. Abre tu página mediante HTTPS en Safari o Chrome.');return;}
- const btn=fc19E('fc19CamRequest').querySelector('button');btn.disabled=true;btn.textContent='Solicitando permiso…';
+ if(fc19CameraRequesting)return;
+ // El botón solo aparece para quien tiene el turno. Pedir permiso EN el gesto de pulsación.
+ if(!fc19User||!fc19State||fc19State.turn!==fc19User||!['playing','review'].includes(fc19State.phase)){ 
+  fc19Alert('📷 Solo la persona en turno puede encender su cámara. Si la partida quedó bloqueada, utiliza «Reiniciar sala».');return;
+ }
+ if(!navigator.mediaDevices||typeof navigator.mediaDevices.getUserMedia!=='function'){
+  fc19Alert('📷 Abre la web en Safari o Chrome mediante HTTPS para permitir la cámara.');return;
+ }
+ if(fc19CamReady&&fc19VideoStream&&fc19VideoStream.active){
+  fc19CamPaint();
+  const video=fc19E('fc19Video');if(video&&video.paused)video.play().catch(()=>{});
+  return;
+ }
+ const button=fc19E('fc19CamRequest')?.querySelector('button');
+ fc19CameraRequesting=true;
+ if(button){button.disabled=true;button.textContent='📷 Abriendo cámara…';}
+ fc19Alert('📷 Solicitando permiso de cámara…');
+ let stream=null;
  try{
-  fc19VideoStream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:'user',width:{ideal:720},height:{ideal:1280}}});
-  if(!fc19MyTurn()) {fc19StopCamera();return;}
-  const video=fc19E('fc19Video');video.srcObject=fc19VideoStream;
-  const track=fc19VideoStream.getVideoTracks()[0];
-  try{const caps=track.getCapabilities&&track.getCapabilities();if(caps&&caps.zoom&&caps.zoom.min!==undefined)await track.applyConstraints({advanced:[{zoom:caps.zoom.min}]});}catch(_ignored){}
-  await video.play();fc19CamReady=true;
-  fc19Alert('📸 ¡Cámara lista! Ahora toca la pantalla para detener cada categoría.');
-  fc19CamPaint();fc19StartSpinner();fc19Render();
- }catch(e){
+  // IMPORTANTE: no hacer awaits, consultas Firebase ni comprobaciones remotas antes de getUserMedia.
+  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:720},height:{ideal:1280}},audio:false});
+  if(!stream||!stream.getVideoTracks().some(t=>t.readyState==='live'))throw new Error('La cámara no entregó video activo.');
+  if(!fc19User||!fc19State||fc19State.turn!==fc19User||!['playing','review'].includes(fc19State.phase)){
+   stream.getTracks().forEach(t=>t.stop());fc19Alert('Tu turno terminó mientras dabas permiso.');return;
+  }
   fc19StopCamera();
-  const msg=e.name==='NotAllowedError'?'Permiso denegado. Permite la cámara desde los ajustes del navegador.':
-   e.name==='NotFoundError'?'No se encontró cámara en este dispositivo.':'No se pudo abrir la cámara. Prueba en HTTPS y cierra otras apps que la estén usando.';
-  fc19Alert(msg+' '+(e.message||''));
- }finally{btn.disabled=false;btn.textContent='📷 Activar cámara frontal';}
+  fc19VideoStream=stream;
+  const video=fc19E('fc19Video');
+  video.muted=true;video.autoplay=true;video.playsInline=true;
+  video.setAttribute('playsinline','');video.setAttribute('webkit-playsinline','');
+  // Mostrar el video ANTES de play(): Safari puede rechazar video escondido.
+  fc19E('fc19CamRequest').hidden=true;
+  fc19E('fc19StageWrap').hidden=false;
+  video.srcObject=stream;
+  try{
+   const result=video.play();
+   if(result&&typeof result.then==='function')await result;
+  }catch(playError){
+   // Si Safari impide el autoplay, los controles permiten reanudarlo con un toque.
+   console.warn('[Minijuego 19] Vista previa en pausa:',playError);
+  }
+  fc19CamReady=true;
+  fc19CamPaint();
+  if(fc19State?.phase==='playing')fc19StartSpinner();
+  fc19Render();
+  fc19Alert(fc19State?.phase==='review'?'✅ Cámara recuperada. Puedes tomar la foto o continuar sin guardarla.':'✅ Cámara activada. Toca el filtro para detener una categoría por vez.');
+ }catch(e){
+  console.error('[Minijuego 19] No abrió la cámara:',e);
+  if(stream)stream.getTracks().forEach(t=>t.stop());
+  fc19StopCamera();
+  let msg='❌ No se pudo abrir la cámara. Vuelve a intentarlo.';
+  if(e.name==='NotAllowedError'||e.name==='SecurityError'||e.name==='PermissionDeniedError')
+   msg='🚫 Cámara bloqueada. En Safari toca el icono de la dirección → Configuración del sitio web → Cámara → Permitir, luego recarga.';
+  else if(e.name==='NotFoundError'||e.name==='DevicesNotFoundError')
+   msg='❌ No se encontró ninguna cámara en este dispositivo.';
+  else if(e.name==='NotReadableError'||e.name==='TrackStartError')
+   msg='❌ Otra aplicación está usando la cámara. Ciérrala y vuelve a intentarlo.';
+  else if(e.name==='OverconstrainedError')
+   msg='❌ No se pudo usar la configuración de cámara solicitada.';
+  fc19Alert(msg);
+ }finally{
+  fc19CameraRequesting=false;
+  if(button){button.disabled=false;button.textContent='📷 Activar cámara frontal';}
+ }
+}
+function fc19HandleCameraTap(){
+ const video=fc19E('fc19Video');
+ if(fc19CamReady&&video&&video.paused&&video.srcObject){
+  video.play().catch(e=>console.warn('[Mini 19] Vista previa:',e));
+ }
+ fc19StopOne();
 }
 function fc19StartSpinner(){
  if(fc19Spinner)return;
@@ -17153,9 +17302,9 @@ function fc19StartSpinner(){
   if(!fc19CamReady||!fc19MyTurn()||!fc19State||fc19State.phase!=='playing')return;
   const picks=(fc19State.picks||{})[fc19User]||{};
   fc19SpinTick++;
-  for(const slot of fc19Slots)if(!Object.prototype.hasOwnProperty.call(picks,slot.key) && (!['cantera','debut','prime','retiro'].includes(slot.key)||fc19SpinTick%4===0))fc19Spun[slot.key]=fc19Value(slot);
+  for(const slot of fc19Slots)if(!Object.prototype.hasOwnProperty.call(picks,slot.key))fc19Spun[slot.key]=fc19Value(slot);
   fc19Draw();
- },125);
+ },78);
 }
 function fc19Draw(){
  const s=fc19State||{},picks=((s.picks||{})[fc19User])||{},idx=s.step||0;
@@ -17241,12 +17390,16 @@ function fc19Render(){
   fc19E('fc19Watch').hidden=isActor;
   fc19E('fc19CameraPanel').hidden=!isActor||phase==='review';
   fc19E('fc19Review').hidden=!isActor||phase!=='review'||!fc19PhotoData;
+  fc19E('fc19SkipReviewBtn').hidden=!isActor||phase!=='review'||!!fc19PhotoData;
   if(isActor&&phase==='playing'){
    fc19CamPaint();if(fc19CamReady)fc19StartSpinner();
   }
   if(isActor&&phase==='review'&&!fc19PhotoData){
    fc19E('fc19CameraPanel').hidden=false;
-   fc19CamPaint();fc19StopSpinner();fc19Draw();
+   fc19CamPaint();fc19StopSpinner();
+   if(fc19CamReady)fc19Draw();
+   fc19E('fc19CamStatus').hidden=false;
+   fc19E('fc19CamStatus').textContent='📸 Tu carrera ya terminó. Vuelve a activar la cámara para tomar la foto, o pulsa «Continuar sin foto» para ceder el turno.';
   }
   if(!isActor){
    const completed=((s.picks||{})[s.turn])||{};
@@ -17256,12 +17409,157 @@ function fc19Render(){
     const val=completed[slot.key];const safe=val===undefined?'🎲 Girando':String(val).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
     return '<span>'+(i<count?'✅ ':'⏳ ')+slot.name+': <b>'+safe+'</b></span>';
    }).join('') + (completed.botas!==undefined ? '<span>💶 Valor estimado: <b>'+fc19MarketLabel(completed)+'</b></span>' : '');
-   fc19E('fc19Watch').querySelector('p').textContent=phase==='review'?s.turn+' terminó sus selecciones y está decidiendo si guarda la foto.':'El filtro se juega por turnos. Puedes ver en directo qué categoría va fijando tu compañero.';
+   fc19E('fc19Watch').querySelector('p').textContent=phase==='review'?s.turn+' terminó sus selecciones. Está preparando la foto o eligiendo continuar sin ella.':'El filtro se juega por turnos. Puedes ver en directo qué categoría va fijando tu compañero.';
   }
   if(isActor&&fc19CamReady)fc19Draw();
  }
  if(phase==='finished')fc19E('fc19FinalCards').innerHTML=fc19SummaryHtml('Criss')+fc19SummaryHtml('Andreita');
 }
+
+/* ===== MINIJUEGO 19 · TOP 10 PERSISTENTE =====
+   Cada turno completado crea UN registro con ID estable (partida + perfil).
+   Jamás se guardan fotos base64 en Realtime Database: solo URLs de Cloudinary.
+   La cámara sigue siendo local; el espectador ve el recuadro de resultados.
+*/
+function fc19StartRanking(){
+ if(fc19RanksListening)return;
+ fc19RanksListening=true;
+ fc19RecordsRef.orderByChild('market').limitToLast(10).on('value',snapshot=>{
+  const all=snapshot.val()||{};
+  fc19TopRecords=Object.entries(all).filter(([key,v])=>v&&['Criss','Andreita'].includes(v.player)&&Number.isFinite(Number(v.market)))
+   .map(([key,v])=>({key,...v})).sort((a,b)=>Number(b.market)-Number(a.market)||(Number(a.createdAt)||0)-(Number(b.createdAt)||0)||a.key.localeCompare(b.key)).slice(0,10);
+  fc19DrawRanking();
+ },error=>{
+  console.error('[Top 10 Carrera]',error);
+  const status=fc19E('fc19RankMessage');if(status)status.textContent='No se pudo cargar el Top 10. Comprueba los permisos de Firebase en footballCareer19/records.';
+ });
+}
+function fc19RegisterCompleted(state){
+ const s=state||fc19State;
+ if(!s||!s.matchId||!s.completed||!s.picks)return;
+ for(const player of fc19Players){
+  if(!s.completed[player])continue;
+  const picks=s.picks[player];if(!picks||!Object.prototype.hasOwnProperty.call(picks,'botas'))continue;
+  const id=String(s.matchId)+'_'+player;
+  if(fc19Recorded.has(id)||fc19Recording.has(id))continue;
+  const market=fc19EstimateMarket(picks);
+  if(market===null)continue;
+  const savedPicks={};for(const slot of fc19Slots)savedPicks[slot.key]=picks[slot.key]??null;
+  fc19Recording.add(id);
+  // Never overwrite an existing record or its attached screenshot.
+  fc19RecordsRef.child(id).transaction(old=>old||{
+   player:player,matchId:s.matchId,market:market,picks:savedPicks,
+   createdAt:firebase.database.ServerValue.TIMESTAMP
+  },undefined,false).then(()=>{fc19Recorded.add(id);}).catch(e=>{
+   console.error('[Top 10: guardar carrera]',e);
+   const status=fc19E('fc19RankMessage');if(status)status.textContent='No se pudo guardar una carrera en el ranking. Revisa los permisos de Firebase.';
+  }).finally(()=>fc19Recording.delete(id));
+ }
+}
+function fc19CloseRankDetail(key,detail,more){
+ fc19RankExpanded.delete(key);detail.hidden=true;
+ more.textContent='Ver detalles';more.setAttribute('aria-expanded','false');
+ more.scrollIntoView({block:'nearest',behavior:'auto'});
+}
+let fc19PhotoPreviousFocus=null;
+function fc19OpenRankPhoto(url,player){
+ if(typeof url!=='string'||!/^https:\/\//.test(url))return;
+ const viewer=fc19E('fc19PhotoViewer');if(!viewer)return;
+ if(viewer.parentNode!==document.body)document.body.appendChild(viewer);
+ fc19PhotoPreviousFocus=document.activeElement;
+ fc19E('fc19PhotoViewerTitle').textContent='📸 Captura de '+player;
+ fc19E('fc19PhotoViewerImage').src=url;
+ viewer.hidden=false;document.body.classList.add('fc19-photo-open');
+ fc19E('fc19PhotoCloseBtn').focus({preventScroll:true});
+}
+function fc19CloseRankPhoto(){
+ const viewer=fc19E('fc19PhotoViewer');if(!viewer||viewer.hidden)return;
+ viewer.hidden=true;fc19E('fc19PhotoViewerImage').removeAttribute('src');
+ document.body.classList.remove('fc19-photo-open');
+ if(fc19PhotoPreviousFocus&&fc19PhotoPreviousFocus.isConnected)fc19PhotoPreviousFocus.focus({preventScroll:true});
+ fc19PhotoPreviousFocus=null;
+}
+document.addEventListener('keydown',event=>{if(event.key==='Escape')fc19CloseRankPhoto();});
+function fc19RankText(parent,tag,textValue,className){
+ const node=document.createElement(tag);if(className)node.className=className;
+ node.textContent=String(textValue??'—');parent.appendChild(node);return node;
+}
+function fc19DrawRanking(){
+ const holder=fc19E('fc19RankRows');if(!holder)return;
+ holder.replaceChildren();
+ if(!fc19TopRecords.length){
+  fc19RankText(holder,'p','⚽ Todavía no hay carreras guardadas. ¡Jueguen una ronda para inaugurar el Top 10!');
+  return;
+ }
+ fc19TopRecords.forEach((record,index)=>{
+  const block=document.createElement('article');block.className='fc19-rank-item';
+  const line=fc19RankText(block,'div','','fc19-rank-line');
+  fc19RankText(line,'span','#'+(index+1),'fc19-rank-number');
+  fc19RankText(line,'span',(record.player==='Criss'?'👑 ':'🌸 ')+record.player,'fc19-rank-name');
+  const market=Math.max(0,Math.min(300,Number(record.market)||0));
+  fc19RankText(line,'span',market.toLocaleString('es-ES',{maximumFractionDigits:1})+' M€','fc19-rank-value');
+  const isOpen=fc19RankExpanded.has(record.key);
+  const more=fc19RankText(line,'button',isOpen?'Ocultar detalles':'Ver detalles','fc19-rank-more');
+  more.type='button';more.setAttribute('aria-expanded',String(isOpen));
+  const detail=fc19RankText(block,'div','','fc19-rank-detail');detail.hidden=!isOpen;
+  more.onclick=()=>{
+   if(fc19RankExpanded.has(record.key))fc19RankExpanded.delete(record.key);else fc19RankExpanded.add(record.key);
+   detail.hidden=!fc19RankExpanded.has(record.key);more.textContent=detail.hidden?'Ver detalles':'Ocultar detalles';more.setAttribute('aria-expanded',String(!detail.hidden));
+  };
+  const closeDetail=fc19RankText(detail,'button','✕ Cerrar detalles','fc19-rank-close');
+  closeDetail.type='button';closeDetail.onclick=()=>fc19CloseRankDetail(record.key,detail,more);
+  const date=Number(record.createdAt)||0;
+  fc19RankText(detail,'p',date?'📅 '+new Date(date).toLocaleString('es-GT',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'📅 Guardando fecha…','fc19-rank-meta');
+  const grid=fc19RankText(detail,'div','','fc19-rank-grid');
+  for(const slot of fc19Slots){
+   const cell=fc19RankText(grid,'div','');
+   fc19RankText(cell,'small',slot.name==='Prime'?'Prime / debut':slot.name);
+   fc19RankText(cell,'strong',(record.picks||{})[slot.key]??'—');
+  }
+  const upload=fc19RankText(detail,'div','','fc19-rank-upload');
+  const plus=fc19RankText(upload,'button','+','fc19-rank-plus');plus.type='button';
+  const isOwner=fc19User===record.player;
+  plus.disabled=!isOwner;
+  plus.title=isOwner?'Subir captura a esta carrera':'Entra con el perfil '+record.player+' para subir su captura';
+  fc19RankText(upload,'span',record.photoUrl?'📷 Captura guardada. Puedes sustituirla usando +':isOwner?'📷 Pulsa + para subir tu captura':'📷 '+record.player+' puede subir su captura','fc19-rank-upload-label');
+  const file=document.createElement('input');file.type='file';file.accept='image/png,image/jpeg,image/webp,image/heic,image/heif';file.hidden=true;file.setAttribute('aria-label','Adjuntar captura para '+record.player);upload.appendChild(file);
+  plus.onclick=()=>file.click();
+  file.onchange=()=>{const selected=file.files&&file.files[0];if(selected)fc19UploadRankPhoto(record.key,record.player,selected,plus);file.value='';};
+  if(record.photoUrl&&typeof record.photoUrl==='string'&&/^https:\/\//.test(record.photoUrl)){
+   const openPhoto=fc19RankText(detail,'button','','fc19-rank-photo-button');
+   openPhoto.type='button';openPhoto.setAttribute('aria-label','Ver captura de '+record.player+' sin salir de la página');
+   const img=document.createElement('img');img.className='fc19-rank-photo';img.loading='lazy';img.src=record.photoUrl;img.alt='Captura de la carrera de '+record.player;
+   openPhoto.appendChild(img);
+   openPhoto.onclick=()=>fc19OpenRankPhoto(record.photoUrl,record.player);
+  }
+  const closeBottom=fc19RankText(detail,'button','✕ Volver al Top 10','fc19-rank-close bottom');
+  closeBottom.type='button';closeBottom.onclick=()=>fc19CloseRankDetail(record.key,detail,more);
+  holder.appendChild(block);
+ });
+}
+async function fc19UploadRankPhoto(key,player,file,button){
+ const status=fc19E('fc19RankMessage');
+ if(!fc19User||fc19User!==player){status.textContent='Entra con el perfil '+player+' para subir la captura de esa carrera.';return;}
+ if(!file||!(/^(image\/(png|jpeg|webp|heic|heif))$/i.test(file.type)||/\.(png|jpe?g|webp|heic|heif)$/i.test(file.name))){status.textContent='Selecciona una imagen PNG, JPG, WEBP o HEIC.';return;}
+ if(file.size>12*1024*1024){status.textContent='La captura debe pesar menos de 12 MB.';return;}
+ button.disabled=true;status.textContent='⏳ Subiendo captura a Cloudinary…';
+ try{
+  const result=await uploadToCloudinaryViaXHR(file,percent=>{
+   status.textContent='⏳ Subiendo captura: '+Math.round(percent)+'%';
+  });
+  const url=result?.data?.secure_url;
+  if(!url||!/^https:\/\/res\.cloudinary\.com\//.test(url))throw new Error('Cloudinary no devolvió una dirección segura.');
+  const tx=await fc19RecordsRef.child(key).transaction(existing=>{
+   if(!existing||existing.player!==player)return;
+   existing.photoUrl=url;existing.photoUpdatedAt=firebase.database.ServerValue.TIMESTAMP;
+   return existing;
+  },undefined,false);
+  if(!tx.committed)throw new Error('La participación no existe o no pertenece al perfil seleccionado.');
+  status.textContent='✅ Captura guardada y visible en el ranking, incluso al volver a abrir la página.';
+ }catch(e){console.error('[Top 10 captura]',e);status.textContent='❌ No se pudo guardar la captura: '+(e.message||'error desconocido');}
+ finally{button.disabled=false;}
+}
+
 function fc19Rounded(ctx,x,y,w,h,r){
  r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
 }
@@ -17355,8 +17653,8 @@ async function fc19TakePicture(){
  finally{fc19Busy=false;btn.disabled=false;btn.textContent='📸 ¡Tomar foto y guardar!';}
 }
 async function fc19PhotoDecision(save){
- if(fc19Busy||!fc19MyTurn()||fc19State.phase!=='review'||!fc19PhotoData)return;
- if(!fc19Both()){fc19Alert('Espera a que ambos vuelvan a conectarse para terminar el turno.');return;}
+ if(fc19Busy||!fc19MyTurn()||fc19State.phase!=='review')return;
+ if(save&&!fc19PhotoData){fc19Alert('Primero toma una foto, o continúa sin foto.');return;}
  if(save){
   const filename='Mi-Carrera-Futbolistica-'+fc19User+'-'+new Date().toISOString().slice(0,10)+'.png';
   const link=document.createElement('a');link.href=fc19PhotoData;link.download=filename;
@@ -17374,7 +17672,7 @@ async function fc19PhotoDecision(save){
    }
    return s;
   },undefined,false);
-  if(result.committed){fc19StopCamera();fc19PhotoData='';fc19Spun={};fc19Alert(save?'Se inició la descarga de tu foto. ✅':'Foto descartada. Turno finalizado.');fc19Render();}
+  if(result.committed){fc19RegisterCompleted(result.snapshot.val());fc19StopCamera();fc19PhotoData='';fc19Spun={};fc19Alert(save?'Se inició la descarga de tu foto. ✅':'Foto descartada. Turno finalizado.');fc19Render();}
  }catch(e){fc19Error(e)}finally{fc19Busy=false;}
 }
 async function fc19Replay(){
