@@ -4214,6 +4214,71 @@
   color: #ff1e42 !important; 
   text-shadow: 0 1px 2px rgba(0,0,0,0.2); 
 }
+/* ==========================================================================
+   MINIJUEGO 18: PENALTIS DE AMOR (BARÇA VS MADRID)
+   ========================================================================== */
+.penalty-container {
+  background: #ffffff;
+  border: 3px solid var(--rose-pink);
+  border-radius: 25px;
+  padding: 15px;
+  box-shadow: 0 10px 25px rgba(230, 92, 101, 0.15);
+  text-align: center;
+}
+.penalty-stadium {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  height: 300px;
+  margin: 0 auto;
+  border-radius: 15px;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 40%, #2d6a4f 40%, #1b4332 100%);
+  border: 4px solid var(--title-burgundy);
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+}
+.penalty-crowd {
+  position: absolute;
+  top: 0; left: 0; width: 200%; height: 40%;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><circle cx="10" cy="10" r="3" fill="%23ffcccc"/><circle cx="5" cy="15" r="3" fill="%23ffffff"/><circle cx="15" cy="5" r="3" fill="%23ffd166"/></svg>') repeat;
+  animation: moveCrowd 4s linear infinite alternate;
+  opacity: 0.8;
+}
+@keyframes moveCrowd { 0% { transform: translateX(0); } 100% { transform: translateX(-5%); } }
+.penalty-goal {
+  position: absolute;
+  bottom: 20%; left: 15%; width: 70%; height: 50%;
+  border: 6px solid white;
+  border-bottom: none;
+  background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.3) 10px, rgba(255,255,255,0.3) 12px), repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,0.3) 10px, rgba(255,255,255,0.3) 12px);
+}
+.penalty-zones {
+  position: absolute;
+  bottom: 20%; left: 15%; width: 70%; height: 50%;
+  display: flex;
+}
+.penalty-zone-btn {
+  flex: 1; height: 100%; border: 2px dashed rgba(255,255,255,0.5);
+  background: transparent; cursor: pointer; transition: background 0.2s;
+  display: flex; align-items: center; justify-content: center; font-size: 2rem;
+}
+.penalty-zone-btn:hover { background: rgba(255,255,255,0.2); }
+.penalty-zone-btn.selected { background: rgba(230, 92, 101, 0.5); border: 2px solid var(--soft-red); }
+.penalty-scoreboard {
+  display: flex; justify-content: space-around; align-items: center;
+  background: #fff0f3; padding: 10px; border-radius: 15px; border: 2px solid var(--rose-pink);
+  margin-bottom: 15px; font-weight: 900; font-size: 1.5rem;
+}
+.team-shield { width: 50px; height: 50px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+.penalty-item {
+  position: absolute; font-size: 3rem; bottom: 5%; left: 50%; transform: translateX(-50%);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none;
+}
+.penalty-history-table {
+  width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem;
+}
+.penalty-history-table th { background: var(--rose-pink); color: var(--title-burgundy); padding: 8px; }
+.penalty-history-table td { border-bottom: 1px solid #ffccd5; padding: 8px; text-align: center; font-weight: 700; }
 </style>
 </head>
 <body>
@@ -4741,6 +4806,15 @@
     <span class="minigame-nav-sub">Minijuego 17 Puzzle Cam</span>
   </div>
   <span class="new-badge-pill" id="badge-game-17">NEW</span>
+</div>
+
+<div class="minigame-nav-item" id="nav-game-18" onclick="selectMinigameFromSidebar(18)">
+  <span class="minigame-nav-icon">⚽</span>
+  <div class="minigame-nav-info">
+    <span class="minigame-nav-name">Penaltis de Amor</span>
+    <span class="minigame-nav-sub">Minijuego 18 1v1</span>
+  </div>
+  <span class="new-badge-pill" id="badge-game-18">NEW</span>
 </div>
 
           </div>
@@ -6052,6 +6126,86 @@
       <p style="font-weight: 700; color: #555; margin-bottom: 15px;">¡Qué hermosa foto mi amor!</p>
       <button id="puzzleNextTurnBtn" class="modal-btn" onclick="nextPuzzleTurn()" style="max-width: 250px; margin: 0 auto; background: #2a9d8f;">Siguiente Turno 🔄</button>
     </div>
+  </div>
+</div>
+
+<div id="game-stage-18" style="display: none; width: 100%;">
+  <div class="penalty-container">
+    <h3 class="custom-game-title" style="font-size: 1.4rem; margin-bottom: 5px;">⚽ Penaltis: Barça vs Madrid</h3>
+    
+    <!-- Login -->
+    <div id="penaltyLoginBox">
+      <p style="font-weight: 700; color: #555; margin-bottom: 15px;">Selecciona tu equipo para la tanda de penaltis:</p>
+      <div class="profile-selector" style="max-width: 320px; margin: 0 auto 15px auto;">
+        <div class="profile-card" id="penaltyUserCriss" onclick="choosePenaltyUser('Criss')">👑 Criss (Barcelona (the best team)</div>
+        <div class="profile-card" id="penaltyUserAndreita" onclick="choosePenaltyUser('Andreita')">🌸 Andreita (R. Madrid)</div>
+      </div>
+      <button class="modal-btn" onclick="connectPenalty()">Entrar a la Cancha 🚀</button>
+    </div>
+
+    <!-- Sala de Espera -->
+    <div id="penaltyWaitingBox" style="display: none; padding: 20px 10px;">
+      <div style="font-size: 3rem; margin-bottom: 8px;">🏟️🥅⚽</div>
+      <h4 style="color: var(--title-burgundy); font-weight: 800;">Vestidores (Sala de Espera)</h4>
+      <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+        <span class="presence-badge ready" id="penaltyReadyCriss">👑 Criss: No listo ⏳</span>
+        <span class="presence-badge ready" id="penaltyReadyAndreita">🌸 Andreita: No lista ⏳</span>
+      </div>
+      <button class="modal-btn" id="penaltyReadyBtn" onclick="togglePenaltyReady()" style="max-width: 280px; margin: 0 auto;">✨ ¡Estoy Listo! ✨</button>
+    </div>
+
+    <!-- Arena de Juego -->
+    <div id="penaltyPlayArena" style="display: none;">
+      <div class="penalty-scoreboard">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <img src="https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" class="team-shield">
+          <span id="penaltyScoreCriss" style="color: #111;">0</span>
+        </div>
+        <div class="pinturillo-timer-badge" id="penaltyTimerDisplay" style="font-size: 1.2rem;">⏳ 05</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span id="penaltyScoreAndreita" style="color: #800020;">0</span>
+          <img src="https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg" class="team-shield">
+        </div>
+      </div>
+
+      <h4 id="penaltyRoleBanner" style="color: var(--title-burgundy); font-weight: 900; margin-bottom: 10px;">Elige a dónde tirar...</h4>
+
+      <div class="penalty-stadium">
+        <div class="penalty-crowd"></div>
+        <div class="penalty-goal"></div>
+        
+        <!-- Zonas interactivas -->
+        <div class="penalty-zones" id="penaltyZones">
+          <button class="penalty-zone-btn" onclick="selectPenaltyZone(1)"></button>
+          <button class="penalty-zone-btn" onclick="selectPenaltyZone(2)"></button>
+          <button class="penalty-zone-btn" onclick="selectPenaltyZone(3)"></button>
+        </div>
+
+        <!-- Elemento animado (Balón o Guantes) -->
+        <div class="penalty-item" id="penaltyActionItem">⚽</div>
+      </div>
+      
+      <div id="penaltyResultMsg" style="font-weight: 900; font-size: 1.3rem; margin-top: 15px; height: 30px;"></div>
+    </div>
+
+    <!-- Resumen y Tabla -->
+    <div id="penaltySummarySection" style="display: none; margin-top: 20px;">
+      <div class="cute-records-container">
+        <div style="font-size: 3rem; margin-bottom: 8px;" id="penaltyConfetti">🎉🏆🎉</div>
+        <h3 style="color: var(--title-burgundy); font-weight: 800; font-size: 1.4rem;" id="penaltyWinnerText">¡EL GANADOR ES BARCELONA!</h3>
+        <p style="font-weight: 700; color: #555; margin: 10px 0;">¡Felicidades por ganar la Champions del Amor!</p>
+        <button class="modal-btn" onclick="restartPenaltyGame()" style="max-width: 260px; margin: 15px auto 0 auto;">🔄 Jugar Revancha</button>
+        
+        <h4 style="margin-top: 25px; color: var(--title-burgundy); font-weight: 800;">🏆 Historial de Campeones</h4>
+        <table class="penalty-history-table">
+          <thead>
+            <tr><th>Campeón</th><th>Resultado</th><th>Fecha y Hora</th></tr>
+          </thead>
+          <tbody id="penaltyHistoryBody"></tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -8464,6 +8618,7 @@ function restartCoopMatch() {
       else if (stageNum === 15) initAdivinaSystem();
       else if (stageNum === 16) initAjedrezSystem();
       else if (stageNum === 17) initPuzzleCamSystem();
+      else if (stageNum === 18) initPenaltySystem();
     }
 
     /* MINIJUEGO 2 */
@@ -14760,6 +14915,212 @@ function exitPuzzleGame() {
   document.getElementById('puzzleInstructionsBox').style.display = 'none';
   document.getElementById('puzzleSummaryBox').style.display = 'none';
   document.getElementById('puzzleWaitingBox').style.display = 'block';
+}
+/* ==========================================================================
+   LÓGICA MINIJUEGO 18: PENALTIS (FIREBASE RTDB Y FIRESTORE)
+   ========================================================================== */
+let myPenaltyUser = "";
+let amIPenaltyReady = false;
+let myPenaltyZone = null;
+let penaltyTimerInterval = null;
+
+function initPenaltySystem() {
+  const savedUser = localStorage.getItem('pinturillo_saved_user');
+  if (savedUser) choosePenaltyUser(savedUser);
+  loadPenaltyHistory();
+}
+
+function choosePenaltyUser(name) {
+  myPenaltyUser = name;
+  document.getElementById('penaltyUserCriss').classList.remove('selected');
+  document.getElementById('penaltyUserAndreita').classList.remove('selected');
+  document.getElementById(`penaltyUser${name}`).classList.add('selected');
+}
+
+function connectPenalty() {
+  if (!myPenaltyUser) { showToast("Selecciona un equipo 💕"); return; }
+  document.getElementById('penaltyLoginBox').style.display = 'none';
+  document.getElementById('penaltyWaitingBox').style.display = 'block';
+  
+  rtdb.ref(`penalty_ready/${myPenaltyUser}`).set(false);
+  listenPenaltyState();
+}
+
+function togglePenaltyReady() {
+  amIPenaltyReady = !amIPenaltyReady;
+  const btn = document.getElementById('penaltyReadyBtn');
+  btn.textContent = amIPenaltyReady ? "✅ ¡Listo! (Esperando...)" : "✨ ¡Estoy Listo! ✨";
+  btn.style.background = amIPenaltyReady ? "#800020" : "#2a9d8f";
+  rtdb.ref(`penalty_ready/${myPenaltyUser}`).set(amIPenaltyReady);
+}
+
+function listenPenaltyState() {
+  rtdb.ref('penalty_ready').on('value', (snap) => {
+    const ready = snap.val() || {};
+    document.getElementById('penaltyReadyCriss').textContent = `👑 Criss: ${ready.Criss ? 'Listo ✅' : 'No listo ⏳'}`;
+    document.getElementById('penaltyReadyCriss').className = `presence-badge ${ready.Criss ? 'ready-ok' : 'ready'}`;
+    document.getElementById('penaltyReadyAndreita').textContent = `🌸 Andreita: ${ready.Andreita ? 'Lista ✅' : 'No lista ⏳'}`;
+    document.getElementById('penaltyReadyAndreita').className = `presence-badge ${ready.Andreita ? 'ready-ok' : 'ready'}`;
+    
+    if (ready.Criss && ready.Andreita) {
+      rtdb.ref('penalty_match').once('value').then(matchSnap => {
+        if (!matchSnap.val() || matchSnap.val().status === 'idle') {
+          if (myPenaltyUser === 'Criss') startPenaltyRound('Criss', 0, 0);
+        }
+      });
+    }
+  });
+
+  rtdb.ref('penalty_match').on('value', (snap) => {
+    const data = snap.val();
+    if (!data) return;
+
+    if (data.status === 'playing') {
+      document.getElementById('penaltyWaitingBox').style.display = 'none';
+      document.getElementById('penaltySummarySection').style.display = 'none';
+      document.getElementById('penaltyPlayArena').style.display = 'block';
+      
+      document.getElementById('penaltyScoreCriss').textContent = data.score.Criss || 0;
+      document.getElementById('penaltyScoreAndreita').textContent = data.score.Andreita || 0;
+      
+      const isKicker = (data.kicker === myPenaltyUser);
+      document.getElementById('penaltyRoleBanner').textContent = isKicker ? "⚽ ¡Te toca PATEAR! Elige zona:" : "🧤 ¡Te toca TAPAR! Elige zona:";
+      document.getElementById('penaltyActionItem').textContent = isKicker ? "⚽" : "🧤";
+      document.getElementById('penaltyActionItem').style.bottom = "5%";
+      document.getElementById('penaltyActionItem').style.left = "50%";
+      document.getElementById('penaltyResultMsg').textContent = "";
+      
+      // Reiniciar botones visuales
+      document.querySelectorAll('.penalty-zone-btn').forEach(b => {
+        b.classList.remove('selected');
+        b.disabled = false;
+      });
+      myPenaltyZone = null;
+      
+      syncPenaltyTimer(data.timerEnd);
+      
+    } else if (data.status === 'resolved') {
+      clearInterval(penaltyTimerInterval);
+      document.getElementById('penaltyTimerDisplay').textContent = "⏳ 00";
+      document.querySelectorAll('.penalty-zone-btn').forEach(b => b.disabled = true);
+      
+      const kickerZone = data.selections[data.kicker];
+      const goalieZone = data.selections[data.goalie];
+      const isGoal = (kickerZone !== goalieZone) && kickerZone !== null;
+      
+      const positions = { 1: "15%", 2: "50%", 3: "85%" };
+      const item = document.getElementById('penaltyActionItem');
+      item.style.bottom = "50%";
+      item.style.left = kickerZone ? positions[kickerZone] : "50%";
+      
+      const msg = document.getElementById('penaltyResultMsg');
+      if (isGoal) {
+        msg.textContent = "¡GOOOOOOLLLL! ⚽🔥";
+        msg.style.color = "#2a9d8f";
+      } else {
+        msg.textContent = "¡PARADÓN! 🧤❌";
+        msg.style.color = "#e63946";
+      }
+      
+      if (myPenaltyUser === 'Criss') {
+        setTimeout(() => checkPenaltyWinCondition(data, isGoal), 2500);
+      }
+    } else if (data.status === 'finished') {
+      document.getElementById('penaltyPlayArena').style.display = 'none';
+      document.getElementById('penaltySummarySection').style.display = 'block';
+      const winnerName = data.winner === 'Criss' ? 'Real Madrid (Criss)' : 'Barcelona (Andreita)';
+      document.getElementById('penaltyWinnerText').textContent = `¡El ganador es ${winnerName}!`;
+    }
+  });
+}
+
+function selectPenaltyZone(zone) {
+  myPenaltyZone = zone;
+  document.querySelectorAll('.penalty-zone-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.penalty-zone-btn')[zone-1].classList.add('selected');
+  
+  const updateObj = {};
+  updateObj[`selections/${myPenaltyUser}`] = zone;
+  rtdb.ref('penalty_match').update(updateObj);
+}
+
+function syncPenaltyTimer(timerEnd) {
+  if (penaltyTimerInterval) clearInterval(penaltyTimerInterval);
+  penaltyTimerInterval = setInterval(() => {
+    const remainingMs = timerEnd - Date.now();
+    if (remainingMs <= 0) {
+      clearInterval(penaltyTimerInterval);
+      document.getElementById('penaltyTimerDisplay').textContent = "⏳ 00";
+      if (myPenaltyUser === 'Criss') rtdb.ref('penalty_match').update({ status: 'resolved' });
+    } else {
+      document.getElementById('penaltyTimerDisplay').textContent = `⏳ 0${Math.ceil(remainingMs/1000)}`;
+    }
+  }, 100);
+}
+
+function startPenaltyRound(kicker, scoreCriss, scoreAndreita) {
+  const goalie = kicker === 'Criss' ? 'Andreita' : 'Criss';
+  rtdb.ref('penalty_match').set({
+    status: 'playing',
+    kicker: kicker,
+    goalie: goalie,
+    timerEnd: Date.now() + 5000,
+    selections: { Criss: null, Andreita: null },
+    score: { Criss: scoreCriss, Andreita: scoreAndreita }
+  });
+}
+
+async function checkPenaltyWinCondition(data, isGoal) {
+  let scoreCriss = data.score.Criss;
+  let scoreAndreita = data.score.Andreita;
+  
+  if (isGoal) {
+    if (data.kicker === 'Criss') scoreCriss++;
+    else scoreAndreita++;
+  }
+  
+  if (scoreCriss >= 5 || scoreAndreita >= 5) {
+    const winner = scoreCriss >= 5 ? 'Criss' : 'Andreita';
+    rtdb.ref('penalty_match').update({ status: 'finished', winner: winner, score: { Criss: scoreCriss, Andreita: scoreAndreita } });
+    
+    // Guardar en historial (Firestore)
+    const winnerTeam = winner === 'Criss' ? 'Real Madrid' : 'Barcelona';
+    const now = new Date();
+    await db.collection("penalty_records").add({
+      winner: winnerTeam,
+      score: `${scoreCriss} - ${scoreAndreita}`,
+      timestamp: now.getTime(),
+      dateStr: `${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`
+    });
+  } else {
+    startPenaltyRound(data.goalie, scoreCriss, scoreAndreita); // Cambio de turno
+  }
+}
+
+function restartPenaltyGame() {
+  amIPenaltyReady = false;
+  rtdb.ref(`penalty_ready/Criss`).set(false);
+  rtdb.ref(`penalty_ready/Andreita`).set(false);
+  rtdb.ref('penalty_match').set({ status: 'idle' });
+  document.getElementById('penaltySummarySection').style.display = 'none';
+  document.getElementById('penaltyWaitingBox').style.display = 'block';
+  togglePenaltyReady(); // forzar actualización visual
+  togglePenaltyReady(); 
+}
+
+function loadPenaltyHistory() {
+  db.collection("penalty_records").orderBy("timestamp", "desc").onSnapshot(snap => {
+    const tbody = document.getElementById('penaltyHistoryBody');
+    tbody.innerHTML = '';
+    snap.forEach(doc => {
+      const row = doc.data();
+      tbody.innerHTML += `<tr>
+        <td>${row.winner === 'Real Madrid' ? '👑 Madrid' : '🌸 Barça'}</td>
+        <td>${row.score}</td>
+        <td style="font-size: 0.8rem;">${row.dateStr}</td>
+      </tr>`;
+    });
+  });
 }
 </script>
 </body>
