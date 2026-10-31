@@ -9004,7 +9004,7 @@ body.hm-menu-open{overflow:hidden}
 <div id="game-stage-20" style="display:none;width:100%">
   <div class="hm-game" id="hm20Game">
     <h3>🍬 LLUVIA MALDITA · HALLOWEEN</h3>
-    <p>¡Criss y Andreita necesitan entrar a la misma sala! Atrapa caramelos moviendo tu cesta. Si agarras una bomba o una poción maldita, pierdes. La velocidad sube a los 30 y 60 segundos.</p>
+    <p>Atrapa caramelos moviendo tu cesta. Si agarras una bomba o una poción maldita, pierdes mi amor</p>
     <div id="hm20Identity"><div class="hm-players"><button type="button" onclick="hmChoose(20,'Criss')">👑 Criss</button><button type="button" onclick="hmChoose(20,'Andreita')">🌸 Andreita</button></div><button class="hm-btn" onclick="hmEnter(20)">Entrar a la sala</button></div>
     <div id="hm20Lobby" class="hm-panel" hidden><strong>🏰 SALA DE ESPERA</strong><div class="hm-presence"><span id="hm20Criss">Criss · sin conectar</span><span id="hm20Andreita">Andreita · sin conectar</span></div><p id="hm20Status">Ambos deben entrar y pulsar «Estoy listo».</p><button class="hm-btn" onclick="hmReady(20)">✅ Estoy listo</button><button class="hm-btn hm-alt" onclick="hmLeave(20)">Salir</button></div>
     <div id="hm20Arena" class="hm-panel" hidden>
@@ -9020,7 +9020,7 @@ body.hm-menu-open{overflow:hidden}
 <!-- MINIJUEGO 21: ESCAPE DEL CASTILLO, eleccion cooperativa sincronizada -->
 <div id="game-stage-21" style="display:none;width:100%">
   <div class="hm-game" id="hm21Game"><h3>🏰 LAS PUERTAS DEL CASTILLO MALDITO</h3>
-    <p>Juego cooperativo de siete habitaciones. Criss y Andreita deben escoger en secreto la <strong>misma puerta correcta</strong> siguiendo la pista. Cada acierto consigue una llave; tres errores y el castillo los atrapa.</p>
+    <p>Juego cooperativo de siete habitaciones. debes escoger en secreto la <strong>misma puerta correcta</strong> siguiendo la pista. Cada acierto consigue una llave; tres errores y el castillo los atrapa.</p>
     <div id="hm21Identity"><div class="hm-players"><button type="button" onclick="hmChoose(21,'Criss')">👑 Criss</button><button type="button" onclick="hmChoose(21,'Andreita')">🌸 Andreita</button></div><button class="hm-btn" onclick="hmEnter(21)">Entrar al castillo</button></div>
     <div id="hm21Lobby" class="hm-panel" hidden><strong>🏰 SALA DE ESPERA</strong><div class="hm-presence"><span id="hm21Criss">Criss · sin conectar</span><span id="hm21Andreita">Andreita · sin conectar</span></div><p id="hm21Status">Ambos jugadores deben estar conectados y listos.</p><button class="hm-btn" onclick="hmReady(21)">✅ Estoy listo</button><button class="hm-btn hm-alt" onclick="hmLeave(21)">Salir</button></div>
     <div id="hm21Arena" class="hm-panel" hidden><div class="hm-hud"><span id="hm21Room">Habitación 1/7</span><span id="hm21Keys">🔑 0 llaves</span><span id="hm21Hearts">❤️❤️❤️</span></div>
@@ -13087,6 +13087,7 @@ function applyCustomPinturilloColor(hexCode) {
       if (isMatch) {
         myChefOrdersCount++;
         showToast(`🎉 ¡Pedido #${myChefOrdersCount} entregado con éxito! ✨`);
+
 
         const updateObj = {};
         updateObj[`scores/${myChefUser}`] = myChefOrdersCount;
