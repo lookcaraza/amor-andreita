@@ -5577,10 +5577,298 @@ body.halloween-full-theme .tab-content {
   body.halloween-full-theme .hero-overlay h1 { font-size: clamp(1.75rem, 8vw, 2.7rem); }
 }
 
+/* V8.1: NAVEGACION A PANTALLA COMPLETA Y DOS JUEGOS HALLOWEEN; aislado de los demás juegos. */
+#hmTopbar{position:fixed;top:max(12px,env(safe-area-inset-top));left:max(13px,env(safe-area-inset-left));z-index:980;display:flex;gap:9px;pointer-events:none}
+#hmTopbar button{pointer-events:auto;width:50px;height:50px;display:grid;place-items:center;background:#0a0c18;color:#fff;border:2px solid #f19c35;border-radius:14px;box-shadow:0 4px 20px #000a;font-size:27px;cursor:pointer}
+#hmTopbar button:focus-visible,#hmNav button:focus-visible{outline:3px solid #ffe5ab;outline-offset:2px}
+#hmCloseSection{position:fixed;top:max(13px,env(safe-area-inset-top));right:14px;z-index:978;width:43px;height:43px;background:#281224;color:white;border:2px solid #ffbb65;border-radius:50%;font-size:25px;cursor:pointer;display:none}
+body.hm-section-visible #hmCloseSection{display:block}
+#hmBackdrop{display:none;position:fixed;inset:0;z-index:19;background:#070813b2;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+body.hm-section-visible #hmBackdrop{display:block}
+body.hm-section-visible main>.tab-content.active{position:fixed;z-index:30;inset:0;display:block;overflow-y:auto;overscroll-behavior:contain;max-height:100dvh;min-height:100dvh;width:100%;margin:0;padding:86px max(15px,calc((100vw - 1120px)/2)) 40px;border-radius:0;box-shadow:none;animation:none;}
+body.hm-section-visible main>.tab-content.active .minigames-layout{max-width:1050px;margin:0 auto}
+body.hm-section-visible main>.tab-content.active>h2{padding-inline:52px}
+body.hm-section-visible{overflow:hidden}
+#hmNav{display:none;position:fixed;inset:0;z-index:1200;background:#060911ec;backdrop-filter:blur(17px);-webkit-backdrop-filter:blur(17px);overflow:auto;padding:38px max(22px,calc((100vw - 690px)/2)) 55px;color:#fff}
+#hmNav.hm-show{display:block}
+#hmNav .hm-menu-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:23px}
+#hmNav .hm-menu-head h2{color:#ffc36a!important;margin:0;text-align:left;font-size:23px}
+#hmNav .hm-menu-head button{background:#381831;border:1px solid #ffb864;color:#fff;border-radius:12px;width:46px;height:46px;font-size:24px;cursor:pointer}
+#hmNav .hm-menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#hmNav .hm-menu-grid button,#hmNav .hm-game-choices button{border:1px solid #8a6584;background:linear-gradient(145deg,#202542,#141021);border-radius:13px;color:#fff3d5;font-weight:800;text-align:left;padding:14px;cursor:pointer;min-height:54px}
+#hmNav .hm-game-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+#hmNav .hm-game-choices button{font-size:13px;min-height:45px;padding:10px}
+#hmNav h3{margin:22px 0 8px;color:#ffcf84;font-size:17px}
+#hmNav .hm-menu-grid button:hover,#hmNav .hm-game-choices button:hover{border-color:#ffd491;background:#542846}
+body.halloween-full-theme #minigames-section #game-stage-20,body.halloween-full-theme #minigames-section #game-stage-21{--bg-cream:#110e1f;--card-white:#15152a;--text-black:#fff1ce;--text-subtle:#c4c7e7;--title-burgundy:#ffd16d}
+.hm-game{background:linear-gradient(158deg,#0b1021,#251234 52%,#120d1e);border:2px solid #bd7a45;border-radius:22px;padding:18px;color:#fff3df;font-family:Nunito,Arial,sans-serif;text-align:center;max-width:100%;margin:auto;box-shadow:0 12px 35px #0008}
+.hm-game *{box-sizing:border-box}.hm-game h3{color:#ffd67f;font-family:Montserrat,Arial,sans-serif;font-size:clamp(17px,4vw,25px);margin:4px 0 10px}.hm-game p{color:#e0d6ed;font-size:13px;line-height:1.5;margin:8px auto}
+.hm-game .hm-btn{padding:12px 14px;border-radius:13px;border:1px solid #ffe0a1;color:#211125;background:#ffc36d;cursor:pointer;font-size:14px;font-weight:900;min-height:44px;margin:4px}
+.hm-game .hm-btn[disabled]{opacity:.55;cursor:not-allowed}
+.hm-game .hm-alt{background:#312644;color:#fff4e0;border-color:#8f78b4}
+.hm-game .hm-players{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.hm-game .hm-players button{background:#221a3b;border:2px solid #6d587f;color:#fff;border-radius:14px;font-weight:900;padding:15px 6px;cursor:pointer;min-width:0}
+.hm-game .hm-players button.hm-selected{background:#57305d;border-color:#ffca74}
+.hm-game .hm-presence{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px auto}
+.hm-game .hm-presence span{border-radius:13px;padding:11px 6px;background:#261e38;color:#fff0d3;font-size:12px;border:1px solid #775977}
+.hm-game .hm-panel{padding:14px;background:#1d1834;border:1px solid #80667e;border-radius:16px;margin:10px 0}
+.hm-game .hm-panel[hidden],.hm-game [hidden]{display:none!important}
+.hm-game .hm-hud{display:flex;gap:7px;justify-content:space-between;flex-wrap:wrap;margin:12px 0;font-weight:900;font-size:12px}
+.hm-game .hm-hud span{background:#24182e;border:1px solid #8d5b8e;border-radius:9px;padding:9px}
+#hmCatchCanvas{width:100%;max-width:620px;height:auto;aspect-ratio:4 / 5;background:#0b0d22;border:2px solid #9c6ba1;border-radius:15px;display:block;margin:auto;touch-action:none;cursor:crosshair}
+.hm-game .hm-failure{background:radial-gradient(circle,#941c31,#16071c);border:2px solid #ffc56f;border-radius:20px;padding:27px 12px;animation:hmLose .5s ease-in-out 2 alternate}
+.hm-game .hm-failure strong{display:block;color:#ffe2a2;font-size:clamp(20px,6vw,34px);font-weight:900}
+@keyframes hmLose{0%{transform:scale(.9) rotate(-2deg)}100%{transform:scale(1.03) rotate(2deg)}}
+.hm-game table{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px;table-layout:fixed}
+.hm-game th,.hm-game td{padding:8px 3px;border-bottom:1px solid #706080;overflow-wrap:anywhere}
+.hm-game th{color:#ffc76b;font-size:11px}
+.hm-game .hm-door-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:20px 0}
+.hm-game .hm-door{border:3px solid #947157;border-radius:14px;background:linear-gradient(150deg,#542b41,#201629);padding:20px 4px;color:#fff4e1;cursor:pointer;min-height:155px;font-weight:900;display:flex;align-items:center;justify-content:space-around;flex-direction:column;gap:7px;transition:transform .15s}
+.hm-game .hm-door:disabled{cursor:not-allowed;opacity:.67}
+.hm-game .hm-door.hm-chosen{border-color:#ffd979;transform:translateY(-5px);background:#693f5f}
+.hm-game .hm-door .hm-door-icon{font-size:clamp(35px,7vw,53px);filter:drop-shadow(0 2px 5px #000a)}
+.hm-game .hm-door-grid.hm-reveal .hm-door.hm-safe{background:#164b38;border-color:#a8ffcf;animation:hmSpark .6s infinite alternate}
+.hm-game .hm-door-grid.hm-reveal .hm-door.hm-trap{background:#6c2631;border-color:#ffb0ac}
+@keyframes hmSpark{to{box-shadow:0 0 24px #9effbf77}}
+.hm-game .hm-board-status{min-height:30px;font-weight:800;color:#ffdc98;margin:12px 0}
+@media(max-width:700px){body.hm-section-visible main>.tab-content.active{padding:76px 12px 28px!important}#hmNav .hm-game-choices{grid-template-columns:1fr}#hmNav .hm-menu-grid{grid-template-columns:1fr 1fr}#hmNav{padding:24px 17px 50px}.hm-game{padding:11px 8px}.hm-game .hm-door{min-height:120px;padding:11px 3px}#hmCatchCanvas{max-width:min(100%,440px)}body.hm-section-visible #minigames-section .minigames-layout{display:block}body.hm-section-visible #minigames-section .minigames-sidebar{display:none}}
+/* El main tiene un z-index base de 1: subirlo evita que el velo oculte los paneles. */
+body.hm-section-visible main{z-index:35!important;}
+
+body.hm-navigation-enabled>nav{display:none!important}
+
+/* V8.2 · LA ÚLTIMA CAMPANADA — estilos aislados al minijuego 22. */
+body.halloween-full-theme #minigames-section #game-stage-22{
+  --bg-cream:#111526;--card-white:#14182b;--text-black:#fff0d3;
+  --text-subtle:#cdd5e6;--title-burgundy:#ffe4a0;color:#fff0d3
+}
+#game-stage-22 .tm-game{max-width:880px;margin:auto;color:#f7e8dd;background:linear-gradient(150deg,#101526,#191026 56%,#090b19);border:2px solid #b78c62;border-radius:22px;padding:clamp(12px,3vw,25px);box-shadow:0 24px 60px #0009;overflow:hidden}
+#game-stage-22 .tm-game *{box-sizing:border-box}
+#game-stage-22 h3{font:900 clamp(22px,5vw,33px) Montserrat,Arial,sans-serif;color:#ffcf83;margin:9px 0;letter-spacing:.4px;text-shadow:0 0 18px #ff8c3a33;text-align:center}
+#game-stage-22 .tm-eyebrow{text-transform:uppercase;letter-spacing:3px;font-size:11px;color:#e4bb94;text-align:center}
+#game-stage-22 .tm-intro{max-width:650px;text-align:center;font-size:14px;line-height:1.7;margin:8px auto 17px;color:#d6dbea}
+#game-stage-22 .tm-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px auto;max-width:640px}
+#game-stage-22 .tm-choice{background:#202942;color:#fff1d6;min-height:64px;padding:12px;border:2px solid #566487;border-radius:14px;font-weight:900;cursor:pointer;font-size:14px}
+#game-stage-22 .tm-choice[aria-pressed="true"]{border-color:#ffcc80;background:#573957;box-shadow:0 0 0 1px #ffcf8050}
+#game-stage-22 .tm-choice strong{display:block;font-size:18px;margin-bottom:5px}
+#game-stage-22 .tm-role-label{font-size:12px;color:#d8d3e6;display:block;margin-top:4px}
+#game-stage-22 .tm-action{background:linear-gradient(130deg,#ffd78b,#ec9d59);color:#21151d;border:1px solid #fff1c9;border-radius:13px;padding:11px 15px;font-weight:900;min-height:44px;cursor:pointer;margin:5px;font-size:13px}
+#game-stage-22 .tm-action:disabled{opacity:.45;cursor:not-allowed}
+#game-stage-22 .tm-secondary{background:#30314f;color:#fff3da;border-color:#867a9d}
+#game-stage-22 .tm-row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+#game-stage-22 .tm-lobby{background:#181b2f;border:1px solid #786a86;border-radius:16px;padding:15px;margin:10px 0}
+#game-stage-22 .tm-presence{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}
+#game-stage-22 .tm-presence>div{background:#232440;border:1px solid #736889;padding:13px 5px;border-radius:11px;text-align:center;font-size:12px;color:#eee}
+#game-stage-22 .tm-presence strong{display:block;color:#ffd393;font-size:14px}
+#game-stage-22 .tm-status{text-align:center;color:#ffe3a1;font-size:13px;font-weight:800;min-height:25px;margin:10px auto;line-height:1.4}
+#game-stage-22 [hidden]{display:none!important}
+#game-stage-22 .tm-world{min-height:385px;position:relative;overflow:hidden;border:2px solid #625776;border-radius:19px;margin:12px 0 18px;padding:18px 12px 21px;isolation:isolate;box-shadow:inset 0 0 44px #0008}
+#game-stage-22 .tm-world::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background-repeat:no-repeat;background-size:cover}
+#game-stage-22 .tm-world.tm-past::before{background:radial-gradient(circle at 84% 12%,#ffd79a99 0 4%,transparent 11%),linear-gradient(180deg,#493d61,#26192c 56%,#140d16)}
+#game-stage-22 .tm-world.tm-future::before{background:radial-gradient(circle at 70% 20%,#5deee842,transparent 28%),linear-gradient(170deg,#0f344a,#131d49 50%,#080a1e)}
+#game-stage-22 .tm-world.tm-past{border-color:#a57c53}
+#game-stage-22 .tm-world.tm-future{border-color:#48b9cb}
+#game-stage-22 .tm-world::after{content:'';position:absolute;inset:-25%;z-index:-1;pointer-events:none;background:repeating-linear-gradient(105deg,transparent 0 40px,#fff1cf0d 41px 42px,transparent 43px 65px);animation:tmMist 18s linear infinite}
+@keyframes tmMist{from{transform:translateX(-13%)}to{transform:translateX(13%)}}
+#game-stage-22 .tm-horizon{text-align:center;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;color:#ffd893;font-size:clamp(17px,4vw,24px);text-shadow:0 2px 16px #000;margin-bottom:4px}
+#game-stage-22 .tm-future .tm-horizon{color:#a6fcff}
+#game-stage-22 .tm-chapter-title{text-align:center;color:#fff2d4;font-size:16px;margin:5px auto;max-width:550px}
+#game-stage-22 .tm-narration{font-size:13px;color:#e8e1ed;max-width:530px;text-align:center;line-height:1.5;margin:6px auto 13px}
+#game-stage-22 .tm-hud{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:12px 0}
+#game-stage-22 .tm-hud span{font-size:12px;border:1px solid #ad8b74;padding:7px 10px;border-radius:100px;background:#100d1fcc;color:#ffe5af;font-weight:900}
+#game-stage-22 .tm-grid9{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;width:min(100%,292px);aspect-ratio:1;margin:14px auto;background:#060910;padding:5px;border-radius:12px;border:3px solid #b89e80;box-shadow:0 6px 25px #0009;overflow:hidden}
+#game-stage-22 .tm-grid9 button{padding:0;border:1px solid #ebc59988;position:relative;cursor:pointer;background-color:#52415b;background-size:300% 300%;min-width:0;transition:transform .13s ease,filter .2s;border-radius:4px;box-shadow:inset 0 0 10px #0004}
+#game-stage-22 .tm-grid9 button:disabled{cursor:default;opacity:.7}
+#game-stage-22 .tm-grid9 button:not(:disabled):active{transform:scale(.91)}
+#game-stage-22 .tm-grid9 button i{position:absolute;bottom:3px;right:5px;background:#100a19b9;color:#fff3d7;border-radius:6px;padding:1px 5px;font:900 11px Nunito,Arial}
+#game-stage-22 .tm-grid9 button.tm-empty{background:none!important;border:1px dashed #f6c18a44;box-shadow:none}
+#game-stage-22 .tm-grid9.tm-complete{box-shadow:0 0 26px #ffc36c99,0 6px 24px #0009}
+#game-stage-22 .tm-runes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px auto;max-width:450px}
+#game-stage-22 .tm-runes button{border:1px solid #6db7d2;background:#142a40;color:#f7e5dd;min-height:57px;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer}
+#game-stage-22 .tm-runes button:disabled{opacity:.55}
+#game-stage-22 .tm-message-key{margin:15px auto;padding:16px 12px;border:2px solid #ffd48a;background:#382842a8;color:#fff4cb;border-radius:15px;max-width:460px;font-size:17px;line-height:1.5;animation:tmGlow 2.5s ease-in-out infinite alternate}
+@keyframes tmGlow{from{box-shadow:0 0 4px #ef9f4944}to{box-shadow:0 0 23px #e8c47d74}}
+#game-stage-22 .tm-dials{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;max-width:450px;margin:15px auto}
+#game-stage-22 .tm-dial{padding:12px 5px;background:linear-gradient(#162e4a,#10172b);color:#adfaff;border:2px solid #427d9e;border-radius:15px;cursor:pointer;font-size:24px;min-height:90px;transition:transform .2s}
+#game-stage-22 .tm-dial:active{transform:scale(.94)}
+#game-stage-22 .tm-dial small{display:block;font-size:10px;color:#ffe1b5;margin-top:4px;font-weight:800}
+#game-stage-22 .tm-input{background:#101629;color:#ffdfa4;border:1px solid #8c7da0;padding:11px;border-radius:11px;font-size:16px;max-width:160px;width:100%;text-align:center;letter-spacing:5px;font-weight:800}
+#game-stage-22 .tm-sequence{display:flex;gap:8px;justify-content:center;margin:14px auto;font-size:clamp(18px,4vw,25px);font-weight:900;flex-wrap:wrap}
+#game-stage-22 .tm-sequence span{min-width:38px;min-height:42px;padding:8px;border:1px solid #87cad0;border-radius:9px;background:#101a30;color:#fff}
+#game-stage-22 .tm-symbols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;max-width:460px;margin:12px auto}
+#game-stage-22 .tm-symbols button{font-size:25px;background:#392844;border:2px solid #ac80a7;border-radius:12px;min-height:65px;color:#fff;cursor:pointer}
+#game-stage-22 .tm-symbols button:disabled{opacity:.5}
+#game-stage-22 .tm-portal{position:relative;width:min(240px,62vw);aspect-ratio:1;border-radius:50%;margin:14px auto;background:radial-gradient(circle,#232857 0 20%,#0b0e23 30% 44%,#85eafa50 45% 46%,#090d1d 47% 58%,#ffb76066 59% 61%,#1a1d35 63%);border:4px solid #f4c479;box-shadow:0 0 24px #65b9d255, inset 0 0 34px #61cdea88}
+#game-stage-22 .tm-portal::before,#game-stage-22 .tm-portal::after{content:'';position:absolute;inset:12%;border:3px dashed #aad7f5;border-radius:50%;animation:tmSpin 8s linear infinite}
+#game-stage-22 .tm-portal::after{inset:23%;border-color:#eac491;animation-direction:reverse;animation-duration:6s}
+#game-stage-22 .tm-portal strong{position:absolute;inset:0;display:grid;place-items:center;font-size:34px;z-index:1;filter:drop-shadow(0 0 15px #ffc875)}
+@keyframes tmSpin{to{transform:rotate(360deg)}}
+#game-stage-22 .tm-hint{margin:12px auto 0;background:#1c2034;border-left:4px solid #f9c780;border-radius:9px;padding:11px 14px;color:#eadbd0;font-size:12px;line-height:1.5;max-width:600px}
+#game-stage-22 .tm-hint strong{color:#ffe0aa}
+#game-stage-22 .tm-chat{margin:18px 0 2px;padding:13px;background:#111529;border:1px solid #6b5a7a;border-radius:15px}
+#game-stage-22 .tm-chat h4{color:#ffe2aa;margin-bottom:8px;font-size:13px}
+#game-stage-22 .tm-chatlog{max-height:135px;min-height:68px;overflow-y:auto;text-align:left;display:flex;flex-direction:column;gap:7px;margin:8px 0}
+#game-stage-22 .tm-chatlog p{font-size:12px;color:#f5e4da;margin:0;padding:7px;background:#22253c;border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere}
+#game-stage-22 .tm-chatlog b{color:#ffd584}
+#game-stage-22 .tm-chatform{display:flex;gap:7px}
+#game-stage-22 .tm-chatform input{min-width:0;flex:1;background:#0c1226;color:white;border:1px solid #887392;border-radius:10px;padding:11px;font:600 13px Nunito,Arial}
+#game-stage-22 .tm-chatform button{background:#e9aa67;color:#171323;font-weight:900;border:0;border-radius:10px;padding:10px 15px;cursor:pointer}
+#game-stage-22 .tm-outcome{text-align:center;padding:26px 10px}
+#game-stage-22 .tm-outcome h3{font-size:clamp(23px,5vw,34px);color:#ffdb82}
+#game-stage-22 .tm-outcome p{max-width:540px;margin:11px auto;line-height:1.6}
+#game-stage-22 .tm-win{animation:tmWinPulse 2.2s ease-in-out infinite alternate}
+@keyframes tmWinPulse{to{filter:drop-shadow(0 0 20px #ffd78a);transform:scale(1.1)}}
+@media(max-width:550px){#game-stage-22 .tm-game{padding:11px 8px}#game-stage-22 .tm-world{padding:14px 9px}#game-stage-22 .tm-choice{padding:10px 6px;font-size:12px}#game-stage-22 .tm-choice strong{font-size:15px}#game-stage-22 .tm-presence{gap:5px}#game-stage-22 .tm-dials{gap:4px}#game-stage-22 .tm-dial{font-size:18px;min-height:75px}#game-stage-22 .tm-runes button{font-size:12px}}
+
+
+/* V8.3 — Menú tipo video: apertura suave, vidrio negro y hamburguesa -> X.
+   Solo afecta hmTopbar y hmNav, no altera las pantallas ni la lógica de los 22 juegos. */
+#hmTopbar{z-index:1302;top:max(13px,env(safe-area-inset-top));left:max(13px,env(safe-area-inset-left))}
+/* El aspa de arriba a la derecha queda como único cierre visible del menú,
+   igual que en el video; las tres barras animan su transformación al abrirse. */
+#hmTopbar{opacity:1;visibility:visible;transition:opacity .16s ease .12s,visibility 0s}
+body.hm-menu-open #hmTopbar{
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .25s ease .17s,visibility 0s linear .42s;
+}
+#hmTopbar .hm-hamburger{
+  display:grid;place-items:center;
+  width:49px;height:49px;border-radius:13px;
+  border:1.5px solid rgba(255,182,98,.78);
+  color:#ffe9cd;
+  background:linear-gradient(145deg,rgba(15,15,22,.95),rgba(33,23,30,.91));
+  box-shadow:0 7px 24px #000a,inset 0 0 13px #ffb45c10;
+  transition:background .25s,box-shadow .3s,border-color .25s;
+  -webkit-tap-highlight-color:transparent;
+  cursor:pointer;
+}
+#hmTopbar .hm-hamburger:active{background:#38201d}
+#hmTopbar .hm-hamburger-lines{position:relative;display:block;width:25px;height:22px}
+#hmTopbar .hm-hamburger-lines i{
+  position:absolute;left:0;width:25px;height:2.8px;border-radius:4px;
+  background:#f6eee5;
+  box-shadow:0 0 5px #fff3;
+  transform-origin:center;
+  transition:top .33s cubic-bezier(.19,1,.22,1),transform .33s cubic-bezier(.19,1,.22,1),opacity .15s ease,background .25s ease;
+}
+#hmTopbar .hm-hamburger-lines i:nth-child(1){top:2px}
+#hmTopbar .hm-hamburger-lines i:nth-child(2){top:10px}
+#hmTopbar .hm-hamburger-lines i:nth-child(3){top:18px}
+#hmTopbar .hm-hamburger-open{
+  border-color:#f4a45b;
+  background:linear-gradient(145deg,#151217,#311c22);
+  box-shadow:0 0 0 2px #f5a05924,0 0 20px #ef7f3950;
+}
+#hmTopbar .hm-hamburger-open .hm-hamburger-lines i:nth-child(1){top:10px;transform:rotate(45deg);background:#ffc58d}
+#hmTopbar .hm-hamburger-open .hm-hamburger-lines i:nth-child(2){opacity:0;transform:scaleX(.12)}
+#hmTopbar .hm-hamburger-open .hm-hamburger-lines i:nth-child(3){top:10px;transform:rotate(-45deg);background:#ffc58d}
+#hmNav,
+#hmNav.hm-show{
+  box-sizing:border-box;
+  display:block;
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  height:100dvh;
+  padding:clamp(72px,9vh,91px) max(18px,calc((100vw - 735px)/2)) max(36px,env(safe-area-inset-bottom));
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  isolation:isolate;
+  z-index:1300;
+  background:linear-gradient(155deg,rgba(4,4,7,.95),rgba(10,11,16,.92) 50%,rgba(0,0,0,.96));
+  -webkit-backdrop-filter:blur(21px) saturate(.55);
+  backdrop-filter:blur(21px) saturate(.55);
+  box-shadow:inset 0 0 140px #000b;
+}
+#hmNav{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translate3d(0,-22px,0) scale(1.015);
+  filter:blur(5px);
+  transition:opacity .33s ease,transform .4s cubic-bezier(.2,.9,.2,1),filter .3s ease,visibility 0s linear .4s;
+}
+#hmNav.hm-show{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transform:translate3d(0,0,0) scale(1);
+  filter:blur(0);
+  transition:opacity .32s ease,transform .42s cubic-bezier(.2,.9,.2,1),filter .3s ease,visibility 0s;
+}
+/* Ligero resplandor / textura sin quitar el fondo negro ni tapar los controles */
+#hmNav::before{
+  content:'';
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse at 90% 0%,#ff792414,transparent 47%),radial-gradient(ellipse at 6% 90%,#53618112,transparent 48%);
+}
+body.hm-menu-open{overflow:hidden}
+#hmNav .hm-menu-head{padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid #f1bf8c80}
+#hmNav .hm-menu-head h2{color:#ffe8c3!important;font-size:clamp(20px,4.5vw,25px);line-height:1.15;text-shadow:0 2px 10px #000a}
+#hmNav .hm-menu-head button{
+  flex-shrink:0;position:relative;
+  border:1.5px solid #e5a163;border-radius:50%;
+  width:43px;height:43px;background:rgba(11,11,14,.9);
+  box-shadow:0 0 17px #fa7d2944;
+  font-size:25px;color:#ffe5c0;
+}
+#hmNav h3{color:#ffe4b5;font-size:16px;letter-spacing:.4px;text-shadow:0 2px 9px #000}
+#hmNav .hm-menu-grid button,#hmNav .hm-game-choices button{
+  color:#faf0de;
+  background:linear-gradient(125deg,rgba(40,34,46,.84),rgba(15,15,20,.85));
+  border:1px solid #a6938499;
+  box-shadow:inset 0 0 0 1px #ffffff0a,0 4px 12px #0004;
+  text-shadow:0 1px 4px #0009;
+  transition:background .2s,border-color .2s,transform .2s;
+}
+#hmNav .hm-menu-grid button:hover,#hmNav .hm-game-choices button:hover,
+#hmNav .hm-menu-grid button:focus-visible,#hmNav .hm-game-choices button:focus-visible{
+  background:#482c31;
+  border-color:#ffb36d;
+  transform:translateY(-1px);
+}
+#hmNav.hm-show .hm-menu-head,#hmNav.hm-show .hm-menu-grid,
+#hmNav.hm-show h3,#hmNav.hm-show .hm-game-choices{animation:hmMenuContentIn .42s cubic-bezier(.18,.8,.25,1) both}
+#hmNav.hm-show .hm-menu-grid{animation-delay:.045s}
+#hmNav.hm-show h3{animation-delay:.075s}
+#hmNav.hm-show .hm-game-choices{animation-delay:.11s}
+@keyframes hmMenuContentIn{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){
+  #hmNav,#hmNav.hm-show{padding:clamp(77px,10vh,94px) 20px calc(44px + env(safe-area-inset-bottom))}
+  #hmNav .hm-menu-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  #hmNav .hm-menu-grid button{padding:12px 10px;min-height:52px;font-size:12px}
+  #hmNav .hm-game-choices{grid-template-columns:1fr}
+  #hmNav .hm-game-choices button{font-size:13px}
+}
+@media(max-width:350px){#hmNav .hm-menu-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){
+  #hmNav,#hmNav.hm-show,#hmTopbar .hm-hamburger-lines i{transition:none!important;animation:none!important;filter:none!important}
+  #hmNav.hm-show .hm-menu-head,#hmNav.hm-show .hm-menu-grid,#hmNav.hm-show h3,#hmNav.hm-show .hm-game-choices{animation:none!important}
+}
+
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
 </head>
 <body class="halloween-full-theme">
+<div id="hmBackdrop" aria-hidden="true"></div>
+<div id="hmTopbar"><button id="hmMenuToggle" class="hm-hamburger" type="button" onclick="hmMenu(!document.getElementById('hmNav').classList.contains('hm-show'))" aria-label="Abrir menú de secciones y minijuegos" aria-controls="hmNav" aria-expanded="false" title="Menú"><span class="hm-hamburger-lines" aria-hidden="true"><i></i><i></i><i></i></span></button></div>
+<button id="hmCloseSection" type="button" onclick="hmCloseSection()" aria-label="Cerrar sección">✕</button>
+<aside id="hmNav" aria-label="Menú principal" aria-hidden="true">
+  <div class="hm-menu-head"><h2>🕸️ Nuestra aventura</h2><button type="button" onclick="hmMenu(false)" aria-label="Cerrar menú">✕</button></div>
+  <div class="hm-menu-grid">
+    <button type="button" onclick="hmNavigate('gallery')">📸 Álbum de fotos</button>
+    <button type="button" onclick="hmNavigate('minigames-section')">🎮 Todos los minijuegos</button>
+    <button type="button" onclick="hmNavigate('quiz-game')">💌 Preguntados</button>
+    <button type="button" onclick="hmNavigate('songs-section')">🎵 Canciones</button>
+    <button type="button" onclick="hmNavigate('time-section')">⏳ Nuestro tiempo</button>
+    <button type="button" onclick="hmNavigate('pet-section')">🐶 Nuestra mascota</button>
+  </div>
+  <h3>Minijuegos · Elige uno</h3>
+  <div id="hmNavGames" class="hm-game-choices"></div>
+</aside>
+
 
   <!-- REPRODUCTOR SOUNDCLOUD INVISIBLE -->
   <iframe id="sc-widget" 
@@ -6170,6 +6458,9 @@ body.halloween-full-theme .tab-content {
 <div class="minigame-nav-item" id="nav-game-19" onclick="selectMinigameFromSidebar(19)">
  <span class="minigame-nav-icon">🎬</span><div class="minigame-nav-info"><span class="minigame-nav-name">Mi Carrera Futbolística</span><span class="minigame-nav-sub">Minijuego 19 · Filtro Cam Online</span></div><span class="new-badge-pill" id="badge-game-19">NEW</span>
 </div>
+<div class="minigame-nav-item" id="nav-game-20" onclick="selectMinigameFromSidebar(20)"><span class="minigame-nav-icon">🍬</span><div class="minigame-nav-info"><span class="minigame-nav-name">Lluvia Maldita</span><span class="minigame-nav-sub">Minijuego 20 · Duelo de dulces en línea</span></div><span class="new-badge-pill" id="badge-game-20">NEW</span></div>
+<div class="minigame-nav-item" id="nav-game-21" onclick="selectMinigameFromSidebar(21)"><span class="minigame-nav-icon">🏰</span><div class="minigame-nav-info"><span class="minigame-nav-name">Las Puertas del Castillo</span><span class="minigame-nav-sub">Minijuego 21 · Escape en pareja</span></div><span class="new-badge-pill" id="badge-game-21">NEW</span></div>
+<div class="minigame-nav-item" id="nav-game-22" onclick="selectMinigameFromSidebar(22)"><span class="minigame-nav-icon">⏳</span><div class="minigame-nav-info"><span class="minigame-nav-name">La Última Campanada</span><span class="minigame-nav-sub">Minijuego 22 · Pasado vs futuro · Online</span></div><span class="new-badge-pill" id="badge-game-22">NEW</span></div>
           </div>
         </aside>
 
@@ -8709,6 +9000,91 @@ body.halloween-full-theme .tab-content {
   </section>
 </div>
 
+<!-- MINIJUEGO 20: LLUVIA MALDITA, sala duo en tiempo real -->
+<div id="game-stage-20" style="display:none;width:100%">
+  <div class="hm-game" id="hm20Game">
+    <h3>🍬 LLUVIA MALDITA · HALLOWEEN</h3>
+    <p>¡Criss y Andreita necesitan entrar a la misma sala! Atrapa caramelos moviendo tu cesta. Si agarras una bomba o una poción maldita, pierdes. La velocidad sube a los 30 y 60 segundos.</p>
+    <div id="hm20Identity"><div class="hm-players"><button type="button" onclick="hmChoose(20,'Criss')">👑 Criss</button><button type="button" onclick="hmChoose(20,'Andreita')">🌸 Andreita</button></div><button class="hm-btn" onclick="hmEnter(20)">Entrar a la sala</button></div>
+    <div id="hm20Lobby" class="hm-panel" hidden><strong>🏰 SALA DE ESPERA</strong><div class="hm-presence"><span id="hm20Criss">Criss · sin conectar</span><span id="hm20Andreita">Andreita · sin conectar</span></div><p id="hm20Status">Ambos deben entrar y pulsar «Estoy listo».</p><button class="hm-btn" onclick="hmReady(20)">✅ Estoy listo</button><button class="hm-btn hm-alt" onclick="hmLeave(20)">Salir</button></div>
+    <div id="hm20Arena" class="hm-panel" hidden>
+      <div class="hm-hud"><span id="hm20Score">Puntos: 0</span><span id="hm20Clock">Tiempo: 0:00</span><span id="hm20Speed">Velocidad: normal</span></div>
+      <canvas id="hmCatchCanvas" width="480" height="600" aria-label="Cesta de dulces: arrastra o usa las flechas del teclado"></canvas>
+      <p>Desliza la cesta con tu dedo o mueve el mouse; en computadora también puedes usar ← y →.</p>
+      <div id="hm20LiveScores" class="hm-board-status">Criss: 0 · Andreita: 0</div>
+    </div>
+    <div id="hm20Result" class="hm-panel" hidden><div id="hm20ResultText"></div><button class="hm-btn" onclick="hmReplay(20)">🔄 Otra ronda juntos</button><button class="hm-btn hm-alt" onclick="hmLeave(20)">Salir</button></div>
+    <div class="hm-panel"><h3>🏆 TOP 5 · RECOLECTORES HISTÓRICOS</h3><p>Más dulces capturados. Cada partida cuenta como participación e indica el tiempo jugado.</p><table><thead><tr><th>Pos.</th><th>Jugador</th><th>Dulces</th><th>Tiempo</th></tr></thead><tbody id="hm20Top"><tr><td colspan="4">Entra a la sala para consultar el Top 5.</td></tr></tbody></table></div>
+  </div>
+</div>
+<!-- MINIJUEGO 21: ESCAPE DEL CASTILLO, eleccion cooperativa sincronizada -->
+<div id="game-stage-21" style="display:none;width:100%">
+  <div class="hm-game" id="hm21Game"><h3>🏰 LAS PUERTAS DEL CASTILLO MALDITO</h3>
+    <p>Juego cooperativo de siete habitaciones. Criss y Andreita deben escoger en secreto la <strong>misma puerta correcta</strong> siguiendo la pista. Cada acierto consigue una llave; tres errores y el castillo los atrapa.</p>
+    <div id="hm21Identity"><div class="hm-players"><button type="button" onclick="hmChoose(21,'Criss')">👑 Criss</button><button type="button" onclick="hmChoose(21,'Andreita')">🌸 Andreita</button></div><button class="hm-btn" onclick="hmEnter(21)">Entrar al castillo</button></div>
+    <div id="hm21Lobby" class="hm-panel" hidden><strong>🏰 SALA DE ESPERA</strong><div class="hm-presence"><span id="hm21Criss">Criss · sin conectar</span><span id="hm21Andreita">Andreita · sin conectar</span></div><p id="hm21Status">Ambos jugadores deben estar conectados y listos.</p><button class="hm-btn" onclick="hmReady(21)">✅ Estoy listo</button><button class="hm-btn hm-alt" onclick="hmLeave(21)">Salir</button></div>
+    <div id="hm21Arena" class="hm-panel" hidden><div class="hm-hud"><span id="hm21Room">Habitación 1/7</span><span id="hm21Keys">🔑 0 llaves</span><span id="hm21Hearts">❤️❤️❤️</span></div>
+      <p id="hm21Clue" style="font-size:17px;color:#ffe09f;font-weight:900">El castillo susurra una pista...</p>
+      <div class="hm-door-grid" id="hm21Doors"><button class="hm-door" onclick="hmDoor(0)"><span class="hm-door-icon">🌙</span>Puerta 1</button><button class="hm-door" onclick="hmDoor(1)"><span class="hm-door-icon">🎃</span>Puerta 2</button><button class="hm-door" onclick="hmDoor(2)"><span class="hm-door-icon">👻</span>Puerta 3</button></div>
+      <div id="hm21StatusLive" class="hm-board-status" role="status">Escoge una puerta. La elección de tu pareja permanece secreta.</div>
+    </div>
+    <div id="hm21Result" class="hm-panel" hidden><div id="hm21ResultText"></div><button class="hm-btn" onclick="hmReplay(21)">🔄 Volver a intentar</button><button class="hm-btn hm-alt" onclick="hmLeave(21)">Salir</button></div>
+  </div>
+</div>
+
+<!-- MINIJUEGO 22 — LA ÚLTIMA CAMPANADA: 1896 / 2186, sin interferir con minijuegos previos. -->
+<div id="game-stage-22" style="display:none;width:100%">
+  <div class="tm-game">
+    <div class="tm-eyebrow">Minijuego 22 · Aventura cooperativa online</div>
+    <h3>⏳ LA ÚLTIMA CAMPANADA</h3>
+    <p class="tm-intro">En la mansión de los Valdén, un reloj se rompió en la noche de Halloween. Una persona despertó en <strong>1896</strong> y la otra en <strong>2186</strong>. Solo pueden reunirse reconstruyendo sus recuerdos: <strong>cada época ve cosas que la otra no puede ver</strong>. Cooperen por el transmisor para salvar ambas líneas temporales.</p>
+    <div id="tm22Choose">
+      <p class="tm-status">Primero selecciona tu identidad y después una época diferente a la de tu pareja.</p>
+      <div class="tm-choices" id="tm22Names">
+        <button type="button" class="tm-choice" data-name="Criss" onclick="tm22ChooseName('Criss')"><strong>👑 Criss</strong>Entrar como Criss</button>
+        <button type="button" class="tm-choice" data-name="Andreita" onclick="tm22ChooseName('Andreita')"><strong>🌸 Andreita</strong>Entrar como Andreita</button>
+      </div>
+      <div class="tm-choices" id="tm22Sides">
+        <button type="button" class="tm-choice" data-side="past" onclick="tm22ChooseSide('past')"><strong>🕯️ PASADO</strong>1896 · Mansión abandonada<span class="tm-role-label">Pergaminos, acertijos antiguos, mosaicos</span></button>
+        <button type="button" class="tm-choice" data-side="future" onclick="tm22ChooseSide('future')"><strong>🛸 FUTURO</strong>2186 · Ciudad bajo un eclipse<span class="tm-role-label">Circuitos, hologramas, descifradores</span></button>
+      </div>
+      <div class="tm-row"><button type="button" class="tm-action" onclick="tm22Enter()">Entrar en la sala temporal</button></div>
+    </div>
+    <div id="tm22Lobby" class="tm-lobby" hidden>
+      <p class="tm-eyebrow">Sala del reloj partido</p>
+      <div class="tm-presence"><div id="tm22Criss">Criss · No conectado</div><div id="tm22Andreita">Andreita · No conectado</div></div>
+      <p id="tm22LobbyStatus" class="tm-status" role="status">Esperando a ambos viajeros...</p>
+      <div class="tm-row"><button type="button" class="tm-action" id="tm22ReadyButton" onclick="tm22Ready()">✓ Estoy listo</button><button type="button" class="tm-action tm-secondary" onclick="tm22Leave()">Salir de la sala</button></div>
+    </div>
+    <div id="tm22Play" hidden>
+      <div class="tm-hud"><span id="tm22Chapter">Capítulo 1 / 4</span><span id="tm22Timer">Tiempo 00:00</span><span id="tm22SideName">Época</span></div>
+      <div class="tm-world tm-past" id="tm22World">
+        <div id="tm22Horizon" class="tm-horizon">1896</div>
+        <div class="tm-chapter-title" id="tm22Title">La noche en que se detuvo el reloj</div>
+        <p class="tm-narration" id="tm22Story"></p>
+        <div id="tm22Puzzle"></div>
+        <p class="tm-status" id="tm22PlayStatus" role="status" aria-live="polite"></p>
+      </div>
+      <div class="tm-hint" id="tm22Hint" hidden></div>
+    </div>
+    <div id="tm22Finish" class="tm-outcome" hidden>
+      <div style="font-size:58px" class="tm-win">⌛</div>
+      <h3>¡EL TIEMPO LOS REUNIÓ!</h3>
+      <p>Criss y Andreita han conseguido que las dos épocas vuelvan a encontrarse. La última campanada ya no anuncia el fin: anuncia un nuevo comienzo juntos.</p>
+      <p id="tm22FinalTime"></p>
+      <div class="tm-row"><button type="button" class="tm-action" onclick="tm22Replay()">Volver a jugar los dos</button><button type="button" class="tm-action tm-secondary" onclick="tm22Leave()">Salir de la sala</button></div>
+    </div>
+    <div id="tm22Chat" class="tm-chat" hidden>
+      <h4>📡 Transmisor entre épocas · Mensajes sincronizados</h4>
+      <div id="tm22ChatLog" class="tm-chatlog" role="log" aria-live="polite"><p>Envíen pistas al otro lado del tiempo...</p></div>
+      <form class="tm-chatform" id="tm22ChatForm" onsubmit="tm22Send(event)">
+        <input id="tm22ChatInput" type="text" maxlength="140" autocomplete="off" placeholder="Dile a tu pareja qué encontraste..." aria-label="Mensaje para la otra época"/>
+        <button type="submit">Enviar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div id="fc19PhotoViewer" class="fc19-photo-viewer" hidden role="dialog" aria-modal="true" aria-label="Captura de carrera futbolística" onclick="if(event.target===this)fc19CloseRankPhoto()">
   <div class="fc19-photo-viewer-panel">
     <button type="button" class="fc19-photo-viewer-x" id="fc19PhotoCloseBtn" onclick="fc19CloseRankPhoto()" aria-label="Cerrar imagen">✕</button>
@@ -10128,6 +10504,7 @@ function restartCoopMatch() {
       }
       // Eventos del ambiente empiezan solamente después del susto.
       if (window.halloweenAmbient) window.halloweenAmbient.start();
+      if (typeof window.hmOpenAlbumAfterEntry === 'function') window.hmOpenAlbumAfterEntry();
     }
 
     let isAuthenticated = false;
@@ -11076,7 +11453,7 @@ function restartCoopMatch() {
         badge.style.display = 'none';
       }
 
-       for (let i = 1; i <= 18; i++) {
+       for (let i = 1; i <= 22; i++) {
         const navItem = document.getElementById(`nav-game-${i}`);
         if (navItem) {
           if (i === stageNum) {
@@ -11143,7 +11520,7 @@ function restartCoopMatch() {
     }
 
     function goToStage(stageNum) {
-      for(let i=1; i<=19; i++) {
+      for(let i=1; i<=22; i++) {
   document.getElementById(`game-stage-${i}`).style.display = 'none';
   const navItem = document.getElementById(`nav-game-${i}`);
   if(navItem) {
@@ -11174,8 +11551,10 @@ function restartCoopMatch() {
       else if (stageNum === 17) initPuzzleCamSystem();
       else if (stageNum === 18) initPenalty18();
       else if (stageNum === 19) fc19Init();
-      if(stageNum !== 19 && typeof fc19StopCamera === 'function' && fc19CamReady) fc19StopCamera();
-      if(stageNum !== 19 && typeof fc19FullscreenExit === 'function' && fc19Portal) fc19FullscreenExit();
+      if (typeof window.hmOnStage === 'function') window.hmOnStage(stageNum);
+      if (typeof window.tm22OnStage === 'function') window.tm22OnStage(stageNum);
+      if(stageNum !== 19 && typeof fc19StopCamera === 'function'  ) { try { if (fc19CamReady) fc19StopCamera(); } catch(_e) {} }
+      if(stageNum !== 19 && typeof fc19FullscreenExit === 'function') { try { if(fc19Portal) fc19FullscreenExit(); } catch(_e) {} }
     }
 
     /* MINIJUEGO 2 */
@@ -19036,5 +19415,508 @@ function fc19Fullscreen(){
   }
 }());
 </script>
+<script>
+/* MODULO V8.1 - dos minijuegos cooperativos en Firebase Realtime Database.
+   No cambia funciones de otros juegos ni añade bibliotecas externas. */
+(function(){
+'use strict';
+const ROOT='halloweenDuoV81', NAMES=['Criss','Andreita'];
+const CANDY=['🍬','🍭','🍫','🧁','🍪','🍩'], BAD=['💣','🧪','☠️'];
+const DOORS=['🌙','🎃','👻'];
+const CLUES=['Busca el brillo plateado de la noche','La pista es una calabaza encendida','Escucha el susurro del fantasma'];
+const games={20:{name:null,room:null,presRef:null,round:null,presence:null,off:[],ready:false,session:null,resultSaved:false,lastRound:null},21:{name:null,room:null,presRef:null,round:null,presence:null,off:[],ready:false,session:null,advanceTimer:null,lastRound:null}};
+const E=id=>document.getElementById(id);
+const now=()=>Date.now()+(window.hmServerOffset||0);
+function message(game,text){const el=E(`hm${game}Status`);if(el)el.textContent=text;}
+function htmlSafe(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function roomInit(game){return {phase:'lobby',rid:Date.now()+'-'+Math.floor(Math.random()*999999),ready:{Criss:false,Andreita:false},players:{Criss:{score:0,ended:false},Andreita:{score:0,ended:false}},seed:Math.floor(Math.random()*100000),level:0,hearts:3,keys:0,choices:{}};}
+function onlineTwo(game){const p=games[game].presence||{};return NAMES.every(n=>p[n]&&p[n].sid);}
+function hasBothReady(game,s){return NAMES.every(n=>!!s.ready?.[n])&&onlineTwo(game);}
+function visibleGame(num){return E('minigames-section')?.classList.contains('active')&&E('game-stage-'+num)?.style.display!=='none';}
+window.hmMenu=function(on){
+  const el=E('hmNav'), toggle=E('hmMenuToggle');
+  if(!el)return;
+  const shouldOpen=!!on;
+  el.classList.toggle('hm-show',shouldOpen);
+  el.setAttribute('aria-hidden',String(!shouldOpen));
+  document.body.classList.toggle('hm-menu-open',shouldOpen);
+  if(toggle){
+    toggle.classList.toggle('hm-hamburger-open',shouldOpen);
+    toggle.setAttribute('aria-expanded',String(shouldOpen));
+    toggle.setAttribute('aria-label',shouldOpen?'Cerrar menú':'Abrir menú de secciones y minijuegos');
+    toggle.title=shouldOpen?'Cerrar menú':'Abrir menú';
+  }
+  if(shouldOpen){ el.scrollTop=0; }
+};
+document.addEventListener('keydown',function(ev){
+  if(ev.key==='Escape' && E('hmNav')?.classList.contains('hm-show')){
+    ev.preventDefault();window.hmMenu(false);
+    const toggle=E('hmMenuToggle');if(toggle)toggle.focus({preventScroll:true});
+  }
+});
+window.hmNavigate=function(tab,stage){
+  if(tab!=='minigames-section'||(stage&&stage!==20))stopCatch();
+  hmMenu(false); if(typeof window.openTab==='function')window.openTab(tab,null);
+  if(stage&&typeof window.selectMinigameFromSidebar==='function')window.selectMinigameFromSidebar(stage);
+  document.body.classList.add('hm-section-visible');
+  const target=E(tab);if(target)target.scrollTop=0;
+};
+window.hmCloseSection=function(){hmMenu(false);stopCatch();document.body.classList.remove('hm-section-visible');};
+function createNavigation(){
+  const wrap=E('hmNavGames');if(!wrap)return;
+  const nodes=[...document.querySelectorAll('.minigame-nav-list .minigame-nav-item')];
+  wrap.replaceChildren();
+  nodes.forEach((node,i)=>{
+    const number=Number((node.id||'').match(/nav-game-(\d+)/)?.[1]||i+1);
+    const title=node.querySelector('.minigame-nav-name')?.textContent?.trim()||`Juego ${number}`;
+    const button=document.createElement('button');button.type='button';button.textContent=`${number}. ${title}`;button.onclick=()=>hmNavigate('minigames-section',number);wrap.appendChild(button);
+  });
+}
+const navReady=()=>{document.body.classList.add('hm-navigation-enabled');createNavigation();
+ // Respeta la vista inicial del álbum sin modificar el encabezado ni la galería.
+};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',navReady,{once:true});else navReady();
+window.hmOpenAlbumAfterEntry=()=>hmNavigate('gallery');
+try{firebase.database().ref('.info/serverTimeOffset').on('value',snap=>window.hmServerOffset=snap.val()||0);}catch(err){console.warn('Sin horario Firebase',err);}
+
+window.hmChoose=function(game,name){
+  if(!games[game]||!NAMES.includes(name))return;
+  if(games[game].name&&games[game].name!==name){message(game,'Primero sal de la sala actual.');return;}
+  games[game].name=name;
+  E(`hm${game}Identity`)?.querySelectorAll('.hm-players button').forEach((btn,i)=>btn.classList.toggle('hm-selected',NAMES[i]===name));
+};
+window.hmEnter=async function(game){
+  const g=games[game];if(!g||!g.name){alert('Primero elige Criss o Andreita.');return;}
+  if(g.room){message(game,'Ya estás en esta sala.');return;}
+  try{
+    g.room=firebase.database().ref(`${ROOT}/game${game}`);
+    g.session=sessionStorage.getItem(`hmDuoSession${game}`)||String(Date.now())+'_'+Math.random().toString(36).slice(2);
+    sessionStorage.setItem(`hmDuoSession${game}`,g.session);
+    g.presRef=g.room.child('presence/'+g.name);
+    await g.presRef.onDisconnect().remove();
+    await g.presRef.set({sid:g.session,joinedAt:firebase.database.ServerValue.TIMESTAMP});
+    const current=g.room.child('round');
+    await current.transaction(s=>s||roomInit(game),undefined,false);
+    const onRound=snap=>{g.round=snap.val();renderGame(game);if(g.round?.phase==='lobby'&&hasBothReady(game,g.round))startIfReady(game);};
+    const onPresence=snap=>{g.presence=snap.val()||{};renderGame(game);if(g.round?.phase==='lobby'&&hasBothReady(game,g.round))startIfReady(game);};
+    current.on('value',onRound,e=>message(game,'Firebase: '+e.message));
+    g.room.child('presence').on('value',onPresence,e=>message(game,'Firebase: '+e.message));
+    g.off=[()=>current.off('value',onRound),()=>g.room?.child('presence').off('value',onPresence)];
+    if(game===20){const scoresRef=firebase.database().ref(ROOT+'/ranking20').limitToLast(200);
+      const onRank=s=>renderTop(s.val());scoresRef.on('value',onRank,err=>{if(E('hm20Top'))E('hm20Top').innerHTML='<tr><td colspan="4">No disponible: revisa Firebase.</td></tr>';});
+      g.off.push(()=>scoresRef.off('value',onRank));
+    }
+  }catch(err){console.error('Error en sala Halloween',err);message(game,'No se pudo conectar a Firebase: '+err.message+' (revisar las reglas de Realtime Database).');g.room=null;}
+};
+window.hmLeave=async function(game){
+ const g=games[game];if(!g)return;
+ if(game===20)stopCatch();if(g.advanceTimer)clearTimeout(g.advanceTimer);
+ for(const off of g.off.splice(0)){try{off();}catch(e){}}
+ try{if(g.presRef){await g.presRef.onDisconnect().cancel();await g.presRef.remove();}}catch(err){console.warn(err);}
+ Object.assign(g,{room:null,round:null,presence:null,presRef:null,ready:false,lastRound:null,name:null});
+ E(`hm${game}Identity`).hidden=false;E(`hm${game}Lobby`).hidden=true;E(`hm${game}Arena`).hidden=true;E(`hm${game}Result`).hidden=true;
+ E(`hm${game}Identity`)?.querySelectorAll('.hm-players button').forEach(b=>b.classList.remove('hm-selected'));
+};
+window.hmReady=async function(game){const g=games[game];if(!g.room||!g.name)return;
+ if(!onlineTwo(game)){message(game,'Falta tu pareja: ambos deben entrar desde sus dispositivos.');return;}
+ try{await g.room.child('round').transaction(s=>{
+   if(!s||s.phase==='done')s=roomInit(game);
+   if(s.phase!=='lobby')return;
+   s.ready=s.ready||{};s.ready[g.name]=true;return s;
+ },undefined,false);}
+ catch(err){message(game,'No fue posible marcar como listo: '+err.message);}
+};
+async function startIfReady(game){const g=games[game];if(!g.room||!g.round||!hasBothReady(game,g.round))return;
+ try{await g.room.child('round').transaction(s=>{
+  if(!s||s.phase!=='lobby'||!s.ready?.Criss||!s.ready?.Andreita)return;
+  s.phase='play';s.startAt=now();s.players={Criss:{score:0,ended:false},Andreita:{score:0,ended:false}};s.level=0;s.hearts=3;s.keys=0;s.choices={};s.stepAt=now();return s;
+ },undefined,false);}catch(e){console.error('No se pudo empezar sala',e);}
+}
+window.hmReplay=async game=>{const g=games[game];if(!g.room)return;
+ if(game===20)stopCatch();
+ try{await g.room.child('round').transaction(s=>{
+  if(!s||s.phase!=='done')return;
+  return roomInit(game);
+ },undefined,false);}catch(e){message(game,e.message);}
+};
+function renderGame(game){const g=games[game];if(!g.name||!g.room)return;
+ const s=g.round||{phase:'lobby',ready:{}};
+ E(`hm${game}Identity`).hidden=true;
+ E(`hm${game}Lobby`).hidden=s.phase!=='lobby';
+ E(`hm${game}Arena`).hidden=s.phase!=='play'&&s.phase!=='reveal';
+ E(`hm${game}Result`).hidden=s.phase!=='done';
+ for(const n of NAMES){const el=E(`hm${game}${n}`);if(el)el.textContent=`${n}: ${g.presence?.[n]?'🟢 Conectado':'⚪ Desconectado'} ${s.ready?.[n]?'· LISTO':''}`;}
+ if(s.phase==='lobby')message(game,onlineTwo(game)?(s.ready?.[g.name]?'Esperando a que tu pareja pulse listo...':'¡Ya están los dos! Pulsa «Estoy listo».'):'Esperando a que Criss y Andreita entren desde dos dispositivos.');
+ if(game===20){
+   const sc=s.players||{};if(E('hm20LiveScores'))E('hm20LiveScores').textContent=`Criss: ${sc.Criss?.score||0} · Andreita: ${sc.Andreita?.score||0}`;
+   if(s.phase==='play'){if(s.rid!==g.lastRound){g.lastRound=s.rid;g.resultSaved=false;startCatch();}if(s.players?.[g.name]?.ended)render20End(s);}
+   else stopCatch();
+   if(s.phase==='done')render20End(s);
+ }else{
+   if(s.phase==='play'||s.phase==='reveal')render21(s);
+   if(s.phase==='done')render21End(s);
+ }
+}
+// ------- GAME 20: canvas, collector, ranking historico --------
+let catchRAF=0,catchState=null;
+function stopCatch(){if(catchRAF)cancelAnimationFrame(catchRAF);catchRAF=0;catchState=null;}
+function catchElapsed(s){return Math.max(0,(now()-(s.startAt||now()))/1000);}
+function startCatch(){stopCatch();catchState={items:[],x:240,last:performance.now(),spawn:0,score:games[20].round?.players?.[games[20].name]?.score||0,ending:false};catchRAF=requestAnimationFrame(tickCatch);}
+function pointerCatch(evt){if(!catchState||!visibleGame(20))return;const r=E('hmCatchCanvas').getBoundingClientRect();catchState.x=Math.max(35,Math.min(445,(evt.clientX-r.left)/r.width*480));}
+function keyCatch(evt){if(!catchState||!visibleGame(20)||!['ArrowLeft','ArrowRight'].includes(evt.key))return;evt.preventDefault();catchState.x=Math.max(35,Math.min(445,catchState.x+(evt.key==='ArrowRight'?45:-45)));}
+function tickCatch(timestamp){const state=catchState,g=games[20],s=g.round;
+ if(!state||!s||s.phase!=='play'||s.players?.[g.name]?.ended){stopCatch();return;}
+ const cn=E('hmCatchCanvas'),ctx=cn.getContext('2d');let dt=Math.min(.055,(timestamp-state.last)/1000||.016);state.last=timestamp;
+ const sec=catchElapsed(s),period=sec>=60?.38:sec>=30?.57:.82,speed=sec>=60?210:sec>=30?155:115;
+ if(E('hm20Clock'))E('hm20Clock').textContent=`Tiempo: ${Math.min(1,Math.floor(sec/60))}:${String(Math.floor(sec%60)).padStart(2,'0')}`;
+ if(E('hm20Speed'))E('hm20Speed').textContent=`Velocidad: ${sec>=60?'RÁPIDA':sec>=30?'MEDIA':'NORMAL'}`;
+ if(E('hm20Score'))E('hm20Score').textContent='Puntos: '+state.score;
+ if(sec>=90){finishCatch('time');return;}
+ state.spawn+=dt;if(state.spawn>=period){state.spawn-=period;const good=Math.random()<.77;state.items.push({x:25+Math.random()*430,y:-25,good,glyph:(good?CANDY:BAD)[Math.floor(Math.random()*(good?CANDY:BAD).length)],radius:18});}
+ // Fondo nocturno, sin tocar los demás elementos DOM.
+ const gr=ctx.createLinearGradient(0,0,0,600);gr.addColorStop(0,'#11142e');gr.addColorStop(1,'#32132e');ctx.fillStyle=gr;ctx.fillRect(0,0,480,600);
+ ctx.fillStyle='#f8bb6a33';for(let i=0;i<21;i++){ctx.beginPath();ctx.arc((i*93+37)%480,(i*167+80)%590,1+i%3,0,Math.PI*2);ctx.fill();}
+ ctx.font='29px Arial';ctx.textAlign='center';
+ for(let i=state.items.length-1;i>=0;i--){const item=state.items[i];item.y+=speed*dt;ctx.fillText(item.glyph,item.x,item.y);
+   if(item.y>=535&&item.y<=582&&Math.abs(item.x-state.x)<55){state.items.splice(i,1);
+     if(item.good){state.score++;g.room.child(`round/players/${g.name}/score`).set(state.score).catch(console.warn);}else{finishCatch('bad');return;}
+   }else if(item.y>630)state.items.splice(i,1);
+ }
+ ctx.font='62px Arial';ctx.fillText('🧺',state.x,580);
+ ctx.textAlign='left';ctx.fillStyle='#ffde9e';ctx.font='bold 16px sans-serif';ctx.fillText('DULCES  +1      PELIGROS  ✕',18,36);
+ catchRAF=requestAnimationFrame(tickCatch);
+}
+async function finishCatch(reason){const state=catchState,g=games[20];if(!g.room||!g.round||!state||state.ending)return;
+ state.ending=true;const sec=Math.max(0,Math.min(90,Math.floor(catchElapsed(g.round))));const score=state.score;stopCatch();
+ try{await g.room.child('round').transaction(s=>{
+   if(!s||s.phase!=='play'||s.players?.[g.name]?.ended)return;
+   s.players[g.name]={score,ended:true,seconds:sec,reason};
+   if(NAMES.every(n=>s.players[n]?.ended))s.phase='done';return s;
+ },undefined,false);
+  const rid=g.round.rid;
+  await firebase.database().ref(`${ROOT}/ranking20/${rid}_${g.name}`).set({name:g.name,score,seconds:sec,date:firebase.database.ServerValue.TIMESTAMP,reason});
+  render20End(g.round);
+ }catch(e){console.error(e);const box=E('hm20Result');box.hidden=false;E('hm20ResultText').textContent='No se pudo guardar el resultado. Revisa la conexión a Firebase.';}
+}
+function render20End(s){const g=games[20],me=s.players?.[g.name];if(!me||!me.ended)return;
+ E('hm20Arena').hidden=true;E('hm20Result').hidden=false;
+ const msg=me.reason==='bad'?'<div class="hm-failure"><strong>🎃 ¡PERDISTE MIAMOR! 💀</strong><p>¡Atrapaste una poción, bomba o trampa maldita!</p></div>':'<h3>🍭 ¡Sobreviviste a la lluvia maldita!</h3>';
+ E('hm20ResultText').innerHTML=msg+`<p> ${htmlSafe(g.name)} atrapó <strong>${Number(me.score)||0}</strong> dulces en <strong>${Math.floor((me.seconds||0)/60)}:${String((me.seconds||0)%60).padStart(2,'0')}</strong>.</p>`+
+ (s.phase!=='done'?'<p>Esperando a que tu pareja termine su turno…</p>':'<p>¡Ronda completada por ambos!</p>');
+ E('hm20Result').querySelector('button').disabled=s.phase!=='done';
+}
+function renderTop(data){const el=E('hm20Top');if(!el)return;
+ const arr=Object.values(data||{}).filter(v=>NAMES.includes(v?.name)&&Number.isFinite(Number(v.score))).sort((a,b)=>Number(b.score)-Number(a.score)||Number(a.seconds)-Number(b.seconds)).slice(0,5);
+ el.innerHTML=arr.length?arr.map((v,i)=>`<tr><td>${i+1}</td><td>${htmlSafe(v.name)}</td><td>${Number(v.score)||0}</td><td>${Math.floor((v.seconds||0)/60)}:${String((v.seconds||0)%60).padStart(2,'0')}</td></tr>`).join(''):'<tr><td colspan="4">Todavía no hay partidas. ¡Sean los primeros!</td></tr>';
+}
+// ------- GAME 21: 7 cuartos, elección secreta y revelado al elegir ambos -------
+function safeDoor(s){return ((s.seed||0)+(s.level||0)*2)%3;}
+function render21(s){const g=games[21];
+ E('hm21Room').textContent=`Habitación ${Math.min(7,(s.level||0)+1)}/7`;
+ E('hm21Keys').textContent=`🔑 ${s.keys||0} llaves`;
+ E('hm21Hearts').textContent='❤️'.repeat(Math.max(0,s.hearts||0))+'🖤'.repeat(3-Math.max(0,s.hearts||0));
+ E('hm21Clue').textContent='🕯️ Pista: '+CLUES[safeDoor(s)];
+ const grid=E('hm21Doors');grid.classList.toggle('hm-reveal',s.phase==='reveal');
+ const myChoice=s.choices?.[g.name];const other=NAMES.find(n=>n!==g.name);
+ [...grid.children].forEach((button,i)=>{button.disabled=s.phase!=='play'||myChoice!==undefined;button.classList.toggle('hm-chosen',myChoice===i);button.classList.toggle('hm-safe',s.phase==='reveal'&&safeDoor(s)===i);button.classList.toggle('hm-trap',s.phase==='reveal'&&safeDoor(s)!==i);});
+ if(s.phase==='reveal'){
+  E('hm21StatusLive').textContent=s.lastSuccess?'✨ ¡Las dos eligieron la puerta correcta! ¡Una llave nueva!':'💀 ¡Una trampa! Perdieron una vida. Próxima sala en segundos…';
+  if(g.advanceTimer)clearTimeout(g.advanceTimer);
+  g.advanceTimer=setTimeout(()=>advance21(),Math.max(120,2900-(now()-(s.revealAt||now()))));
+ }else{
+  E('hm21StatusLive').textContent=myChoice!==undefined?(s.choices?.[other]!==undefined?'Revelando puertas…':'✅ Elegiste tu puerta. Esperando la elección de tu pareja…'):
+  (s.choices?.[other]!==undefined?'Tu pareja ya eligió. ¡Ahora te toca!':'Ambos deben elegir una puerta; se revelarán juntas.');
+ }
+}
+window.hmDoor=async function(index){const g=games[21];if(!g.room||!NAMES.includes(g.name)||index<0||index>2)return;
+ try{await g.room.child('round').transaction(s=>{
+  if(!s||s.phase!=='play'||s.choices?.[g.name]!==undefined)return;
+  s.choices=s.choices||{};s.choices[g.name]=index;
+  if(NAMES.every(n=>s.choices[n]!==undefined)){
+    const success=NAMES.every(n=>s.choices[n]===safeDoor(s));
+    s.lastSuccess=success;s.keys=(s.keys||0)+(success?1:0);s.hearts=(s.hearts||3)-(success?0:1);
+    s.phase='reveal';s.revealAt=now();
+  }
+  return s;
+ },undefined,false);}catch(e){E('hm21StatusLive').textContent='Error de sincronización: '+e.message;}
+};
+async function advance21(){const g=games[21];if(!g.room)return;
+ try{await g.room.child('round').transaction(s=>{
+  if(!s||s.phase!=='reveal'||now()-(s.revealAt||now())<2300)return;
+  if((s.hearts||0)<=0||(s.level||0)>=6){s.phase='done';s.finishedAt=now();return s;}
+  s.level++;s.phase='play';s.choices={};s.stepAt=now();return s;
+ },undefined,false);}catch(e){console.error('Paso de puerta',e);}
+}
+function render21End(s){E('hm21ResultText').innerHTML=`<h3>${(s.hearts||0)>0?'🏰 ¡Escaparon juntos del castillo!':'💀 El castillo los atrapó…'}</h3><p>Consiguieron ${Number(s.keys||0)} de 7 llaves. ${s.hearts>0?'¡Se salvaron!':'Pueden intentarlo nuevamente juntos.'}</p>`;}
+// Manejo de entradas solo cuando realmente está abierto el minijuego.
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initInputs,{once:true});else initInputs();
+function initInputs(){const canvas=E('hmCatchCanvas');if(canvas){canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture?.(e.pointerId);pointerCatch(e)});canvas.addEventListener('pointermove',e=>{if(e.buttons||e.pointerType==='touch')pointerCatch(e)});}
+ window.addEventListener('keydown',keyCatch,{passive:false});}
+window.hmOnStage=function(num){if(num!==20)stopCatch();if(num===20||num===21){const g=games[num];if(g.round){renderGame(num);if(num===20&&g.round.phase==='play'&&!g.round.players?.[g.name]?.ended&&!catchState)startCatch();}}
+ else{stopCatch();}
+};
+})();
+
+</script>
+<script>
+/* V8.2 — LA ÚLTIMA CAMPANADA. Firebase RTDB compartido, rol por época y 4 acertijos. */
+(function(){
+'use strict';
+const E=id=>document.getElementById(id);
+const NAMES=['Criss','Andreita'];
+const ROOT='halloweenDuoV81/game22';
+const WORDS=['LUNA','CUERVO','ECLIPSE','NIEBLA'];
+const ICONS=['🌙','🦇','🕸️','🗝️'];
+const TURNS=['◔','◑','◕','●'];
+const chapterNames=['El retrato roto','El código de la eternidad','El eco de los cuatro sellos','La última campanada'];
+const stories={
+ past:[
+  '1896. En una casa donde los relojes están detenidos, encuentras nueve huecos. Restaura el retrato moviendo los fragmentos junto al espacio vacío. El cuadro te susurrará una palabra que debes enviar al futuro.',
+  'Un armario antiguo resiste el paso del tiempo. Solo se abrirá con tres números que todavía no existen. Tu pareja debe hacer que una máquina futura los descubra.',
+  'Cuatro sellos cubren una puerta sellada con cera. En el futuro existe un registro del orden preciso, pero aquí debes pulsarlos tú.',
+  'La torre está a punto de dar la última campanada. Baja tu palanca y haz que la otra época responda antes de veinte segundos.'
+ ],
+ future:[
+  '2186. Los archivos de la ciudad quedaron corruptos. El receptor de palabras antiguas aguarda una contraseña escondida en un retrato del siglo pasado. Solo la otra época puede leerla.',
+  'Un laboratorio futurista conserva cuatro engranajes holográficos. Haz coincidir cada anillo con su marca luminosa. La máquina revelará un código para el armario de 1896.',
+  'El sistema registra un orden exacto de cuatro sellos del pasado. Transmite la secuencia a tu pareja y, cuando la puerta antigua se abra, activa el receptor del futuro.',
+  'El portal está casi completo. Activa tu generador a la vez que la palanca de 1896. La sincronización solo dura veinte segundos.'
+ ]
+};
+const hints={
+ past:[
+  ['Una pieza puede moverse únicamente cuando comparte un lado con el espacio vacío.','Piensa en las cifras del marco: arriba, el principio; abajo, el final. El cuadro solo habla cuando todas están ordenadas.'],
+  ['Las cifras todavía están ocultas en el otro extremo del tiempo.','La máquina del futuro tiene cuatro anillos; uno por cada señal que debe alinear. Después habrá tres números que enviar.'],
+  ['Los símbolos del siglo pasado son idénticos a los del registro futurista.','No improvises una combinación: pide cuatro figuras en el orden exacto en que aparecen en el monitor de tu pareja.'],
+  ['No basta con accionar tu palanca: la otra época debe hacer lo mismo.','La ventana es de veinte segundos. Si se enfría el portal, vuelvan a intentarlo sin perder progreso.']
+ ],
+ future:[
+  ['No todos los archivos nacen en el futuro. Uno está escrito detrás de una pintura antigua.','Cuando el cuadro se reconstruya, aparecerá una palabra. Pide que te la envíen por el transmisor y elígela aquí.'],
+  ['Cada anillo cambia de fase al tocarlo y el objetivo está dibujado sobre él.','Mira la pequeña marca superior de cada columna: ese es su destino. Los cuatro anillos deben coincidir.'],
+  ['Tu pantalla conoce el orden, pero los sellos están físicamente en 1896.','Transmite los cuatro símbolos de izquierda a derecha. Al abrirse la puerta, enciende aquí el receptor.'],
+  ['La energía de tu botón es fugaz; debe encontrarse con la energía antigua.','Coordina una cuenta atrás por el chat y pulsen ambos en un lapso de veinte segundos.']
+ ]
+};
+const g={name:null,side:null,session:null,room:null,presRef:null,presence:{},round:null,ready:false,off:[],chatRef:null,chatHandler:null,chatRid:null,timer:null,advanceBusy:false,lastFrame:'',typed:'',runes:[],error:'',wrong:0};
+const now=()=>Date.now()+(Number(window.hmServerOffset)||0);
+const both=()=>NAMES.every(n=>!!g.presence?.[n]?.sid)&&g.presence.Criss.side!==g.presence.Andreita.side;
+function mkseed(n){return (Math.floor(Math.abs(n))%200000)+23;}
+function rng(seed){let z=mkseed(seed);return ()=>{z=(Math.imul(1664525,z)+1013904223)>>>0;return z/4294967296;};}
+function scramble(seed){const a=[1,2,3,4,5,6,7,8,0],rand=rng(seed);let prev=-1;for(let k=0;k<40;k++){
+ const b=a.indexOf(0),adj=[b-3,b+3,(b%3)?b-1:-1,(b%3<2)?b+1:-1].filter(v=>v>=0&&v<9&&v!==prev);const next=adj[Math.floor(rand()*adj.length)];a[b]=a[next];a[next]=0;prev=b;
+ }return a.join(',')==='1,2,3,4,5,6,7,8,0'?scramble(seed+17):a;}
+function code(seed){return String(100+((seed*37+251)%900)).padStart(3,'0');}
+function dialGoal(seed){return [0,1,2,3].map((n)=>((seed>>>((n*3)%12))+n*7)%4);}
+function glyphOrder(seed){return [0,1,2,3].map(i=>ICONS[(seed+i*3+Math.floor(seed/(i+2)))%4]);}
+function newRound(){return {rid:String(Date.now())+'_'+Math.random().toString(36).slice(2,8),phase:'lobby',chapter:0,seed:mkseed(Date.now()),ready:{Criss:false,Andreita:false},startedAt:null,stageAt:null,solvedAt:null,progress:{}};}
+function initStage(s,chapter){s.chapter=chapter;s.phase='play';s.stageAt=now();s.solvedAt=null;s.progress=chapter===0?{tiles:scramble(s.seed),pastSolved:false,futureSolved:false}:chapter===1?{dials:[0,0,0,0],pastSolved:false,futureSolved:false}:chapter===2?{pastSolved:false,futureSolved:false}: {past:0,future:0};return s;}
+function isSolved(s){return s.chapter<3&&s.progress?.pastSolved&&s.progress?.futureSolved;}
+function reveal(s){if(isSolved(s)){s.phase='reveal';s.solvedAt=now();}return s;}
+function setStatus(msg,where){const el=E(where||'tm22PlayStatus');if(el)el.textContent=msg;}
+function ensureRoom(){if(!g.room||!g.name||!g.side)return false;if(!both()){setStatus('Esperando que ambas épocas estén conectadas.');return false;}return true;}
+window.tm22ChooseName=name=>{if(g.room||!NAMES.includes(name))return;g.name=name;paintSelection();};
+window.tm22ChooseSide=side=>{if(g.room||!['past','future'].includes(side))return;g.side=side;paintSelection();};
+function paintSelection(){E('tm22Names')?.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.name===g.name)));E('tm22Sides')?.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.side===g.side)));}
+window.tm22Enter=async()=>{
+ if(!g.name||!g.side){alert('Elige primero tu identidad y tu época.');return;}if(g.room)return;
+ if(typeof firebase==='undefined'||!firebase.database){alert('Firebase no está disponible. Conéctate a internet para jugar en pareja.');return;}
+ const room=firebase.database().ref(ROOT),sid=Date.now()+'_'+Math.random().toString(36).slice(2,10);
+ const status=E('tm22LobbyStatus');if(status)status.textContent='Conectando las dos épocas…';
+ try{
+  const p=room.child('presence');const tx=await p.transaction(cur=>{
+   cur=cur||{};const other=NAMES.find(n=>n!==g.name);
+   if(cur[g.name]?.sid||cur[other]?.side===g.side)return;
+   cur[g.name]={sid,side:g.side,joined:firebase.database.ServerValue.TIMESTAMP};return cur;
+  },undefined,false);
+  if(!tx.committed){setStatus('Ese nombre o esa época ya está ocupada. Elijan perfiles y épocas diferentes.','tm22LobbyStatus');alert('Ese nombre o esa época ya está ocupado. Elijan perfiles y épocas diferentes.');return;}
+  g.room=room;g.session=sid;g.presRef=p.child(g.name);
+  try{await g.presRef.onDisconnect().remove();}catch(err){console.warn('Sin desconexión automática',err);}
+  await room.child('round').transaction(cur=>cur||newRound(),undefined,false);
+  const roundRef=room.child('round');const onRound=snap=>{
+   const prev=g.round?.rid;g.round=snap.val();if(g.round?.rid!==prev){g.typed='';g.runes=[];g.lastFrame='';listenChat();}
+   render();if(g.round?.phase==='lobby')tryStart();
+  };
+  const onPresence=snap=>{g.presence=snap.val()||{};render();if(g.round?.phase==='lobby')tryStart();};
+  roundRef.on('value',onRound,err=>setStatus('Error de conexión con la sala: '+err.message,'tm22LobbyStatus'));
+  p.on('value',onPresence,err=>setStatus('Error de presencia: '+err.message,'tm22LobbyStatus'));
+  g.off=[()=>roundRef.off('value',onRound),()=>p.off('value',onPresence)];
+  g.timer=setInterval(tick,1000);render();
+ }catch(err){console.error('Fallo de conexión V8.2',err);if(g.presRef){try{await g.presRef.remove();}catch(e){}}
+  Object.assign(g,{room:null,presRef:null,session:null});alert('No se pudo abrir la sala. Revisa las reglas de Firebase Realtime Database.');
+ }
+};
+window.tm22Leave=async()=>{
+ const ref=g.presRef;g.off.splice(0).forEach(off=>{try{off();}catch(e){}});if(g.chatRef&&g.chatHandler)g.chatRef.off('value',g.chatHandler);
+ if(g.timer)clearInterval(g.timer);g.timer=null;g.room=null;g.presRef=null;g.chatRef=null;g.chatHandler=null;g.chatRid=null;
+ try{if(ref){await ref.onDisconnect().cancel();await ref.remove();}}catch(e){console.warn(e);}
+ g.presence={};g.round=null;g.name=null;g.side=null;g.ready=false;g.typed='';g.runes=[];g.lastFrame='';g.error='';render();paintSelection();
+};
+window.tm22Ready=async()=>{if(!g.room||!g.name||!both())return;
+ try{await g.room.child('round').transaction(s=>{if(!s||s.phase!=='lobby')return;s.ready=s.ready||{};s.ready[g.name]=true;return s;},undefined,false);}catch(err){setStatus('No se pudo confirmar: '+err.message,'tm22LobbyStatus');}
+};
+async function tryStart(){if(!g.room||!g.round||g.round.phase!=='lobby'||!both()||!NAMES.every(n=>g.round.ready?.[n]))return;
+ try{await g.room.child('round').transaction(s=>{if(!s||s.phase!=='lobby'||!NAMES.every(n=>s.ready?.[n])||!both())return;s.startedAt=now();return initStage(s,0);},undefined,false);}catch(err){console.warn('Esperando conexión para comenzar',err);}
+}
+window.tm22Replay=async()=>{if(!g.room||!both())return;
+ try{await g.room.child('round').transaction(s=>{if(!s||s.phase!=='done')return;return newRound();},undefined,false);}catch(err){setStatus('No se pudo reiniciar: '+err.message);}
+};
+function listenChat(){if(!g.room||!g.round)return;const rid=g.round.rid;if(g.chatRid===rid)return;
+ if(g.chatRef&&g.chatHandler)g.chatRef.off('value',g.chatHandler);
+ g.chatRid=rid;g.chatRef=g.room.child('messages/'+rid).limitToLast(18);
+ g.chatHandler=snap=>{const el=E('tm22ChatLog');if(!el)return;el.replaceChildren();const data=snap.val()||{};
+  const all=Object.values(data).filter(m=>m&&NAMES.includes(m.author)&&typeof m.text==='string').slice(-18);
+  if(!all.length){const p=document.createElement('p');p.textContent='Todavía no hay mensajes entre las dos épocas.';el.appendChild(p);return;}
+  for(const m of all){const p=document.createElement('p');const b=document.createElement('b');b.textContent=m.author+': ';p.appendChild(b);p.appendChild(document.createTextNode(m.text.slice(0,140)));el.appendChild(p);}el.scrollTop=el.scrollHeight;
+ };
+ g.chatRef.on('value',g.chatHandler,()=>setStatus('No se pudieron cargar los mensajes: revisa permisos de Firebase.'));
+}
+window.tm22Send=async evt=>{evt.preventDefault();if(!g.room||!g.name)return;
+ const input=E('tm22ChatInput');const txt=(input?.value||'').trim().slice(0,140);if(!txt)return;input.value='';
+ try{await g.room.child('messages/'+g.round.rid).push({author:g.name,text:txt,at:firebase.database.ServerValue.TIMESTAMP});}catch(err){input.value=txt;setStatus('No se pudo enviar: '+err.message);}
+};
+const picture=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"><defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#221c48"/><stop offset="1" stop-color="#a1676c"/></linearGradient></defs><rect width="300" height="300" fill="url(#sky)"/><circle cx="238" cy="61" r="35" fill="#ffe1a2"/><path d="M0 210L50 162 89 202 132 132 177 199 215 166 300 224v76H0" fill="#262037"/><path d="M95 255V124L152 82 208 124v131" stroke="#ffdb9b" stroke-width="4" fill="#493347"/><path d="M83 130l69-67 70 67" stroke="#ffdb9b" stroke-width="8" fill="none"/><rect x="128" y="158" width="46" height="67" rx="22" fill="#120b23" stroke="#d8b179" stroke-width="5"/><circle cx="151" cy="188" r="15" fill="#fddf9a"/><path d="M151 188V178m0 10 10 7" stroke="#43203b" stroke-width="4"/><path d="M0 252q60-34 117 0t183 0v48H0" fill="#0b0a1c"/><g fill="#ead9b8"><circle cx="45" cy="40" r="2"/><circle cx="105" cy="27" r="2"/><circle cx="170" cy="52" r="2"/></g></svg>`;
+const pictureUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(picture);
+function b(tag,txt,className,click){const el=document.createElement(tag);if(className)el.className=className;if(txt!=null)el.textContent=txt;if(click)el.addEventListener('click',click);return el;}
+function localError(msg){g.error=msg;g.wrong++;setStatus(msg);const world=E('tm22World');if(world){world.animate([{filter:'brightness(1)'},{filter:'brightness(1.7) hue-rotate(65deg)'},{filter:'brightness(1)'}],{duration:480});}}
+async function mutate(fn){if(!ensureRoom())return;
+ try{await g.room.child('round').transaction(s=>{if(!s||s.phase!=='play'||!g.presence[g.name]||g.presence[g.name].sid!==g.session||g.presence[g.name].side!==g.side)return;return fn(s);},undefined,false);}catch(err){localError('Error al sincronizar: '+err.message);}
+}
+window.tm22Tile=idx=>mutate(s=>{if(s.chapter!==0||g.side!=='past'||s.progress.pastSolved)return;const a=s.progress.tiles;if(!Array.isArray(a)||a.length!==9)return;const z=a.indexOf(0);if(!([z-3,z+3].includes(idx)||Math.floor(z/3)===Math.floor(idx/3)&&Math.abs(z-idx)===1))return;
+ [a[z],a[idx]]=[a[idx],a[z]];if(a.every((v,i)=>v===(i+1)%9))s.progress.pastSolved=true;return reveal(s);
+});
+window.tm22Word=word=>{const s=g.round;if(!s||g.side!=='future'||s.chapter!==0||!s.progress?.pastSolved||s.progress.futureSolved)return;
+ if(word!==WORDS[s.seed%WORDS.length]){localError('El receptor rechaza esa palabra. Pregunta al pasado qué decía el cuadro.');return;}
+ return mutate(next=>{if(next.chapter!==0||!next.progress?.pastSolved||next.progress.futureSolved)return;next.progress.futureSolved=true;return reveal(next);});
+};
+window.tm22Dial=i=>mutate(s=>{if(s.chapter!==1||g.side!=='future'||s.progress.futureSolved||i<0||i>3)return;const a=s.progress.dials;if(!Array.isArray(a)||a.length!==4)return;
+ a[i]=(Number(a[i])+1)%4;if(a.every((v,n)=>v===dialGoal(s.seed)[n]))s.progress.futureSolved=true;return reveal(s);
+});
+window.tm22CodeSubmit=()=>{const s=g.round;if(!s||s.chapter!==1||g.side!=='past'||!s.progress.futureSolved)return;
+ const input=E('tm22CodeInput');const value=(input?.value||'').trim();if(!/^\d{3}$/.test(value)){localError('El armario necesita exactamente tres números.');return;}
+ if(value!==code(s.seed)){localError('Las manecillas retroceden: todavía no es la combinación correcta.');return;}
+ return mutate(next=>{if(next.chapter!==1||!next.progress.futureSolved)return;next.progress.pastSolved=true;return reveal(next);});
+};
+window.tm22AddRune=sym=>{const s=g.round;if(!s||s.chapter!==2||g.side!=='past'||s.progress.pastSolved||!ICONS.includes(sym))return;
+ if(g.runes.length<4)g.runes.push(sym);renderPuzzle();};
+window.tm22ClearRunes=()=>{g.runes=[];renderPuzzle();};
+window.tm22SubmitRunes=()=>{const s=g.round;if(!s||s.chapter!==2||g.side!=='past')return;
+ const selected=g.runes.join('');if(g.runes.length!==4){localError('El círculo tiene cuatro huecos: necesita cuatro sellos.');return;}
+ if(selected!==glyphOrder(s.seed).join('')){g.runes=[];localError('El eco antiguo no reconoce el orden. Compara las marcas con el archivo del futuro.');renderPuzzle();return;}
+ return mutate(next=>{if(next.chapter!==2||next.progress.pastSolved)return;next.progress.pastSolved=true;return reveal(next);});
+};
+window.tm22Receiver=()=>mutate(s=>{if(s.chapter!==2||g.side!=='future'||!s.progress.pastSolved||s.progress.futureSolved)return;s.progress.futureSolved=true;return reveal(s);});
+window.tm22Lever=()=>mutate(s=>{if(s.chapter!==3||s.phase!=='play'||!both())return;let t=now(),p=s.progress;
+ if(p.past&&t-p.past>20000)p.past=0;if(p.future&&t-p.future>20000)p.future=0;
+ p[g.side]=t;if(p.past&&p.future&&Math.abs(p.past-p.future)<=20000){s.phase='done';s.finishedAt=t;}return s;
+});
+async function nextChapter(){if(g.advanceBusy||!g.room||!g.round||g.round.phase!=='reveal')return;g.advanceBusy=true;
+ try{await g.room.child('round').transaction(s=>{if(!s||s.phase!=='reveal'||now()-(s.solvedAt||now())<2300)return;
+ return initStage(s,Math.min(3,s.chapter+1));},undefined,false);}catch(err){console.warn('Cambio de capítulo:',err);}finally{g.advanceBusy=false;}
+}
+function makeHint(){if(!g.round||g.round.phase!=='play'||!g.side)return;
+ const elapsed=now()-(g.round.stageAt||now());const el=E('tm22Hint');if(!el)return;
+ if(elapsed<33000){el.hidden=true;return;}
+ const index=elapsed>=78000?1:0;const strong=document.createElement('strong');strong.textContent=index?'🕯️ Una pista más: ':'🕯️ Una pista del tiempo: ';
+ el.replaceChildren(strong,document.createTextNode(hints[g.side][g.round.chapter][index]));el.hidden=false;
+}
+function tick(){const s=g.round;if(!s)return;
+ if(s.phase==='play'||s.phase==='reveal'){
+  const t=Math.max(0,Math.floor((now()-(s.startedAt||now()))/1000));E('tm22Timer').textContent=`Tiempo ${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;
+  if(s.phase==='play')makeHint();if(s.phase==='reveal')nextChapter();
+ }
+}
+function render(){const online=!!g.room, s=g.round;
+ E('tm22Choose').hidden=online;E('tm22Lobby').hidden=!online||s?.phase!=='lobby';
+ E('tm22Play').hidden=!online||!['play','reveal'].includes(s?.phase);
+ E('tm22Finish').hidden=!online||s?.phase!=='done';E('tm22Chat').hidden=!online;
+ if(!online){paintSelection();return;}
+ for(const n of NAMES){const slot=E('tm22'+n);const p=g.presence?.[n];if(!slot)continue;slot.replaceChildren(b('strong',n),document.createTextNode(p?`🟢 ${p.side==='past'?'1896 · Pasado':'2186 · Futuro'}${s?.ready?.[n]?' · LISTO':''}`:'⚪ No conectado'));}
+ if(s?.phase==='lobby'){
+  E('tm22LobbyStatus').textContent=both()?s.ready?.[g.name]?'Ya estás listo. Falta que tu pareja confirme.':'¡Están los dos! Pulsa «Estoy listo» para comenzar.':'Necesitan a Criss y Andreita en épocas distintas.';
+  E('tm22ReadyButton').disabled=!both()||!!s.ready?.[g.name];
+ }
+ if(['play','reveal'].includes(s?.phase)){
+  E('tm22Chapter').textContent=`Capítulo ${s.chapter+1} / 4`;
+  E('tm22SideName').textContent=g.side==='past'?'🕯️ 1896':'🛸 2186';
+  const world=E('tm22World');world.classList.toggle('tm-past',g.side==='past');world.classList.toggle('tm-future',g.side==='future');
+  E('tm22Horizon').textContent=g.side==='past'?'1896 · MANSIÓN VALDÉN':'2186 · NEÓPOLIS';
+  E('tm22Title').textContent=chapterNames[s.chapter];E('tm22Story').textContent=stories[g.side][s.chapter];
+  const fingerprint=[s.rid,s.chapter,s.phase,JSON.stringify(s.progress)].join('|');
+  if(fingerprint!==g.lastFrame){g.lastFrame=fingerprint;if(s.phase==='reveal'){
+   const area=E('tm22Puzzle');area.replaceChildren(b('div','✧ ¡EL RELOJ VUELVE A LATIR! ✧','tm-message-key'),b('p','La señal llegó al otro lado del tiempo. Preparando el siguiente capítulo…'));
+  }else{renderPuzzle();}}
+  if(s.phase==='reveal')setStatus('¡Unieron ambas épocas! Se abre una nueva grieta temporal…');
+  else if(!both())setStatus('Una época está desconectada. La aventura continúa cuando vuelva tu pareja.');
+  else setStatus('Criss y Andreita están conectados. Compartan sus pistas en el transmisor.');
+  tick();
+ }
+ if(s?.phase==='done'){
+  const t=Math.max(0,Math.floor(((s.finishedAt||now())-(s.startedAt||now()))/1000));
+  E('tm22FinalTime').textContent=`⏱️ Escaparon en ${Math.floor(t/60)} min y ${t%60} s. ¡Los cuatro capítulos están completos!`;
+ }
+}
+function renderPuzzle(){const s=g.round,area=E('tm22Puzzle');if(!s||!area||s.phase!=='play')return;
+ area.replaceChildren();const side=g.side,p=s.progress,done=side==='past'?p.pastSolved:p.futureSolved;
+ if(s.chapter===0){
+  if(side==='past'){
+   if(done){area.appendChild(b('div','La palabra oculta es: «'+WORDS[s.seed%WORDS.length]+'». Envíala al futuro mediante el transmisor.','tm-message-key'));
+   }else{
+    const board=b('div',null,'tm-grid9');const z=p.tiles.indexOf(0);
+    p.tiles.forEach((value,index)=>{const tile=b('button',null,value===0?'tm-empty':'',()=>tm22Tile(index));tile.type='button';
+     if(value===0){tile.disabled=true;tile.setAttribute('aria-label','Hueco vacío');}
+     else{const origin=value-1;tile.style.backgroundImage=`url("${pictureUrl}")`;tile.style.backgroundPosition=`${(origin%3)*50}% ${Math.floor(origin/3)*50}%`;
+      tile.appendChild(b('i',String(value)));const legal=[z-3,z+3].includes(index)||(Math.floor(z/3)===Math.floor(index/3)&&Math.abs(z-index)===1);tile.disabled=!legal;
+      tile.setAttribute('aria-label',`Mover fragmento ${value}`);}board.appendChild(tile);
+    });area.appendChild(board);area.appendChild(b('p','Toca una pieza vecina al hueco para deslizarla hasta restaurar el retrato.'));
+   }
+  }else{
+   area.appendChild(b('p',p.pastSolved?'El retrato fue restaurado. Consulta la palabra que el pasado acaba de descubrir.':'Esperando a que el pasado restaure el cuadro y te comunique la palabra.'));
+   const grid=b('div',null,'tm-runes');WORDS.forEach(word=>{const btn=b('button',word,'',()=>tm22Word(word));btn.type='button';btn.disabled=!p.pastSolved||!!p.futureSolved;grid.appendChild(btn);});area.appendChild(grid);
+   if(done)area.appendChild(b('div','El receptor reconoce la palabra. ¡Primer fragmento del tiempo recuperado!','tm-message-key'));
+  }
+ }else if(s.chapter===1){
+  if(side==='future'){
+   if(done)area.appendChild(b('div','El código que apareció en el monitor es: '+code(s.seed)+'. Envíaselo al pasado para abrir el armario.','tm-message-key'));
+   else{const row=b('div',null,'tm-dials');dialGoal(s.seed).forEach((goal,i)=>{
+    const current=Number(p.dials?.[i])||0;const btn=b('button',TURNS[current], 'tm-dial',()=>tm22Dial(i));btn.type='button';btn.appendChild(b('small','META: '+TURNS[goal]));btn.setAttribute('aria-label',`Engranaje ${i+1}, posición ${current+1}, meta ${goal+1}`);row.appendChild(btn);
+   });area.appendChild(row);area.appendChild(b('p','Pulsa cada anillo para girarlo hasta que coincida con la marca «META».'));
+   }
+  }else{
+   area.appendChild(b('p',p.futureSolved?'El armario de 1896 está iluminado. Introduce las tres cifras que tu pareja encontró en el futuro.':'El candado permanece sellado. Tu pareja debe calibrar los engranajes del futuro.'));
+   const row=b('div',null,'tm-row');const input=b('input',null,'tm-input');input.id='tm22CodeInput';input.setAttribute('inputmode','numeric');input.setAttribute('maxlength','3');input.setAttribute('placeholder','000');input.setAttribute('aria-label','Código de tres cifras');input.autocomplete='off';input.disabled=!p.futureSolved||!!p.pastSolved;
+   input.addEventListener('input',()=>{input.value=input.value.replace(/\D/g,'').slice(0,3);});
+   const submit=b('button','Abrir armario','tm-action',()=>tm22CodeSubmit());submit.type='button';submit.disabled=input.disabled;
+   row.append(input,submit);area.appendChild(row);if(done)area.appendChild(b('div','El armario se ha abierto. ¡Has recuperado la segunda mitad del reloj!','tm-message-key'));
+  }
+ }else if(s.chapter===2){
+  if(side==='future'){
+   area.appendChild(b('p','Transmite a 1896 los cuatro sellos de esta pantalla, de izquierda a derecha:'));
+   const seq=b('div',null,'tm-sequence');glyphOrder(s.seed).forEach(icon=>seq.appendChild(b('span',icon)));area.appendChild(seq);
+   const btn=b('button',p.futureSolved?'✓ Receptor activado':'Encender receptor de ecos','tm-action',()=>tm22Receiver());btn.type='button';btn.disabled=!p.pastSolved||!!p.futureSolved;area.appendChild(btn);
+   if(!p.pastSolved)area.appendChild(b('p','El receptor se encenderá después de que el pasado complete sus cuatro sellos.'));
+  }else{
+   area.appendChild(b('p','Tu pareja ve la secuencia correcta. Pulsa los cuatro sellos según el orden que te transmita.'));
+   const seq=b('div',null,'tm-sequence');for(let i=0;i<4;i++)seq.appendChild(b('span',g.runes[i]||'·'));area.appendChild(seq);
+   const grid=b('div',null,'tm-symbols');ICONS.forEach(icon=>{const btn=b('button',icon,null,()=>tm22AddRune(icon));btn.type='button';btn.disabled=p.pastSolved||g.runes.length>=4;grid.appendChild(btn);});area.appendChild(grid);
+   const controls=b('div',null,'tm-row');const clear=b('button','Borrar','tm-action tm-secondary',()=>tm22ClearRunes());clear.type='button';clear.disabled=p.pastSolved;
+   const submit=b('button','Activar los sellos','tm-action',()=>tm22SubmitRunes());submit.type='button';submit.disabled=p.pastSolved||g.runes.length<4;controls.append(clear,submit);area.appendChild(controls);
+   if(done)area.appendChild(b('div','Los sellos brillan en azul. ¡Dile al futuro que active el receptor!','tm-message-key'));
+  }
+ }else if(s.chapter===3){
+  const portal=b('div',null,'tm-portal');portal.appendChild(b('strong','⏳'));area.appendChild(portal);
+  const mine=Number(p[side]||0),other=Number(p[side==='past'?'future':'past']||0);
+  if(mine&&now()-mine<20000){area.appendChild(b('div',`Tu energía está activa: quedan ${Math.ceil((20000-(now()-mine))/1000)} segundos para recibir la señal de tu pareja.`,'tm-message-key'));}
+  else if(other&&now()-other<20000){area.appendChild(b('div','¡La otra época ha activado su palanca! Activa la tuya antes de que se apague.','tm-message-key'));}
+  const btn=b('button',side==='past'?'🕯️ Bajar la palanca de 1896':'🛸 Encender el generador de 2186','tm-action',()=>tm22Lever());btn.type='button';area.appendChild(btn);
+  area.appendChild(b('p','Ambos pulsarán desde sus propios dispositivos. Si pasan veinte segundos entre pulsaciones, vuelvan a intentarlo.'));
+ }
+}
+function init(){paintSelection();render();}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+window.tm22OnStage=function(stage){if(stage===22)render();};
+window.tm22Debug={getState:()=>({name:g.name,side:g.side,round:g.round,presence:g.presence}),scramble,code,glyphOrder,dialGoal};
+})();
+</script>
+
 </body>
 </html>
