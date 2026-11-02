@@ -5850,6 +5850,92 @@ body.hm-menu-open{overflow:hidden}
 
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+<style id="retosDiariosV91Styles">
+/* V9 – menú por delante de las telarañas (sin afectar sus animaciones) */
+#halloweenCornerDecor { z-index:1250 !important; }
+#halloweenAmbientLayer { z-index:1240 !important; }
+#hmTopbar { z-index:1302 !important; isolation:isolate; }
+#hmTopbar .hm-hamburger,
+#hmTopbar button.hm-hamburger {
+  position:relative !important; z-index:1303 !important;
+  background:#050505 !important;
+  border:2px solid #f5a763 !important;
+  box-shadow:0 7px 25px rgba(0,0,0,.85),inset 0 0 0 1px #30251b !important;
+  opacity:1 !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+#hmTopbar .hm-hamburger-lines, #hmTopbar .hm-hamburger-lines i { z-index:1; }
+#hmNav, #hmNav.hm-show { z-index:1300 !important; background:#060609 !important; }
+#hmNav .hm-menu-head button {background:#101012!important;}
+/* V9 – Retos Diarios: apartado aislado */
+#retos-diarios-section {background:linear-gradient(155deg,#0d0d18,#1b1323 48%,#100e16)!important;color:#fff1df!important;border:2px solid #a57854!important;}
+#retos-diarios-section * {box-sizing:border-box;}
+#retos-diarios-section h2 {color:#ffd390!important;}
+#drApp {max-width:940px;margin:auto;color:#fff1df;font-family:Nunito,sans-serif;}
+#drApp .dr-hero {text-align:center;padding:20px 8px 17px;background:radial-gradient(circle at 55% 10%,#7d422739,transparent 69%),#161424;border:1px solid #a47552;border-radius:23px;margin-bottom:16px;}
+#drApp .dr-hero h2 {margin:5px auto!important;font-size:clamp(26px,5vw,36px);font-weight:900;}
+#drApp .dr-icon {font-size:32px;letter-spacing:4px;animation:drRise 3s ease-in-out infinite alternate;}
+@keyframes drRise {to{transform:translateY(-5px)}}
+#drApp .dr-hero p{color:#f2d6bc;margin:7px 0 12px;font-size:13px;}
+#drApp .dr-day{display:inline-block;padding:9px 15px;background:#35283e;border:1px solid #7f668d;border-radius:999px;font-weight:900;font-size:13px;}
+#drApp .dr-clock-box {margin:15px auto 0;padding:12px 17px;background:#06060c;border:1px solid #e9a655;border-radius:14px;display:table;color:#ffcb7f;font-weight:800;box-shadow:0 0 25px #ff7f1926;}
+#drApp #drCountdown {font:900 clamp(22px,5vw,33px) Montserrat,sans-serif;letter-spacing:2px;display:inline-block;margin-left:4px;color:#fff0d3;font-variant-numeric:tabular-nums;}
+#drApp .dr-choose {display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin:14px auto 20px;background:#1b192a;border-radius:17px;padding:14px;border:1px solid #705973;}
+#drApp .dr-choose b {color:#f9d8ad;margin-right:7px;}
+#drApp button {min-height:42px;border:1px solid #a48180;border-radius:12px;padding:10px 15px;background:#2e253d;color:#ffebd8;font:800 13px Nunito,Arial,sans-serif;cursor:pointer;transition:transform .2s,background .2s,border-color .2s;}
+#drApp button:hover:not(:disabled) {transform:translateY(-2px);background:#50354b;border-color:#ffc080;}
+#drApp button:disabled{opacity:.5;cursor:progress;}
+#drApp .dr-selected {background:#bd6c35;border-color:#ffd7a1;color:#120e14;}
+#drApp .dr-cards {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:14px auto;}
+#drApp .dr-card {min-width:0;padding:22px 18px;min-height:285px;border-radius:20px;background:linear-gradient(150deg,#23203a,#171525);border:2px solid #a88066;box-shadow:0 10px 24px #0005;display:flex;flex-direction:column;gap:11px;animation:drAppear .35s ease-out both;}
+#drApp .dr-card:nth-child(2){animation-delay:.08s;border-color:#ca7c9c;}
+@keyframes drAppear {from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+#drApp .dr-person{color:#ffd39c;font:900 21px Montserrat,sans-serif;}
+#drApp .dr-date{color:#c4bad0;font-size:12px;font-weight:800;text-transform:capitalize;}
+#drApp .dr-task{font-size:15px;line-height:1.65;font-weight:800;color:#fff8e8;margin:5px 0;flex:1;white-space:pre-wrap;}
+#drApp .dr-status{padding:10px 12px;border-radius:11px;background:#110e1a;border:1px solid #635473;color:#ffe1a4;font-size:12px;font-weight:900;}
+#drApp .dr-primary{display:block;width:100%;background:#1b8d56!important;border-color:#72f3a6!important;color:white!important;padding:12px!important;}
+#drApp .dr-marked{font-size:12px;font-weight:800;color:#b3f0c7;}
+#drApp .dr-prompt{font-size:12px;color:#d3c4dd;}
+#drApp .dr-review{padding:12px 0;text-align:center;}
+#drApp .dr-review strong{display:block;color:#f4e6d7;font-size:13px;line-height:1.5;margin-bottom:9px;}
+#drApp .dr-review>div{display:flex;gap:9px;justify-content:center;}
+#drApp .dr-review button[data-answer=yes]{background:#1f744a;border-color:#71e8a9;flex:1;}
+#drApp .dr-review button[data-answer=no]{background:#813040;border-color:#fa97a2;flex:1;}
+#drApp .dr-score{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0;}
+#drApp .dr-score>div{padding:17px;border:1px solid #816c79;border-radius:15px;background:#171423;font-size:15px;font-weight:900;}
+#drApp .dr-score b{display:block;color:#ffbe79;font-size:20px;margin:6px 0;}
+#drApp .dr-score small{display:block;font-size:12px;line-height:1.55;font-weight:700;color:#e9d6dc;}
+#drApp .dr-tip {padding:13px 16px;background:#2a2333;border-left:3px solid #f6b268;border-radius:10px;color:#eaddde;line-height:1.6;font-size:12px;margin:14px auto;}
+#drApp .dr-network{background:#55351f;color:#ffeab7;border:1px solid #b7833d;padding:10px 12px;border-radius:10px;font-weight:800;font-size:12px;margin:12px 0;}
+#drApp .dr-finished{padding:34px 22px;text-align:center;background:#291f32;border:2px solid #ffcd80;border-radius:22px;color:#ffe1bc;font:900 22px Montserrat,sans-serif;line-height:1.5;}
+#drApp .dr-history{margin:22px auto 15px;background:#1a1828;border:1px solid #987c7f;border-radius:17px;overflow:hidden;}
+#drApp .dr-history>summary{padding:16px;color:#ffe5b8;font-weight:900;cursor:pointer;}
+#drApp .dr-history-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;padding:14px;}
+#drApp .dr-history h4{color:#f8c38c;font-size:14px;margin-bottom:9px;}
+#drApp .dr-history ol{padding:0;list-style:none;}
+#drApp .dr-history li{padding:9px 0;font-size:11px;line-height:1.4;color:#e0dbe5;border-bottom:1px solid #5c526048;}
+#drApp .dr-history li.dr-used>span:last-child{text-decoration:line-through;opacity:.6;}
+#drApp .dr-cross{color:#f6ae86;font-weight:900;}
+#drApp .dr-pending{color:#b5a3c5;font-weight:800;}
+#drNotice{display:none;position:fixed;bottom:22px;left:50%;transform:translateX(-50%);width:min(480px,94vw);padding:14px 18px;background:#17151c;border:2px solid #ffcb85;border-radius:14px;color:#fff0d7;font:800 13px Nunito,sans-serif;z-index:2147483570;box-shadow:0 10px 45px #000b;text-align:center;}
+#drNotice.dr-visible{display:block;animation:drAppear .25s ease-out both;}
+@media(max-width:650px){#retos-diarios-section{padding:15px 12px!important;}#drApp .dr-cards,#drApp .dr-score,#drApp .dr-history-grid{grid-template-columns:1fr;}#drApp .dr-hero{padding:17px 9px;}#drApp .dr-card{min-height:0;padding:18px 14px;}#drApp .dr-choose b{width:100%;text-align:center;}#drApp .dr-choose button{flex:1;}#drApp #drCountdown{display:block;margin:5px auto 0;}}
+@media(prefers-reduced-motion:reduce){#drApp .dr-card,#drApp .dr-icon{animation:none!important;}}
+
+
+/* Retos Diarios V9.1: categoría independiente dentro del menú de Halloween */
+#hmNav .dr-menu-category{margin:27px 0 24px;padding:17px 17px 19px;background:linear-gradient(140deg,#281e30,#100f1b);border:1px solid #f1b977;border-radius:17px;box-shadow:0 12px 28px #0006;}
+#hmNav .dr-menu-category h3{font-size:19px!important;margin:0 0 8px!important;color:#ffd592!important;text-align:left;}
+#hmNav .dr-menu-category p{font-size:13px;line-height:1.5;color:#e4d7df;margin:0 0 13px;}
+#hmNav .dr-menu-category button{min-height:52px;padding:12px 15px;background:#1c3f33;color:#e9ffed;border:2px solid #78c99a;border-radius:12px;font-weight:900;display:flex;align-items:center;justify-content:space-between;gap:9px;width:100%;cursor:pointer;}
+#hmNav .dr-menu-category button:hover{background:#235342;border-color:#a7ffd0;}
+#drApp .dr-check{padding:13px 12px;border-radius:12px;font-size:13px;font-weight:900;line-height:1.6;}
+#drApp .dr-check-yes{background:#113c2a;color:#b3ffd1;border:2px solid #57d59b;box-shadow:0 0 15px #20af6933;}
+#drApp .dr-check-no{background:#4b1c2a;color:#ffe4e6;border:2px solid #df7e95;}
+
+</style>
 </head>
 <body class="halloween-full-theme">
 <div id="hmBackdrop" aria-hidden="true"></div>
@@ -6097,7 +6183,7 @@ body.hm-menu-open{overflow:hidden}
 <!-- APARTADO 1: NUESTRO TIEMPO JUNTOS -->
     <section id="time-section" class="tab-content">
       <h2>Nuestro Tiempo Juntos 💕</h2>
-      <p class="custom-game-subtitle">Comenzamos a ser novios el 29 de marzo. Cada segundo a tu lado es mágico ✨</p>
+      <p class="custom-game-subtitle">Comenzamos a ser novios el 23 de marzo. Cada segundo a tu lado es mágico ✨</p>
       
       <div class="basta-roulette-box" style="max-width: 600px; margin: 0 auto; text-align: center;">
         <div style="font-size: 1.2rem; font-weight: 800; color: var(--title-burgundy); margin-bottom: 15px;">
@@ -10573,7 +10659,7 @@ function restartCoopMatch() {
       { q: "¿Como se llamo mi Tia Mama?", options: ["Damaris", "Patty", "Olga", "Sandra"], corrects: ["Olga"] },
       { q: "¿Cual es mi animal favorito?", options: ["Perros", "Gatos", "Peces", "Pajaros"], corrects: ["Perros"] },
       { q: "¿Cual de estos objetos no tengo?", options: ["Reloj", "Zapatos Grises", "Peluche", "Pulsera Roja", "Guitarra Electrica", "Lentes de Sol", "Computadora", "Todas las anteriores"], corrects: ["Todas las anteriores"] },
-      { q: "¿Cuando es nuestro aniversario?", options: ["23 de cada mes", "28 de cada mes", "27 de cada mes", "29 de cada mes"], corrects: ["29 de cada mes"] },
+      { q: "¿Cuando es nuestro aniversario?", options: ["23 de cada mes", "28 de cada mes", "27 de cada mes", "29 de cada mes"], corrects: ["23 de cada mes"] },
       { q: "¿Cual es el color de mis ojos", options: ["Negro", "Cafes claro", "Cafes oscuro", "Azules Muajajaj"], corrects: ["Azules Muajajaj"] },
       { q: "¿Cual es mi pelicula de Disney Fav?", options: ["Cars", "Cars 2", "Cars 3", "Ninguna de esas"], corrects: ["Cars"] },
       { q: "¿Cual es mi cancion fav en Ingles?", options: ["Runaway (AURORA)", "Locked out of heaven (BRUNO MARS)", "Lost on you (LP)", "By the ocean (DRAKE BELL)", "I want you back (THE JACKSON 5", "Baby one more time (Britney Spears"], corrects: ["Locked out of heaven (BRUNO MARS)"] },
@@ -15743,7 +15829,7 @@ window.addEventListener('DOMContentLoaded', () => {
        ========================================================================== */
     function initLoveTimer() {
       // Fecha de inicio de noviazgo: 29 de marzo de 2026 (o el año correspondiente)
-      const startDate = new Date("2026-03-29T00:00:00");
+      const startDate = new Date("2026-03-23T00:00:00");
 
       function updateTimer() {
         const now = new Date();
@@ -19919,5 +20005,308 @@ window.tm22Debug={getState:()=>({name:g.name,side:g.side,round:g.round,presence:
 })();
 </script>
 
+<script>
+/* RETOS DIARIOS V9: módulo aislado. Requiere SDK Firebase ya incluido en PAGINAMR V8. */
+(function () {
+  'use strict';
+  if (window.__retosDiariosV9) return;
+  window.__retosDiariosV9 = true;
+
+  const TODAY_ZERO = '2026-11-02';
+  const PLAYERS = ['Criss', 'Andreita'];
+  const ID = 'retos-diarios-section';
+  const ROOT = 'retos_diarios_v9';
+  const WHATSAPP_DESTINO = { Andreita: '50257836238', Criss: '50249117719' }; // Quien envía el reto -> número de su pareja.
+  const SAFE_WATER_NOTE = 'Usa siempre agua potable y segura.';
+  // 20 retos diferentes por persona; los marcados X son retos que ya pasaron (se calculan por fecha).
+  const TASKS = {
+    Criss: [
+      'Envia 10 fotos en diferentes posiciones y angulos a andreita.',
+      'Debes de ir vestido con colores claros a una salida, ella puede escoger que dia mas no los colores.',
+      'Enviale alitas a Andreita.',
+      'Deberas de enviar un video a andreita tocandote.',
+      'Pide 5 referencias de fotos a andreita de que le gustaria que le enviaras, no se permite fotos desnudas o encuerado, solo fotos normales.',
+      'Dedícale una canción a Andreita.',
+      'Puedes escoger las fotos que se pondran en ml y la otra persona no puede escoger nada ni rechazar se la debe de poner.',
+      'Dile a andreita que heroe ir en todo el dia y que rol y no puede jugar algo mas que no sea eso.',
+      'Juega suyou en todo el dia no puedes jugar algo mas.',
+      'Pidele una skin o una comida a andreita, puede ser una colaboracion y pagarla con pases semanales.',
+      'Envia un videotutorial de como te vistes antes de salir a trabajar.',
+      'envia un video tocandote desde que inicias hasta que termines.',
+      'Elige el outfit de andreita para ir a la universidad, debera enviarte foto de su closet y tu vas viendo que te gusta, y se lo debe poner sin exigencias o negaciones.',
+      'Envía 5 fotos de cosas que encuentres durante el día y te recuerden a ella.',
+      'Pregúntale qué le gustaría que le regalaras en Navidad.',
+      'Haz un tiktok de amor sobre mi, puede ser chistoso como tu desees pero debes de subirlo a tiktok y dejarlo ahi, si lo pones para ti me debes una skin collector.',
+      'Darle 100 besitos a andreita en un video y contarlos (cuando nos veamos).',
+      'Debes comprar lubricante y tratar de que andreita se venga solo chupandola, si no se viene y ella te pide que la metas igual cuenta como pasado.',
+      'Envia 2 fotosmemes a andreita para que le haga stickers o 3 fotos normales sensuales.',
+      'Hoy esta prohibido que juegues jg y oro, deberas de ir exp en toda la noche sin cambios.'
+    ],
+    Andreita: [
+      'Enviar 7 videos diferentes tomando agua, tienes que enseñar como lo sirves del tambo de salvavidas y tomartelo sin cortar ni parar el video, tienes hasta las 12 de la noche.',
+      'bailar en ropa interior por un minimo de 2 minutos una cancion brasileaña a eleccion.',
+      'hacer un dibujo en paint, photoshop o en una hoja y enviar una foto a criss.',
+      'darle 100 besitos a toñita en un video y contarlos.',
+      'debes hacer un tutorial a criss de como te bañas, debes grabarte y salir todo tu cuerpo y un video de como te bañas minimo 10 minutos, puedes editarlo pero sin ropa.',
+      'hoy debes de jugar solo kagura en todas las partidas no puedes pickear otro heroe, y no puedes ir otro rol que no sea mago.',
+      'para nuestra proxima salida tienes que ir todo de negro sin importar que evento sea debes de ir asi, o si prefieres me muestras tu ousfis y talvez lo cambie.',
+      'debes enviar un video comiendo comiendo por minimo 5 min y sin hablar, no puedes decir ninguna palabra.',
+      'debes de enviar un video tocandote a criss desde que comienzas y te preparas hasta que termines sin importar que dure 1 hora debes hacerlo.',
+      'envia 5 fotos tomadas por ti de cosas que te encuentres en el dia que se la quieres dedicar a criss.',
+      'envia 1 cancion para dedicarmela ami bby.',
+      'haz un tiktok de amor sobre mi, puede ser chistoso como tu desees pero debes de subirlo a tiktok y dejarlo ahi, si lo pones para ti me debes una skin collector.',
+      'crea un minijuego que te gustaria que se añadiera a la pagina.',
+      'debes escoger que fotos nos pondremos en ml, yo no puedo decir que no.',
+      'debes enviarle una comida a mi, puede ser de 30 quetzales no debe ser algo caro, si dado caso andas cortita de dinero se aplaza para la quincena o pagas la comida la proxima vez que salgamos.',
+      'debes de pagar los globitos esta vez ajsdhaj tu puedes escoger el que tu quieras.',
+      'puedes solicitar un regalo a criss pero que no sea muy dificil de conseguir y que este en sus posibilidades jdsajk, puede ser una comida o una skin de colaboracion.',
+      'dile a criss que heroe debe de sacar en ranks, y que rol debe ir en todo el dia, no puede jugar otro rol y otro heroe que no sea heroe, si dado caso se lo banean manda un top 3, y si el 1 se lo bloquean debe escoger el segundo, ya si me bloquean todos alv voy lo que quiera jajaj.',
+      'envia 20 fotos distintas a criss poses normales.',
+      'pidele a criss que te diga referencias a criss de como quiere 5 fotos y deberas enviarlas igual o parecidas no puedes negarte.'
+    ]
+  };
+  const get = id => document.getElementById(id);
+  const esc = value => String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  let role = null, serverData = {}, databaseRef = null, lastDayKey = '', connected = false;
+
+  function dateKey(date = Date.now()) {
+    // Guatemala está siempre a UTC-06:00, sin horario de verano.
+    return new Date(date - 21600000).toISOString().slice(0, 10);
+  }
+  function dayIndex(key) {
+    const base = Date.parse(TODAY_ZERO + 'T00:00:00Z');
+    return Math.round((Date.parse(key + 'T00:00:00Z') - base) / 86400000);
+  }
+  function indexDate(idx) {
+    return new Date(Date.parse(TODAY_ZERO + 'T00:00:00Z') + idx * 86400000).toISOString().slice(0,10);
+  }
+  function fmtDay(key) {
+    const [y,m,d] = key.split('-').map(Number);
+    const nm = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    return `${d} de ${nm[m-1]} de ${y}`;
+  }
+  function midnightDeadline(key) { // medianoche de Guatemala después de la fecha indicada
+    const [y,m,d] = key.split('-').map(Number);
+    return Date.UTC(y, m - 1, d + 1, 6, 0, 0);
+  }
+  function serverNow() { return Date.now() + (Number(window.hmServerOffset) || 0); }
+  function clockText(ms) {
+    const seconds = Math.min(86400,Math.max(0, Math.ceil(ms / 1000)));
+    const h=Math.floor(seconds/3600), m=Math.floor(seconds%3600/60), s=seconds%60;
+    return [h,m,s].map(n=>String(n).padStart(2,'0')).join(':');
+  }
+  function shuffledOrder(player) {
+    const order=Array.from({length:TASKS[player].length-1},(_,i)=>i+1);
+    // Misma permutación para ambos dispositivos. El reto n.º 1 permanece fijo para 2/11.
+    let rng = player === 'Criss' ? 0x4A93B : 0x821A17;
+    for(let i=order.length-1;i>0;i--){
+      rng=(Math.imul(rng,1664525)+1013904223)>>>0;
+      const j=rng%(i+1); [order[i],order[j]]=[order[j],order[i]];
+    }
+    return [0,...order];
+  }
+  const ORDERS={Criss:shuffledOrder('Criss'),Andreita:shuffledOrder('Andreita')};
+  function taskAt(player, idx){ return idx>=0 && idx<TASKS[player].length ? TASKS[player][ORDERS[player][idx]] : null; }
+  function dayState(idx, player) { return (serverData[indexDate(idx)] || {})[player] || {}; }
+  function successBeforeDeadline(idx, player) {
+    const st=dayState(idx,player), checked=Number(st.verifiedAt);
+    return st.verified===true && Number.isFinite(checked) && checked > 0 && checked < midnightDeadline(indexDate(idx));
+  }
+  function strikeCount(player, today) {
+    let count=0;
+    for(let i=0;i<Math.min(today,20);i++)if(!successBeforeDeadline(i,player))count++;
+    return count;
+  }
+  function penaltyText(strikes) {
+    if(strikes>=3) return '🫣 3 strikes: una skin collector con método migajero, si ambos lo acuerdan.';
+    if(strikes===2) return '😈 2 strikes: ahora toca pagar el M como castigo.';
+    if(strikes===1) return '⚠️ 1 strike: ¡ups, amor! No hiciste tu reto diario. Tienes una penalización.';
+    return '💖 ¡Sin penalizaciones pendientes!';
+  }
+  function showNotice(message) {
+    let el=get('drNotice'); if(!el)return;
+    el.textContent=message;el.classList.add('dr-visible');
+    clearTimeout(showNotice.timer);showNotice.timer=setTimeout(()=>el.classList.remove('dr-visible'),4500);
+  }
+  function notifyMissedChallenge() {
+    if(!connected || !role || !PLAYERS.includes(role)) return;
+    const today=dayIndex(dateKey(serverNow())), yesterday=today-1;
+    if(yesterday<0 || yesterday>=20 || successBeforeDeadline(yesterday,role)) return;
+    const noticeKey='retosDiariosV9PenaltyNotice_'+role+'_'+today;
+    try {if(localStorage.getItem(noticeKey)==='1') return;localStorage.setItem(noticeKey,'1');}catch(e){}
+    showNotice('Ups amor, no hiciste tu reto diario. Tendrás una penalización. '+penaltyText(strikeCount(role,today)));
+  }
+  function taskStatus(st, idx, today) {
+    if(st.verified===true) return '✅ Confirmado por tu pareja';
+    if(st.verified===false) return '❌ Tu pareja marcó «No»';
+    if(st.sentAt) return '📤 (1/1) Marcado como enviado · Pendiente de revisión';
+    if(idx<today) return '⌛ No completado antes de medianoche';
+    return '⏳ Pendiente · 0/1';
+  }
+  function renderCard(name, idx, today) {
+    const st=dayState(idx,name), other=name==='Criss'?'Andreita':'Criss';
+    const myTask=role===name, mayReview=role===other;
+    const canSend=idx===today && !st.sentAt && !st.verified;
+    const canReview=idx===today && !!st.sentAt && st.verified == null;
+    let actions='';
+    if(myTask && canSend) actions=`<button class="dr-primary" data-dr-action="send" data-person="${name}">📲 Enviar reto a ${esc(other)} por WhatsApp</button>`;
+    if(myTask && !!st.sentAt) actions='<div class="dr-marked">📨 1/1 · Botón utilizado. Recuerda completar el envío dentro de WhatsApp.</div>';
+    if(mayReview && canReview) actions=`<div class="dr-review"><strong>¿${esc(name)} hizo su misión del ${esc(fmtDay(indexDate(idx)))}?</strong><div><button data-dr-action="verify" data-answer="yes" data-person="${name}">✅ Sí</button><button data-dr-action="verify" data-answer="no" data-person="${name}">❌ No</button></div></div>`;
+    if(!role) actions='<div class="dr-prompt">Selecciona arriba si eres Criss o Andreita para participar.</div>';
+    if(mayReview && !st.sentAt && idx===today) actions=`<div class="dr-prompt">☑️ ¿${esc(name)} hizo su reto? Los botones ✅ Sí / ❌ No se habilitan cuando lo marque como enviado.</div>`;
+    if(st.verified===true) actions=`<div class="dr-check dr-check-yes" role="status">✅ ${esc(name)} realizó su misión del ${esc(fmtDay(indexDate(idx)))} · Confirmado por ${esc(st.verifiedBy||other)}</div>`;
+    if(st.verified===false) actions=`<div class="dr-check dr-check-no" role="status">❌ Misión no completada · Revisado por ${esc(st.verifiedBy||other)}</div>`;
+    const past=idx<today;
+    return `<article class="dr-card ${past?'dr-overdue':''}"><div class="dr-person">${st.verified===true?'✅ ':''}${name==='Criss'?'👑':'🌸'} Reto de ${esc(name)}</div><div class="dr-date">${esc(fmtDay(indexDate(idx)))}</div><p class="dr-task">${esc(taskAt(name,idx))}</p><div class="dr-status">${esc(taskStatus(st,idx,today))}</div>${actions}</article>`;
+  }
+  function render() {
+    const container=get('drApp'); if(!container)return;
+    const today=dayIndex(dateKey(serverNow()));
+    const key=dateKey(serverNow());
+    const [yes,no]=PLAYERS.map(n=>strikeCount(n,today));
+    const done=today>=20;
+    const active=today>=0&&!done;
+    const body=done?'<div class="dr-finished">🥹 Sorry amor, tengo que actualizar los retos, ya no se me ocurren pipipi 💗</div>'
+      : today<0?'<p class="dr-early">Nuestros retos comienzan el 2 de noviembre de 2026.</p>'
+      : `<div class="dr-cards">${PLAYERS.map(p=>renderCard(p,today,today)).join('')}</div>`;
+    container.innerHTML=`
+      <div class="dr-hero"><div class="dr-icon">🕸️ 💌 🎃</div><h2>Retos Diarios</h2><p>Un reto distinto para cada uno cada día.</p><div class="dr-day">📅 ${esc(fmtDay(key))}</div>${active?'<div class="dr-clock-box">⏰ Termina en <span id="drCountdown">--:--:--</span></div>':''}</div>
+      <div class="dr-choose"><b>¿Quién está jugando?</b><button class="${role==='Criss'?'dr-selected':''}" data-dr-role="Criss">👑 Soy Criss</button><button class="${role==='Andreita'?'dr-selected':''}" data-dr-role="Andreita">🌸 Soy Andreita</button></div>
+      ${!connected?'<div class="dr-network">⚠️ Sin conexión confirmada a Firebase. Los cambios requieren internet y permisos de escritura en Realtime Database.</div>':''}
+      ${body}
+      <div class="dr-score"><div>👑 Criss <b>${yes} strikes</b><small>${esc(penaltyText(yes))}</small></div><div>🌸 Andreita <b>${no} strikes</b><small>${esc(penaltyText(no))}</small></div></div>
+      <p class="dr-tip">💞 Todos los retos se deben enviar a whatsapp amor, y debes indiciar que la otra persona hizo el reto, si pones que no lo hize y si lo hice, te pone automatico 3 strikes y es la mayor penalizacion.</p>`;
+    const menuCheck=get('drMenuCheck');
+    if(menuCheck){
+      const completed=PLAYERS.filter(name=>dayState(today,name).verified===true).length;
+      menuCheck.textContent=completed===2?'✅✅':completed===1?'✅':'☑️';
+      menuCheck.setAttribute('aria-label',`${completed} de 2 retos verificados hoy`);
+    }
+    tickClock();
+  }
+  function tickClock() {
+    const now=serverNow(), key=dateKey(now);
+    // Justo al pasar las 00:00 de Guatemala: nuevo día, nueva misión, contador de 24 h.
+    if(key!==lastDayKey){lastDayKey=key; render();notifyMissedChallenge();return;}
+    const el=get('drCountdown');
+    if(el)el.textContent=clockText(midnightDeadline(key)-now);
+  }
+  function getDatabase() {
+    if(!window.firebase || !firebase.apps || !firebase.apps.length) return null;
+    try {return firebase.database();}catch(e){return null;}
+  }
+  async function handleSend(name,button){
+    if(role!==name || !PLAYERS.includes(name))return;
+    const today=dayIndex(dateKey(serverNow()));
+    if(today<0||today>=20){showNotice('Hoy ya no hay un reto disponible.');return;}
+    const date=indexDate(today), mate=name==='Criss'?'Andreita':'Criss', task=taskAt(name,today);
+    const message=`💖 *RETO DIARIO* · ${fmtDay(date)}\n${name} para ${mate}:\n${task}\n\n¡Listo para mi misión de hoy! 🎃`;
+    const phone=WHATSAPP_DESTINO[name];
+    const url=`https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    const db=getDatabase();
+    if(!db){showNotice('No hay conexión a Firebase: no se marcó como enviado.');return;}
+    button.disabled=true;
+    // Abrir directamente en el gesto del usuario para evitar bloqueos por el navegador.
+    const w=window.open(url,'_blank','noopener,noreferrer');
+    if(!w && /iPhone|Android/i.test(navigator.userAgent)) window.location.href=url;
+    try{
+      const at=serverNow();
+      const result=await db.ref(`${ROOT}/days/${date}/${name}`).transaction(cur=>{
+        if(cur&&cur.sentAt)return;
+        return {...(cur||{}),sentAt:at,sentBy:name};
+      },undefined,false);
+      if(!result.committed)showNotice('Este reto ya estaba marcado como enviado.');
+      else showNotice('Reto marcado como enviado (1/1). Finaliza el envío en WhatsApp.');
+    }catch(e){showNotice('No se pudo guardar en Firebase. Inténtalo de nuevo.');console.error('Retos: error al enviar',e);}
+    button.disabled=false;
+  }
+  async function handleVerify(name,answer,button) {
+    const verifier=name==='Criss'?'Andreita':'Criss';
+    if(role!==verifier || !PLAYERS.includes(name))return;
+    const today=dayIndex(dateKey(serverNow()));
+    if(today<0||today>=20)return;
+    const date=indexDate(today), db=getDatabase();
+    if(!db){showNotice('No disponible sin conexión a Firebase.');return;}
+    button.disabled=true;
+    try{
+      const result=await db.ref(`${ROOT}/days/${date}/${name}`).transaction(cur=>{
+        if(!cur||!cur.sentAt||cur.verified!=null)return;
+        return {...cur,verified:answer==='yes',verifiedBy:verifier,verifiedAt:serverNow()};
+      },undefined,false);
+      showNotice(result.committed?'Verificación guardada para ambos.':'Esta misión ya se había verificado.');
+    }catch(e){showNotice('No se pudo verificar. Revisa Firebase.');console.error('Retos: error de validación',e);}
+    button.disabled=false;
+  }
+  function boot() {
+    const menu=get('hmNav');
+    const menuGrid=menu?.querySelector('.hm-menu-grid');
+    if(menuGrid && !get('drMenuCategory')){
+      // Categoría propia, como «Nuestra aventura» y «Minijuegos · Elige uno».
+      menu?.querySelector('#drMenuButton')?.remove();
+      const category=document.createElement('section');
+      category.id='drMenuCategory';category.className='dr-menu-category';
+      category.innerHTML='<h3>🎯 Retos Diarios</h3><p>Retos Diarios Amorcito bella :p.</p><button type="button" id="drMenuButton">✅ Abrir Retos Diarios <span id="drMenuCheck" aria-live="polite">☑️</span></button>';
+      const gamesTitle=[...(menu?.querySelectorAll('h3')||[])].find(h=>h.textContent.includes('Minijuegos'));
+      if(gamesTitle)gamesTitle.before(category);
+      else menuGrid.after(category);
+      category.querySelector('button').onclick=()=>{if(typeof window.hmNavigate==='function')window.hmNavigate(ID);else if(typeof window.openTab==='function')window.openTab(ID,null);};
+    }
+    const main=document.querySelector('body main');
+    if(main&&!get(ID)){
+      const section=document.createElement('section');section.id=ID;section.className='tab-content';
+      section.innerHTML='<div id="drApp"></div><div id="drNotice" role="status" aria-live="polite"></div>';
+      main.appendChild(section);
+    }
+    try {role=localStorage.getItem('retosDiariosJugadorV9');}catch(e){}
+    if(!PLAYERS.includes(role)) role=null;
+    get('drApp')?.addEventListener('click',ev=>{
+      const button=ev.target.closest('button'); if(!button)return;
+      const r=button.dataset.drRole;
+      if(r&&PLAYERS.includes(r)){
+        role=r;try{localStorage.setItem('retosDiariosJugadorV9',role);}catch(e){}
+        render();notifyMissedChallenge();return;
+      }
+      const action=button.dataset.drAction, p=button.dataset.person;
+      if(action==='send')handleSend(p,button);
+      if(action==='verify')handleVerify(p,button.dataset.answer,button);
+    });
+    const db=getDatabase();
+    if(db){
+      databaseRef=db.ref(ROOT+'/days');
+      databaseRef.on('value',snap=>{serverData=snap.val()||{};connected=true;render();notifyMissedChallenge();},err=>{connected=false;render();console.warn('Retos: falta permiso de lectura Firebase',err);});
+      // Guardar hora del servidor para reducir errores por relojes locales adelantados.
+      db.ref('.info/serverTimeOffset').on('value',snap=>{window.hmServerOffset=Number(snap.val())||0;});
+    }
+    lastDayKey=dateKey(serverNow());render();
+    setInterval(tickClock,1000);
+    // Al recuperar foco actualizar día/hora y el estado.
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)render();});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+
+/* Corrige el texto fijo de meses y permite 1 año, 1 año y 1 mes, etc. */
+(function(){
+  const START_YEAR=2026,START_MONTH=3,ANNIVERSARY_DAY=23;
+  function updateAnniversary(){
+    const section=document.getElementById('time-section');
+    if(!section)return;
+    const target=section.querySelector('.basta-roulette-box > div:first-child');
+    if(!target)return;
+    const guatemala=new Date(Date.now()-21600000);
+    const year=guatemala.getUTCFullYear(),month=guatemala.getUTCMonth()+1,day=guatemala.getUTCDate();
+    const total=Math.max(0,(year-START_YEAR)*12+(month-START_MONTH)-(day<ANNIVERSARY_DAY?1:0));
+    const years=Math.floor(total/12),months=total%12;
+    let label='';
+    if(years)label=years+' '+(years===1?'año':'años')+(months?' y '+months+' '+(months===1?'mes':'meses'):'');
+    else label=total+' '+(total===1?'mes':'meses');
+    target.textContent='🌸 Llevamos '+label+' hermosos juntos 🌸';
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',updateAnniversary,{once:true});else updateAnniversary();
+  setInterval(updateAnniversary,60000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateAnniversary();});
+})();
+
+</script>
 </body>
 </html>
