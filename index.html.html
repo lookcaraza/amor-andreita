@@ -5936,6 +5936,132 @@ body.hm-menu-open{overflow:hidden}
 #drApp .dr-check-no{background:#4b1c2a;color:#ffe4e6;border:2px solid #df7e95;}
 
 </style>
+<style id="ng23Styles">
+/* Minijuego 23: estilos exclusivos, no afectan otras zonas */
+#game-stage-23{display:none;width:100%;}
+#game-stage-23,#game-stage-23 *{box-sizing:border-box}
+#game-stage-23 .ng23-root{max-width:1040px;margin:0 auto;padding:clamp(13px,3vw,27px);background:radial-gradient(circle at 70% 0%,#543351 0,transparent 35%),linear-gradient(150deg,#100d20,#171c32 65%,#0c1022);color:#f9ecde;border:2px solid #e6a36a;border-radius:24px;box-shadow:0 18px 45px #0009;font-family:Nunito,system-ui,sans-serif;min-height:400px}
+#game-stage-23 h3{font-size:clamp(22px,4vw,29px);color:#ffcb87;text-align:center;margin:8px auto 9px;font-family:Montserrat,sans-serif;line-height:1.25}
+#game-stage-23 .ng23-eyebrow{text-align:center;text-transform:uppercase;letter-spacing:2px;font-size:11px;font-weight:900;color:#e6ad8c}
+#game-stage-23 .ng23-description{max-width:650px;margin:6px auto 20px;text-align:center;font-size:13px;line-height:1.6;color:#e1d9e7}
+#game-stage-23 .ng23-card{margin:15px auto;background:#171527;border:1px solid #715b79;border-radius:19px;padding:18px;box-shadow:0 8px 24px #0005}
+#game-stage-23 .ng23-center{text-align:center}
+#game-stage-23 .ng23-roles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;max-width:580px;margin:20px auto}
+#game-stage-23 button{font-family:Nunito,sans-serif;cursor:pointer;touch-action:manipulation}
+#game-stage-23 .ng23-btn{background:linear-gradient(135deg,#fecb8b,#f2a768);border:1px solid #ffe2ab;border-radius:13px;padding:12px 17px;min-height:46px;color:#251627;font-weight:900;font-size:14px}
+#game-stage-23 .ng23-btn:disabled{opacity:.45;cursor:not-allowed}
+#game-stage-23 .ng23-btn.ng23-muted{background:#33273e;color:#fff0df;border:1px solid #91708e}
+#game-stage-23 .ng23-role-btn{background:#302941;border:2px solid #82698e;color:#fff2da;font-weight:900;min-height:65px;font-size:16px;border-radius:14px}
+#game-stage-23 .ng23-role-btn.ng23-chosen{background:#684255;border-color:#ffd38f;box-shadow:0 0 18px #f6a24745}
+#game-stage-23 .ng23-presence{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0}
+#game-stage-23 .ng23-presence>div{border:1px solid #735c89;background:#221d39;border-radius:13px;padding:12px 8px;text-align:center;color:#f3d4dd;font-size:13px;font-weight:900}
+#game-stage-23 .ng23-presence .ng23-online{background:#174133;border-color:#65d7ad;color:#dcffe8}
+#game-stage-23 .ng23-alert{background:#231a32;border:1px solid #967184;padding:12px;border-radius:11px;color:#ffdfac;font-size:13px;font-weight:800;line-height:1.5;text-align:center;margin:13px 0}
+#game-stage-23 .ng23-roulette{width:min(250px,64vw);aspect-ratio:1;margin:20px auto 13px;position:relative}
+#game-stage-23 .ng23-wheel{width:100%;height:100%;border-radius:50%;background:conic-gradient(#d57b4c 0deg 180deg,#bf689d 180deg 360deg);border:9px solid #f6cc92;box-shadow:0 0 35px #ffb25a63,inset 0 0 20px #0004;display:grid;place-items:center;position:relative;transform:rotate(0deg)}
+#game-stage-23 .ng23-wheel::before{content:'👑 Criss';position:absolute;top:24%;left:20%;font-weight:900;color:#16101a;transform:rotate(-42deg)}
+#game-stage-23 .ng23-wheel::after{content:'🌸 Andreita';position:absolute;bottom:22%;right:13%;font-weight:900;color:#180e1c;transform:rotate(43deg)}
+#game-stage-23 .ng23-wheel-center{width:47px;height:47px;background:#140c1c;border:3px solid #fff0d5;color:#fff;border-radius:50%;display:grid;place-items:center;font-size:23px;z-index:1}
+#game-stage-23 .ng23-pointer{position:absolute;top:-16px;left:calc(50% - 13px);z-index:3;color:#fff;font-size:27px;filter:drop-shadow(0 2px 2px #000)}
+#game-stage-23 .ng23-spinning .ng23-wheel{animation:ng23Spin 3.8s cubic-bezier(.1,.45,.22,1) forwards}
+@keyframes ng23Spin{from{transform:rotate(0)}to{transform:rotate(var(--ng23-spin-end,1890deg))}}
+#game-stage-23 .ng23-statbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:16px 0}
+#game-stage-23 .ng23-statbar>div{text-align:center;background:#231c36;border:1px solid #77617b;border-radius:13px;padding:10px 5px;color:#e9d7df;font-size:12px;font-weight:700}
+#game-stage-23 .ng23-statbar strong{display:block;color:#ffcf89;font-weight:900;font-size:clamp(15px,3vw,23px);margin-top:4px}
+#game-stage-23 .ng23-focus-title{text-align:center;color:#ffe0a8;font-size:clamp(17px,4vw,23px);font-weight:900;margin:12px 0;line-height:1.5}
+#game-stage-23 .ng23-focus-num{font-size:clamp(45px,8vw,73px);line-height:1;color:#fff4ce;text-shadow:0 0 25px #ffae6966;display:block;margin:8px 0}
+#game-stage-23 .ng23-paper{background:repeating-linear-gradient(0deg,#e4e3e9 0,#e4e3e9 31px,#c8d8e4 32px),#e6e8ef;color:#201c24;border:7px solid #c8a88a;border-radius:11px;box-shadow:0 15px 37px #000a,inset 0 1px 15px #0001;padding:12px 10px;max-width:700px;margin:14px auto}
+#game-stage-23 .ng23-board-heading{font-size:13px;font-weight:900;text-align:center;margin:3px 0 12px;color:#292334}
+#game-stage-23 .ng23-number-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:5px;align-items:center}
+#game-stage-23 .ng23-number{border:1px solid #b3aab8;background:#ffffffd6;border-radius:7px;min-width:0;min-height:35px;padding:4px 0;color:#192038;font-size:clamp(10px,1.8vw,15px);font-weight:900;position:relative;transition:background .14s,box-shadow .14s;line-height:1.15}
+#game-stage-23 .ng23-number:not(:disabled):hover{background:#fff0c1;box-shadow:0 0 0 2px #d09265}
+#game-stage-23 .ng23-number.ng23-used{background:#dee1e5;color:#7c7d86;text-decoration:line-through;opacity:.43}
+#game-stage-23 .ng23-number.ng23-hit{background:#b4efd5;color:#0a513e;animation:ng23Hit .35s ease-in-out}
+#game-stage-23 .ng23-number.ng23-miss{background:#ffc5c5!important;animation:ng23Wrong .4s ease-out}
+@keyframes ng23Wrong{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+@keyframes ng23Hit{50%{transform:scale(1.15)}}
+#game-stage-23 .ng23-x-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;background:#333b47;border:3px solid #454955;border-radius:5px;padding:4px;max-width:560px;margin:0 auto}
+#game-stage-23 .ng23-xcell{min-width:0;aspect-ratio:1;border:1px solid #8e9bb1;background:#f1ebdf;color:#29415c;font-weight:900;font-size:clamp(12px,3vw,22px);display:grid;place-items:center;border-radius:1px}
+#game-stage-23 .ng23-xcell.ng23-crossed{background:#f9d9d5;color:#9c253e;position:relative;font-size:clamp(20px,5vw,35px);font-family:Montserrat,sans-serif}
+#game-stage-23 button.ng23-xcell:not(:disabled):hover{background:#ffe1b7;outline:2px solid #c28051;outline-offset:-2px}
+#game-stage-23 .ng23-progress{height:11px;background:#080d1c;border:1px solid #8b718e;border-radius:99px;overflow:hidden;max-width:700px;margin:12px auto}
+#game-stage-23 .ng23-progress>span{display:block;height:100%;background:linear-gradient(90deg,#ffad6c,#f9d081);transition:width .3s}
+#game-stage-23 .ng23-end{text-align:center;padding:25px 8px}
+#game-stage-23 .ng23-trophy{font-size:72px;animation:ng23Trophy 1.3s ease-in-out infinite alternate}
+@keyframes ng23Trophy{to{transform:scale(1.14) rotate(8deg)}}
+#game-stage-23 .ng23-leaders{margin:20px auto 0;background:#131327;border:1px solid #6c5977;border-radius:17px;padding:14px}
+#game-stage-23 .ng23-leaders h4{font-size:15px;color:#ffd391;margin-bottom:11px;text-align:center}
+#game-stage-23 .ng23-leaderline{display:flex;justify-content:space-between;gap:12px;padding:11px;background:#242039;color:#f5e4de;border-radius:9px;margin:6px 0;font-size:13px;font-weight:900}
+#game-stage-23 .ng23-history{max-height:170px;overflow:auto;font-size:12px;line-height:1.6;margin-top:9px;color:#e3d6e3}
+#game-stage-23 .ng23-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin:16px auto}
+#game-stage-23 .ng23-help{font-size:12px;color:#d1c1d2;text-align:center;margin:11px auto;line-height:1.55}
+#game-stage-23 .ng23-notice{color:#fddda9;font-size:12px;text-align:center;font-weight:900;min-height:19px;margin-top:7px}
+@media(max-width:670px){#game-stage-23 .ng23-root{border-radius:17px;padding:13px 9px}#game-stage-23 .ng23-card{padding:12px 9px}#game-stage-23 .ng23-number-grid{grid-template-columns:repeat(9,minmax(0,1fr));gap:3px}#game-stage-23 .ng23-number{min-height:34px;font-size:12px;border-radius:5px}#game-stage-23 .ng23-paper{border-width:4px;padding:9px 5px}#game-stage-23 .ng23-x-grid{gap:2px;padding:3px}#game-stage-23 .ng23-statbar{gap:4px}#game-stage-23 .ng23-statbar>div{padding:8px 4px;font-size:10px}#game-stage-23 .ng23-leaderline{font-size:12px}}
+@media(max-width:365px){#game-stage-23 .ng23-number-grid{grid-template-columns:repeat(8,minmax(0,1fr))}#game-stage-23 .ng23-number{min-height:32px;font-size:11px}}
+@media(prefers-reduced-motion:reduce){#game-stage-23 *,#game-stage-23 *::before,#game-stage-23 *::after{animation:none!important;transition:none!important}}
+
+/* V23.1: trazos en dos toques y carrera de 35 X; afecta solo este juego. */
+#game-stage-23 .ng23-xcell.ng23-slashed{background:#fff2c6;color:#b46824;font-size:clamp(24px,5vw,38px);font-weight:900;box-shadow:inset 0 0 0 2px #dfaa60;}
+#game-stage-23 .ng23-xcell.ng23-crossed{background:#ffd9e0;color:#af223e;}
+#game-stage-23 .ng23-finder-count{margin:13px auto;padding:14px 10px;max-width:700px;background:#1f4a42;border:2px solid #74d8ad;border-radius:14px;color:#ecfff5;font-size:clamp(14px,3vw,20px);text-align:center;font-weight:800;}
+#game-stage-23 .ng23-finder-count strong{color:#ffd68a;font-size:clamp(20px,5vw,30px);white-space:nowrap;}
+#game-stage-23 .ng23-xcell:not(:disabled){touch-action:manipulation;user-select:none;-webkit-user-select:none;}
+
+</style>
+<style id="rv24Styles">
+/* MINIJUEGO 24 · PALABRAS AL REVÉS: estilos encapsulados */
+#game-stage-24 {display:none;width:100%;}
+#game-stage-24,#game-stage-24 *{box-sizing:border-box;}
+#game-stage-24 .rv24-root{max-width:940px;margin:auto;padding:clamp(14px,3vw,28px);border-radius:25px;border:2px solid #d5a1cf;background:radial-gradient(circle at 82% 2%,#8c376454,transparent 40%),linear-gradient(145deg,#0a1123,#1a122b 60%,#0b1022);color:#fff4e9;box-shadow:0 20px 50px #0009;font-family:'Nunito',Arial,sans-serif;}
+#game-stage-24 .rv24-root h3{font:900 clamp(23px,5vw,36px) 'Montserrat',Arial,sans-serif;color:#ffde9e!important;text-shadow:0 2px 15px #ffb35a30;margin:6px 0 12px;text-align:center;}
+#game-stage-24 .rv24-eyebrow{text-align:center;color:#e9b9e1;font-weight:900;font-size:12px;letter-spacing:1.9px;text-transform:uppercase;}
+#game-stage-24 .rv24-intro{text-align:center;line-height:1.65;color:#e6d8ee;margin:0 auto 20px;max-width:630px;font-weight:700;font-size:14px;}
+#game-stage-24 .rv24-card{background:#18182f;border:1px solid #8c6d9d;border-radius:19px;padding:clamp(15px,3vw,23px);margin:14px auto;box-shadow:0 5px 20px #0004;}
+#game-stage-24 .rv24-card h4{color:#ffd493;font-size:18px;margin:0 0 12px;font-weight:900;}
+#game-stage-24 .rv24-players{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:15px auto;}
+#game-stage-24 button{min-height:46px;padding:11px 16px;border:1px solid #9e7ca0;border-radius:14px;background:#302344;color:#fff2dc;font:900 14px 'Nunito',Arial,sans-serif;cursor:pointer;transition:transform .15s,border .2s,background .2s;}
+#game-stage-24 button:hover:not(:disabled){background:#59365b;border-color:#f4c58c;transform:translateY(-1px);}
+#game-stage-24 button:disabled{opacity:.45;cursor:not-allowed;}
+#game-stage-24 button.rv24-selected{background:#a55b6b;border-color:#ffcb9c;box-shadow:0 0 0 2px #ffbd7533;}
+#game-stage-24 .rv24-primary{background:linear-gradient(120deg,#f2b871,#ffdf9e);color:#22151f;border-color:#ffebc1;}
+#game-stage-24 .rv24-record{background:linear-gradient(120deg,#a62653,#e64a68);border-color:#ffafbc;color:#fff;}
+#game-stage-24 .rv24-recording{animation:rv24Pulse 1s infinite alternate;}
+@keyframes rv24Pulse{to{box-shadow:0 0 0 9px #ff31572e;}}
+#game-stage-24 .rv24-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0;}
+#game-stage-24 .rv24-actions button{flex:1;min-width:160px;max-width:320px;}
+#game-stage-24 input{width:100%;min-height:48px;background:#0d1124;color:#fff;border:2px solid #8b6d91;border-radius:13px;padding:12px 14px;font-size:16px;outline-offset:3px;}
+#game-stage-24 label{display:block;margin:8px 0 5px;color:#ffdcad;font-size:13px;font-weight:900;}
+#game-stage-24 .rv24-mic{display:grid;place-items:center;gap:10px;}
+#game-stage-24 .rv24-mic-icon{height:78px;width:78px;border-radius:50%;display:grid;place-items:center;font-size:37px;background:radial-gradient(circle,#95385d,#32203a);border:2px solid #e993b0;box-shadow:0 0 28px #f75a8740;}
+#game-stage-24 .rv24-status{text-align:center;background:#0e1122;border:1px solid #6e607f;padding:12px;border-radius:13px;font-weight:800;font-size:13px;color:#f9ddac;min-height:44px;line-height:1.5;}
+#game-stage-24 .rv24-presence{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:15px 0;}
+#game-stage-24 .rv24-presence div{background:#12152b;border:1px solid #6c6281;padding:14px 7px;border-radius:13px;text-align:center;color:#e8dff7;font-weight:900;font-size:12px;}
+#game-stage-24 .rv24-presence .rv24-online{border-color:#50c594;background:#15332d;color:#bafce0;}
+#game-stage-24 .rv24-score{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0;}
+#game-stage-24 .rv24-score>div{background:#101326;border:1px solid #806a83;border-radius:12px;text-align:center;padding:11px 5px;font-size:12px;font-weight:800;color:#e5d5e8;}
+#game-stage-24 .rv24-score strong{display:block;font:900 24px Montserrat,Arial,sans-serif;color:#ffd08d;margin:4px 0;}
+#game-stage-24 .rv24-ribbon{display:block;text-align:center;font-weight:900;color:#ffd394;margin:14px auto;background:#39243b;padding:10px;border-radius:99px;border:1px solid #a67b94;}
+#game-stage-24 .rv24-audio{margin:13px auto;padding:14px;background:#10172b;border:1px solid #777095;border-radius:16px;max-width:570px;}
+#game-stage-24 .rv24-audio strong{display:block;margin-bottom:9px;color:#ffe0b0;font-size:13px;}
+#game-stage-24 .rv24-audio audio{display:block;width:100%;height:42px;}
+#game-stage-24 .rv24-wave{display:flex;gap:3px;align-items:center;justify-content:center;height:52px;margin:8px auto;}
+#game-stage-24 .rv24-wave span{width:5px;height:12px;border-radius:8px;background:linear-gradient(#eeb4c2,#ffd48e);animation:rv24Wave .6s ease-in-out infinite alternate;}
+#game-stage-24 .rv24-wave span:nth-child(2n){animation-delay:.17s;}
+#game-stage-24 .rv24-wave span:nth-child(3n){animation-delay:.36s;}
+@keyframes rv24Wave{to{height:43px;}}
+#game-stage-24 .rv24-help{font-size:12px;line-height:1.65;color:#d4c6e2;margin:12px 0;text-align:center;}
+#game-stage-24 .rv24-result{text-align:center;padding:16px 12px;background:linear-gradient(150deg,#24213d,#352238);border-radius:20px;border:1px solid #a98caa;}
+#game-stage-24 .rv24-result strong{color:#ffdd92;font-size:clamp(18px,4vw,25px);}
+#game-stage-24 .rv24-history{display:grid;gap:8px;}
+#game-stage-24 .rv24-history>div{padding:10px;background:#12162c;border-radius:11px;border:1px solid #5e5778;font-size:12px;color:#f6e7dc;}
+#game-stage-24 .rv24-error{color:#ffd2d3;background:#622339;border:1px solid #dc8a91;padding:12px;border-radius:12px;margin:10px 0;font-size:13px;}
+#game-stage-24 .rv24-spinner{display:inline-block;animation:rv24Spin 1.5s linear infinite;}
+@keyframes rv24Spin{to{transform:rotate(360deg)}}
+#game-stage-24 [hidden]{display:none!important;}
+@media(max-width:650px){#game-stage-24 .rv24-root{padding:13px 10px}#game-stage-24 .rv24-actions{flex-direction:column}#game-stage-24 .rv24-actions button{max-width:none;width:100%}#game-stage-24 .rv24-players{gap:7px}#game-stage-24 .rv24-presence{gap:7px}#game-stage-24 .rv24-score{gap:5px}#game-stage-24 .rv24-score strong{font-size:19px}}
+@media(prefers-reduced-motion:reduce){#game-stage-24 .rv24-wave span,#game-stage-24 .rv24-recording{animation:none;}}
+
+</style>
 </head>
 <body class="halloween-full-theme">
 <div id="hmBackdrop" aria-hidden="true"></div>
@@ -20305,6 +20431,347 @@ window.tm22Debug={getState:()=>({name:g.name,side:g.side,round:g.round,presence:
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',updateAnniversary,{once:true});else updateAnniversary();
   setInterval(updateAnniversary,60000);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateAnniversary();});
+})();
+
+</script>
+<script id="ng23Script">
+/* Juego 23 · Independiente: no toca las funciones internas de los juegos existentes. */
+(function(){
+'use strict';
+if(window.__nuevoJuegoNumeros23)return;
+window.__nuevoJuegoNumeros23=true;
+const ID=23, KEY='unJuegoNuevoNoSeMeOcurreNombre_v1', NAMES=['Criss','Andreita'], MAX=144, CELLS=35;
+const E=id=>document.getElementById(id), OTHER=n=>n==='Criss'?'Andreita':'Criss';
+const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let db=null,room=null,pres=null,statsRef=null,state=null,presence={},stats={},name=null,choice=null,session=String(Date.now())+'_'+Math.random().toString(36).slice(2),clockOffset=0;
+let heartbeat=null, ticker=null, currentStamp='', notice='', isBusy=false, waitingInitial=true;
+/* Solo el jugador que pone X guarda los trazos parciales. Cada X terminada se registra mediante una transacción Firebase. */
+let slashCells=new Set(), pendingCells=new Set(), localRound='', saveScheduled=null, savingMarks=false;
+const now=()=>Date.now()+clockOffset;
+function live(n){const v=presence[n];return !!(v?.sid && Number(v?.t)>now()-55000);}
+function both(){return NAMES.every(live);}
+function newState(){return {phase:'lobby',gameId:Date.now()+'-'+Math.random().toString(36).slice(2),who:null,turn:0,seed:Math.floor(Math.random()*2000000000),sheet:{Criss:{},Andreita:{}},used:{Criss:{},Andreita:{}},picked:null,marked:false,found:false,picker:null,findBy:null,winner:null,startedAt:0,spinAt:0};}
+function getSheets(n){return state?.sheet?.[n]||{};}
+function sheetScore(n){return Object.keys(getSheets(n)).length;}
+function shuffle(role,seed){let s=((seed||17913)+(role==='Criss'?984221:222819))>>>0,arr=Array.from({length:MAX},(_,i)=>i+1);for(let i=arr.length-1;i>0;i--){s=(Math.imul(s,1664525)+1013904223)>>>0;const j=s%(i+1);[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+function alertUser(t){notice=t;const el=E('ng23Notice');if(el)el.textContent=t;}
+function stageShowing(){return !!E('game-stage-23') && E('game-stage-23').style.display!=='none';}
+function updateStage(stage){const target=E('game-stage-23');if(!target)return;if(stage===ID){for(let i=1;i<=22;i++){const x=E('game-stage-'+i);if(x)x.style.display='none';E('nav-game-'+i)?.classList.remove('active');}target.style.display='block';E('nav-game-23')?.classList.add('active');render();}else{target.style.display='none';E('nav-game-23')?.classList.remove('active');}}
+function openGame(){if(typeof window.hmNavigate==='function'){window.hmNavigate('minigames-section');}else if(typeof window.openTab==='function')window.openTab('minigames-section',null);if(typeof window.goToStage==='function')window.goToStage(ID);else updateStage(ID);document.body.classList.add('hm-section-visible');}
+function bootDom(){const existing=E('game-stage-23');if(existing)return;
+ const nav=document.querySelector('.minigame-nav-list');
+ if(nav){const node=document.createElement('div');node.className='minigame-nav-item';node.id='nav-game-23';node.tabIndex=0;node.role='button';node.innerHTML='<span class="minigame-nav-icon">🔢</span><div class="minigame-nav-info"><span class="minigame-nav-name">UN JUEGO NUEVO NO SE ME OCURRE EL NOMBRE</span><span class="minigame-nav-sub">Minijuego 23 · Online 1 vs 1</span></div><span class="new-badge-pill" id="badge-game-23">NEW</span>';node.addEventListener('click',openGame);node.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openGame();}});nav.appendChild(node);}
+ let menu=E('hmNavGames');if(menu&&!E('ng23MenuButton')){const b=document.createElement('button');b.type='button';b.id='ng23MenuButton';b.textContent='23. UN JUEGO NUEVO NO SE ME OCURRE EL NOMBRE';b.onclick=openGame;menu.appendChild(b);}
+ const stage=document.createElement('div');stage.id='game-stage-23';stage.style.cssText='display:none;width:100%;';stage.innerHTML='<div class="ng23-root"><div class="ng23-eyebrow">🔎 Minijuego 23 · Multijugador online</div><h3>UN JUEGO NUEVO NO SE ME OCURRE EL NOMBRE</h3><p class="ng23-description">Dos hojas de 35 casillas, 144 números desordenados y una ruleta 50/50. ¡Marca cada X con dos toques mientras el otro busca el número!</p><div id="ng23Content"></div><div class="ng23-notice" role="status" aria-live="polite" id="ng23Notice"></div><div class="ng23-leaders" id="ng23Leaderboard"></div></div>';
+ const main=document.querySelector('.minigames-main-stage')||document.querySelector('#minigames-section');if(main)main.appendChild(stage);
+ if(typeof window.goToStage==='function'){const original=window.goToStage;window.goToStage=function(s){if(Number(s)===23){updateStage(23);return;}updateStage(Number(s));return original.apply(this,arguments);};}
+ if(typeof window.selectMinigameFromSidebar==='function'){const original=window.selectMinigameFromSidebar;window.selectMinigameFromSidebar=function(s){if(Number(s)===23){updateStage(23);return;}return original.apply(this,arguments);};}
+ const content=E('ng23Content');content.addEventListener('click',async ev=>{const b=ev.target.closest('button');if(!b||b.disabled)return;const action=b.dataset.act; if(!action)return;
+ if(action==='choose'){choice=b.dataset.name;render();}
+ else if(action==='join')await join();
+ else if(action==='leave')await leave();
+ else if(action==='spin')await spin();
+ else if(action==='pick')await pick(Number(b.dataset.num));
+ else if(action==='find')await find(Number(b.dataset.num),b);
+ else if(action==='cross')await mark(Number(b.dataset.cell));
+ else if(action==='again')await replay();
+ });
+ render();}
+function leaderboard(){const t=E('ng23Leaderboard');if(!t)return;const a=stats.wins||{},history=Array.isArray(stats.history)?stats.history:[];
+ t.innerHTML='<h4>🏆 Clasificación histórica · Ganadores</h4>'+NAMES.map((n,i)=>`<div class="ng23-leaderline"><span>${i?'🌸':'👑'} ${n}</span><span>🏆 ${Number(a[n]||0)} victoria${Number(a[n]||0)===1?'':'s'}</span></div>`).join('')+(history.length?'<div class="ng23-history">'+history.slice().reverse().slice(0,8).map(h=>`<div>🏅 ${escape(h.winner)} · ${new Date(h.at).toLocaleDateString('es-GT')} · ${escape(h.score||'Hoja completa')}</div>`).join('')+'</div>':'<p class="ng23-help">Aún no hay victorias guardadas en Firebase.</p>');}
+function bars(){return `<div class="ng23-statbar"><div>👑 Criss<strong data-ng23-count="Criss">${sheetScore('Criss')}/${CELLS}</strong></div><div>🌸 Andreita<strong data-ng23-count="Andreita">${sheetScore('Andreita')}/${CELLS}</strong></div><div>Ronda<strong>${Number(state?.turn||0)+1}</strong></div></div>`;}
+function progress(n){let sc=sheetScore(n);return `<div class="ng23-progress" data-ng23-progress="${escape(n)}" aria-label="${sc} de ${CELLS} X"><span style="width:${sc/CELLS*100}%"></span></div>`;}
+function numberPaper(mode){const role=name||'Criss';const all=shuffle(role,state.seed),used=state.used?.[role]||{};const n=Number(state.picked),already=state.found;
+ const grid=all.map((v,i)=>{const prev=!!used[v]&&(mode==='pick');const disabled=mode==='pick'&&prev||mode==='find'&&already;const txt=mode==='pick'?'Elige número '+v:'Buscar número '+v;return `<button type="button" class="ng23-number${prev?' ng23-used':''}${mode==='find'&&already&&v===n?' ng23-hit':''}" data-act="${mode}" data-num="${v}" ${disabled?'disabled':''} title="${escape(txt)}" aria-label="${escape(txt)}">${v}</button>`}).join('');
+ return `<div class="ng23-paper"><div class="ng23-board-heading">🔎 ${mode==='pick'?'ELIGE UN NÚMERO · 1 AL '+MAX:'ENCUENTRA EL NÚMERO INDICADO'}</div><div class="ng23-number-grid">${grid}</div></div>`;}
+function roundId(){return [state?.gameId,state?.turn,state?.phase,state?.picker,state?.picked].join('|');}
+function resetLocalRound(){const id=roundId();if(id!==localRound){localRound=id;slashCells.clear();pendingCells.clear();}}
+function ownCount(){let score=sheetScore(name);for(const slot of pendingCells)if(getSheets(name)[slot]==null)score++;return Math.min(CELLS,score);}
+function xPaper(clickable){const cells=getSheets(name);return `<div class="ng23-paper"><div class="ng23-board-heading">📄 HOJA DE ${escape(name)} · <span id="ng23OwnCount">${sheetScore(name)}</span>/${CELLS} X</div><div class="ng23-x-grid">${Array.from({length:CELLS},(_,i)=>{const has=cells[i]!=null||pendingCells.has(i),partial=slashCells.has(i)&&!has;return `<button type="button" class="ng23-xcell${has?' ng23-crossed':partial?' ng23-slashed':''}" data-act="cross" data-cell="${i}" ${!clickable||has?'disabled':''} aria-label="${has?'X terminada':partial?'Completar X en casilla '+(i+1):'Primer trazo de casilla '+(i+1)}">${has?'✕':partial?'╱':''}</button>`;}).join('')}</div></div>`;}
+/* Refresco sin reconstruir los botones de la hoja: permite marcar muy rápido, incluso en celular. */
+function updateLiveCounters(){
+ const score=n=>n===name&&state?.phase==='find'&&state?.picker===name?ownCount():sheetScore(n);
+ for(const n of NAMES){const v=score(n);const el=E('ng23Content')?.querySelector(`[data-ng23-count="${n}"]`);if(el)el.textContent=v+'/'+CELLS;}
+ const opponent=E('ng23FinderCount');if(opponent&&state?.picker)opponent.textContent=score(state.picker)+' / '+CELLS;
+ const mine=E('ng23OwnCount');if(mine)mine.textContent=ownCount();
+ const bar=E('ng23Content')?.querySelector('[data-ng23-progress]');if(bar){const v=ownCount();bar.setAttribute('aria-label',v+' de '+CELLS+' X');const fill=bar.querySelector('span');if(fill)fill.style.width=(v/CELLS*100)+'%';}
+ const canMark=!!(name&&both()&&state?.phase==='find'&&state.picker===name&&!state.found);
+ E('ng23Content')?.querySelectorAll('.ng23-xcell').forEach(button=>{
+   const slot=Number(button.dataset.cell),has=getSheets(name)[slot]!=null||pendingCells.has(slot),partial=slashCells.has(slot)&&!has;
+   button.textContent=has?'✕':partial?'╱':'';
+   button.classList.toggle('ng23-crossed',has);button.classList.toggle('ng23-slashed',partial);
+   button.disabled=!canMark||has;
+   button.setAttribute('aria-label',has?'X terminada':partial?'Completar X en casilla '+(slot+1):'Primer trazo de casilla '+(slot+1));
+ });
+}
+
+function drawLobby(){return `<div class="ng23-card ng23-center"><h3>🏠 Sala de espera</h3><p class="ng23-description">Ambos deben estar conectados para que aparezca la ruleta de quién comienza.</p><div class="ng23-presence">${NAMES.map(n=>`<div class="${live(n)?'ng23-online':''}">${n==='Criss'?'👑':'🌸'} ${n}<br>${live(n)?'✅ Dentro de la sala':'⌛ Esperando...'}</div>`).join('')}</div>${!name?`<div class="ng23-roles">${NAMES.map(n=>`<button class="ng23-role-btn ${choice===n?'ng23-chosen':''}" data-act="choose" data-name="${n}">${n==='Criss'?'👑':'🌸'} Soy ${n}</button>`).join('')}</div><div class="ng23-actions"><button class="ng23-btn" data-act="join" ${!choice?'disabled':''}>🚪 Entrar a la sala como ${escape(choice||'...')}</button></div>`:`<div class="ng23-alert">✅ Estás conectado como ${escape(name)}.</div>`}${name?'<div class="ng23-actions"><button class="ng23-btn ng23-muted" data-act="leave">Salir de la sala</button></div>':''}${both()&&name?'<div class="ng23-alert">🎉 ¡Los dos están adentro! Presionen la ruleta para elegir al primero.</div><div class="ng23-actions"><button class="ng23-btn" data-act="spin">🎡 Girar ruleta · 50% / 50%</button></div>':'<p class="ng23-help">La ruleta estará disponible cuando estén Criss y Andreita.</p>'}</div>`;}
+function drawRoulette(){return `${bars()}<div class="ng23-card ng23-center ng23-spinning"><h3>🎡 ¿Quién va primero?</h3><div class="ng23-roulette"><div class="ng23-pointer">▼</div><div class="ng23-wheel" style="--ng23-spin-end:${state.who==='Criss'?'2070deg':'1890deg'}"><div class="ng23-wheel-center">💘</div></div></div><div class="ng23-alert">Girando… ¡Criss y Andreita tienen exactamente 50% de probabilidad!</div></div>`;}
+function drawPlay(){const picker=state.picker, finder=OTHER(picker),me=name,chosen=Number(state.picked),which=state.phase;
+ if(which==='select'){
+ if(me===state.who)return `${bars()}<div class="ng23-card"><div class="ng23-focus-title">🎯 ¡${escape(me)}, te toca elegir un número!</div>${numberPaper('pick')}<p class="ng23-help">Elige cualquier número libre. Andreita/Criss deberá encontrarlo en su propia hoja desordenada.</p></div>`;
+ return `${bars()}<div class="ng23-card ng23-center"><div class="ng23-focus-title">⏳ ${escape(state.who)} está escogiendo un número</div><div style="font-size:64px">📄</div>${xPaper(false)}<p class="ng23-help">Espera a que elija el número. Después te aparecerá la búsqueda.</p></div>`;
+ }
+ if(me===finder){return `${bars()}<div class="ng23-card"><div class="ng23-focus-title">🔎 ${escape(picker)} escogió un número. ¡Encuéntralo!</div><strong class="ng23-focus-num ng23-center">${chosen}</strong>${state.found?'<div class="ng23-alert">✅ ¡Número encontrado! Esperando la X de '+escape(picker)+'.</div>':numberPaper('find')}<div class="ng23-finder-count">✍️ ${escape(picker)} lleva <strong id="ng23FinderCount">${sheetScore(picker)} / ${CELLS}</strong> cuadros con X</div><p class="ng23-help">¡Encuentra el número antes de que ${escape(picker)} llene su hoja! Al acertar, su hoja se bloquea al instante y cambia el turno.</p></div>`;}
+ return `${bars()}<div class="ng23-card"><div class="ng23-focus-title">⚡ ¡Llena tu hoja de X lo más rápido posible!</div><div class="ng23-alert">${escape(finder)} está buscando el número <b>${chosen}</b>. Mientras lo busca, puedes hacer tantas X como alcances. <b>Primer toque: ╱ · Segundo toque en la MISMA casilla: ✕</b>. ¡Solo las X completas cuentan!</div>${xPaper(!state.found)}${progress(me)}<div class="ng23-alert">⚡ ¡Sigue marcando sin límite por ronda! La hoja se bloquea en cuanto ${escape(finder)} encuentre el número. Quien llegue primero a ${CELLS} X gana.</div></div>`;
+}
+function drawEnd(){return `${bars()}<div class="ng23-card ng23-end"><div class="ng23-trophy">🏆🎉</div><h3>¡GANÓ ${escape(state.winner)}!</h3><p class="ng23-description">${escape(state.winner)} completó su hoja con ${CELLS} X. ¡Felicidades! 💕</p><div class="ng23-actions"><button class="ng23-btn" data-act="again" ${!both()?'disabled':''}>🔄 Otra partida juntos</button><button class="ng23-btn ng23-muted" data-act="leave">Salir de la sala</button></div></div>`;}
+function render(){const node=E('ng23Content');if(!node)return;const oldScroll=stageShowing()?window.scrollY:null;
+ let html='';if(!db){html='<div class="ng23-card ng23-alert">⚠️ Firebase todavía no está disponible. Abre la página completa publicada con conexión a internet.</div>';}else if(!name||!both()||!state||state.phase==='lobby'){html=drawLobby();}
+ else if(state.phase==='spinning'){html=drawRoulette();}
+ else if(state.phase==='finished'){html=drawEnd();}
+ else {html=drawPlay();if(name)html+=`<div class="ng23-actions"><button class="ng23-btn ng23-muted" data-act="leave">Salir de la sala</button></div>`;}
+ resetLocalRound();
+ const stamp=state?.gameId+'|'+state?.phase+'|'+state?.turn+'|'+state?.picked+'|'+state?.who+'|'+state?.picker+'|'+state?.winner+'|'+name+'|'+choice+'|'+NAMES.map(live).join(',');
+ if(stamp!==currentStamp){node.innerHTML=html;currentStamp=stamp;}
+ updateLiveCounters();
+ const msg=E('ng23Notice');if(msg)msg.textContent=notice;
+ leaderboard();}
+async function txn(fn){if(!db)return null;try{const res=await room.child('state').transaction(cur=>{if(!cur)return;return fn(cur);},undefined,false);return res.committed?res.snapshot.val():null;}catch(e){alertUser('Error al sincronizar: '+e.message);return null;}}
+async function join(){if(!choice||name||!db)return;const target=db.ref(KEY+'/presence/'+choice),sid=session;
+ try{const result=await target.transaction(old=>{if(old?.sid && old.sid!==sid && Number(old.t||0)>now()-55000)return;return {sid,t:now()};},undefined,false);
+ if(!result.committed){alertUser('Ese jugador ya tiene una sesión activa. Selecciona tu propia identidad.');return;}
+ name=choice;pres=target;try{sessionStorage.setItem('ng23Role',name);}catch(e){}
+ await pres.onDisconnect().remove();
+ await db.ref(KEY+'/state').transaction(v=>v||newState());
+ if(heartbeat)clearInterval(heartbeat);
+ heartbeat=setInterval(()=>{if(name&&pres)pres.update({t:now()}).catch(()=>{});},12000);
+ alertUser('✅ Entraste como '+name);render();
+ }catch(e){alertUser('No se pudo entrar. Revisa permisos de Firebase: '+e.message);}
+}
+async function leave(){if(name&&pres){const mine=name;try{await pres.transaction(v=>v?.sid===session?null:undefined,undefined,false);}catch(e){}try{await pres.onDisconnect().cancel();}catch(e){}}
+ name=null;choice=null;pres=null;if(heartbeat)clearInterval(heartbeat);heartbeat=null;try{sessionStorage.removeItem('ng23Role');}catch(e){}alertUser('Saliste de la sala.');render();}
+async function spin(){if(!name||!both()||state?.phase!=='lobby')return;const winner=Math.random()<0.5?'Criss':'Andreita';const res=await txn(s=>{if(s.phase!=='lobby')return;return {...s,phase:'spinning',who:winner,spinAt:now()};});if(res)alertUser('🎡 Girando la ruleta…');}
+async function maybeEndSpin(){if(!name||!both()||state?.phase!=='spinning'||now()-Number(state.spinAt||0)<3800)return;await txn(s=>{if(s.phase!=='spinning'||now()-Number(s.spinAt||0)<3800)return;return {...s,phase:'select',picker:null,who:s.who,startedAt:now()};});}
+async function pick(num){if(!name||!both()||!Number.isInteger(num)||num<1||num>MAX||state?.phase!=='select'||state.who!==name)return;
+ const res=await txn(s=>{if(s.phase!=='select'||s.who!==name||s.used?.[name]?.[num])return;const used={...s.used,[name]:{...(s.used?.[name]||{}),[num]:true}};return {...s,phase:'find',picked:num,picker:name,findBy:OTHER(name),marked:false,found:false,used};});if(res)alertUser('🔎 ¡Busca el número '+num+', '+OTHER(name)+'!');}
+/* La búsqueda termina la ronda de inmediato. Ya no espera a que el otro coloque una X. */
+function advance(s){
+ return {...s,phase:'select',who:OTHER(s.picker),picked:null,picker:null,findBy:null,marked:false,found:false,turn:(s.turn||0)+1};
+}
+/* El primer toque traza / localmente. El segundo lo completa como X y se guarda.
+   Las transacciones verifican que el buscador aún no haya encontrado el número. */
+function mark(slot){
+ if(!name||!both()||state?.phase!=='find'||state.picker!==name||state.found||!Number.isInteger(slot)||slot<0||slot>=CELLS)return;
+ resetLocalRound();
+ if(getSheets(name)[slot]!=null||pendingCells.has(slot))return;
+ if(!slashCells.has(slot)){
+   slashCells.add(slot);updateLiveCounters();return;
+ }
+ slashCells.delete(slot);pendingCells.add(slot);
+ updateLiveCounters();
+ if(!saveScheduled&&!savingMarks){saveScheduled=setTimeout(()=>{saveScheduled=null;flushMarks();},10);}
+}
+async function flushMarks(){
+ if(savingMarks||!pendingCells.size||!name||!room)return;
+ savingMarks=true;
+ const slots=[...pendingCells],wantedGame=state?.gameId,wantedTurn=state?.turn,wantedPicked=state?.picked,wantedPicker=name;
+ const result=await txn(s=>{
+   if(s.gameId!==wantedGame||s.turn!==wantedTurn||s.phase!=='find'||s.picker!==wantedPicker||s.picked!==wantedPicked||s.found)return;
+   const newSheet={...(s.sheet?.[wantedPicker]||{})};
+   for(const slot of slots){if(newSheet[slot]==null && Object.keys(newSheet).length<CELLS)newSheet[slot]=s.picked;}
+   const sheets={...(s.sheet||{}),[wantedPicker]:newSheet};
+   if(Object.keys(newSheet).length>=CELLS)return {...s,sheet:sheets,phase:'finished',winner:wantedPicker,endedAt:now()};
+   return {...s,sheet:sheets};
+ });
+ slots.forEach(slot=>pendingCells.delete(slot));savingMarks=false;
+ if(!result&&state?.phase==='find'&&state?.turn===wantedTurn&&state?.picker===wantedPicker)alertUser('La ronda cambió antes de guardar una o más X. ¡Vuelve a intentarlo en tu siguiente turno!');
+ render();
+ if(pendingCells.size&&state?.phase==='find'&&state.picker===name){
+   if(saveScheduled)clearTimeout(saveScheduled);
+   saveScheduled=setTimeout(()=>{saveScheduled=null;flushMarks();},10);
+ }
+}
+async function find(n,b){if(!name||!both()||state?.phase!=='find'||state.findBy!==name)return;
+ if(n!==Number(state.picked)){b.classList.add('ng23-miss');setTimeout(()=>b.classList.remove('ng23-miss'),650);alertUser('❌ Ese no es. ¡Busca el '+state.picked+'!');return;}
+ const res=await txn(s=>{if(s.phase!=='find'||s.findBy!==name||n!==Number(s.picked))return;return advance(s);});
+ if(res)alertUser('✅ Encontraste el número '+n+'. ¡Bloqueaste las X de '+OTHER(name)+'!');
+}
+
+async function replay(){if(!name||!both()||state?.phase!=='finished')return;
+ const res=await txn(s=>{if(s.phase!=='finished')return;return newState();});if(res)alertUser('🔄 Nueva partida. ¡Giren la ruleta!');}
+let recording=false;
+async function recordWin(){if(recording||state?.phase!=='finished'||!state.winner||!db)return;recording=true;
+ try{const s=state;await db.ref(KEY+'/stats').transaction(cur=>{const data=cur||{},history=Array.isArray(data.history)?data.history:[];
+ if(history.some(h=>h.id===s.gameId))return;
+ const wins={...(data.wins||{})};wins[s.winner]=Number(wins[s.winner]||0)+1;
+ return {wins,history:[...history,{id:s.gameId,winner:s.winner,score:CELLS+'/'+CELLS+' X',at:Number(s.endedAt||now())}].slice(-30)};
+ },undefined,false);
+ }catch(e){console.warn('No se pudo guardar la victoria:',e);}finally{recording=false;}}
+function connect(){try{if(!window.firebase||!firebase.apps?.length)throw Error('Firebase no está inicializado');db=firebase.database();room=db.ref(KEY);room.child('state').on('value',s=>{state=s.val();render();recordWin();},e=>alertUser('No hay permisos de lectura del minijuego en Firebase.'));
+ room.child('presence').on('value',s=>{presence=s.val()||{};currentStamp='';render();});
+ db.ref(KEY+'/stats').on('value',s=>{stats=s.val()||{};leaderboard();});
+ db.ref('.info/serverTimeOffset').on('value',s=>clockOffset=Number(s.val())||0);
+ ticker=setInterval(()=>{if(state?.phase==='spinning')maybeEndSpin();},550);
+ }catch(e){console.warn('Minijuego 23:',e);alertUser('Firebase no disponible: '+e.message);render();}}
+function init(){bootDom();connect();}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+
+</script>
+<script id="rv24Script">
+/* MINIJUEGO 24 · PALABRAS AL REVÉS · Solo nuevo módulo, sin tocar otros juegos. */
+(function () {
+'use strict';
+if (window.__palabrasAlRevesV24) return;
+window.__palabrasAlRevesV24 = true;
+const ID=24, ROOT='palabrasAlRevesV24', NAMES=['Criss','Andreita'], ROUNDS=8, AUDIO_SECS=7, RATE=12000;
+const el=id=>document.getElementById(id);
+const other=name=>name==='Criss'?'Andreita':'Criss';
+const safe=value=>String(value==null?'':value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let choice='',me='',sid='',db=null,roomRef=null,room={},stats={},audio={},audioRef=null,audioKey='',roomCallback=null;
+let stopOnDisconnect=null,recording=null,localRecording=null,busy=false,message='',lastPhase='',stageVisible=false;
+const randomId=()=>String(Date.now())+'_'+Math.random().toString(36).slice(2,12);
+function getDb(){try{return window.firebase&&firebase.apps&&firebase.apps.length?firebase.database():null;}catch(e){return null;}}
+function note(s){message=s;const target=el('rv24Message');if(target)target.textContent=s;}
+function canPlay(){return !!(room?.players?.Criss?.sid&&room?.players?.Andreita?.sid&&room.players.Criss.ready&&room.players.Andreita.ready);}
+function joined(){return !!me&&room.players?.[me]?.sid===sid;}
+function isVisible(){return el('game-stage-24')?.style.display!=='none'&&!!el('game-stage-24');}
+function label(n){return n==='Criss'?'👑 Criss':'🌸 Andreita';}
+function statbar(){const s=room.state||{};return `<div class="rv24-score"><div>👑 Criss<strong>${Number(s.scores?.Criss||0)}</strong>aciertos</div><div>🎮 Ronda<strong>${Math.min(ROUNDS,Number(s.round||0)+1)} / ${ROUNDS}</strong>por turnos</div><div>🌸 Andreita<strong>${Number(s.scores?.Andreita||0)}</strong>aciertos</div></div>`;}
+function people(){return `<div class="rv24-presence">${NAMES.map(n=>{let p=room.players?.[n];return `<div class="${p?.sid?'rv24-online':''}">${label(n)}<p>${!p?.sid?'⚪ Sin conectar':p.ready?'🟢 Dentro y listo':'🟡 Dentro de la sala'}</p></div>`;}).join('')}</div>`;}
+function audioBox(name,key){let url=audio?.[key];if(!url)return `<div class="rv24-audio"><strong>${name}</strong><p class="rv24-help">⏳ Esperando audio…</p></div>`;return `<div class="rv24-audio"><strong>${name}</strong><audio controls preload="none" src="${safe(url)}"></audio></div>`;}
+function recordingControls(mode){const isRec=!!recording;const has=localRecording&&localRecording.mode===mode;
+ return `<div class="rv24-mic"><div class="rv24-mic-icon">${isRec?'🔴':'🎙️'}</div><div class="rv24-wave" ${isRec?'':'hidden'}>${Array(14).fill('<span></span>').join('')}</div></div>
+ <div class="rv24-actions"><button class="rv24-record ${isRec?'rv24-recording':''}" data-rv="${isRec?'stop':'record'}" ${busy?'disabled':''}>${isRec?'⏹️ Detener y escuchar invertido':'🎙️ Grabar audio (máx. 7 segundos)'}</button></div>
+ <p class="rv24-help">La voz se invierte de verdad: reproducimos las muestras de audio de atrás hacia delante, no el texto escrito.</p>
+ ${has?`${audioPreviewLocal(localRecording)}<div class="rv24-actions"><button class="rv24-primary" data-rv="send" ${busy?'disabled':''}>📤 Enviar audio invertido a ${safe(other(me))}</button><button data-rv="discard" ${busy?'disabled':''}>↻ Volver a grabar</button></div>`:''}`;}
+function audioPreviewLocal(r){return `<div class="rv24-audio"><strong>🔊 Tu voz al revés · Pulsa reproducir</strong><audio controls preload="none" src="${r.reverse}"></audio></div>`;}
+function render(){const target=el('rv24Content');if(!target)return;
+ const s=room.state||{phase:'lobby',round:0,scores:{Criss:0,Andreita:0}};
+ let out='';
+ if(!joined()){
+  out=`<section class="rv24-card"><h4>🚪 Elige tu jugador</h4><p class="rv24-help">Ambos deben entrar desde sus propios dispositivos. Sin los dos, el juego no comienza.</p><div class="rv24-players">${NAMES.map(n=>`<button data-rv="choose" data-name="${n}" class="${choice===n?'rv24-selected':''}">${label(n)}</button>`).join('')}</div><div class="rv24-actions"><button class="rv24-primary" data-rv="join" ${!choice||busy?'disabled':''}>Entrar a la sala</button></div>${people()}</section>`;
+ } else if(s.phase==='lobby'||!s.phase){
+  out=`<section class="rv24-card"><h4>🏠 Sala de espera</h4><p class="rv24-ribbon">Has entrado como ${label(me)}</p>${people()}<p class="rv24-status">${!room.players?.[other(me)]?.sid?'Esperando a tu pareja…':!canPlay()?'Ambos deben pulsar «Estoy listo».':'¡Los dos están listos! Pulsa «Comenzar».'}</p><div class="rv24-actions"><button class="rv24-primary" data-rv="ready">${room.players?.[me]?.ready?'✅ Estoy listo':'✅ Estoy listo para jugar'}</button><button data-rv="start" ${!canPlay()?'disabled':''}>🎡 Comenzar · Sorteo 50/50</button><button data-rv="leave">Salir de la sala</button></div></section>`;
+ } else if(!room.players?.Criss?.sid||!room.players?.Andreita?.sid){
+  out=`<section class="rv24-card"><h4>⏸️ Partida en pausa</h4>${people()}<p class="rv24-status">La otra persona se desconectó. Espera a que vuelva a entrar para continuar.</p><div class="rv24-actions"><button data-rv="leave">Salir</button></div></section>`;
+ } else if(s.phase==='record'){
+  out=statbar()+`<section class="rv24-card"><span class="rv24-ribbon">🎤 Turno de ${label(s.speaker)}</span>${me===s.speaker?`<h4>Di una palabra para ${safe(other(me))}</h4><label for="rv24Word">Palabra o frase secreta (opcional)</label><input id="rv24Word" maxlength="70" value="${safe(el('rv24Word')?.value||'')}" placeholder="Ejemplo: amor" autocomplete="off"/><p class="rv24-help">La palabra escrita se oculta hasta que tu pareja responda.</p>${recordingControls('prompt')}`:`<h4>⏳ ${label(s.speaker)} está grabando una palabra…</h4><p class="rv24-status">En cuanto termine recibirás la voz invertida para escucharla. ¡Prepara tus oídos!</p>`}</section>`;
+ } else if(s.phase==='guess'){
+  out=statbar()+`<section class="rv24-card"><span class="rv24-ribbon">🔊 ${label(s.listener)} debe descifrar el audio</span>${me===s.listener?`<h4>👂 Escucha la palabra al revés</h4>${audioBox('Audio invertido de '+s.speaker,'promptReverse')}<p class="rv24-help">Escúchalo varias veces. Ahora grábate diciendo lo que interpretas en reversa. ¡Tu propia grabación también se invertirá!</p>${recordingControls('guess')}`:`<h4>⏳ ${label(s.listener)} está buscando cómo repetir el audio</h4><p class="rv24-status">Tu pareja escucha tu grabación invertida y está preparando su respuesta.</p>${audioBox('Tu grabación invertida','promptReverse')}`}</section>`;
+ } else if(s.phase==='review'){
+  out=statbar()+`<section class="rv24-card"><span class="rv24-ribbon">⚖️ ¿Sonó como la palabra original?</span>${s.promptWord?`<p class="rv24-result">🔓 Palabra original: <strong>${safe(s.promptWord)}</strong></p>`:''}${audioBox('1 · Grabación original de '+s.speaker,'promptForward')}${audioBox('2 · Respuesta de '+s.listener+' invertida','guessReverse')}${me===s.speaker?`<h4>✅ Evalúa la respuesta de ${s.listener}</h4><p class="rv24-help">Escucha ambos audios y decide si la respuesta invertida se parece a la original. Un «Sí» da 1 punto a quien respondió.</p><div class="rv24-actions"><button class="rv24-primary" data-rv="judge" data-result="yes">✅ Sí, acertó · +1 punto</button><button data-rv="judge" data-result="no">❌ No, siguiente ronda</button></div>`:`<p class="rv24-status">Esperando que ${s.speaker} escuche los audios y confirme tu respuesta.</p>`}</section>`;
+ } else if(s.phase==='finished'){
+  const sc=s.scores||{},cr=Number(sc.Criss||0),an=Number(sc.Andreita||0);let winner=cr===an?'¡Empate, ambos ganaron!':cr>an?'👑 ¡Ganó Criss!':'🌸 ¡Ganó Andreita!';
+  out=statbar()+`<section class="rv24-result"><div style="font-size:50px">🏆🎉</div><strong>${winner}</strong><p class="rv24-help">Ocho turnos completados. ¡Ya pueden jugar otra partida!</p><div class="rv24-actions"><button class="rv24-primary" data-rv="again">🔄 Jugar de nuevo</button><button data-rv="leave">Salir</button></div></section>`;
+ }
+ target.innerHTML=out;
+ if(message){let notice=el('rv24Message');if(notice)notice.textContent=message;}
+}
+function renderBoard(){const t=el('rv24Leaderboard');if(!t)return;const w=stats.wins||{};const h=Array.isArray(stats.history)?stats.history:[];
+ t.innerHTML=`<section class="rv24-card"><h4>🏆 Historial de victorias</h4><div class="rv24-presence"><div>👑 Criss · ${Number(w.Criss||0)} victorias</div><div>🌸 Andreita · ${Number(w.Andreita||0)} victorias</div></div><div class="rv24-history">${h.length?h.slice().reverse().slice(0,6).map(x=>`<div>🏅 ${safe(x.winner==='Empate'?'Empate':x.winner)} · ${safe(x.score||'')} · ${new Date(Number(x.at)||Date.now()).toLocaleDateString('es-GT')}</div>`).join(''):'<div>Todavía no se han registrado partidas.</div>'}</div></section>`;
+}
+function sidValid(data){return !!(me&&sid&&data?.players?.[me]?.sid===sid);}
+function transact(fn){return new Promise((res,rej)=>{roomRef.transaction(fn,(err,committed,snap)=>err?rej(err):res({committed,value:snap?.val()}),false);});}
+async function join(){if(busy||!choice)return;db=getDb();if(!db){note('No hay conexión con Firebase. Abre la página completa online.');return;}
+ busy=true;render();let session=randomId(),name=choice;
+ try{roomRef=db.ref(ROOT+'/room');const result=await transact(data=>{
+  data=data||{};data.players=data.players||{};const old=data.players[name];if(old?.sid&&old.sid!==session)return;
+  data.players[name]={sid:session,ready:false,joinedAt:Date.now()};data.state=data.state||{phase:'lobby',round:0,scores:{Criss:0,Andreita:0}};return data;
+ });
+ if(!result.committed){note('Ese jugador ya está dentro en otro dispositivo. Debe salir primero.');return;}
+ me=name;sid=session;stopOnDisconnect=roomRef.child('players/'+name).onDisconnect();await stopOnDisconnect.remove();
+ if(!roomCallback){roomCallback=snap=>{room=snap.val()||{};if(me&&!joined()){me='';sid='';note('La sesión se cerró desde otro dispositivo.');}render();};roomRef.on('value',roomCallback,err=>note('Firebase: '+err.message));}
+ note('Ya estás en la sala como '+name);render();
+ }catch(e){note('No se pudo entrar a la sala: '+e.message);}finally{busy=false;render();}}
+async function ready(){if(!joined()||busy)return;busy=true;try{await transact(data=>{if(!sidValid(data)||data.state?.phase!=='lobby')return;data.players[me].ready=true;return data;});note('¡Listo! Esperando a los dos.');}catch(e){note(e.message);}finally{busy=false;render();}}
+async function start(){if(!joined()||!canPlay()||busy)return;busy=true;
+ try{const result=await transact(data=>{if(!sidValid(data)||data.state?.phase!=='lobby'||!NAMES.every(n=>data.players?.[n]?.sid&&data.players[n].ready))return;
+  const first=Math.random()<.5?'Criss':'Andreita';data.state={phase:'record',gameId:randomId(),round:0,speaker:first,listener:other(first),scores:{Criss:0,Andreita:0},startedAt:Date.now()};return data;
+ });note(result.committed?'🎡 ¡La ruleta eligió al primer jugador!':'Esperando al otro jugador.');
+ }catch(e){note(e.message);}finally{busy=false;render();}}
+async function leave(){if(recording)await stopRecord();if(!joined()){me='';sid='';render();return;}
+ try{const session=sid;await transact(data=>{if(data?.players?.[me]?.sid!==session)return;delete data.players[me];if(!Object.keys(data.players||{}).length)data.state={phase:'lobby',round:0,scores:{Criss:0,Andreita:0}};return data;});
+  if(stopOnDisconnect)await stopOnDisconnect.cancel();
+ }catch(e){note(e.message);}finally{me='';sid='';choice='';localRecording=null;audio={};audioKey='';if(audioRef){audioRef.off('value');audioRef=null;}render();}}
+// WAV PCM mono a 12 kHz: cualquier navegador moderno puede reproducirlo y Firebase puede sincronizarlo.
+function wavBytes(samples,rate=RATE){const b=new ArrayBuffer(44+samples.length*2),v=new DataView(b);
+ const st=(at,s)=>{for(let i=0;i<s.length;i++)v.setUint8(at+i,s.charCodeAt(i));};st(0,'RIFF');v.setUint32(4,b.byteLength-8,true);st(8,'WAVE');st(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,rate,true);v.setUint32(28,rate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);st(36,'data');v.setUint32(40,samples.length*2,true);
+ for(let i=0;i<samples.length;i++){const s=Math.max(-1,Math.min(1,samples[i]));v.setInt16(44+i*2,s<0?s*32768:s*32767,true);}return b;}
+function toData(buffer){return new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(fr.result);fr.onerror=()=>reject(fr.error);fr.readAsDataURL(new Blob([buffer],{type:'audio/wav'}));});}
+async function inverseVoice(blob){let context=new (window.AudioContext||window.webkitAudioContext)();
+ try{const decoded=await context.decodeAudioData(await blob.arrayBuffer());const len=Math.max(1,Math.min(Math.round(decoded.duration*RATE),RATE*AUDIO_SECS));const output=new Float32Array(len),tracks=Array.from({length:decoded.numberOfChannels},(_,i)=>decoded.getChannelData(i)),factor=decoded.sampleRate/RATE;
+  for(let i=0;i<len;i++){let ix=Math.min(decoded.length-2,Math.floor(i*factor)),frac=i*factor-ix,vol=0;for(let track of tracks)vol+=track[ix]*(1-frac)+track[ix+1]*frac;output[i]=vol/tracks.length;}
+  const reversed=output.slice().reverse();return {original:await toData(wavBytes(output)),reverse:await toData(wavBytes(reversed))};
+ }finally{await context.close().catch(()=>{});}}
+async function record(){if(busy||recording||!joined())return;const s=room.state||{};let mode=s.phase==='record'&&me===s.speaker?'prompt':s.phase==='guess'&&me===s.listener?'guess':'';if(!mode)return;
+ if(!window.MediaRecorder||!navigator.mediaDevices?.getUserMedia){note('Tu navegador no permite grabar. Usa Chrome o Safari actualizado con HTTPS y permiso de micrófono.');return;}
+ try{let stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true},video:false});
+  let preferred=['audio/webm;codecs=opus','audio/mp4','audio/webm'].find(t=>MediaRecorder.isTypeSupported?.(t));
+  let recorder=new MediaRecorder(stream,preferred?{mimeType:preferred}:undefined);let chunks=[];
+  let modeKey=String(s.gameId)+'_'+s.round+'_'+mode;localRecording=null;
+  recording={stream,recorder,chunks,mode,modeKey,timeout:null};recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+  recorder.onstop=()=>{stream.getTracks().forEach(t=>t.stop());if(recording?.timeout)clearTimeout(recording.timeout);let current=recording;recording=null;
+   if(!current||current.modeKey!==modeKey)return;
+   busy=true;render();inverseVoice(new Blob(chunks,{type:recorder.mimeType||chunks[0]?.type||'audio/webm'})).then(files=>{
+    if(room.state?.gameId!==s.gameId||room.state?.round!==s.round){note('La ronda cambió. Debes grabar otra vez.');return;}
+    localRecording={...files,mode,modeKey,word:el('rv24Word')?.value||''};render();const audioNode=el('rv24Content')?.querySelector('.rv24-audio audio');audioNode?.play().catch(()=>{});note('✅ Audio invertido. Escúchalo y pulsa «Enviar».');
+   }).catch(e=>{note('No se pudo invertir esta grabación: '+e.message);}).finally(()=>{busy=false;render();});};
+  recorder.start();recording.timeout=setTimeout(()=>{if(recording?.recorder===recorder&&recorder.state==='recording')recorder.stop();},AUDIO_SECS*1000);
+  note('🔴 Grabando… Presiona detener al terminar.');render();
+ }catch(e){note(e.name==='NotAllowedError'?'Necesitas permitir el micrófono en tu navegador.':'Error de micrófono: '+e.message);}}
+async function stopRecord(){if(!recording)return;const r=recording;if(r.timeout)clearTimeout(r.timeout);if(r.recorder.state==='recording')r.recorder.stop();}
+function resetVoice(){localRecording=null;render();}
+function audioPath(s){return `${ROOT}/audio/${s.gameId}/${s.round}`;}
+function subscribeAudio(){const s=room.state||{},newKey=s.gameId&&['record','guess','review'].includes(s.phase)?audioPath(s):'';if(newKey===audioKey)return;
+ if(audioRef){audioRef.off('value');audioRef=null;}audio={};audioKey=newKey;
+ if(db&&newKey){audioRef=db.ref(newKey);audioRef.on('value',snap=>{audio=snap.val()||{};if(!recording)render();},e=>note('No se puede descargar audio: '+e.message));}
+}
+async function sendAudio(){if(!joined()||busy||!localRecording)return;
+ const s=room.state||{},mode=s.phase==='record'&&me===s.speaker?'prompt':s.phase==='guess'&&me===s.listener?'guess':'';
+ if(!mode||mode!==localRecording.mode||localRecording.modeKey!==s.gameId+'_'+s.round+'_'+mode){note('Ya pasó este turno.');resetVoice();return;}
+ busy=true;render();
+ try{let ref=db.ref(audioPath(s)),data=mode==='prompt'?{promptForward:localRecording.original,promptReverse:localRecording.reverse}:{guessReverse:localRecording.reverse};
+  await ref.update(data);const result=await transact(cur=>{
+   let x=cur?.state;if(!sidValid(cur)||x?.gameId!==s.gameId||x.round!==s.round||x.phase!==s.phase)return;
+   if(mode==='prompt'){x.phase='guess';x.promptWord=localRecording.word||'';}else x.phase='review';return cur;
+  });
+  if(result.committed){localRecording=null;note('🎧 Audio enviado. La otra persona ya puede escucharlo.');}
+  else note('El turno ya había cambiado: la grabación no se aplicó.');
+ }catch(e){note('Error al guardar el audio en Firebase: '+e.message);}finally{busy=false;render();}}
+async function judge(yes){const s=room.state||{};if(busy||!joined()||s.phase!=='review'||s.speaker!==me)return;busy=true;
+ try{let ended=false,gameId=s.gameId;let result=await transact(cur=>{
+  const x=cur?.state;if(!sidValid(cur)||x?.phase!=='review'||x.gameId!==gameId||x.round!==s.round||x.speaker!==me)return;
+  x.scores=x.scores||{Criss:0,Andreita:0};if(yes)x.scores[x.listener]=Number(x.scores[x.listener]||0)+1;
+  x.history=x.history||[];x.history.push({round:x.round+1,speaker:x.speaker,listener:x.listener,correct:yes,word:x.promptWord||''});
+  if(x.round+1>=ROUNDS){x.phase='finished';x.endedAt=Date.now();ended=true;}
+  else {x.round++;const nextSpeaker=x.listener;x.listener=x.speaker;x.speaker=nextSpeaker;x.phase='record';delete x.promptWord;}
+  return cur;
+ });if(result.committed){localRecording=null;note(yes?'🎉 ¡Punto para '+s.listener+'!':'➜ Respuesta no acertada. ¡Siguiente turno!');if(ended)await registerVictory(gameId,result.value?.state);db.ref(audioPath(s)).remove().catch(()=>{});}
+ }catch(e){note(e.message);}finally{busy=false;render();}}
+async function registerVictory(gameId,final){if(!final||!db)return;const sc=final.scores||{},a=Number(sc.Criss||0),b=Number(sc.Andreita||0),winner=a===b?'Empate':a>b?'Criss':'Andreita';
+ const ref=db.ref(ROOT+'/stats');try{await new Promise((resolve,reject)=>ref.transaction(current=>{
+  current=current||{};current.recorded=current.recorded||{};if(current.recorded[gameId])return;
+  current.recorded[gameId]=true;current.wins=current.wins||{Criss:0,Andreita:0};if(winner!=='Empate')current.wins[winner]=Number(current.wins[winner]||0)+1;
+  current.history=Array.isArray(current.history)?current.history:[];current.history.push({winner,score:`${a} - ${b}`,at:Date.now()});current.history=current.history.slice(-30);
+  // Limitar los IDs de partidas históricas para impedir crecimiento ilimitado.
+  const keys=Object.keys(current.recorded);if(keys.length>80)keys.slice(0,keys.length-80).forEach(k=>delete current.recorded[k]);return current;
+ },(err)=>err?reject(err):resolve(),false));}catch(e){note('Partida terminada. No se pudo guardar la victoria: '+e.message);}}
+async function again(){if(!joined()||room.state?.phase!=='finished')return;
+ try{await transact(cur=>{if(!sidValid(cur)||cur.state?.phase!=='finished')return;cur.state={phase:'lobby',round:0,scores:{Criss:0,Andreita:0}};NAMES.forEach(n=>{if(cur.players?.[n])cur.players[n].ready=false;});return cur;});localRecording=null;note('Nueva sala creada. Ambos deben indicar que están listos.');}catch(e){note(e.message);}}
+function updateStage(stage){const target=el('game-stage-24');if(!target)return;const active=Number(stage)===ID;
+ target.style.display=active?'block':'none';el('nav-game-24')?.classList.toggle('active',active);
+ if(active){for(let i=1;i<=23;i++){el('game-stage-'+i)?.style.setProperty('display','none');el('nav-game-'+i)?.classList.remove('active');}render();}
+}
+function openGame(){if(typeof window.hmNavigate==='function')window.hmNavigate('minigames-section');else if(typeof window.openTab==='function')window.openTab('minigames-section',null);
+ if(typeof window.goToStage==='function')window.goToStage(ID);else updateStage(ID);document.body.classList.add('hm-section-visible');}
+function boot(){if(el('game-stage-24'))return;
+ const nav=document.querySelector('.minigame-nav-list');if(nav){const node=document.createElement('div');node.className='minigame-nav-item';node.id='nav-game-24';node.tabIndex=0;node.role='button';node.innerHTML='<span class="minigame-nav-icon">🎙️</span><div class="minigame-nav-info"><span class="minigame-nav-name">Palabras al Revés</span><span class="minigame-nav-sub">Minijuego 24 · Audio online por turnos</span></div><span class="new-badge-pill" id="badge-game-24">NEW</span>';node.onclick=openGame;node.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openGame();}};nav.appendChild(node);}
+ const menu=el('hmNavGames');if(menu&&!el('rv24MenuButton')){const b=document.createElement('button');b.type='button';b.id='rv24MenuButton';b.textContent='24. Palabras al Revés';b.onclick=openGame;menu.appendChild(b);}
+ const stage=document.createElement('div');stage.id='game-stage-24';stage.style.cssText='display:none;width:100%';stage.innerHTML='<div class="rv24-root"><div class="rv24-eyebrow">🎤 Minijuego 24 · Duelo de voz online</div><h3>🔁 PALABRAS AL REVÉS</h3><p class="rv24-intro">Graba una palabra y escucha su audio al revés. Tienes que intentar imitarla para que tu propia grabación invertida suene como la original. ¡Turnos alternados!</p><div id="rv24Content"></div><p id="rv24Message" class="rv24-status" role="status" aria-live="polite"></p><div id="rv24Leaderboard"></div></div>';
+ const main=document.querySelector('.minigames-main-stage')||el('minigames-section');main?.appendChild(stage);
+ // Envolver la navegación original sin alterar las 22/23 pantallas previas.
+ if(typeof window.goToStage==='function'){const original=window.goToStage;window.goToStage=function(s){if(Number(s)===24){updateStage(24);return;}updateStage(Number(s));return original.apply(this,arguments);};}
+ if(typeof window.selectMinigameFromSidebar==='function'){const original=window.selectMinigameFromSidebar;window.selectMinigameFromSidebar=function(s){if(Number(s)===24){updateStage(24);return;}return original.apply(this,arguments);};}
+ el('rv24Content').addEventListener('click',async ev=>{let btn=ev.target.closest('button');if(!btn||btn.disabled)return;let a=btn.dataset.rv;if(!a)return;
+ switch(a){case'choose':choice=btn.dataset.name;render();break;case'join':await join();break;case'ready':await ready();break;case'start':await start();break;case'leave':await leave();break;case'record':await record();break;case'stop':await stopRecord();break;case'discard':resetVoice();break;case'send':await sendAudio();break;case'judge':await judge(btn.dataset.result==='yes');break;case'again':await again();break;}
+ });
+ db=getDb();if(db){roomRef=db.ref(ROOT+'/room');roomCallback=snap=>{room=snap.val()||{};if(me&&!joined()){me='';sid='';note('Sesión desconectada. Entra de nuevo.');}subscribeAudio();render();};roomRef.on('value',roomCallback,err=>note('Error de Firebase: '+err.message));db.ref(ROOT+'/stats').on('value',snap=>{stats=snap.val()||{};renderBoard();},err=>note('No se pudieron leer las victorias: '+err.message));}
+ else note('Conecta Firebase y abre tu página publicada para jugar online.');
+ render();renderBoard();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 
 </script>
