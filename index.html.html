@@ -20307,10 +20307,8 @@ function render(){const target=rootEl();if(!target)return;
  }else if(s.phase==='review'){
   out=scoreRow(s)+'<section class="rv24-card"><span class="rv24-ribbon">✅ ¡Listo! El segundo audio se subió correctamente.</span><h4>🎧 Comparen cómo quedó</h4><p class="rv24-help">Los dos pueden reproducir los audios. El segundo intento se reproduce invertido para comprobar si se parece al mensaje original.</p>'+
   (s.promptWord?'<p class="rv24-result">🔓 Palabra original: <strong>'+escapeHtml(s.promptWord)+'</strong></p>':'')+
-  playerAudio('1 · Mensaje original de '+s.speaker,'promptForward')+
-  playerAudio('2 · Primer audio al revés (lo que oyó '+s.listener+')','promptReverse')+
-  playerAudio('3 · Imitación tal como la grabó '+s.listener,'guessForward')+
-  playerAudio('4 · Imitación de '+s.listener+' AL REVÉS','guessReverse')+
+  playerAudio('1 · Primer audio de '+s.speaker+' AL REVÉS','promptReverse')+
+  playerAudio('2 · Imitación de '+s.listener+' AL REVÉS','guessReverse')+
   (player===s.speaker?'<h4>✅ '+who(s.speaker)+', confirma el resultado</h4><p class="rv24-help">¿La imitación invertida suena lo suficientemente parecida a tu palabra original?</p><div class="rv24-actions"><button class="rv24-primary" data-rv="judge" data-result="yes" '+(busy?'disabled':'')+'>✅ ¡Sí! +1 punto</button><button data-rv="judge" data-result="no" '+(busy?'disabled':'')+'>❌ No, siguiente ronda</button></div>':'<p class="rv24-status">Esperando a que '+s.speaker+' confirme el resultado y pase al siguiente turno.</p>')+'</section>';
  }else if(s.phase==='finished'){
   const c=Number(s.scores?.Criss||0),a=Number(s.scores?.Andreita||0);const winner=c===a?'¡Empate!':c>a?'🏆 ¡Ganó Criss!':'🏆 ¡Ganó Andreita!';
