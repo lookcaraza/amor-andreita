@@ -20579,5 +20579,192 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 
 </script>
+<!-- MINIJUEGO 25: ESCONDIDAS 3D, original, sin iframes, hecho para jugar desde dos celulares. -->
+<style id="hide25styles">
+#game-stage-25{display:none;width:100%}
+#game-stage-25 * ,#hide25overlay *{box-sizing:border-box}
+#game-stage-25 .h25-feature{background:linear-gradient(142deg,#0c1529 0%,#252047 58%,#3d214b 100%);border:2px solid #d7a9c5;border-radius:25px;color:#fff1e9;text-align:center;padding:27px 19px;max-width:860px;margin:0 auto;box-shadow:0 12px 36px #09031970}
+#game-stage-25 h3{color:#ffe5ab!important;font:900 clamp(24px,5vw,34px) 'Montserrat',sans-serif;margin:9px 0 14px}
+#game-stage-25 p{color:#faf0ff;line-height:1.6;margin:10px auto;font-size:15px;max-width:650px}
+#game-stage-25 .h25-feature button,.h25-btn{background:#ffe6b2;color:#2d1e3a;border:0;border-radius:13px;padding:13px 20px;font:900 15px 'Nunito',sans-serif;cursor:pointer;min-height:46px}
+#hide25overlay[hidden]{display:none!important}
+#hide25overlay [hidden]{display:none!important}
+#hide25overlay{position:fixed;inset:0;z-index:2147483642;width:100vw;height:100dvh;max-height:100dvh;background:#090d19;overflow:hidden;overscroll-behavior:contain;display:flex;flex-direction:column;color:#fff;font-family:'Nunito',sans-serif;isolation:isolate}
+#hide25overlay button{touch-action:manipulation;cursor:pointer}
+#hide25overlay button:disabled{opacity:.5;cursor:default}
+#hide25overlay .h25-top{height:48px;flex:none;display:flex;align-items:center;justify-content:space-between;gap:7px;background:linear-gradient(90deg,#12172b,#30223b);padding:max(6px,env(safe-area-inset-top)) max(9px,env(safe-area-inset-right)) 6px max(9px,env(safe-area-inset-left));border-bottom:1px solid #ae92a6}
+#hide25overlay .h25-top button{border-radius:9px;border:1px solid #c9a4b7;padding:8px 11px;font-size:13px;font-weight:900;background:#7d304b;color:#fff;white-space:nowrap}
+#hide25overlay .h25-top button:last-child{background:#293c62}
+#hide25overlay .h25-top strong{font-weight:900;font-size:clamp(11px,3.1vw,16px);text-align:center;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
+#hide25overlay .h25-world{flex:1;position:relative;min-height:0;background:#10101e;overflow:hidden;touch-action:none}
+#hide25overlay canvas{position:absolute;width:100%;height:100%;display:block;inset:0;touch-action:none}
+#hide25overlay .h25-top-hud{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:#090e20cc;border:1px solid #e5c7bb77;border-radius:12px;padding:7px 12px;display:flex;gap:12px;align-items:center;max-width:94%;white-space:nowrap;font-size:clamp(10px,2.8vw,14px);font-weight:900;pointer-events:none}
+#hide25overlay .h25-c{color:#9ad5ff}#hide25overlay .h25-a{color:#ffafd1}
+#hide25overlay .h25-status{position:absolute;top:50px;left:50%;transform:translateX(-50%);border-radius:12px;background:#10122acc;padding:5px 12px;color:#ffe7b5;text-align:center;font-weight:800;font-size:clamp(11px,2.9vw,13px);max-width:90%;pointer-events:none}
+#hide25overlay .h25-crosshair{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font:900 27px monospace;color:#ffffffad;text-shadow:0 0 9px #b3e5ff;pointer-events:none}
+#hide25overlay .h25-minimap{position:absolute;top:96px;right:10px;width:min(118px,29vw);height:min(118px,29vw);border:2px solid #f4d8b2a1;border-radius:12px;background:#080b1fd9;pointer-events:none;padding:4px;image-rendering:pixelated}
+#hide25overlay .h25-joy{position:absolute;bottom:max(15px,env(safe-area-inset-bottom));left:max(16px,env(safe-area-inset-left));width:126px;height:126px;border-radius:50%;border:2px solid #c0d4e1a8;box-shadow:inset 0 0 21px #6b93aa4a;background:#1924488c;touch-action:none;z-index:8;display:grid;place-items:center}
+#hide25overlay .h25-joy-tip{width:53px;height:53px;background:radial-gradient(circle at 30% 25%,#cce7ff,#678eaf);border-radius:50%;box-shadow:0 0 18px #9abaf759;pointer-events:none}
+#hide25overlay .h25-action{position:absolute;right:max(15px,env(safe-area-inset-right));bottom:max(23px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px;z-index:9;align-items:center}
+#hide25overlay .h25-action button{border:2px solid #ffe9c6;min-height:54px;min-width:102px;padding:9px 13px;background:linear-gradient(135deg,#86384d,#ba5773);border-radius:16px;color:#fff;font-weight:900;box-shadow:0 7px 18px #0007;text-shadow:0 1px #521a2e;font-size:13px}
+#hide25overlay .h25-action button:first-child{background:linear-gradient(135deg,#274d81,#4589ba)}
+#hide25overlay .h25-hint{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);font-size:11px;text-shadow:0 2px 3px #000;opacity:.85;pointer-events:none;white-space:nowrap}
+#hide25overlay .h25-screen-center{position:absolute;inset:0;display:grid;place-items:center;padding:13px;pointer-events:none}
+#hide25overlay .h25-dialog{pointer-events:auto;text-align:center;max-height:100%;overflow:auto;width:min(95vw,455px);padding:22px 19px;border:2px solid #dbb9a9;border-radius:22px;background:linear-gradient(143deg,#111629f7,#29233af7);box-shadow:0 18px 50px #000b}
+#hide25overlay .h25-dialog h3{font:900 clamp(21px,5.4vw,29px) 'Montserrat',sans-serif;color:#ffe3a2!important;margin:0 0 12px}
+#hide25overlay .h25-dialog p{color:#fff1e7;font-weight:700;line-height:1.45;margin:10px auto;font-size:14px}
+#hide25overlay .h25-row{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin-top:12px}
+#hide25overlay .h25-row button{flex:1 1 auto;max-width:225px;min-height:43px;border:0;padding:11px 14px;border-radius:12px;background:#e6c494;color:#231a2c;font-weight:900}
+#hide25overlay .h25-row button:nth-child(even){background:#b6d9f2}
+#hide25overlay .h25-presence{border:1px solid #627e9b;border-radius:10px;background:#0b162a;padding:8px;color:#d9f4ff;font-size:12px;margin:8px auto;font-weight:800;max-width:350px}
+#hide25overlay .h25-message{padding:8px;margin:9px auto;background:#171d36;border-radius:10px;color:#ffe9bc;font-weight:800;font-size:13px;white-space:pre-wrap}
+#hide25overlay .h25-vignette{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 min(22vw,160px) #03020bd5}
+#hide25overlay .h25-countdown{position:absolute;inset:0;background:#050711d9;display:grid;place-items:center;text-align:center;padding:20px;pointer-events:none}
+#hide25overlay .h25-countdown>div{border:1px solid #c79ab9;padding:17px;border-radius:20px;background:#121728;text-shadow:0 2px #000;font:900 clamp(18px,5vw,25px) 'Nunito',sans-serif}
+#hide25overlay .h25-foot{flex:none;text-align:center;font-size:11px;color:#e4cddb;padding:4px 6px;background:#18182c}
+@media(max-height:515px){#hide25overlay .h25-dialog{padding:10px 12px}#hide25overlay .h25-dialog p{margin:5px auto;font-size:12px}#hide25overlay .h25-dialog h3{font-size:20px;margin-bottom:4px}#hide25overlay .h25-dialog .h25-row{margin-top:7px}#hide25overlay .h25-foot{display:none}#hide25overlay .h25-joy{height:100px;width:100px}#hide25overlay .h25-joy-tip{height:42px;width:42px}#hide25overlay .h25-action button{min-height:44px}}
+</style>
+<script id="hide25script">
+(()=>{'use strict';
+const $=id=>document.getElementById(id),ROOT='halloweenDuoV81/hide25';
+const clamp=(n,lo,hi)=>Math.max(lo,Math.min(hi,n)),TAU=Math.PI*2;
+const HIDE_TIME=20,SEEK_TIME=105,MAP_N=19,FOV=Math.PI/2.9;
+const G={open:false,me:'',sid:'',joined:false,room:{},ready:{},presence:{},positions:{},ref:null,stateRef:null,readyRef:null,presenceRef:null,positionRef:null,subscribed:false,demo:false,round:-1,maze:null,spawn:null,x:1.5,z:1.5,a:0,joy:{x:0,y:0},keys:{},sprint:false,energy:100,raf:0,last:0,lastSync:0,lastHeartbeat:0,lastHud:0,lastTimerCheck:0,oldOverflow:'',hist:false,busy:false,tip:'',error:'',cachedOther:null};
+let ctx=null,depth=[],joystickPointer=null,lookPointer=null,lastLookX=0;
+function db(){try{const d=typeof rtdb!=='undefined'?rtdb:(window.firebase?.apps?.length?firebase.database():null);return d?.ref(ROOT)||null}catch(_){return null}}
+function generate(level){
+ let seed=(((level+3)*2654435761)>>>0)||12;const rnd=()=>{seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;return (seed>>>0)/4294967296};
+ const a=Array.from({length:MAP_N},()=>Array(MAP_N).fill(1)),stack=[[1,1]];a[1][1]=0;
+ while(stack.length){const [cx,cy]=stack[stack.length-1];const options=[[2,0],[-2,0],[0,2],[0,-2]].filter(([dx,dy])=>cx+dx>0&&cx+dx<MAP_N-1&&cy+dy>0&&cy+dy<MAP_N-1&&a[cy+dy][cx+dx]);if(!options.length){stack.pop();continue}const [dx,dy]=options[Math.floor(rnd()*options.length)];a[cy+dy/2][cx+dx/2]=0;a[cy+dy][cx+dx]=0;stack.push([cx+dx,cy+dy]);}
+ // Añade atajos sin romper las paredes exteriores.
+ for(let i=0;i<25;i++){let x=1+Math.floor(rnd()*(MAP_N-2)),z=1+Math.floor(rnd()*(MAP_N-2));if(a[z][x]&&((!a[z][x-1]&&!a[z][x+1])||(!a[z-1][x]&&!a[z+1][x])))a[z][x]=0;}
+ const dist=Array.from({length:MAP_N},()=>Array(MAP_N).fill(-1));dist[1][1]=0;const q=[[1,1]];let far=[1,1];for(let i=0;i<q.length;i++){const [x,z]=q[i];if(dist[z][x]>dist[far[1]][far[0]])far=[x,z];for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1]]){const xx=x+dx,zz=z+dz;if(zz<0||zz>=MAP_N||xx<0||xx>=MAP_N||a[zz][xx]||dist[zz][xx]>=0)continue;dist[zz][xx]=dist[z][x]+1;q.push([xx,zz])}}
+ return {walls:a,far};
+}
+function wall(x,z){return x<0||z<0||x>=MAP_N||z>=MAP_N||!G.maze||!!G.maze.walls[Math.floor(z)]?.[Math.floor(x)]}
+function canStep(x,z){const r=.18;return !wall(x-r,z-r)&&!wall(x+r,z-r)&&!wall(x-r,z+r)&&!wall(x+r,z+r)}
+function currentRole(){return G.room.seeker===G.me?'buscador':'escondido'}
+function active(){return G.demo||(G.joined&&(G.room.phase==='hide'||G.room.phase==='seek')&&G.room.sessions?.[G.me]===G.sid&&!(G.room.phase==='hide'&&G.room.seeker===G.me))}
+function seconds(){const st=G.room;if(G.demo)return 999;if(st.phase==='hide')return Math.max(0,HIDE_TIME-Math.floor((Date.now()-st.startedAt)/1000));if(st.phase==='seek')return Math.max(0,SEEK_TIME-Math.floor((Date.now()-st.startedAt-HIDE_TIME*1000)/1000));return 0;}
+function setMsg(t){G.tip=t;const el=$('h25message');if(el)el.textContent=t}
+function boot(){if($('game-stage-25'))return;
+ const s=document.createElement('section');s.id='game-stage-25';s.innerHTML=`<div class="h25-feature"><div style="font-size:12px;color:#f0bfad;font-weight:900;letter-spacing:1px">MINIJUEGO 25 · PARA CRISS Y ANDREITA</div><h3>🏚️ Escondidas 3D: La Mansión</h3><p>¡Esta vez sí es una aventura de persecución! Una persona se esconde durante 20 segundos; la otra debe encontrarla y atraparla antes de que se acabe el tiempo. En la siguiente ronda se cambian los papeles.</p><p>🎮 Vista en primera persona · Laberintos diferentes · Joystick para celular · Sala online con Firebase · Sin enlaces ni registros externos</p><button type="button" id="h25launch">⛶ Entrar a la mansión</button></div>`;
+ (document.querySelector('.minigames-main-stage')||$('minigames-section')||document.body).appendChild(s);
+ const nav=document.querySelector('.minigame-nav-list');if(nav){const n=document.createElement('div');n.id='nav-game-25';n.className='minigame-nav-item';n.tabIndex=0;n.setAttribute('role','button');n.innerHTML='<span class="minigame-nav-icon">🏚️</span><span class="minigame-nav-info"><span class="minigame-nav-name">Escondidas 3D</span><span class="minigame-nav-sub">Online · Mansión · Celular</span></span><span class="new-badge-pill">NEW</span>';n.onclick=showStage;n.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showStage()}};nav.appendChild(n)}
+ const menu=$('hmNavGames');if(menu){const b=document.createElement('button');b.id='h25menu';b.textContent='25. Escondidas 3D · Online';b.type='button';b.onclick=showStage;menu.appendChild(b)}
+ const p=document.createElement('section');p.id='hide25overlay';p.hidden=true;p.setAttribute('aria-hidden','true');p.innerHTML=`
+ <div class="h25-top"><button id="h25exit" type="button">✕ Salir</button><strong>🏚️ ESCONDIDAS 3D · CRISS & ANDREITA</strong><button id="h25full" type="button">⛶ Ampliar</button></div>
+ <div class="h25-world" id="h25world"><canvas id="h25canvas" aria-label="Vista 3D de la mansión"></canvas><div class="h25-vignette"></div><div class="h25-top-hud"><span id="h25role">MANSIÓN</span><span id="h25timer">--:--</span><span class="h25-c" id="h25scoreC">💙 0</span><span class="h25-a" id="h25scoreA">💗 0</span></div><div class="h25-status" id="h25status">Elige jugador para entrar</div><div class="h25-crosshair" id="h25cross">+</div><canvas class="h25-minimap" id="h25map"></canvas>
+ <div class="h25-joy" id="h25joystick" hidden><div class="h25-joy-tip" id="h25joytip"></div></div>
+ <div class="h25-action" id="h25actions" hidden><button type="button" id="h25run">⚡ CORRER</button><button type="button" id="h25catch">✋ ATRAPAR</button></div><div class="h25-hint" id="h25hint">Izquierda: mover · Derecha: girar cámara</div>
+ <div class="h25-countdown" id="h25blind" hidden><div>🙈 ¡NO MIRES!<p id="h25blindText" style="font-size:15px;margin:12px">Tu pareja está buscando dónde esconderse…</p><span id="h25blindSecs">20</span> segundos</div></div>
+ <div class="h25-screen-center" id="h25cent"><div class="h25-dialog" id="h25dialog"><h3 id="h25heading">🏚️ Escondidas 3D</h3><p id="h25description">Criss y Andreita entran desde sus celulares. Elijan sus perfiles y presionen «Estoy listo».</p><div class="h25-row" id="h25choose"><button type="button" id="h25criss">💙 Criss</button><button type="button" id="h25andreita">💗 Andreita</button></div><div class="h25-presence" id="h25presence">Esperando jugadores...</div><div class="h25-message" id="h25message">Elige tu perfil para conectarte.</div><div class="h25-row"><button id="h25ready" type="button" hidden>✅ Estoy listo</button><button id="h25demo" type="button">🕹️ Probar controles sin rival</button><button id="h25retry" type="button" hidden>↻ Reintentar</button></div></div></div>
+ </div><div class="h25-foot">📱 Horizontal recomendado · El juego se mantiene dentro de tu página</div>`;
+ document.body.appendChild(p);$('h25launch').onclick=open;$('h25exit').onclick=()=>close(false);$('h25full').onclick=toggleFull;$('h25criss').onclick=()=>join('Criss');$('h25andreita').onclick=()=>join('Andreita');$('h25ready').onclick=ready;$('h25demo').onclick=demo;$('h25retry').onclick=()=>join(G.me||'Criss');$('h25catch').onclick=catchPlayer;
+ let joy=$('h25joystick');joy.addEventListener('pointerdown',e=>{if(joy.hidden)return;joystickPointer=e.pointerId;joy.setPointerCapture(e.pointerId);setJoy(e);e.preventDefault()});joy.addEventListener('pointermove',e=>{if(e.pointerId===joystickPointer){setJoy(e);e.preventDefault()}});const resetJoy=e=>{if(e.pointerId!==joystickPointer)return;joystickPointer=null;G.joy.x=0;G.joy.y=0;$('h25joytip').style.transform='translate(0,0)'};joy.addEventListener('pointerup',resetJoy);joy.addEventListener('pointercancel',resetJoy);
+ const cv=$('h25canvas');cv.addEventListener('pointerdown',e=>{if(!active())return;lookPointer=e.pointerId;lastLookX=e.clientX;cv.setPointerCapture(e.pointerId);e.preventDefault()});cv.addEventListener('pointermove',e=>{if(lookPointer===e.pointerId){G.a+=(e.clientX-lastLookX)*.007;lastLookX=e.clientX;}});cv.addEventListener('pointerup',e=>{if(lookPointer===e.pointerId)lookPointer=null});cv.addEventListener('pointercancel',e=>{if(lookPointer===e.pointerId)lookPointer=null});
+ const run=$('h25run');run.addEventListener('pointerdown',e=>{G.sprint=true;e.preventDefault()});['pointerup','pointercancel','pointerleave'].forEach(evt=>run.addEventListener(evt,()=>G.sprint=false));
+ window.addEventListener('keydown',e=>{if(!G.open)return;const k=e.key.toLowerCase();G.keys[k]=true;if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k))e.preventDefault();if(k===' '&&!e.repeat)catchPlayer();});window.addEventListener('keyup',e=>{G.keys[e.key.toLowerCase()]=false});window.addEventListener('blur',()=>{G.keys={};G.joy={x:0,y:0};G.sprint=false});
+ window.addEventListener('popstate',()=>{if(G.open)close(true)});
+ if(typeof window.goToStage==='function'){const prev=window.goToStage;window.goToStage=function(n){if(+n===25){for(let i=1;i<=24;i++){$('game-stage-'+i)?.style.setProperty('display','none');$('nav-game-'+i)?.classList.remove('active')}s.style.display='block';$('nav-game-25')?.classList.add('active');return;}s.style.display='none';$('nav-game-25')?.classList.remove('active');return prev.apply(this,arguments)}}
+ if(typeof window.selectMinigameFromSidebar==='function'){const old=window.selectMinigameFromSidebar;window.selectMinigameFromSidebar=function(n){if(+n===25){showStage();return;}return old.apply(this,arguments)}}
+ G.maze=generate(1);G.spawn={seeker:{x:1.5,z:1.5},hider:{x:G.maze.far[0]+.5,z:G.maze.far[1]+.5}};
+}
+function showStage(){if(typeof window.hmNavigate==='function')window.hmNavigate('minigames-section');else if(typeof window.openTab==='function')window.openTab('minigames-section',null);if(typeof window.goToStage==='function')window.goToStage(25);else $('game-stage-25').style.display='block'}
+function open(){if(G.open)return;G.open=true;G.oldOverflow=document.body.style.overflow;document.body.style.overflow='hidden';$('hide25overlay').hidden=false;$('hide25overlay').setAttribute('aria-hidden','false');ctx=$('h25canvas').getContext('2d',{alpha:false});G.last=performance.now();G.raf=requestAnimationFrame(frame);G.hist=false;try{history.pushState({hide25:true},'',location.href);G.hist=true}catch(_){}hud()}
+async function close(fromBack){if(!G.open)return;G.open=false;cancelAnimationFrame(G.raf);G.demo=false;await leave();$('hide25overlay').hidden=true;$('hide25overlay').setAttribute('aria-hidden','true');document.body.style.overflow=G.oldOverflow;G.keys={};G.joy={x:0,y:0};G.sprint=false;if(document.fullscreenElement===$('hide25overlay'))document.exitFullscreen().catch(()=>{});if(fromBack)G.hist=false;else if(G.hist){G.hist=false;try{history.back()}catch(_){}}}
+async function toggleFull(){const el=$('hide25overlay');try{if(document.fullscreenElement===el)await document.exitFullscreen();else if(el.requestFullscreen)await el.requestFullscreen({navigationUI:'hide'});else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();}catch(_){}try{if(document.fullscreenElement===el&&screen.orientation?.lock)await screen.orientation.lock('landscape')}catch(_){}}
+function setJoy(e){const r=$('h25joystick').getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),m=Math.hypot(dx,dy)||1;G.joy.x=clamp(dx/46,-1,1);G.joy.y=clamp(dy/46,-1,1);if(m>46){G.joy.x=dx/m;G.joy.y=dy/m}$('h25joytip').style.transform=`translate(${G.joy.x*30}px,${G.joy.y*30}px)`}
+function sub(){if(G.subscribed||!G.ref)return;G.ref.child('state').on('value',stateChanged,e=>setMsg('No puedo leer la partida: '+e.message));G.ref.child('ready').on('value',readyChanged);G.ref.child('presence').on('value',presenceChanged);G.ref.child('positions').on('value',posChanged);G.subscribed=true}
+function unsub(){if(!G.ref||!G.subscribed)return;G.ref.child('state').off('value',stateChanged);G.ref.child('ready').off('value',readyChanged);G.ref.child('presence').off('value',presenceChanged);G.ref.child('positions').off('value',posChanged);G.subscribed=false}
+function stateChanged(s){G.room=s.val()||{};const n=G.room.round||0;if((G.room.phase==='hide'||G.room.phase==='seek')&&G.round!==n){G.round=n;G.maze=generate(n);G.spawn={seeker:{x:1.5,z:1.5},hider:{x:G.maze.far[0]+.5,z:G.maze.far[1]+.5}};if(G.me){const pos=G.me===G.room.seeker?G.spawn.seeker:G.spawn.hider;G.x=pos.x;G.z=pos.z;G.a=G.me===G.room.seeker?0:Math.PI;G.energy=100;G.lastSync=0}}
+ hud()}
+function readyChanged(s){G.ready=s.val()||{};hud();maybeStart()}
+function presenceChanged(s){G.presence=s.val()||{};if(G.joined&&G.presence[G.me]?.sid!==G.sid){G.joined=false;setMsg('Tu perfil dejó de estar conectado. Vuelve a entrar.');}hud();maybeStart()}
+function posChanged(s){G.positions=s.val()||{}}
+async function join(name){if(G.busy)return;G.busy=true;G.demo=false;let claimed=false;let newRef=null;try{
+ if(G.joined)await leave();G.me=name;G.sid='h25-'+Date.now()+'-'+Math.random().toString(36).slice(2,10);G.ref=db();if(!G.ref)throw Error('Firebase Realtime Database no está disponible. Usa tu página publicada en HTTPS.');
+ const pref=G.ref.child('presence/'+name);newRef=pref;const sid=G.sid;const result=await pref.transaction(v=>{if(v?.sid&&Date.now()-Number(v.at||0)<55000)return;return {sid,at:Date.now()}},undefined,false);
+ if(!result.committed)throw Error(name+' ya está conectado desde otro dispositivo.');claimed=true;
+ await pref.onDisconnect().remove();await G.ref.child('positions/'+name).onDisconnect().remove();await G.ref.child('ready/'+name).set(false);G.joined=true;G.round=-1;sub();setMsg('Conectado. Esperando a tu pareja.');
+ }catch(e){if(claimed&&newRef)try{await newRef.remove()}catch(_){}G.joined=false;setMsg('❌ '+e.message)}finally{G.busy=false;hud()}}
+async function leave(){const ref=G.ref,name=G.me,sid=G.sid;unsub();G.joined=false;G.sid='';G.me='';G.round=-1;G.ready={};G.presence={};G.positions={};G.room={};G.ref=null;if(ref&&name){try{const p=ref.child('presence/'+name);const snap=await p.once('value');if(snap.val()?.sid===sid){await p.onDisconnect().cancel();await ref.child('positions/'+name).onDisconnect().cancel();await Promise.all([p.remove(),ref.child('ready/'+name).remove(),ref.child('positions/'+name).remove()])}}catch(_){}}hud()}
+async function ready(){if(!G.joined||G.busy||G.ready[G.me])return;G.busy=true;try{await G.ref.child('ready/'+G.me).set(true);setMsg('✅ ¡Listo! Esperando que el otro jugador pulse Estoy listo.');await maybeStart()}catch(e){setMsg('❌ No se pudo marcar listo: '+e.message)}finally{G.busy=false;hud()}}
+let starting=false;async function maybeStart(){if(starting||!G.joined||!G.ready.Criss||!G.ready.Andreita)return;
+ if(!G.presence.Criss?.sid||!G.presence.Andreita?.sid)return; if(['hide','seek'].includes(G.room.phase))return;starting=true;
+ try{const refs={Criss:G.presence.Criss.sid,Andreita:G.presence.Andreita.sid};const result=await G.ref.child('state').transaction(st=>{st=st||{};if(st.phase==='hide'||st.phase==='seek')return;const round=(Number(st.round)||0)+1;return {phase:'hide',round,startedAt:Date.now(),seeker:round%2?'Criss':'Andreita',hider:round%2?'Andreita':'Criss',wins:st.wins||{Criss:0,Andreita:0},sessions:refs}},undefined,false);
+ if(result.committed)await G.ref.child('ready').update({Criss:false,Andreita:false});
+ }catch(e){setMsg('Error al iniciar: '+e.message)}finally{starting=false;hud()}}
+function demo(){if(G.joined){setMsg('Sal primero de tu perfil online para usar la prueba.');return}G.demo=true;G.me='';G.maze=generate(1);G.spawn={seeker:{x:1.5,z:1.5},hider:{x:G.maze.far[0]+.5,z:G.maze.far[1]+.5}};G.x=1.5;G.z=1.5;G.a=0;G.energy=100;hud()}
+async function finish(winner,reason){if(!G.joined||!['hide','seek'].includes(G.room.phase))return;const st=G.room;const sref=G.ref.child('state');try{await sref.transaction(s=>{if(!s||s.round!==st.round||s.phase!==st.phase)return;s.phase='finished';s.winner=winner;s.reason=reason;s.wins=s.wins||{Criss:0,Andreita:0};s.wins[winner]=(Number(s.wins[winner])||0)+1;s.finishedAt=Date.now();return s},undefined,false)}catch(e){setMsg('No se pudo registrar el resultado: '+e.message)}}
+async function catchPlayer(){if(G.demo)return;if(!G.joined||G.room.phase!=='seek'||G.room.seeker!==G.me)return;const other=G.positions[G.room.hider];if(other?.sid!==G.room.sessions?.[G.room.hider]){setMsg('Esperando posición de tu pareja…');return}const dist=Math.hypot(G.x-other.x,G.z-other.z),ang=Math.atan2(other.z-G.z,other.x-G.x);const angle=Math.atan2(Math.sin(ang-G.a),Math.cos(ang-G.a));if(dist>1.55||Math.abs(angle)>.8||!visible(G.x,G.z,other.x,other.z)){G.tip='¡Acércate y mira hacia tu pareja para atraparla!';return}await finish(G.me,'¡Lo atrapó antes de que se acabara el tiempo!')}
+function visible(x,z,tx,tz){const d=Math.hypot(tx-x,tz-z),steps=Math.ceil(d/.09);for(let i=1;i<steps;i++){const f=i/steps;if(wall(x+(tx-x)*f,z+(tz-z)*f))return false}return true}
+function hud(){if(!$('h25dialog'))return;const phase=G.room.phase||'lobby',playing=G.demo||(G.joined&&(phase==='hide'||phase==='seek')&&G.room.sessions?.[G.me]===G.sid);
+ $('h25choose').hidden=!!G.me||G.demo;$('h25ready').hidden=!G.joined||playing;$('h25ready').disabled=!!G.ready[G.me];$('h25ready').textContent=G.ready[G.me]?'✅ Listo, esperando…':phase==='finished'?'🔁 Jugar otra ronda':'✅ Estoy listo';$('h25retry').hidden=!G.me||G.joined||G.demo;$('h25demo').hidden=!!G.me||G.demo;
+ $('h25presence').textContent='💙 Criss: '+(G.presence.Criss?'Conectado':'Sin conectar')+' · 💗 Andreita: '+(G.presence.Andreita?'Conectada':'Sin conectar');
+ $('h25dialog').hidden=playing;const role=playing&&!G.demo?currentRole():'';
+ $('h25role').textContent=G.demo?'🎮 EXPLORAR':role==='buscador'?'🔎 BUSCADOR':role==='escondido'?'🙈 ESCONDIDO':'🏚️ MANSIÓN';$('h25scoreC').textContent='💙 '+(G.room.wins?.Criss||0);$('h25scoreA').textContent='💗 '+(G.room.wins?.Andreita||0);
+ $('h25joystick').hidden=!active();$('h25actions').hidden=!active();$('h25catch').hidden=G.demo||role!=='buscador';$('h25blind').hidden=!(G.joined&&!G.demo&&phase==='hide'&&G.room.seeker===G.me);
+ $('h25cross').hidden=!active();$('h25hint').hidden=!active();$('h25map').hidden=!active();
+ if(G.demo){$('h25heading').textContent='🏚️ Mansión 3D';$('h25status').textContent='Prueba de controles';return}
+ if(phase==='finished'){$('h25heading').textContent='🏁 ¡Terminó la ronda!';$('h25description').textContent=(G.room.winner||'Alguien')+' ganó. '+(G.room.reason||'')+' En la próxima ronda cambiarán los roles.';setMsg('💙 Criss '+(G.room.wins?.Criss||0)+' — 💗 Andreita '+(G.room.wins?.Andreita||0)+' · Pulsen Estoy listo para jugar otra vez.')}
+ else if(!G.joined){$('h25heading').textContent='🏚️ Escondidas 3D';$('h25description').textContent='Elijan quién es Criss y quién Andreita. Ambos deben estar conectados y marcar Estoy listo.';if(!G.tip)setMsg('Selecciona tu perfil para conectarte.')}
+ else if(!playing){$('h25heading').textContent='⏳ Sala de espera';$('h25description').textContent='Los dos deben entrar desde sus celulares y presionar Estoy listo. El buscador esperará 20 segundos antes de perseguir.';if(G.ready[G.me])setMsg('✅ Listo. Esperando al otro jugador…')}
+ else{$('h25status').textContent=phase==='hide'?'20 segundos para esconderse':'Encuentra a tu pareja antes de que se acabe el tiempo'}
+}
+function drawMaze(now){const canvas=$('h25canvas');if(!ctx||!canvas)return;const rect=canvas.getBoundingClientRect();if(!rect.width||!rect.height)return;
+ const scale=Math.min(devicePixelRatio||1,1.5),w=Math.max(1,Math.floor(rect.width*scale)),h=Math.max(1,Math.floor(rect.height*scale));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}const c=ctx;
+ const sky=c.createLinearGradient(0,0,0,h/2);sky.addColorStop(0,'#0b112b');sky.addColorStop(.65,'#1d243c');sky.addColorStop(1,'#4c4059');c.fillStyle=sky;c.fillRect(0,0,w,h/2);
+ const fl=c.createLinearGradient(0,h/2,0,h);fl.addColorStop(0,'#34333d');fl.addColorStop(1,'#12101a');c.fillStyle=fl;c.fillRect(0,h/2,w,h/2);
+ // Perspectiva del suelo para dar sensación de profundidad sin librerías externas.
+ c.strokeStyle='#a39aae18';c.lineWidth=1;for(let i=0;i<10;i++){const y=h/2+(h/2)*(i/10)**1.8;c.beginPath();c.moveTo(0,y);c.lineTo(w,y);c.stroke()}
+ const columns=Math.min(310,Math.max(165,Math.ceil(w/3))),colw=w/columns;depth=new Array(columns);
+ for(let col=0;col<columns;col++){const camera=2*(col+.5)/columns-1,angle=G.a+Math.atan(camera*Math.tan(FOV/2)),rx=Math.cos(angle),rz=Math.sin(angle);
+ let mx=Math.floor(G.x),mz=Math.floor(G.z);const deltaX=Math.abs(1/(rx||1e-8)),deltaZ=Math.abs(1/(rz||1e-8));const sx=rx<0?-1:1,sz=rz<0?-1:1;
+ let sideX=(rx<0?G.x-mx:mx+1-G.x)*deltaX,sideZ=(rz<0?G.z-mz:mz+1-G.z)*deltaZ,side=0,d=25;
+ for(let i=0;i<48;i++){if(sideX<sideZ){sideX+=deltaX;mx+=sx;side=0}else{sideZ+=deltaZ;mz+=sz;side=1}if(wall(mx+.5,mz+.5)){d=Math.max(.06,side===0?sideX-deltaX:sideZ-deltaZ);break}}
+ const perp=Math.max(.06,d*Math.cos(angle-G.a));depth[col]=perp;const wallheight=Math.min(h*4,h/(perp*.76)),top=(h-wallheight)/2,low=top+wallheight;
+ const hit=side===0?G.z+d*rz:G.x+d*rx,fract=hit-Math.floor(hit),fog=clamp(1-perp/25,.19,1),sideShade=side===0?1:.76;
+ const f=Math.floor(48*fog*sideShade),red=Math.round(51*fog*sideShade+9),green=Math.round(58*fog*sideShade+8),blue=Math.round(95*fog*sideShade+9);
+ c.fillStyle=`rgb(${red},${green},${blue})`;c.fillRect(col*colw,top,colw+1,wallheight);
+ // Juntas verticales y horizontales imitan bloques de piedra.
+ if(fract<.052||fract>.95){c.fillStyle=`rgba(9,13,23,${.47*fog})`;c.fillRect(col*colw,top,colw+1,wallheight)}
+ const blockH=Math.max(7,wallheight*.29);c.fillStyle=`rgba(9,12,22,${.35*fog})`;
+ for(let row=0;row<4;row++){const yy=top+row*blockH;if(yy>low)break;c.fillRect(col*colw,yy,colw+1,Math.max(1,2*fog))}
+ if(fract>.44&&fract<.56&&mx%4===0&&mz%4===0){c.fillStyle=`rgba(255,192,113,${.18*fog})`;c.fillRect(col*colw,top+wallheight*.2,colw+1,wallheight*.6)}
+ }
+ // Un rival aparece como personaje en perspectiva solamente si no está detrás de un muro.
+ if(G.joined&&G.room.phase==='seek'&&G.room.sessions?.[G.me]===G.sid){const otherName=G.me==='Criss'?'Andreita':'Criss',v=G.positions[otherName];if(v?.sid===G.room.sessions?.[otherName])drawCharacter(c,w,h,otherName,v.x,v.z)}
+ // Brillo ambiental y neblina, también sirven de referencia visual en móviles.
+ const gloss=c.createRadialGradient(w*.5,h*.52,15,w*.5,h*.52,w*.66);gloss.addColorStop(0,'#cf9ddc03');gloss.addColorStop(1,'#05041571');c.fillStyle=gloss;c.fillRect(0,0,w,h);
+ if(G.demo){c.fillStyle='#e1eefacc';c.font=`900 ${Math.max(12,Math.floor(w/47))}px sans-serif`;c.textAlign='center';c.fillText('EXPLORACIÓN 3D · PRUEBA DE CONTROLES',w/2,h*.14)}
+ drawMap();
+}
+function drawCharacter(c,w,h,name,px,pz){if(!Number.isFinite(px)||!Number.isFinite(pz))return;const dx=px-G.x,dz=pz-G.z,dist=Math.hypot(dx,dz);if(dist<.05||dist>20||!visible(G.x,G.z,px,pz))return;
+ const alpha=Math.atan2(dz,dx)-G.a,ang=Math.atan2(Math.sin(alpha),Math.cos(alpha));if(Math.abs(ang)>FOV*.6)return;
+ const screenX=w*.5+(Math.tan(ang)/Math.tan(FOV/2))*w*.5;const col=Math.round(screenX/(w/depth.length));if(col<0||col>=depth.length||depth[col]<dist-.3)return;
+ const hh=clamp(h/(dist*.66),10,h*1.7),y=h/2-hh*.36,x=screenX;const pink=name==='Andreita',cw=hh*.38;
+ c.fillStyle='#090a149a';c.beginPath();c.ellipse(x,y+hh*.7,cw*.8,hh*.10,0,0,TAU);c.fill();
+ c.fillStyle=pink?'#e981ab':'#63aeec';c.fillRect(x-cw*.42,y-hh*.08,cw*.84,hh*.5);
+ c.fillStyle=pink?'#613450':'#213950';c.fillRect(x-cw*.35,y+hh*.42,cw*.3,hh*.27);c.fillRect(x+cw*.05,y+hh*.42,cw*.3,hh*.27);
+ c.fillStyle='#edbfa4';c.beginPath();c.arc(x,y-hh*.23,cw*.4,0,TAU);c.fill();
+ c.fillStyle=pink?'#432638':'#2a2d48';c.fillRect(x-cw*.45,y-hh*.50,cw*.9,hh*.12);
+ c.font=`900 ${clamp(hh*.12,10,28)}px sans-serif`;c.textAlign='center';c.fillStyle='#fff';c.shadowColor='#000';c.shadowBlur=6;c.fillText(name,x,y-hh*.59);c.shadowBlur=0;
+}
+function drawMap(){const canv=$('h25map');if(!canv||canv.hidden||!G.maze)return;const dpr=Math.min(devicePixelRatio||1,2),sz=112,dim=Math.round(sz*dpr);if(canv.width!==dim){canv.width=dim;canv.height=dim}const c=canv.getContext('2d');c.clearRect(0,0,dim,dim);const cell=dim/MAP_N;for(let z=0;z<MAP_N;z++)for(let x=0;x<MAP_N;x++){c.fillStyle=G.maze.walls[z][x]?'#59647b':'#1a2237';c.fillRect(x*cell,z*cell,Math.ceil(cell),Math.ceil(cell))}c.fillStyle='#ffe8ad';c.beginPath();c.arc(G.x*cell,G.z*cell,Math.max(2,cell*.4),0,TAU);c.fill();c.strokeStyle='#ffe8ad';c.lineWidth=2*dpr;c.beginPath();c.moveTo(G.x*cell,G.z*cell);c.lineTo((G.x+Math.cos(G.a)) *cell,(G.z+Math.sin(G.a))*cell);c.stroke()}
+function movement(dt){if(!active())return;const k=G.keys;let forward=-G.joy.y+(k.w||k.arrowup?1:0)-(k.s||k.arrowdown?1:0);let strafe=G.joy.x+(k.d?1:0)-(k.a?1:0);const len=Math.hypot(forward,strafe);if(len>1){forward/=len;strafe/=len}
+ G.a+=(k.arrowleft?-1:0)*dt*2.5+(k.arrowright?1:0)*dt*2.5;
+ const moving=Math.abs(forward)+Math.abs(strafe)>.08,boost=moving&&(G.sprint||k.shift)&&G.energy>2;
+ const speed=boost?4.5:2.7;G.energy=clamp(G.energy+(boost?-27:13)*dt,0,100);
+ if(moving){const dx=(Math.cos(G.a)*forward-Math.sin(G.a)*strafe)*speed*dt,dz=(Math.sin(G.a)*forward+Math.cos(G.a)*strafe)*speed*dt;if(canStep(G.x+dx,G.z))G.x+=dx;if(canStep(G.x,G.z+dz))G.z+=dz;}
+}
+let syncing=false;async function sync(now){if(syncing||!G.joined||!['hide','seek'].includes(G.room.phase)||G.room.sessions?.[G.me]!==G.sid)return;if(now-G.lastSync<125)return;G.lastSync=now;syncing=true;const pos={x:+G.x.toFixed(3),z:+G.z.toFixed(3),a:+G.a.toFixed(3),sid:G.sid,round:G.room.round,at:Date.now()};try{await G.ref.child('positions/'+G.me).set(pos)}catch(e){G.tip='⚠️ Problema de conexión con Firebase: '+e.message}finally{syncing=false}}
+let transitioning=false;async function updatePhase(now){if(transitioning||!G.joined||now-G.lastTimerCheck<850)return;G.lastTimerCheck=now;const st=G.room;if(st.phase==='hide'&&seconds()===0){transitioning=true;try{await G.ref.child('state').transaction(v=>{if(!v||v.round!==st.round||v.phase!=='hide')return;v.phase='seek';return v},undefined,false)}finally{transitioning=false}}else if(st.phase==='seek'&&seconds()===0){transitioning=true;try{await finish(st.hider,'¡Logró esconderse hasta que terminó el tiempo!')}finally{transitioning=false}}}
+function frame(now){if(!G.open)return;const dt=clamp((now-G.last)/1000,0,.07);G.last=now;movement(dt);if(G.maze)drawMaze(now);if(G.joined)sync(now);if(G.joined)updatePhase(now);if(now-G.lastHud>300){G.lastHud=now;hud();const t=seconds();$('h25timer').textContent=G.demo?'PRUEBA':(t===999?'--:--':Math.floor(t/60)+':'+String(t%60).padStart(2,'0'));if(G.joined&&G.room.phase==='hide'&&G.me===G.room.seeker)$('h25blindSecs').textContent=t;if(active()){$('h25status').textContent=G.demo?'Explora la mansión':G.room.phase==='hide'?'🙈 ¡Escóndete! Quedan '+t+' s':(currentRole()==='buscador'?'🔎 Busca a '+G.room.hider:'🏃 Escapa de '+G.room.seeker)+' · Energía '+Math.round(G.energy)+'%'}else if(G.room.phase==='finished')$('h25status').textContent='🏁 '+G.room.winner+' ganó esta ronda';else if(!G.joined)$('h25status').textContent='Entra como Criss o Andreita';}
+ G.raf=requestAnimationFrame(frame)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
 </body>
 </html>
